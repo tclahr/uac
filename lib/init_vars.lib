@@ -1,0 +1,57 @@
+# Copyright (C) 2019,2020 IBM Corporation
+#
+# Licensed under the Apache License, Version 2.0 (the “License”);
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an “AS IS” BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+################################################################################
+# NAME
+#   init_vars - set a default value for some variables
+# SYNOPSIS
+#   init_vars
+################################################################################
+init_vars() {
+
+    # true     one or more collectors were selected
+    # false    no collectors were selected
+    ANY_COLLECTOR_SELECTED=false
+
+    # true     one or more extensions were selected
+    # false    no extensions were selected
+    ANY_EXTENSION_SELECTED=false
+
+    # verbose mode
+    VERBOSE=false
+
+    # debug mode
+    DEBUG=false
+
+    # allow UAC to be run by a non-root user
+    RUN_AS_NON_ROOT=false
+
+    # set default value for all collectors
+    COLLECTOR_PROCESS_LISTING=false
+    COLLECTOR_NETWORK=false
+    COLLECTOR_USER_ACCOUNTS=false
+    COLLECTOR_SYSTEM=false
+    COLLECTOR_HARDWARE=false
+    COLLECTOR_SOFTWARE=false
+    COLLECTOR_DISK_VOLUME_FILE_SYSTEM=false
+    COLLECTOR_BODY_FILE=false
+    COLLECTOR_LOGS=false
+    COLLECTOR_SYSTEM_FILES=false
+    COLLECTOR_HASH_RUNNING_PROCESSES=false
+
+    # set default value for all extensions
+    EXTENSION_CHKROOTKIT=false
+    EXTENSION_HASH_EXEC=false
+
+}

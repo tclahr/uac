@@ -1,0 +1,46 @@
+# Copyright (C) 2019,2020 IBM Corporation
+#
+# Licensed under the Apache License, Version 2.0 (the “License”);
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an “AS IS” BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# user_accounts_login collector
+
+run_cmd "last" "$COLLECTOR_OUTPUT_DIR/last.txt"
+run_cmd "w" "$COLLECTOR_OUTPUT_DIR/w.txt"
+run_cmd "who" "$COLLECTOR_OUTPUT_DIR/who.txt"
+run_cmd "whoami" "$COLLECTOR_OUTPUT_DIR/whoami.txt"
+
+case "$PROFILE" in
+    "aix")
+        run_cmd "grpck -n ALL" "$COLLECTOR_OUTPUT_DIR/grpck-n-ALL.txt"
+        run_cmd "last -X" "$COLLECTOR_OUTPUT_DIR/last-X.txt"
+        run_cmd "lsgroup -f ALL" "$COLLECTOR_OUTPUT_DIR/lsgroup-f-ALL.txt"
+        run_cmd "lsuser -f ALL" "$COLLECTOR_OUTPUT_DIR/lsuser-f-ALL.txt"
+        run_cmd "usrck -n ALL" "$COLLECTOR_OUTPUT_DIR/usrck-n-ALL.txt"
+        ;;
+    "bsd")
+        ;;
+    "linux")
+        run_cmd "last -a -F" "$COLLECTOR_OUTPUT_DIR/last-a-F.txt"
+        run_cmd "lastlog" "$COLLECTOR_OUTPUT_DIR/lastlog.txt"
+        run_cmd "pwck -r" "$COLLECTOR_OUTPUT_DIR/pwck-r.txt"
+        ;;
+    "macos")
+        run_cmd "dscacheutil -q group" "$COLLECTOR_OUTPUT_DIR/dscacheutil-q-group.txt"
+        run_cmd "dscacheutil -q user" "$COLLECTOR_OUTPUT_DIR/dscacheutil-q-user.txt"
+        ;;
+    "solaris")
+        run_cmd "grpck /etc/group" "$COLLECTOR_OUTPUT_DIR/grpck-etc-group.txt"
+        run_cmd "last -a" "$COLLECTOR_OUTPUT_DIR/last-a.txt"
+        run_cmd "pwck /etc/passwd" "$COLLECTOR_OUTPUT_DIR/pwck-etc-passwd.txt"
+        ;;
+esac

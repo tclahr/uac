@@ -1,0 +1,72 @@
+# Copyright (C) 2019,2020 IBM Corporation
+#
+# Licensed under the Apache License, Version 2.0 (the “License”);
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an “AS IS” BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+################################################################################
+# NAME
+#   usage - print the command line usage for the program
+# SYNOPSIS
+#   usage
+################################################################################
+usage() {
+    VERSION=`get_version`
+    logging I "UAC (Unix-like Artifacts Collector) v$VERSION\n"
+    logging I "Collects artifacts from Unix-like systems\n\n"
+    logging I "Usage: $0 COLLECTORS [-e EXTENSION_LIST] [-P PROFILE] [OPTIONS] [DESTINATION]\n"
+    logging I "\n"
+    logging I "COLLECTORS:\n"
+    logging I "    -a           Enable all collectors.\n"
+    logging I "    -p           Collect current process listing.\n"
+    logging I "    -n           Collect active network connections with related process information.\n"
+    logging I "    -u           Collect information about user accounts and login activities.\n"
+    logging I "    -y           Collect low level system information and kernel related details.\n"
+    logging I "    -w           Collect low level hardware information.\n"
+    logging I "    -s           Collect information about installed packages and software.\n"
+    logging I "    -d           Collect information about disk volumes and file systems.\n"
+    logging I "    -b           Extract information from files and directories using the stat tool to create a body file.\n"
+    logging I "    -l           Collect log files and directories.\n"
+    logging I "    -f           Collect system wide configuration files and directories.\n"
+    logging I "    -r           Collect current process listing with hash (MD5) values.\n"
+    logging I "\n"
+    logging I "EXTENSIONS:\n"
+    logging I "    -e EXTENSION_LIST\n"
+    logging I "                 Comma separated list of extensions.\n"
+    logging I "                 all: Enable all extensions.\n"
+    logging I "                 chkrootkit: Run chkrootkit tool.\n"
+    logging I "                 hash_exec: Hash executable files.\n"
+    logging I "\n"
+    logging I "PROFILES:\n"
+    logging I "    -P PROFILE   Force UAC to use a specific profile.\n"
+    logging I "                 aix: Use this to collect AIX artifacts.\n"
+    logging I "                 bsd: Use this to collect BSD (OpenBSD, FreeBSD, NetBSD...) artifacts.\n"
+    logging I "                 linux: Use this to collect Linux artifacts.\n"
+    logging I "                 macos: Use this to collect macOS artifacts.\n"
+    logging I "                 solaris: Use this to collect Solaris artifacts.\n"
+    logging I "\n"
+    logging I "OPTIONS:\n"
+    logging I "    -D           Increase debugging level.\n"
+    logging I "    -V           Increase verbosity level.\n"
+    logging I "    -U           Allow UAC to be run by a non-root user. Note that data collection will be limited.\n"
+    logging I "    -h           Print this help summary page.\n"
+    logging I "\n"
+    logging I "DESTINATION:\n"
+    logging I "    Specify the directory the output will be saved to.\n"
+    logging I "    The default is the current directory.\n"
+    logging I "\n"
+    logging I "EXAMPLES:\n"
+    logging I "    $0 -a\n"
+    logging I "    $0 -a -e all /tmp\n"
+    logging I "    $0 -e hash_exec,chkrootkit -P linux /mnt/share\n"
+    logging I "    $0 -p -w -l -P solaris -V /tmp\n"
+    logging I "\n"
+}

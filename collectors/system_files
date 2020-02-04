@@ -1,0 +1,30 @@
+# Copyright (C) 2019,2020 IBM Corporation
+#
+# Licensed under the Apache License, Version 2.0 (the “License”);
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an “AS IS” BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# system_files collector
+
+# process system files paths
+run_cmd "cat \"$CWD/conf/system_files.conf\" | grep -v \"^#\" | grep -v \"^$\" | grep \"^/\" | sed 's:^/:'\"$MOUNT_POINT\"'/:; s://*:/:g; s:/$::g' | while read line; do find \"\$line\" -type f ; done" "$COLLECTOR_OUTPUT_DIR/system_files.tmp"
+
+# process system files/directories names
+run_cmd "cat \"$CWD/conf/system_files.conf\" | grep -v \"^#\" | grep -v \"^$\" | grep -v \"^/\" | while read line; do find \"$MOUNT_POINT\" -name \"\$line\" -type f ; done" "$COLLECTOR_OUTPUT_DIR/system_files.tmp"
+
+# remove any UAC directories from the collection
+run_cmd "cat \"$COLLECTOR_OUTPUT_DIR/system_files.tmp\" | grep -v \"$CWD\" | grep -v \"$DESTINATION_DIR/$TMP_DATA_DIR\" > \"$COLLECTOR_OUTPUT_DIR/system_files.txt\""
+
+# remove temporary files
+run_cmd "rm -f \"$COLLECTOR_OUTPUT_DIR/system_files.tmp\""
+
+# compress data
+run_cmd "compress_data \"$COLLECTOR_OUTPUT_DIR/system_files.txt\" \"$COLLECTOR_OUTPUT_DIR/system_files.tar.$COMPRESS_EXT\" \"$UAC_LOG_FILE\""

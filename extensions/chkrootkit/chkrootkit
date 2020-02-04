@@ -1,0 +1,33 @@
+# Copyright (C) 2019,2020 IBM Corporation
+#
+# Licensed under the Apache License, Version 2.0 (the “License”);
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an “AS IS” BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# chkrootkit extension
+
+# check if chkrootkit binary file is available through bin directory
+logging D "Checking if chkrootkit binary file can be found at $CWD/extensions/chkrootkit/bin directory\n"
+if [ -x "$CWD/extensions/chkrootkit/bin/chkrootkit" ]; then
+    logging D "chkrootkit binary file was found at $CWD/extensions/chkrootkit/bin directory\n"
+    run_cmd "$CWD/extensions/chkrootkit/bin/chkrootkit -n -r \"$MOUNT_POINT\"" "$EXTENSION_OUTPUT_DIR/chkrootkit-n.txt"
+    run_cmd "$CWD/extensions/chkrootkit/bin/chkrootkit -x -r \"$MOUNT_POINT\"" "$EXTENSION_OUTPUT_DIR/chkrootkit-x.txt"
+else
+    logging D "chkrootkit binary file was not found at $CWD/extensions/chkrootkit/bin directory\n"
+    logging D "Checking if chkrootkit binary file can be found on the system path: $PATH\n"
+    if has_tool chkrootkit; then
+        logging D "chkrootkit binary file was found on the system\n"
+        run_cmd "chkrootkit -n -r \"$MOUNT_POINT\"" "$EXTENSION_OUTPUT_DIR/chkrootkit-n.txt"
+        run_cmd "chkrootkit -x -r \"$MOUNT_POINT\"" "$EXTENSION_OUTPUT_DIR/chkrootkit-x.txt"
+    else
+        logging D "chkrootkit binary file was not found on the system\n"
+    fi
+fi

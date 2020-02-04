@@ -1,0 +1,68 @@
+# Copyright (C) 2019,2020 IBM Corporation
+#
+# Licensed under the Apache License, Version 2.0 (the “License”);
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an “AS IS” BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# network collector
+
+run_cmd "arp -a" "$COLLECTOR_OUTPUT_DIR/arp-a.txt"
+run_cmd "hostname" "$COLLECTOR_OUTPUT_DIR/hostname.txt"
+run_cmd "ifconfig -a" "$COLLECTOR_OUTPUT_DIR/ifconfig-a.txt"
+run_cmd "lsof -n -P -l -i" "$COLLECTOR_OUTPUT_DIR/lsof-n-P-l-i.txt"
+run_cmd "netstat -a" "$COLLECTOR_OUTPUT_DIR/netstat-a.txt"
+run_cmd "netstat -a -n" "$COLLECTOR_OUTPUT_DIR/netstat-a-n.txt"
+run_cmd "netstat -i" "$COLLECTOR_OUTPUT_DIR/netstat-i.txt"
+run_cmd "netstat -r" "$COLLECTOR_OUTPUT_DIR/netstat-r.txt"
+run_cmd "netstat -r -n" "$COLLECTOR_OUTPUT_DIR/netstat-r-n.txt"
+run_cmd "nfsstat" "$COLLECTOR_OUTPUT_DIR/nfsstat.txt"
+run_cmd "showmount -a" "$COLLECTOR_OUTPUT_DIR/showmount-a.txt"
+
+case "$PROFILE" in
+    "aix")
+        run_cmd "lsdev -C -c tcpip" "$COLLECTOR_OUTPUT_DIR/lsdev-C-c-tcpip.txt"
+        run_cmd "lsdev -C -c udp" "$COLLECTOR_OUTPUT_DIR/lsdev-C-c-udp.txt"
+        run_cmd "netstat -a -n -p tcp" "$COLLECTOR_OUTPUT_DIR/netstat-a-n-p-tcp.txt"
+        run_cmd "netstat -a -n -p udp" "$COLLECTOR_OUTPUT_DIR/netstat-a-n-p-udp.txt"
+        run_cmd "netstat -v" "$COLLECTOR_OUTPUT_DIR/netstat-v.txt"
+        run_cmd "nfso -a" "$COLLECTOR_OUTPUT_DIR/nfso-a.txt"
+        ;;
+    "bsd")
+        run_cmd "ipfw list" "$COLLECTOR_OUTPUT_DIR/ipfw-list.txt"
+        run_cmd "pfctl -sa" "$COLLECTOR_OUTPUT_DIR/pfctl-sa.txt"
+        ;;
+    "linux")
+        run_cmd "hostname -f" "$COLLECTOR_OUTPUT_DIR/hostname-f.txt"
+        run_cmd "ip addr show" "$COLLECTOR_OUTPUT_DIR/ip-addr-show.txt"
+        run_cmd "ip link show" "$COLLECTOR_OUTPUT_DIR/ip-link-show.txt"
+        run_cmd "ip neighbor show" "$COLLECTOR_OUTPUT_DIR/ip-neighbor-show.txt"
+        run_cmd "ip route show" "$COLLECTOR_OUTPUT_DIR/ip-route-show.txt"
+        run_cmd "iptables -L -v -n" "$COLLECTOR_OUTPUT_DIR/iptables-L-v-n.txt"
+        run_cmd "iptables -t nat -L -v -n" "$COLLECTOR_OUTPUT_DIR/iptables-t-nat-L-v-n.txt"
+        run_cmd "netstat -a -n -p" "$COLLECTOR_OUTPUT_DIR/netstat-a-n-p.txt"
+        run_cmd "ss -a -n -p" "$COLLECTOR_OUTPUT_DIR/ss-a-n-p.txt"
+        run_cmd "ss -a -p" "$COLLECTOR_OUTPUT_DIR/ss-a-p.txt"
+        ;;
+    "macos")
+        run_cmd "hostname -f" "$COLLECTOR_OUTPUT_DIR/hostname-f.txt"
+        run_cmd "netstat -a -n -p tcp" "$COLLECTOR_OUTPUT_DIR/netstat-a-n-p-tcp.txt"
+        run_cmd "netstat -a -n -p udp" "$COLLECTOR_OUTPUT_DIR/netstat-a-n-p-udp.txt"
+        run_cmd "netstat -v" "$COLLECTOR_OUTPUT_DIR/netstat-v.txt"
+        run_cmd "nfso -a" "$COLLECTOR_OUTPUT_DIR/nfso-a.txt"
+        run_cmd "scutil --dns" "$COLLECTOR_OUTPUT_DIR/scutil-dns.txt"
+        ;;
+    "solaris")
+        run_cmd "inetadm" "$COLLECTOR_OUTPUT_DIR/inetadm.txt"
+        run_cmd "ipfstat" "$COLLECTOR_OUTPUT_DIR/ipfstat.txt"
+        run_cmd "ipfstat -i -o" "$COLLECTOR_OUTPUT_DIR/ipfstat-i-o.txt"
+        run_cmd "netstat -a -n -p" "$COLLECTOR_OUTPUT_DIR/netstat-a-n-p.txt"
+        ;;
+esac

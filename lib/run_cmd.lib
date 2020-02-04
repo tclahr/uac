@@ -1,0 +1,36 @@
+# Copyright (C) 2019,2020 IBM Corporation
+#
+# Licensed under the Apache License, Version 2.0 (the “License”);
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an “AS IS” BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+################################################################################
+# NAME
+#   run_cmd - run command
+# SYNOPSIS
+#   run_cmd COMMAND DESTINATION
+# OPTIONS
+#   COMMAND        command
+#   DESTINATION    file name where the command output will be stored at
+# RETURN VALUE
+#   Eval command exit status code
+################################################################################
+run_cmd() {
+    OUTPUT_DESTINATION="$2"
+    if [ ! "$OUTPUT_DESTINATION" ]; then
+        OUTPUT_DESTINATION="/dev/null"
+    fi
+    logging D "run_cmd: $1\n"
+    $VERBOSE && uprintf "   $ $1\n"
+    $DEBUG && set -x
+    eval "($1)" >> "$OUTPUT_DESTINATION" 2>> "$UAC_LOG_FILE"
+    $DEBUG && set +x
+}

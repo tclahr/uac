@@ -1,0 +1,344 @@
+#!/bin/sh
+
+# Copyright (C) 2019,2020 IBM Corporation
+#
+# Licensed under the Apache License, Version 2.0 (the “License”);
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an “AS IS” BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# set path
+PATH=/usr/xpg4/bin:/usr/xpg6/bin:/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:/usr/ucb:/usr/ccs/bin:/opt/bin:/opt/sbin:/opt/local/bin
+export PATH
+
+# set locale
+LC_ALL=C
+export LC_ALL
+
+# standards conformance for GNU utilities
+_POSIX2_VERSION=199209
+export _POSIX2_VERSION
+
+# remove all existing aliases
+unalias -a
+
+# get current working dir
+cd "`dirname "$0"`" && CWD=`pwd`
+export CWD
+
+# get current command
+CMD="$0 $@"
+
+# load lib files
+for file in "$CWD"/lib/*.lib; do
+    . "$file" > /dev/null
+done
+
+# load config file
+. "$CWD/conf/uac.conf" > /dev/null
+
+# set a default value for some variables
+init_vars
+
+# catch the signals
+trap terminate INT TERM
+
+SHIFT_OPT=""
+while getopts "apnuywsdblfre:P:VDUh" opt; do
+    case $opt in
+        # collectors
+        a)  COLLECTOR_PROCESS_LISTING=true
+            COLLECTOR_NETWORK=true
+            COLLECTOR_USER_ACCOUNTS=true
+            COLLECTOR_SYSTEM=true
+            COLLECTOR_HARDWARE=true
+            COLLECTOR_SOFTWARE=true
+            COLLECTOR_DISK_VOLUME_FILE_SYSTEM=true
+            COLLECTOR_BODY_FILE=true
+            COLLECTOR_LOGS=true
+            COLLECTOR_SYSTEM_FILES=true
+            COLLECTOR_HASH_RUNNING_PROCESSES=true
+            ANY_COLLECTOR_SELECTED=true
+            SHIFT_OPT="$SHIFT_OPT A"
+            ;;
+        p)  COLLECTOR_PROCESS_LISTING=true
+            ANY_COLLECTOR_SELECTED=true
+            SHIFT_OPT="$SHIFT_OPT p"
+            ;;
+        n)  COLLECTOR_NETWORK=true
+            ANY_COLLECTOR_SELECTED=true
+            SHIFT_OPT="$SHIFT_OPT n"
+            ;;
+        u)  COLLECTOR_USER_ACCOUNTS=true
+            ANY_COLLECTOR_SELECTED=true
+            SHIFT_OPT="$SHIFT_OPT u"
+            ;;
+        y)  COLLECTOR_SYSTEM=true
+            ANY_COLLECTOR_SELECTED=true
+            SHIFT_OPT="$SHIFT_OPT y"
+            ;;
+        w)  COLLECTOR_HARDWARE=true
+            ANY_COLLECTOR_SELECTED=true
+            SHIFT_OPT="$SHIFT_OPT w"
+            ;;
+        s)  COLLECTOR_SOFTWARE=true
+            ANY_COLLECTOR_SELECTED=true
+            SHIFT_OPT="$SHIFT_OPT s"
+            ;;
+        d)  COLLECTOR_DISK_VOLUME_FILE_SYSTEM=true
+            ANY_COLLECTOR_SELECTED=true
+            SHIFT_OPT="$SHIFT_OPT d"
+            ;;
+        b)  COLLECTOR_BODY_FILE=true
+            ANY_COLLECTOR_SELECTED=true
+            SHIFT_OPT="$SHIFT_OPT b"
+            ;;
+        l)  COLLECTOR_LOGS=true
+            ANY_COLLECTOR_SELECTED=true
+            SHIFT_OPT="$SHIFT_OPT l"
+            ;;
+        f)  COLLECTOR_SYSTEM_FILES=true
+            ANY_COLLECTOR_SELECTED=true
+            SHIFT_OPT="$SHIFT_OPT f"
+            ;;
+        r)  COLLECTOR_HASH_RUNNING_PROCESSES=true
+            ANY_COLLECTOR_SELECTED=true
+            SHIFT_OPT="$SHIFT_OPT r"
+            ;;
+        # extensions
+        e)  for EXTENSION in `echo "$OPTARG" | sed 's:,: :g'`; do
+                case "$EXTENSION" in
+                    "all")
+                        EXTENSION_CHKROOTKIT=true
+                        EXTENSION_HASH_EXEC=true
+                        ;;
+                    "chkrootkit")
+                        EXTENSION_CHKROOTKIT=true
+                        ;;
+                    "hash_exec")
+                        EXTENSION_HASH_EXEC=true
+                        ;;
+                    *)  uprintf "Invalid extension $EXTENSION\n"
+                        exit 7
+                        ;;
+                esac
+            done
+            ANY_EXTENSION_SELECTED=true
+            SHIFT_OPT="$SHIFT_OPT e $OPTARG"
+            ;;
+        # options
+        P)  PROFILE="$OPTARG"
+            if [ "$PROFILE" != "aix" ] && [ "$PROFILE" != "bsd" ] && [ "$PROFILE" != "linux" ] && [ "$PROFILE" != "macos" ] && [ "$PROFILE" != "solaris" ]; then
+                uprintf "Invalid profile $PROFILE\n"
+                exit 8
+            fi
+            SHIFT_OPT="$SHIFT_OPT t $PROFILE"
+            ;;
+        V)  VERBOSE=true
+            SHIFT_OPT="$SHIFT_OPT V"
+            ;;
+        D)  DEBUG=true
+            SHIFT_OPT="$SHIFT_OPT D"
+            ;;
+        U)  RUN_AS_NON_ROOT=true
+            SHIFT_OPT="$SHIFT_OPT U"
+            ;;
+        h)  usage
+            exit 0
+            ;;
+        ?)  exit 1
+            ;;
+    esac
+done
+for SHIFT in $SHIFT_OPT; do shift; done
+
+if [ "$ANY_COLLECTOR_SELECTED" = true ] || [ "$ANY_EXTENSION_SELECTED" = true ]; then
+    if [ ! "$PROFILE" ]; then
+        PROFILE=`get_profile`
+    fi
+    if [ "$PROFILE" = "aix" ] || [ "$PROFILE" = "bsd" ] || [ "$PROFILE" = "linux" ] || [ "$PROFILE" = "macos" ] || [ "$PROFILE" = "solaris" ]; then
+        if is_running_as_root || [ "$RUN_AS_NON_ROOT" = true ]; then
+
+            # the current directory will be used as the destination directory if none was provided by the user
+            if [ "$1" ]; then
+                # get the absolute path for the destination directory
+                cd "$1" && DESTINATION_DIR=`pwd` && cd "$CWD"
+            else
+                # set the current diretory as the destination directory
+                DESTINATION_DIR="$CWD"
+            fi
+
+            # check if the destination directory exists
+            if [ -d "$DESTINATION_DIR" ]; then
+
+                MOUNT_POINT=`sanitize_path "$MOUNT_POINT"`
+                if [ -d "$MOUNT_POINT" ]; then
+
+                    CURRENT_DATE_TIME=`get_date "+%Y%m%d%H%M%S"`
+                    TIME_ZONE=`get_date "+%z"`
+
+                    if [ "$MOUNT_POINT" = "/" ]; then
+                        LIVE_COLLECTION=true
+                        HOSTNAME=`hostname`
+                        KERNEL_NAME=`uname -s`
+                        MACHINE_ARCH=`get_machine_arch`
+                        # create a tmp dir to store all collected data
+                        TMP_DATA_DIR="uac-$HOSTNAME-$PROFILE-$CURRENT_DATE_TIME"
+                    else
+                        LIVE_COLLECTION=false
+                        # create a tmp dir to store all collected data
+                        TMP_DATA_DIR="uac-mounted_image-$PROFILE-$CURRENT_DATE_TIME"
+                    fi
+
+                    mkdir "$DESTINATION_DIR/$TMP_DATA_DIR" > /dev/null
+                    if [ -d "$DESTINATION_DIR/$TMP_DATA_DIR" ]; then
+
+                        # uac log file
+                        UAC_LOG_FILE="$DESTINATION_DIR/$TMP_DATA_DIR/uac.log"
+
+                        VERSION=`get_version`
+                        logging I "--------------------------------------------------------------------------------\n"
+                        logging I "  __   __ _______ _______ \n"
+                        logging I " |: | |  |:  _   |:  ____|\n"
+                        logging I " |  |_|  |  |_|  |  |____ \n"
+                        logging I " |_______|__| |__|_______|\n"
+                        logging I "\n"
+                        logging I "UAC (Unix-like Artifacts Collector) v$VERSION\n"
+                        logging I "--------------------------------------------------------------------------------\n"
+                        $VERBOSE && logging I "Command Line: $CMD\n" || logging D "Command Line: $CMD\n"
+                        logging I "Destination: $DESTINATION_DIR/$TMP_DATA_DIR\n"
+                        $LIVE_COLLECTION && logging I "Kernel Name (Arch): $KERNEL_NAME ($MACHINE_ARCH)\n"
+                        logging I "Profile: $PROFILE\n"
+                        $LIVE_COLLECTION && logging I "Hostname: $HOSTNAME\n"
+                        logging I "Mount Point: $MOUNT_POINT\n"
+                        logging I "Current User: $USER\n"
+                        logging I "--------------------------------------------------------------------------------\n"
+                        logging I "Some collectors may take several minutes to finish, so please wait!\n"
+                        logging I "Press Ctrl+C any time to cancel the script.\n"
+                        logging I "--------------------------------------------------------------------------------\n"
+                        $LIVE_COLLECTION || logging I "UAC is being run against a forensic image mounted at $MOUNT_POINT\n"
+                        $LIVE_COLLECTION || logging I "Live/volatile data collectors will be disabled automatically.\n"
+                        $LIVE_COLLECTION || logging I "--------------------------------------------------------------------------------\n"
+
+                        UAC_START_EPOCH=`get_epoch`
+                        logging D "UAC_START_EPOCH: $UAC_START_EPOCH\n"
+
+                        COMPRESS_TOOL="compress"
+                        COMPRESS_EXT="Z"
+                        if has_tool gzip; then
+                            COMPRESS_TOOL="gzip"
+                            COMPRESS_EXT="gz"
+                        fi
+                        logging D "COMPRESS_TOOL: $COMPRESS_TOOL\n"
+                        logging D "COMPRESS_EXT: $COMPRESS_EXT\n"
+
+                        # make a backup of the configuration files used during the collection
+                        logging D "Copying conf directory from $CWD/conf to $DESTINATION_DIR/$TMP_DATA_DIR/conf\n"
+                        cp -r "$CWD/conf" "$DESTINATION_DIR/$TMP_DATA_DIR/conf" 2>> "$UAC_LOG_FILE"
+
+                        # collectors
+                        # run process_listing collector
+                        $COLLECTOR_PROCESS_LISTING && $LIVE_COLLECTION && run_collector process_listing 2>> "$UAC_LOG_FILE"
+
+                        # run network collector
+                        $COLLECTOR_NETWORK && $LIVE_COLLECTION && run_collector network 2>> "$UAC_LOG_FILE"
+
+                        # run user_accounts collector
+                        $COLLECTOR_USER_ACCOUNTS && $LIVE_COLLECTION && run_collector user_accounts 2>> "$UAC_LOG_FILE"
+
+                        # run system collector
+                        $COLLECTOR_SYSTEM && $LIVE_COLLECTION && run_collector system 2>> "$UAC_LOG_FILE"
+
+                        # run hardware collector
+                        $COLLECTOR_HARDWARE && $LIVE_COLLECTION && run_collector hardware 2>> "$UAC_LOG_FILE"
+
+                        # run software collector
+                        $COLLECTOR_SOFTWARE && $LIVE_COLLECTION && run_collector software 2>> "$UAC_LOG_FILE"
+
+                        # run disk_volume_file_system collector
+                        $COLLECTOR_DISK_VOLUME_FILE_SYSTEM && $LIVE_COLLECTION && run_collector disk_volume_file_system 2>> "$UAC_LOG_FILE"
+
+                        # run body_file collector
+                        $COLLECTOR_BODY_FILE && $LIVE_COLLECTION && run_collector body_file 2>> "$UAC_LOG_FILE"
+
+                        # run logs collector
+                        $COLLECTOR_LOGS && $LIVE_COLLECTION && run_collector logs 2>> "$UAC_LOG_FILE"
+
+                        # run system_files collector
+                        $COLLECTOR_SYSTEM_FILES && $LIVE_COLLECTION && run_collector system_files 2>> "$UAC_LOG_FILE"
+
+                        # run hash_running_processes collector
+                        $COLLECTOR_HASH_RUNNING_PROCESSES && $LIVE_COLLECTION && run_collector hash_running_processes 2>> "$UAC_LOG_FILE"
+
+                        # extensions
+                        # run chkrootkit extension
+                        $EXTENSION_CHKROOTKIT && run_extension chkrootkit 2>> "$UAC_LOG_FILE"
+
+                        # run hash_exec extension
+                        $EXTENSION_HASH_EXEC && run_extension hash_exec 2>> "$UAC_LOG_FILE"
+
+                        logging I "--------------------------------------------------------------------------------\n"
+                        UAC_END_EPOCH=`get_epoch`
+                        logging D "UAC_END_EPOCH: $UAC_END_EPOCH\n"
+                        UAC_TOTAL_RUNNING_TIME=`expr $UAC_END_EPOCH - $UAC_START_EPOCH`
+                        logging I "Data collection finished! Total running time: $UAC_TOTAL_RUNNING_TIME seconds.\n"
+
+                        uprintf "Creating compressed output file. Please wait...\n"
+                        COMPRESSED_OUTPUT_FILE="$TMP_DATA_DIR.tar.$COMPRESS_EXT"
+                        cd "$DESTINATION_DIR"
+                        if compress_data "$TMP_DATA_DIR" "$COMPRESSED_OUTPUT_FILE"; then
+                            uprintf "Compressed output file created at $DESTINATION_DIR/$COMPRESSED_OUTPUT_FILE\n"
+
+                            uprintf "Computing MD5 hash. Please wait...\n"
+                            `get_md5sum_bin` "$COMPRESSED_OUTPUT_FILE" > "$COMPRESSED_OUTPUT_FILE.md5"
+                            if [ ! -z "$COMPRESSED_OUTPUT_FILE.md5" ]; then
+                                uprintf "MD5 hash output file created at $DESTINATION_DIR/$COMPRESSED_OUTPUT_FILE.md5\n"
+                            else
+                                uprintf "Cannot compute MD5 hash for $DESTINATION_DIR/$COMPRESSED_OUTPUT_FILE\n"
+                                rm "$COMPRESSED_OUTPUT_FILE.MD5"
+                            fi
+
+                            rm -rf "$TMP_DATA_DIR" > /dev/null 2> /dev/null
+                            if [ -d "$TMP_DATA_DIR" ]; then
+                                uprintf "Cannot remove temporary directory at $DESTINATION_DIR/$TMP_DATA_DIR\n"
+                            fi
+
+                        else
+                            uprintf "Cannot create compressed file.\n"
+                            uprintf "Please check the output directory at $DESTINATION_DIR/$TMP_DATA_DIR\n"
+                        fi
+                        cd "$CWD"
+
+                    else
+                        uprintf "Cannot create temporary directory $DESTINATION_DIR/$TMP_DATA_DIR\n"
+                        exit 6
+                    fi
+                else
+                    uprintf "Invalid mount point $MOUNT_POINT\n"
+                    exit 5
+                fi
+            else
+                uprintf "Destination directory $1 does not exists\n"
+                exit 4
+            fi
+        else
+            uprintf "This script requires root privileges to run properly\n"
+            exit 3
+        fi
+    else
+        uprintf "Unsupported profile $PROFILE. Please use -P to force one of the supported profiles.\n"
+        exit 2
+    fi
+else
+    usage
+    exit 1
+fi
+
+exit 0
