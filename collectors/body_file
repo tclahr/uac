@@ -25,10 +25,18 @@ case "$PROFILE" in
         run_cmd "perl \"$CWD/tools/find/find.pl\" $FIND_MAXDEPTH_PARAMETER \"$MOUNT_POINT\" | while read line; do perl \"$CWD/tools/stat/stat.pl\" \"\$line\"; done" "$COLLECTOR_OUTPUT_DIR/body_file.txt"
         ;;
     "bsd")
-        run_cmd "find \"$MOUNT_POINT\" $FIND_MAXDEPTH_PARAMETER -exec stat -f \"0|%N|%i|%Sp|%u|%g|%z|%a|%m|%c|%B\" \"{}\" \\;" "$COLLECTOR_OUTPUT_DIR/body_file.txt"
+        if has_tool stat; then
+            run_cmd "find \"$MOUNT_POINT\" $FIND_MAXDEPTH_PARAMETER -exec stat -f \"0|%N|%i|%Sp|%u|%g|%z|%a|%m|%c|%B\" \"{}\" \\;" "$COLLECTOR_OUTPUT_DIR/body_file.txt"
+        else
+            run_cmd "find \"$MOUNT_POINT\" $FIND_MAXDEPTH_PARAMETER -exec perl \"$CWD/tools/stat/stat.pl\" \"{}\" \\;" "$COLLECTOR_OUTPUT_DIR/body_file.txt"
+        fi
         ;;
     "linux")
-        run_cmd "find \"$MOUNT_POINT\" $FIND_MAXDEPTH_PARAMETER -exec stat -c \"0|%n|%i|%A|%u|%g|%s|%X|%Y|%Z|%W\" \"{}\" \\;" "$COLLECTOR_OUTPUT_DIR/body_file.txt"
+        if has_tool stat; then
+            run_cmd "find \"$MOUNT_POINT\" $FIND_MAXDEPTH_PARAMETER -exec stat -c \"0|%n|%i|%A|%u|%g|%s|%X|%Y|%Z|%W\" \"{}\" \\;" "$COLLECTOR_OUTPUT_DIR/body_file.txt"
+        else
+            run_cmd "find \"$MOUNT_POINT\" $FIND_MAXDEPTH_PARAMETER -exec perl \"$CWD/tools/stat/stat.pl\" \"{}\" \\;" "$COLLECTOR_OUTPUT_DIR/body_file.txt"
+        fi
         ;;
     "macos")
         run_cmd "find \"$MOUNT_POINT\" $FIND_MAXDEPTH_PARAMETER -exec stat -f \"0|%N|%i|%Sp|%u|%g|%z|%a|%m|%c|%B\" \"{}\" \\;" "$COLLECTOR_OUTPUT_DIR/body_file.txt"

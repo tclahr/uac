@@ -15,7 +15,7 @@
 # limitations under the License.
 
 # set path
-PATH=/usr/xpg4/bin:/usr/xpg6/bin:/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:/usr/ucb:/usr/ccs/bin:/opt/bin:/opt/sbin:/opt/local/bin
+PATH=/usr/xpg4/bin:/usr/xpg6/bin:/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:/usr/ucb:/usr/ccs/bin:/opt/bin:/opt/sbin:/opt/local/bin:/netscaler
 export PATH
 
 # set locale
