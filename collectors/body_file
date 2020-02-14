@@ -14,13 +14,14 @@
 
 # body_file collector
 
-FIND_MAXDEPTH_PARAMETER="-maxdepth $BODY_FILE_MAX_DEPTH"
-# disable find's -maxdepth parameter if BODY_FILE_MAX_DEPTH=0
-if [ "$BODY_FILE_MAX_DEPTH" -eq "0" ]; then
-    FIND_MAXDEPTH_PARAMETER=""
-fi
-
 if has_tool stat || has_tool perl; then
+    
+    FIND_MAXDEPTH_PARAMETER="-maxdepth $BODY_FILE_MAX_DEPTH"
+    # disable find's -maxdepth parameter if BODY_FILE_MAX_DEPTH=0
+    if [ "$BODY_FILE_MAX_DEPTH" -eq "0" ]; then
+        FIND_MAXDEPTH_PARAMETER=""
+    fi
+
     case "$PROFILE" in
         "aix")
             run_cmd "perl \"$CWD/tools/find/find.pl\" $FIND_MAXDEPTH_PARAMETER \"$MOUNT_POINT\" | while read line; do perl \"$CWD/tools/stat/stat.pl\" \"\$line\"; done" "$COLLECTOR_OUTPUT_DIR/body_file.txt"
