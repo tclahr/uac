@@ -90,8 +90,6 @@ The ```find``` command line tool will be used to search for files and directorie
 ## Usage
 ```
 UAC (Unix-like Artifacts Collector)
-Collects artifacts from Unix-like systems
-
 Usage: ./uac COLLECTORS [-e EXTENSION_LIST] [-P PROFILE] [OPTIONS] [DESTINATION]
 
 COLLECTORS:
