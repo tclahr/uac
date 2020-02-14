@@ -28,10 +28,14 @@ if [ "$HASH_EXEC_MAX_FILE_SIZE" -eq "0" ]; then
     FIND_SIZE_PARAMETER=""
 fi
 
-case "$PROFILE" in
-    "aix"     ) run_cmd "perl \"$CWD/tools/find/find.pl\" $FIND_MAXDEPTH_PARAMETER $FIND_SIZE_PARAMETER \"$MOUNT_POINT\" | while read line; do file \"\$line\" | egrep -q \"(ELF|MZ|executable|PE32|shared object|script)\" && $MD5SUM_BIN \"\$line\"; done" "$EXTENSION_OUTPUT_DIR/hash_exec.txt" ;;
-    "bsd"     ) run_cmd "find \"$MOUNT_POINT\" $FIND_MAXDEPTH_PARAMETER -type f $FIND_SIZE_PARAMETER | while read line; do file \"\$line\" | egrep -q \"(ELF|MZ|executable|PE32|shared object|script)\" && $MD5SUM_BIN \"\$line\"; done" "$EXTENSION_OUTPUT_DIR/hash_exec.txt" ;;
-    "linux"   ) run_cmd "find \"$MOUNT_POINT\" $FIND_MAXDEPTH_PARAMETER -type f $FIND_SIZE_PARAMETER | while read line; do file \"\$line\" | egrep -q \"(ELF|MZ|executable|PE32|shared object|script)\" && $MD5SUM_BIN \"\$line\"; done" "$EXTENSION_OUTPUT_DIR/hash_exec.txt" ;;
-    "macos"   ) run_cmd "find \"$MOUNT_POINT\" $FIND_MAXDEPTH_PARAMETER -type f $FIND_SIZE_PARAMETER | while read line; do file \"\$line\" | egrep -q \"(ELF|MZ|executable|PE32|shared object|script)\" && $MD5SUM_BIN \"\$line\"; done" "$EXTENSION_OUTPUT_DIR/hash_exec.txt" ;;
-    "solaris" ) run_cmd "perl \"$CWD/tools/find/find.pl\" $FIND_MAXDEPTH_PARAMETER $FIND_SIZE_PARAMETER \"$MOUNT_POINT\" | while read line; do file \"\$line\" | egrep -q \"(ELF|MZ|executable|PE32|shared object|script)\" && $MD5SUM_BIN \"\$line\"; done" "$EXTENSION_OUTPUT_DIR/hash_exec.txt" ;;
-esac
+if has_tool file; then
+    case "$PROFILE" in
+        "aix"     ) run_cmd "perl \"$CWD/tools/find/find.pl\" $FIND_MAXDEPTH_PARAMETER $FIND_SIZE_PARAMETER \"$MOUNT_POINT\" | while read line; do file \"\$line\" | egrep -q \"(ELF|MZ|executable|PE32|shared object|script)\" && $MD5SUM_BIN \"\$line\"; done" "$EXTENSION_OUTPUT_DIR/hash_exec.txt" ;;
+        "bsd"     ) run_cmd "find \"$MOUNT_POINT\" $FIND_MAXDEPTH_PARAMETER -type f $FIND_SIZE_PARAMETER | while read line; do file \"\$line\" | egrep -q \"(ELF|MZ|executable|PE32|shared object|script)\" && $MD5SUM_BIN \"\$line\"; done" "$EXTENSION_OUTPUT_DIR/hash_exec.txt" ;;
+        "linux"   ) run_cmd "find \"$MOUNT_POINT\" $FIND_MAXDEPTH_PARAMETER -type f $FIND_SIZE_PARAMETER | while read line; do file \"\$line\" | egrep -q \"(ELF|MZ|executable|PE32|shared object|script)\" && $MD5SUM_BIN \"\$line\"; done" "$EXTENSION_OUTPUT_DIR/hash_exec.txt" ;;
+        "macos"   ) run_cmd "find \"$MOUNT_POINT\" $FIND_MAXDEPTH_PARAMETER -type f $FIND_SIZE_PARAMETER | while read line; do file \"\$line\" | egrep -q \"(ELF|MZ|executable|PE32|shared object|script)\" && $MD5SUM_BIN \"\$line\"; done" "$EXTENSION_OUTPUT_DIR/hash_exec.txt" ;;
+        "solaris" ) run_cmd "perl \"$CWD/tools/find/find.pl\" $FIND_MAXDEPTH_PARAMETER $FIND_SIZE_PARAMETER \"$MOUNT_POINT\" | while read line; do file \"\$line\" | egrep -q \"(ELF|MZ|executable|PE32|shared object|script)\" && $MD5SUM_BIN \"\$line\"; done" "$EXTENSION_OUTPUT_DIR/hash_exec.txt" ;;
+    esac
+else
+    logging D "Cannot run hash_exec extension. file command not found.\n"
+fi
