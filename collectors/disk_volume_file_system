@@ -23,6 +23,7 @@ run_cmd "zpool status -v" "$COLLECTOR_OUTPUT_DIR/zpool-status-v.txt"
 
 case "$PROFILE" in
     "aix")
+        run_cmd "iostat" "$COLLECTOR_OUTPUT_DIR/iostat.txt"
         run_cmd "lsfs" "$COLLECTOR_OUTPUT_DIR/lsfs.txt"
         run_cmd "lspv" "$COLLECTOR_OUTPUT_DIR/lspv.txt"
         run_cmd "lsvg" "$COLLECTOR_OUTPUT_DIR/lsvg.txt"
@@ -32,6 +33,7 @@ case "$PROFILE" in
         run_cmd "df -h" "$COLLECTOR_OUTPUT_DIR/df-h.txt"
         run_cmd "geom disk list" "$COLLECTOR_OUTPUT_DIR/geom-disk-list.txt"
         run_cmd "geom -t" "$COLLECTOR_OUTPUT_DIR/geom-t.txt"
+        run_cmd "iostat" "$COLLECTOR_OUTPUT_DIR/iostat.txt"
         ;;
     "linux")
         run_cmd "df -h" "$COLLECTOR_OUTPUT_DIR/df-h.txt"
@@ -55,6 +57,7 @@ case "$PROFILE" in
     "solaris")
         run_cmd "df -h" "$COLLECTOR_OUTPUT_DIR/df-h.txt"
         run_cmd "echo | format" "$COLLECTOR_OUTPUT_DIR/format.txt"
+        run_cmd "iostat" "$COLLECTOR_OUTPUT_DIR/iostat.txt"
         run_cmd "iostat -E -n" "$COLLECTOR_OUTPUT_DIR/iostat-E-n.txt"
         ;;
 esac
