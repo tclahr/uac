@@ -14,20 +14,9 @@
 
 # chkrootkit extension
 
-# check if chkrootkit binary file is available through bin directory
-logging D "Checking if chkrootkit binary file can be found at $CWD/extensions/chkrootkit/bin directory\n"
-if [ -x "$CWD/extensions/chkrootkit/bin/chkrootkit" ]; then
-    logging D "chkrootkit binary file was found at $CWD/extensions/chkrootkit/bin directory\n"
-    run_cmd "$CWD/extensions/chkrootkit/bin/chkrootkit -n -r \"$MOUNT_POINT\"" "$EXTENSION_OUTPUT_DIR/chkrootkit-n.txt"
-    run_cmd "$CWD/extensions/chkrootkit/bin/chkrootkit -x -r \"$MOUNT_POINT\"" "$EXTENSION_OUTPUT_DIR/chkrootkit-x.txt"
+if has_tool chkrootkit; then
+    run_cmd "chkrootkit -n -r \"$MOUNT_POINT\"" "$EXTENSION_OUTPUT_DIR/chkrootkit-n.txt"
+    run_cmd "chkrootkit -x -r \"$MOUNT_POINT\"" "$EXTENSION_OUTPUT_DIR/chkrootkit-x.txt"
 else
-    logging D "chkrootkit binary file was not found at $CWD/extensions/chkrootkit/bin directory\n"
-    logging D "Checking if chkrootkit binary file can be found on the system path: $PATH\n"
-    if has_tool chkrootkit; then
-        logging D "chkrootkit binary file was found on the system\n"
-        run_cmd "chkrootkit -n -r \"$MOUNT_POINT\"" "$EXTENSION_OUTPUT_DIR/chkrootkit-n.txt"
-        run_cmd "chkrootkit -x -r \"$MOUNT_POINT\"" "$EXTENSION_OUTPUT_DIR/chkrootkit-x.txt"
-    else
-        logging D "chkrootkit binary file was not found on the system\n"
-    fi
+    logging D "chkrootkit was not found on the system PATH\n"
 fi
