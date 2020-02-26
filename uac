@@ -227,6 +227,18 @@ if [ "$ANY_COLLECTOR_SELECTED" = true ] || [ "$ANY_EXTENSION_SELECTED" = true ];
                         $LIVE_COLLECTION || logging I "Live/volatile data collectors will be disabled automatically.\n"
                         $LIVE_COLLECTION || logging I "--------------------------------------------------------------------------------\n"
 
+                        if [ "$LIVE_COLLECTION" = true ]; then
+                            # add validated tools (binary files) directory to the system PATH
+                            if [ -d "$CWD/bin/$KERNEL_NAME/$MACHINE_ARCH" ]; then
+                                logging D "Validated tools directory found at $CWD/bin/$KERNEL_NAME/$MACHINE_ARCH\n"
+                                run_cmd "ls \"$CWD/bin/$KERNEL_NAME/$MACHINE_ARCH\"" "$UAC_LOG_FILE"
+                                PATH="$CWD/bin/$KERNEL_NAME/$MACHINE_ARCH:$PATH"
+                                export PATH
+                            fi
+                        fi
+
+                        logging D "PATH: $PATH\n"
+
                         UAC_START_EPOCH=`get_epoch`
                         logging D "UAC_START_EPOCH: $UAC_START_EPOCH\n"
 
@@ -240,8 +252,7 @@ if [ "$ANY_COLLECTOR_SELECTED" = true ] || [ "$ANY_EXTENSION_SELECTED" = true ];
                         logging D "COMPRESS_EXT: $COMPRESS_EXT\n"
 
                         # make a backup of the configuration files used during the collection
-                        logging D "Copying conf directory from $CWD/conf to $DESTINATION_DIR/$TMP_DATA_DIR/conf\n"
-                        cp -r "$CWD/conf" "$DESTINATION_DIR/$TMP_DATA_DIR/conf" 2>> "$UAC_LOG_FILE"
+                        run_cmd "cp -r \"$CWD/conf\" \"$DESTINATION_DIR/$TMP_DATA_DIR/conf\""
 
                         # collectors
                         # run process_listing collector
