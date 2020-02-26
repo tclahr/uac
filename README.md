@@ -6,6 +6,8 @@ UAC is a command line shell script that makes use of built-in tools to automate 
 
 UAC was created for Incident Responders, Forensic Analysts, Auditors and System Administrators to facilitate and speed up data collection, and depend less on remote support.
 
+You can use your own validated tools during artifacts collection. They will be used instead of the built-in ones provided by the target system. Please refer to ```bin/README.txt``` for more information.
+
 ## Contributing to the project
 We welcome contributions to the uac Project in many forms. There's always plenty to do! Full details of how to contribute to this project are documented in the [CONTRIBUTING.md](CONTRIBUTING.md) file.
 
@@ -50,7 +52,7 @@ Collect current process listing with hash (MD5) values.
 
 ### chkrootkit
 Run [chkrootkit](http://www.chkrootkit.org) tool (if available).
-Note that chrootkit is not provided by UAC. You need to either install it on the target system or download and compile it, and then copy the binary file to ```extensions/chkrootkit/bin``` directory.
+Note that chrootkit is not provided by UAC. You need to either install it on the target system or download and compile it, and then copy the binary file to ```bin``` directory. Please refer to ```bin/README.txt``` for more information.
 
 ### hash_exec
 Collect MD5 hashes for all executable files. By default, only files smaller than 3072000 bytes (3MB) will be hashed. Please take a look on the ```extensions/hash_exec/hash_exec.conf``` file more details.
