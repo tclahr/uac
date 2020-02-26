@@ -20,8 +20,21 @@ All notable changes to this project will be documented in this file.
     - vmstat
   - disk_volume_file_system
     - iostat
+- logs.conf
+  - .login
+  - .*_login
+  - .logout
+  - .zlogin
+  - .zlogout
 - system_files.conf
-  - /var/spool added
+  - /var/spool
+  - .cshdirs
+  - .cshrc
+  - .kshrc
+  - .tcshrc
+  - .zprofile
+  - .zshenv
+  - .zshrc
 
 ### Changed
 - aix collectors
@@ -33,7 +46,7 @@ All notable changes to this project will be documented in this file.
 
 ### Removed
 - system_files.conf
-  - /var/spool/cron removed
+  - /var/spool/cron
 
 ### Fixed
 - body_file collector will only run if either ```stat``` or ```perl``` is available on the system.
