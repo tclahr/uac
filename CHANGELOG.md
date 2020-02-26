@@ -24,6 +24,7 @@ All notable changes to this project will be documented in this file.
   - .login
   - .*_login
   - .logout
+  - .zhistory
   - .zlogin
   - .zlogout
 - system_files.conf
