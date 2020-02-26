@@ -29,6 +29,8 @@ All notable changes to this project will be documented in this file.
   - .zlogout
 - system_files.conf
   - /var/spool
+  - *.sessions
+  - .*_sessions
   - .cshdirs
   - .cshrc
   - .kshrc
@@ -46,6 +48,9 @@ All notable changes to this project will be documented in this file.
   - ```chkrootkit``` binary file must be placed in the main ```bin``` directory now. Please refer to ```bin/README.txt``` for more information.
 
 ### Removed
+- logs.conf
+  - .*_session
+  - *.session
 - system_files.conf
   - /var/spool/cron
 
