@@ -117,11 +117,11 @@ EXTENSIONS:
 
 PROFILES:
     -P PROFILE   Force UAC to use a specific profile.
-                 aix: Use this to collect AIX artifacts.
-                 bsd: Use this to collect BSD (OpenBSD, FreeBSD, NetBSD...) artifacts.
-                 linux: Use this to collect Linux artifacts.
-                 macos: Use this to collect macOS artifacts.
-                 solaris: Use this to collect Solaris artifacts.
+                 aix: Use this one to collect AIX artifacts.
+                 bsd: Use this one to collect BSD (OpenBSD, FreeBSD, NetBSD...) artifacts.
+                 linux: Use this one to collect Linux artifacts.
+                 macos: Use this one to collect macOS artifacts.
+                 solaris: Use this one to collect Solaris artifacts.
 
 OPTIONS:
     -D           Increase debugging level.
