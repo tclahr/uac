@@ -14,15 +14,15 @@
 
 ################################################################################
 # NAME
-#   has_tool - check if the running system has a tool available
+#   has_tool - check if tool is available on the running system
 # SYNOPSIS
-#   has_bin TOOL_BIN
+#   has_tool NAME
 # RETURN VALUE
 #   true
 #   false
 ################################################################################
 has_tool() {
-    type "$1" > /dev/null 2> /dev/null
+    which "$1" > /dev/null 2> /dev/null
     if [ $? -eq 0 ]; then
         return
     fi
