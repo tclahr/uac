@@ -241,9 +241,6 @@ if [ "$ANY_COLLECTOR_SELECTED" = true ] || [ "$ANY_EXTENSION_SELECTED" = true ];
 
                         logging D "PATH: $PATH\n"
 
-                        UAC_START_EPOCH=`get_epoch`
-                        logging D "UAC_START_EPOCH: $UAC_START_EPOCH\n"
-
                         COMPRESS_TOOL="compress"
                         COMPRESS_EXT="Z"
                         if has_tool gzip; then
@@ -255,6 +252,9 @@ if [ "$ANY_COLLECTOR_SELECTED" = true ] || [ "$ANY_EXTENSION_SELECTED" = true ];
 
                         # make a backup of the configuration files used during the collection
                         run_cmd "cp -r \"$CWD/conf\" \"$DESTINATION_DIR/$TMP_DATA_DIR/conf\""
+
+                        UAC_START_EPOCH=`get_epoch`
+                        logging D "Collection started: `get_date "+%a %b %d %H:%M:%S %Y %z"`\n"
 
                         # collectors
                         # run process_listing collector
@@ -296,13 +296,14 @@ if [ "$ANY_COLLECTOR_SELECTED" = true ] || [ "$ANY_EXTENSION_SELECTED" = true ];
 
                         # run hash_exec extension
                         $EXTENSION_HASH_EXEC && run_extension hash_exec 2>> "$UAC_LOG_FILE"
-
+                        
                         logging I "--------------------------------------------------------------------------------\n"
                         UAC_END_EPOCH=`get_epoch`
-                        logging D "UAC_END_EPOCH: $UAC_END_EPOCH\n"
                         UAC_TOTAL_RUNNING_TIME=`expr $UAC_END_EPOCH - $UAC_START_EPOCH`
-                        logging I "Data collection finished! Total running time: $UAC_TOTAL_RUNNING_TIME seconds.\n"
+                        logging D "Collection finished: `get_date "+%a %b %d %H:%M:%S %Y %z"`\n"
+                        logging D "Total running time: $UAC_TOTAL_RUNNING_TIME seconds.\n"
 
+                        uprintf "Collection finished! Total running time: $UAC_TOTAL_RUNNING_TIME seconds.\n"
                         uprintf "Creating compressed output file. Please wait...\n"
                         COMPRESSED_OUTPUT_FILE="$TMP_DATA_DIR.tar.$COMPRESS_EXT"
                         cd "$DESTINATION_DIR"
