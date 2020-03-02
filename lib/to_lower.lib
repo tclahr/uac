@@ -21,5 +21,6 @@
 #   the lowercase equivalent to STRING
 ################################################################################
 to_lower() {
-    printf %s "$1" | tr '[A-Z]' '[a-z]'
+    # had to use sed here because tr is not available on all busybox/toybox based systems
+    printf %s "$1" | sed 'y:ABCDEFGHIJKLMNOPQRSTUVWXYZ:abcdefghijklmnopqrstuvwxyz:'
 }
