@@ -40,8 +40,9 @@ compress_data() {
         case "$PROFILE" in
             "aix"     ) tar -L "$SOURCE" -cf - 2>> "$DEBUG_OUTPUT" | "$COMPRESS_TOOL" > "$DESTINATION" 2>> "$DEBUG_OUTPUT" ;;
             "bsd"     ) tar -I "$SOURCE" -cf - 2>> "$DEBUG_OUTPUT" | "$COMPRESS_TOOL" > "$DESTINATION" 2>> "$DEBUG_OUTPUT" ;;
+            "linux"   ) tar -T "$SOURCE" -cf - 2>> "$DEBUG_OUTPUT" | "$COMPRESS_TOOL" > "$DESTINATION" 2>> "$DEBUG_OUTPUT" ;;
+            "macos"   ) tar -T "$SOURCE" -cf - 2>> "$DEBUG_OUTPUT" | "$COMPRESS_TOOL" > "$DESTINATION" 2>> "$DEBUG_OUTPUT" ;;
             "solaris" ) tar -cf - -I "$SOURCE" 2>> "$DEBUG_OUTPUT" | "$COMPRESS_TOOL" > "$DESTINATION" 2>> "$DEBUG_OUTPUT" ;;
-            *         ) tar -T "$SOURCE" -cf - 2>> "$DEBUG_OUTPUT" | "$COMPRESS_TOOL" > "$DESTINATION" 2>> "$DEBUG_OUTPUT" ;;
         esac
     fi
     return
