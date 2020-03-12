@@ -56,7 +56,8 @@ All notable changes to this project will be documented in this file.
   - /var/spool/cron
 
 ### Fixed
-- ```has_tool``` function was not working properly on Android (Linux) systems.
+- ```has_tool``` function not working properly on Android (Linux) systems.
+- ```compress_data``` function not working properly on Linux systems that use an old busybox (tar) version.
 - body_file collector will only run if either ```stat``` or ```perl``` is available on the system.
 - hash_exec extension will only run if ```file``` tool is available on the system.
 
