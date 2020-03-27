@@ -20,13 +20,15 @@
 ################################################################################
 terminate() {
     logging I "\nCaught signal! Quitting...\n"
-    if [ -d "$DESTINATION_DIR/$TMP_DATA_DIR" ]; then
-        if ask_question_yn "Do you want to remove the temporary directory $DESTINATION_DIR/$TMP_DATA_DIR ?"; then
-            rm -rf "$DESTINATION_DIR/$TMP_DATA_DIR" > /dev/null
-            if [ ! -d "$DESTINATION_DIR/$TMP_DATA_DIR" ]; then
-                uprintf "Temporary directory removed successfully.\n"
-            else
-                uprintf "Cannot remove temporary directory.\n"
+    if [ ! -z "$DESTINATION_DIR" ] && [ ! -z "$TMP_DATA_DIR" ]; then
+        if [ -d "$DESTINATION_DIR/$TMP_DATA_DIR" ]; then
+            if ask_question_yn "Do you want to remove the temporary directory $DESTINATION_DIR/$TMP_DATA_DIR ?"; then
+                rm -rf "$DESTINATION_DIR/$TMP_DATA_DIR" > /dev/null
+                if [ ! -d "$DESTINATION_DIR/$TMP_DATA_DIR" ]; then
+                    uprintf "Temporary directory removed successfully.\n"
+                else
+                    uprintf "Cannot remove temporary directory.\n"
+                fi
             fi
         fi
     fi
