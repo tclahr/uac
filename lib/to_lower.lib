@@ -22,5 +22,5 @@
 ################################################################################
 to_lower() {
     # had to use sed here because tr is not available on all busybox/toybox based systems
-    printf %s "$1" | sed 'y:ABCDEFGHIJKLMNOPQRSTUVWXYZ:abcdefghijklmnopqrstuvwxyz:'
+    echo "$1" | sed 'y:ABCDEFGHIJKLMNOPQRSTUVWXYZ:abcdefghijklmnopqrstuvwxyz:'
 }
