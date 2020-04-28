@@ -53,7 +53,7 @@ The [mactime](https://wiki.sleuthkit.org/index.php?title=Mactime) tool can be us
 Collect log files and directories. The list of files and directories that will be collected can be found in the ```conf/logs.conf``` file.
 
 ### Misc Files (-f)
-Collect system wide configuration files and directories. The list of files and directories that will be collected can be found in the ```conf/misc_files.conf``` file.
+Collect misc files and directories. The list of files and directories that will be collected can be found in the ```conf/misc_files.conf``` file.
 
 ### Hash Running Processes (-r)
 Collect current process listing with hash (MD5) values.
