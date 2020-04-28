@@ -37,27 +37,31 @@ compress_data() {
     if [ -d "$SOURCE" ]; then
         tar -cf - "$SOURCE" 2>> "$DEBUG_OUTPUT" | "$COMPRESS_TOOL" > "$DESTINATION" 2>> "$DEBUG_OUTPUT"
     else
-        case "$PROFILE" in
-            "aix"     ) tar -L "$SOURCE" -cf - 2>> "$DEBUG_OUTPUT" | "$COMPRESS_TOOL" > "$DESTINATION" 2>> "$DEBUG_OUTPUT" ;;
-            "bsd"     ) tar -I "$SOURCE" -cf - 2>> "$DEBUG_OUTPUT" | "$COMPRESS_TOOL" > "$DESTINATION" 2>> "$DEBUG_OUTPUT" ;;
-            "linux"   )
-                # some old tar/busybox versions do not support -T, so a different solution is required to package and compress data
-                # checking if tar can create package getting names from file
-                printf %s "$CWD/uac" > "$DESTINATION_DIR/$TMP_DATA_DIR/.tarcheck" 2>> "$DEBUG_OUTPUT"
-                tar -T "$DESTINATION_DIR/$TMP_DATA_DIR/.tarcheck" -cf "$DESTINATION_DIR/$TMP_DATA_DIR/.tarcheck.tar" 2>> "$DEBUG_OUTPUT"
-                if [ $? -eq 0 ]; then
-                    rm "$DESTINATION_DIR/$TMP_DATA_DIR/.tarcheck" 2>> "$DEBUG_OUTPUT"
-                    rm "$DESTINATION_DIR/$TMP_DATA_DIR/.tarcheck.tar" 2>> "$DEBUG_OUTPUT"
-                    tar -T "$SOURCE" -cf - 2>> "$DEBUG_OUTPUT" | "$COMPRESS_TOOL" > "$DESTINATION" 2>> "$DEBUG_OUTPUT"
-                else
-                    rm "$DESTINATION_DIR/$TMP_DATA_DIR/.tarcheck" 2>> "$DEBUG_OUTPUT"
-                    FILE_LIST=`cat "$SOURCE" | while IFS= read line; do printf "\"%s\" " "$line"; done`
-                    eval "tar -cf - $FILE_LIST | $COMPRESS_TOOL > \"$DESTINATION\"" 2>> "$DEBUG_OUTPUT"
-                fi
-                ;;
-            "macos"   ) tar -T "$SOURCE" -cf - 2>> "$DEBUG_OUTPUT" | "$COMPRESS_TOOL" > "$DESTINATION" 2>> "$DEBUG_OUTPUT" ;;
-            "solaris" ) tar -cf - -I "$SOURCE" 2>> "$DEBUG_OUTPUT" | "$COMPRESS_TOOL" > "$DESTINATION" 2>> "$DEBUG_OUTPUT" ;;
-        esac
+        if [ -s "$SOURCE" ];then
+            case "$PROFILE" in
+                "aix"     ) tar -L "$SOURCE" -cf - 2>> "$DEBUG_OUTPUT" | "$COMPRESS_TOOL" > "$DESTINATION" 2>> "$DEBUG_OUTPUT" ;;
+                "bsd"     ) tar -I "$SOURCE" -cf - 2>> "$DEBUG_OUTPUT" | "$COMPRESS_TOOL" > "$DESTINATION" 2>> "$DEBUG_OUTPUT" ;;
+                "linux"   )
+                    # some old tar/busybox versions do not support -T, so a different solution is required to package and compress data
+                    # checking if tar can create package getting names from file
+                    printf %s "$CWD/uac" > "$DESTINATION_DIR/$TMP_DATA_DIR/.tarcheck" 2>> "$DEBUG_OUTPUT"
+                    tar -T "$DESTINATION_DIR/$TMP_DATA_DIR/.tarcheck" -cf "$DESTINATION_DIR/$TMP_DATA_DIR/.tarcheck.tar" 2>> "$DEBUG_OUTPUT"
+                    if [ $? -eq 0 ]; then
+                        rm "$DESTINATION_DIR/$TMP_DATA_DIR/.tarcheck" 2>> "$DEBUG_OUTPUT"
+                        rm "$DESTINATION_DIR/$TMP_DATA_DIR/.tarcheck.tar" 2>> "$DEBUG_OUTPUT"
+                        tar -T "$SOURCE" -cf - 2>> "$DEBUG_OUTPUT" | "$COMPRESS_TOOL" > "$DESTINATION" 2>> "$DEBUG_OUTPUT"
+                    else
+                        rm "$DESTINATION_DIR/$TMP_DATA_DIR/.tarcheck" 2>> "$DEBUG_OUTPUT"
+                        FILE_LIST=`cat "$SOURCE" | while IFS= read line; do printf "\"%s\" " "$line"; done`
+                        eval "tar -cf - $FILE_LIST | $COMPRESS_TOOL > \"$DESTINATION\"" 2>> "$DEBUG_OUTPUT"
+                    fi
+                    ;;
+                "macos"   ) tar -T "$SOURCE" -cf - 2>> "$DEBUG_OUTPUT" | "$COMPRESS_TOOL" > "$DESTINATION" 2>> "$DEBUG_OUTPUT" ;;
+                "solaris" ) tar -cf - -I "$SOURCE" 2>> "$DEBUG_OUTPUT" | "$COMPRESS_TOOL" > "$DESTINATION" 2>> "$DEBUG_OUTPUT" ;;
+            esac
+        else
+            logging D "Source file $SOURCE is empty.\n"
+        fi
     fi
     return
 }
