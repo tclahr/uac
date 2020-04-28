@@ -51,7 +51,7 @@ init_vars
 trap terminate INT TERM
 
 SHIFT_OPT=""
-while getopts "apnuywsdblfre:P:VDUh" opt; do
+while getopts "apnuywsdblfre:P:R:VDUh" opt; do
     case $opt in
         # collectors
         a)  COLLECTOR_PROCESS_LISTING=true
@@ -63,7 +63,7 @@ while getopts "apnuywsdblfre:P:VDUh" opt; do
             COLLECTOR_DISK_VOLUME_FILE_SYSTEM=true
             COLLECTOR_BODY_FILE=true
             COLLECTOR_LOGS=true
-            COLLECTOR_SYSTEM_FILES=true
+            COLLECTOR_MISC_FILES=true
             COLLECTOR_HASH_RUNNING_PROCESSES=true
             ANY_COLLECTOR_SELECTED=true
             SHIFT_OPT="$SHIFT_OPT A"
@@ -104,7 +104,7 @@ while getopts "apnuywsdblfre:P:VDUh" opt; do
             ANY_COLLECTOR_SELECTED=true
             SHIFT_OPT="$SHIFT_OPT l"
             ;;
-        f)  COLLECTOR_SYSTEM_FILES=true
+        f)  COLLECTOR_MISC_FILES=true
             ANY_COLLECTOR_SELECTED=true
             SHIFT_OPT="$SHIFT_OPT f"
             ;;
@@ -139,7 +139,43 @@ while getopts "apnuywsdblfre:P:VDUh" opt; do
                 uprintf "Invalid profile $PROFILE\n"
                 exit 8
             fi
-            SHIFT_OPT="$SHIFT_OPT t $PROFILE"
+            SHIFT_OPT="$SHIFT_OPT P $PROFILE"
+            ;;
+        R)  TODAY=`get_date "+%Y-%m-%d"`
+            if regex_match "^((19|20)[0-9][0-9])-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$" "$OPTARG"; then
+                DATE_RANGE_T1=`get_days_between_dates "$TODAY" "$OPTARG"`
+            elif regex_match "^((19|20)[0-9][0-9])-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])..((19|20)[0-9][0-9])-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$" "$OPTARG"; then
+                DATE_T1=`echo "$OPTARG" | cut -d"." -f 1`
+                DATE_T2=`echo "$OPTARG" | cut -d"." -f 3`
+                DATE_RANGE_T1=`get_days_between_dates "$TODAY" "$DATE_T1"`
+                DATE_RANGE_T2=`get_days_between_dates "$TODAY" "$DATE_T2"`
+            else
+                uprintf "Invalid date range $OPTARG\n"
+                exit 9
+            fi
+            if [ "$DATE_RANGE_T1" -gt 0 ]; then
+                uprintf "Invalid date range $OPTARG\n"
+                exit 11
+            fi
+            if [ "$DATE_RANGE_T2" ]; then                
+                if [ "$DATE_RANGE_T1" -gt "$DATE_RANGE_T2" ]; then
+                    uprintf "Invalid date range $OPTARG\n"
+                    exit 12
+                fi
+                # one more day to be inclusive
+                DATE_RANGE_T1=`expr $EXPR_DASH_DASH $DATE_RANGE_T1 - 1`
+                DATE_RANGE_T2=`expr $EXPR_DASH_DASH $DATE_RANGE_T2 + 1`
+                if [ "$DATE_RANGE_T2" -eq 0 ] || [ "$DATE_RANGE_T2" -gt 0 ]; then
+                    DATE_RANGE_T2=""
+                else
+                    # to be used properly with find -atime, -mtime or -ctime, second parameter needs to be positive
+                    DATE_RANGE_T2=`expr $EXPR_DASH_DASH $DATE_RANGE_T2 \* -1`
+                fi
+            else
+                # one more day to be inclusive
+                DATE_RANGE_T1=`expr $EXPR_DASH_DASH $DATE_RANGE_T1 - 1`
+            fi
+            SHIFT_OPT="$SHIFT_OPT R $OPTARG"
             ;;
         V)  VERBOSE=true
             SHIFT_OPT="$SHIFT_OPT V"
@@ -186,7 +222,7 @@ if [ "$ANY_COLLECTOR_SELECTED" = true ] || [ "$ANY_EXTENSION_SELECTED" = true ];
 
                     if [ "$MOUNT_POINT" = "/" ]; then
                         LIVE_COLLECTION=true
-                        HOSTNAME=`hostname`
+                        HOSTNAME=`get_hostname`
                         KERNEL_NAME=`uname -s`
                         MACHINE_ARCH=`get_machine_arch`
                         # create a tmp dir to store all collected data
@@ -203,6 +239,7 @@ if [ "$ANY_COLLECTOR_SELECTED" = true ] || [ "$ANY_EXTENSION_SELECTED" = true ];
                         # uac log file
                         UAC_LOG_FILE="$DESTINATION_DIR/$TMP_DATA_DIR/uac.log"
 
+                        CURRENT_LOGGED_IN_USER=`get_current_logged_in_user`
                         VERSION=`get_version`
                         logging I "--------------------------------------------------------------------------------\n"
                         logging I "  __   __ _______ _______ \n"
@@ -211,14 +248,13 @@ if [ "$ANY_COLLECTOR_SELECTED" = true ] || [ "$ANY_EXTENSION_SELECTED" = true ];
                         logging I " |_______|__| |__|_______|\n"
                         logging I "\n"
                         logging I "UAC (Unix-like Artifacts Collector) v$VERSION\n"
-                        logging I "--------------------------------------------------------------------------------\n"
-                        $VERBOSE && logging I "Command Line: $CMD\n" || logging D "Command Line: $CMD\n"
+                        logging I "--------------------------------------------------------------------------------\n"                        $VERBOSE && logging I "Command Line: $CMD\n" || logging D "Command Line: $CMD\n"
                         logging I "Destination: $DESTINATION_DIR/$TMP_DATA_DIR\n"
                         $LIVE_COLLECTION && logging I "Kernel Name (Arch): $KERNEL_NAME ($MACHINE_ARCH)\n"
                         logging I "Profile: $PROFILE\n"
                         $LIVE_COLLECTION && logging I "Hostname: $HOSTNAME\n"
                         logging I "Mount Point: $MOUNT_POINT\n"
-                        logging I "Current User: $USER\n"
+                        logging I "Current User: $CURRENT_LOGGED_IN_USER\n"
                         logging I "--------------------------------------------------------------------------------\n"
                         logging I "Some collectors may take several minutes to finish, so please wait!\n"
                         logging I "Press Ctrl+C any time to cancel the script.\n"
@@ -241,20 +277,16 @@ if [ "$ANY_COLLECTOR_SELECTED" = true ] || [ "$ANY_EXTENSION_SELECTED" = true ];
 
                         logging D "PATH: $PATH\n"
 
-                        COMPRESS_TOOL="compress"
-                        COMPRESS_EXT="Z"
-                        if has_tool gzip; then
-                            COMPRESS_TOOL="gzip"
-                            COMPRESS_EXT="gz"
+                        if [ "$PROFILE" = "aix" ] || [ "$PROFILE" = "solaris" ]; then
+                            FIND_TOOL="perl \"$CWD/tools/find/find.pl\""
                         fi
-                        logging D "COMPRESS_TOOL: $COMPRESS_TOOL\n"
-                        logging D "COMPRESS_EXT: $COMPRESS_EXT\n"
 
                         # make a backup of the configuration files used during the collection
                         run_cmd "cp -r \"$CWD/conf\" \"$DESTINATION_DIR/$TMP_DATA_DIR/conf\""
 
                         UAC_START_EPOCH=`get_epoch`
-                        logging D "Collection started: `get_date "+%a %b %d %H:%M:%S %Y %z"`\n"
+                        CURRENT_DATE_TIME=`get_date "+%a %b %d %H:%M:%S %Y %z"`
+                        logging D "Collection started: $CURRENT_DATE_TIME\n"
 
                         # collectors
                         # run process_listing collector
@@ -284,8 +316,8 @@ if [ "$ANY_COLLECTOR_SELECTED" = true ] || [ "$ANY_EXTENSION_SELECTED" = true ];
                         # run logs collector
                         $COLLECTOR_LOGS && $LIVE_COLLECTION && run_collector logs 2>> "$UAC_LOG_FILE"
 
-                        # run system_files collector
-                        $COLLECTOR_SYSTEM_FILES && $LIVE_COLLECTION && run_collector system_files 2>> "$UAC_LOG_FILE"
+                        # run misc_files collector
+                        $COLLECTOR_MISC_FILES && $LIVE_COLLECTION && run_collector misc_files 2>> "$UAC_LOG_FILE"
 
                         # run hash_running_processes collector
                         $COLLECTOR_HASH_RUNNING_PROCESSES && $LIVE_COLLECTION && run_collector hash_running_processes 2>> "$UAC_LOG_FILE"
@@ -300,7 +332,8 @@ if [ "$ANY_COLLECTOR_SELECTED" = true ] || [ "$ANY_EXTENSION_SELECTED" = true ];
                         logging I "--------------------------------------------------------------------------------\n"
                         UAC_END_EPOCH=`get_epoch`
                         UAC_TOTAL_RUNNING_TIME=`expr $UAC_END_EPOCH - $UAC_START_EPOCH`
-                        logging D "Collection finished: `get_date "+%a %b %d %H:%M:%S %Y %z"`\n"
+                        CURRENT_DATE_TIME=`get_date "+%a %b %d %H:%M:%S %Y %z"`
+                        logging D "Collection finished: $CURRENT_DATE_TIME\n"
                         logging D "Total running time: $UAC_TOTAL_RUNNING_TIME seconds.\n"
 
                         uprintf "Collection finished! Total running time: $UAC_TOTAL_RUNNING_TIME seconds.\n"
