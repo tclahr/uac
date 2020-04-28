@@ -47,11 +47,63 @@ init_vars() {
     COLLECTOR_DISK_VOLUME_FILE_SYSTEM=false
     COLLECTOR_BODY_FILE=false
     COLLECTOR_LOGS=false
-    COLLECTOR_SYSTEM_FILES=false
+    COLLECTOR_MISC_FILES=false
     COLLECTOR_HASH_RUNNING_PROCESSES=false
 
     # set default value for all extensions
     EXTENSION_CHKROOTKIT=false
     EXTENSION_HASH_EXEC=false
+
+    FIND_TOOL="find"
+
+    # set default value for date range vars
+    DATE_RANGE_T1=""
+    DATE_RANGE_T2=""
+
+    # test to check if expr tool supports --
+    # some embedded linux does not support it
+    EXPR_DASH_DASH="--"
+    expr -- 1 + 1 >/dev/null 2>/dev/null
+    if [ ! $? -eq 0 ]; then
+        EXPR_DASH_DASH=""
+    fi
+
+    # set compress as the default compression tool because some systems do not have gzip
+    COMPRESS_TOOL="compress"
+    COMPRESS_EXT="Z"
+
+    # each command needs to be tested individually as some systems do not have 'type' or 'which' tool
+    HAS_GZIP_TOOL=false
+    eval echo "uac" | gzip >/dev/null 2>/dev/null
+    if [ $? -eq 0 ]; then
+        HAS_GZIP_TOOL=true
+        COMPRESS_TOOL="gzip"
+        COMPRESS_EXT="gz"
+    fi
+   
+    # some systems do not have hostname tool installed
+    HAS_HOSTNAME_TOOL=false
+    eval hostname >/dev/null 2>/dev/null
+    if [ $? -eq 0 ]; then
+        HAS_HOSTNAME_TOOL=true
+    fi
+
+    HAS_STAT_TOOL=false
+    eval stat "$CWD/uac" >/dev/null 2>/dev/null
+    if [ $? -eq 0 ]; then
+        HAS_STAT_TOOL=true
+    fi
+
+    HAS_PERL_TOOL=false
+    eval perl "$CWD/tools/stat/stat.pl" >/dev/null 2>/dev/null
+    if [ $? -eq 0 ]; then
+        HAS_PERL_TOOL=true
+    fi
+
+    HAS_FILE_TOOL=false
+    eval file "$CWD/uac" >/dev/null 2>/dev/null
+    if [ $? -eq 0 ]; then
+        HAS_FILE_TOOL=true
+    fi
 
 }
