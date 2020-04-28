@@ -29,7 +29,7 @@ run_extension() {
 
         if [ -d "$EXTENSION_OUTPUT_DIR" ]; then
             if [ -r "$CWD/extensions/$1/${1}.conf" ]; then
-                logging D "Loading ${1}.conf configuration file"
+                logging D "Loading ${1}.conf configuration file\n"
                 logging D "Copying ${1}.conf file to $EXTENSION_OUTPUT_DIR\n"
                 cp "$CWD/extensions/$1/${1}.conf" "$EXTENSION_OUTPUT_DIR/${1}.conf"
                 . "$CWD/extensions/$1/${1}.conf" > /dev/null
