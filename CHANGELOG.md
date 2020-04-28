@@ -1,10 +1,14 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 1.1.0-dev
+## 1.1.0-rc1
 
 ### Added
 - Now you can use your own validated tools (binary files) during artifacts collection. Please refer to ```bin/README.txt``` for more information.
+- Date Range (-R) option can be used to limit the amount of data collected by logs (-l) and misc_files (-f) collectors.
+- New misc_files (-f) collector. Please refer to ```conf/misc_files.conf``` for more information.
+- Files and directories added to ```conf/user_files.conf``` will be collected by the user_accounts (-u) collector.
+- You can set a max depth and max file size for the logs (-l) and misc_files (-f) collectors. Please refer to ```conf/uac.conf``` for more information.
 - New aix collectors
   - system
     - mpstat
@@ -21,17 +25,13 @@ All notable changes to this project will be documented in this file.
     - vmstat
   - disk_volume_file_system
     - iostat
-- logs.conf
+- user_files.conf
   - .login
   - .*_login
   - .logout
   - .zhistory
   - .zlogin
   - .zlogout
-- system_files.conf
-  - /var/spool
-  - *.sessions
-  - .*_sessions
   - .cshdirs
   - .cshrc
   - .kshrc
@@ -39,24 +39,39 @@ All notable changes to this project will be documented in this file.
   - .zprofile
   - .zshenv
   - .zshrc
+- system_files.conf
+  - /var/spool
 
 ### Changed
+- system_files collector renamed to misc_files (-f). Files and directories added to ```conf/system_files.conf``` will now be collected by the system (-y) collector instead.
 - aix collectors
   - iostat moved from system to disk_volume_file_system collector
 - bsd collectors
   - iostat moved from system to disk_volume_file_system collector
 - chkrootkit extension
   - ```chkrootkit``` binary file must be placed in the main ```bin``` directory now. Please refer to ```bin/README.txt``` for more information.
-
-### Removed
-- logs.conf
+- moved from logs.conf to user_files.conf
+  - .history
+  - *.history
+  - .*_history
+  - .*_logout
   - .*_session
   - *.session
+- moved from system_files.conf to misc_files.conf
+  - /var/spool/cron
+  - /tmp
+  - /private/tmp
+- moved from system_files.conf to user_files.conf
+  - .rhosts
+  - .profile
+  - .bashrc
+  - .*_profile
+
+### Removed
 - system_files.conf
   - /var/spool/cron
 
 ### Fixed
-- ```has_tool``` function not working properly on Android (Linux) systems.
 - ```compress_data``` function not working properly on Linux systems that use an old busybox (tar) version.
 - body_file collector will only run if either ```stat``` or ```perl``` is available on the system.
 - hash_exec extension will only run if ```file``` tool is available on the system.
