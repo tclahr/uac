@@ -26,25 +26,35 @@ The project's [maintainers](MAINTAINERS.md) are responsible for reviewing and me
 
 ### Process Listing (-p)
 Collect current process listing.
+
 ### Network (-n)
 Collect active network connections with related process information.
+
 ### User Accounts (-u)
-Collect information about user accounts and login activities.
+Collect user accounts information, login related files and activities. The list of files and directories that will be collected can be found in the ```conf/user_files.conf``` file.
+
 ### System (-y)
-Collect low level system information and kernel related details.
+Collect system information, system configuration files and kernel related details. The list of files and directories that will be collected can be found in the ```conf/system_files.conf``` file.
+
 ### Hardware (-w)
 Collect low level hardware information.
+
 ### Software (-s)
 Collect information about installed packages and software.
+
 ### Disk Volume and File System (-d)
-Collect information about disk volumes and file systems.
+Collect information about disks, volumes and file systems.
+
 ### Body File (-b)
 Extract information from files and directories using the ```stat``` tool to create a [body file](https://wiki.sleuthkit.org/index.php?title=Body_file). The body file is an intermediate file when creating a timeline of file activity. It is a pipe ("|") delimited text file that contains one line for each file.
 The [mactime](https://wiki.sleuthkit.org/index.php?title=Mactime) tool can be used to read this file and sorts the contents.
+
 ### Logs (-l)
 Collect log files and directories. The list of files and directories that will be collected can be found in the ```conf/logs.conf``` file.
-### System Files (-f)
-Collect system wide configuration files and directories. The list of files and directories that will be collected can be found in the ```conf/system_files.conf``` file.
+
+### Misc Files (-f)
+Collect system wide configuration files and directories. The list of files and directories that will be collected can be found in the ```conf/misc_files.conf``` file.
+
 ### Hash Running Processes (-r)
 Collect current process listing with hash (MD5) values.
 
@@ -76,17 +86,40 @@ Use this profile to collect macOS artifacts.
 ### solaris
 Use this profile to collect Solaris artifacts.
 
+## Options
+
+### Date Range (-R)
+The range of dates to be used by logs (-l) and misc_files (-f) collectors. The date range is used to limit the amount of data collected by filtering files using find's -atime, -mtime or -ctime parameters. By default, UAC will search for files that data was last modified (-mtime) OR status last changed (-ctime) within the given date range. Please refer to ```conf/uac.conf``` for more details.
+The standard format is YYYY-MM-DD for a starting date and no ending date. For an ending date, use YYYY-MM-DD..YYYY-MM-DD.
+
+### Debug (-D)
+Increase debugging level.
+
+### Verbose (-V)
+Increase verbosity level.
+
+### Run as non-root (-U)
+Allow UAC to be run by a non-root user. Note that data collection will be limited.
+
 ## Configuration Files
 
 ### conf/uac.conf
 The main UAC configuration file.
 
 ### conf/logs.conf
-Directory or file paths that will be searched and collected by the logs collector. If a directory path is added, all files and subdirectories will be collected automatically.
+Directory or file paths that will be searched and collected by the logs (-l) collector. If a directory path is added, all files and subdirectories will be collected automatically.
+The ```find``` command line tool will be used to search for files and directories, so the patterns added to this file need to be compatible with the ```-name``` option. Please check ```find``` man pages for instructions.
+
+### conf/misc_files.conf
+Directory or file paths that will be searched and collected by the misc_files (-f) collector. If a directory path is added, all files and subdirectories will be collected automatically.
 The ```find``` command line tool will be used to search for files and directories, so the patterns added to this file need to be compatible with the ```-name``` option. Please check ```find``` man pages for instructions.
 
 ### conf/system_files.conf
-Directory or file paths that will be searched and collected by the system_files collector. If a directory path is added, all files and subdirectories will be collected automatically.
+Directory or file paths that will be searched and collected by the system (-y) collector. If a directory path is added, all files and subdirectories will be collected automatically.
+The ```find``` command line tool will be used to search for files and directories, so the patterns added to this file need to be compatible with the ```-name``` option. Please check ```find``` man pages for instructions.
+
+### conf/user_files.conf
+Directory or file paths that will be searched and collected by the user_accounts (-u) collector. If a directory path is added, all files and subdirectories will be collected automatically.
 The ```find``` command line tool will be used to search for files and directories, so the patterns added to this file need to be compatible with the ```-name``` option. Please check ```find``` man pages for instructions.
 
 ## Usage
@@ -98,14 +131,14 @@ COLLECTORS:
     -a           Enable all collectors.
     -p           Collect current process listing.
     -n           Collect active network connections with related process information.
-    -u           Collect information about user accounts and login activities.
-    -y           Collect low level system information and kernel related details.
+    -u           Collect user accounts information, login related files and activities.
+    -y           Collect system information, system configuration files and kernel related details.
     -w           Collect low level hardware information.
     -s           Collect information about installed packages and software.
-    -d           Collect information about disk volumes and file systems.
+    -d           Collect information about disks, volumes and file systems.
     -b           Extract information from files and directories using the stat tool to create a body file.
     -l           Collect log files and directories.
-    -f           Collect system wide configuration files and directories.
+    -f           Collect misc files and directories.
     -r           Collect current process listing with hash (MD5) values.
 
 EXTENSIONS:
@@ -124,6 +157,7 @@ PROFILES:
                  solaris: Use this one to collect Solaris artifacts.
 
 OPTIONS:
+    -R           Starting date YYYY-MM-DD or range YYYY-MM-DD..YYYY-MM-DD
     -D           Increase debugging level.
     -V           Increase verbosity level.
     -U           Allow UAC to be run by a non-root user. Note that data collection will be limited.
