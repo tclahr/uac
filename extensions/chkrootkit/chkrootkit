@@ -14,9 +14,5 @@
 
 # chkrootkit extension
 
-if has_tool chkrootkit; then
-    run_cmd "chkrootkit -n -r \"$MOUNT_POINT\"" "$EXTENSION_OUTPUT_DIR/chkrootkit-n.txt"
-    run_cmd "chkrootkit -x -r \"$MOUNT_POINT\"" "$EXTENSION_OUTPUT_DIR/chkrootkit-x.txt"
-else
-    logging D "chkrootkit was not found on the system PATH\n"
-fi
+run_cmd "chkrootkit -n -r \"$MOUNT_POINT\"" "$EXTENSION_OUTPUT_DIR/chkrootkit-n.txt"
+run_cmd "chkrootkit -x -r \"$MOUNT_POINT\"" "$EXTENSION_OUTPUT_DIR/chkrootkit-x.txt"
