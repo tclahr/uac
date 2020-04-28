@@ -72,3 +72,17 @@ case "$PROFILE" in
         run_cmd "vmstat" "$COLLECTOR_OUTPUT_DIR/vmstat.txt"
         ;;
 esac
+
+# process system_files paths
+run_cmd "cat \"$CWD/conf/system_files.conf\" | grep -v \"^#\" | grep -v \"^$\" | grep \"^/\" | sed 's:^/:'\"$MOUNT_POINT\"'/:; s://*:/:g; s:/$::g' | while read line; do find \"\$line\" -type f ; done" "$COLLECTOR_OUTPUT_DIR/system_files.tmp"
+# process system_files files/directories names
+run_cmd "cat \"$CWD/conf/system_files.conf\" | grep -v \"^#\" | grep -v \"^$\" | grep -v \"^/\" | while read line; do find \"$MOUNT_POINT\" -name \"\$line\" -type f ; done" "$COLLECTOR_OUTPUT_DIR/system_files.tmp"
+
+# remove any UAC directories from the collection
+run_cmd "cat \"$COLLECTOR_OUTPUT_DIR/system_files.tmp\" | grep -v \"$CWD\" | grep -v \"$DESTINATION_DIR/$TMP_DATA_DIR\" > \"$COLLECTOR_OUTPUT_DIR/system_files.txt\""
+
+# remove temporary files
+run_cmd "rm -f \"$COLLECTOR_OUTPUT_DIR/system_files.tmp\""
+
+# compress data
+run_cmd "compress_data \"$COLLECTOR_OUTPUT_DIR/system_files.txt\" \"$COLLECTOR_OUTPUT_DIR/system_files.tar.$COMPRESS_EXT\" \"$UAC_LOG_FILE\""
