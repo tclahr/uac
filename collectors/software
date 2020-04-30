@@ -31,10 +31,16 @@ case "$PROFILE" in
         ;;
     "linux")
         run_cmd "dpkg -l" "$COLLECTOR_OUTPUT_DIR/dpkg-l.txt"
+        run_cmd "dnf history list" "$COLLECTOR_OUTPUT_DIR/dnf_history_list.txt"
+        run_cmd "dnf history userinstalled" "$COLLECTOR_OUTPUT_DIR/dnf_history_userinstalled.txt"
+        run_cmd "dnf list installed" "$COLLECTOR_OUTPUT_DIR/dnf_list_installed.txt"
         run_cmd "flatpak list" "$COLLECTOR_OUTPUT_DIR/flatpak-list.txt"
         run_cmd "ipkg list-installed" "$COLLECTOR_OUTPUT_DIR/ipkg-list-installed.txt"
         run_cmd "ipkg list_installed" "$COLLECTOR_OUTPUT_DIR/ipkg-list_installed.txt"
         run_cmd "opkg list-installed" "$COLLECTOR_OUTPUT_DIR/opkg-list-installed.txt"
+        run_cmd "pacman -Q -e" "$COLLECTOR_OUTPUT_DIR/pacman-Q-e.txt"
+        run_cmd "pacman -Q -m" "$COLLECTOR_OUTPUT_DIR/pacman-Q-m.txt"
+        run_cmd "pacman -Q -n" "$COLLECTOR_OUTPUT_DIR/pacman-Q-n.txt"
         run_cmd "rpm -q -a" "$COLLECTOR_OUTPUT_DIR/rpm-q-a.txt"
         run_cmd "rpm -q -a --queryformat '%{INSTALLTIME}~%{NAME}~%{VERSION}-%{RELEASE}\n'" "$COLLECTOR_OUTPUT_DIR/rpm-q-a-queryformat.txt"
         run_cmd "snap list" "$COLLECTOR_OUTPUT_DIR/snap-list.txt"
