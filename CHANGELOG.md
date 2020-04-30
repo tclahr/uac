@@ -1,31 +1,39 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 1.1.0-rc1
+## 1.1.0
 
 ### Added
 - Now you can use your own validated tools (binary files) during artifacts collection. Please refer to ```bin/README.txt``` for more information.
 - Date Range (-R) option can be used to limit the amount of data collected by logs (-l) and misc_files (-f) collectors.
 - New misc_files (-f) collector. Please refer to ```conf/misc_files.conf``` for more information.
 - Files and directories added to ```conf/user_files.conf``` will be collected by the user_accounts (-u) collector.
-- You can set a max depth and max file size for the logs (-l) and misc_files (-f) collectors. Please refer to ```conf/uac.conf``` for more information.
-- New aix collectors
-  - system
-    - mpstat
-- New linux collectors
-  - system 
-    - vmstat
-  - software
+- You can set a max depth and max file size for logs (-l), misc_files (-f) and user_accounts (-u) collectors. Please refer to ```conf/uac.conf``` for more information.
+- New disk_volume_file_system collectors
+  - solaris
+    - iostat
+- New software collectors
+  - linux
+    - dnf history list
+    - dnf history userinstalled
+    - dnf list installed
     - ipkg list-installed
     - ipkg list_installed
     - opkg list-installed
-- New solaris collectors
-  - system
+    - pacman -Q -e
+    - pacman -Q -m
+    - pacman -Q -n
+- New system collectors
+  - aix
+    - mpstat
+  - linux
+    - vmstat
+  - solaris
     - mpstat
     - vmstat
-  - disk_volume_file_system
-    - iostat
-- user_files.conf
+- New user_accounts collectors
+  - last -i
+- New entries in user_files.conf
   - .login
   - .*_login
   - .logout
@@ -39,11 +47,11 @@ All notable changes to this project will be documented in this file.
   - .zprofile
   - .zshenv
   - .zshrc
-- system_files.conf
+- New entries in system_files.conf
   - /var/spool
 
 ### Changed
-- system_files collector renamed to misc_files (-f). Files and directories added to ```conf/system_files.conf``` will now be collected by the system (-y) collector instead.
+- Files and directories added to ```conf/system_files.conf``` will be collected by the system (-y) collector.
 - aix collectors
   - iostat moved from system to disk_volume_file_system collector
 - bsd collectors
@@ -68,7 +76,7 @@ All notable changes to this project will be documented in this file.
   - .*_profile
 
 ### Removed
-- system_files.conf
+- Entries removed from system_files.conf
   - /var/spool/cron
 
 ### Fixed
