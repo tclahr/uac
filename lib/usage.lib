@@ -57,6 +57,7 @@ usage() {
     logging I "    -D           Increase debugging level.\n"
     logging I "    -V           Increase verbosity level.\n"
     logging I "    -U           Allow UAC to be run by a non-root user. Note that data collection will be limited.\n"
+    logging I "    -v           Print version number.\n"
     logging I "    -h           Print this help summary page.\n"
     logging I "\n"
     logging I "DESTINATION:\n"
