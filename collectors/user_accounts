@@ -12,49 +12,75 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# user_accounts_login collector
+# user_accounts collector
 
-run_cmd "last" "$COLLECTOR_OUTPUT_DIR/last.txt"
-run_cmd "w" "$COLLECTOR_OUTPUT_DIR/w.txt"
-run_cmd "who" "$COLLECTOR_OUTPUT_DIR/who.txt"
-run_cmd "whoami" "$COLLECTOR_OUTPUT_DIR/whoami.txt"
+if $LIVE_COLLECTION; then
 
-case "$PROFILE" in
-    "aix")
-        run_cmd "grpck -n ALL" "$COLLECTOR_OUTPUT_DIR/grpck-n-ALL.txt"
-        run_cmd "last -X" "$COLLECTOR_OUTPUT_DIR/last-X.txt"
-        run_cmd "lsgroup -f ALL" "$COLLECTOR_OUTPUT_DIR/lsgroup-f-ALL.txt"
-        run_cmd "lsuser -f ALL" "$COLLECTOR_OUTPUT_DIR/lsuser-f-ALL.txt"
-        run_cmd "usrck -n ALL" "$COLLECTOR_OUTPUT_DIR/usrck-n-ALL.txt"
-        ;;
-    "bsd")
-        ;;
-    "linux")
-        run_cmd "last -a -F" "$COLLECTOR_OUTPUT_DIR/last-a-F.txt"
-        run_cmd "lastlog" "$COLLECTOR_OUTPUT_DIR/lastlog.txt"
-        run_cmd "pwck -r" "$COLLECTOR_OUTPUT_DIR/pwck-r.txt"
-        ;;
-    "macos")
-        run_cmd "dscacheutil -q group" "$COLLECTOR_OUTPUT_DIR/dscacheutil-q-group.txt"
-        run_cmd "dscacheutil -q user" "$COLLECTOR_OUTPUT_DIR/dscacheutil-q-user.txt"
-        ;;
-    "solaris")
-        run_cmd "grpck /etc/group" "$COLLECTOR_OUTPUT_DIR/grpck-etc-group.txt"
-        run_cmd "last -a" "$COLLECTOR_OUTPUT_DIR/last-a.txt"
-        run_cmd "pwck /etc/passwd" "$COLLECTOR_OUTPUT_DIR/pwck-etc-passwd.txt"
-        ;;
-esac
+    run_cmd "last" "$COLLECTOR_OUTPUT_DIR/last.txt"
+    run_cmd "last -i" "$COLLECTOR_OUTPUT_DIR/last-i.txt"
+    run_cmd "w" "$COLLECTOR_OUTPUT_DIR/w.txt"
+    run_cmd "who" "$COLLECTOR_OUTPUT_DIR/who.txt"
+    run_cmd "whoami" "$COLLECTOR_OUTPUT_DIR/whoami.txt"
 
-# process user_files paths
-run_cmd "cat \"$CWD/conf/user_files.conf\" | grep -v \"^#\" | grep -v \"^$\" | grep \"^/\" | sed 's:^/:'\"$MOUNT_POINT\"'/:; s://*:/:g; s:/$::g' | while read line; do find \"\$line\" -type f ; done" "$COLLECTOR_OUTPUT_DIR/user_files.tmp"
-# process user_files files/directories names
-run_cmd "cat \"$CWD/conf/user_files.conf\" | grep -v \"^#\" | grep -v \"^$\" | grep -v \"^/\" | while read line; do find \"$MOUNT_POINT\" -name \"\$line\" -type f ; done" "$COLLECTOR_OUTPUT_DIR/user_files.tmp"
+    case "$PROFILE" in
+        "aix")
+            run_cmd "grpck -n ALL" "$COLLECTOR_OUTPUT_DIR/grpck-n-ALL.txt"
+            run_cmd "last -X" "$COLLECTOR_OUTPUT_DIR/last-X.txt"
+            run_cmd "lsgroup -f ALL" "$COLLECTOR_OUTPUT_DIR/lsgroup-f-ALL.txt"
+            run_cmd "lsuser -f ALL" "$COLLECTOR_OUTPUT_DIR/lsuser-f-ALL.txt"
+            run_cmd "usrck -n ALL" "$COLLECTOR_OUTPUT_DIR/usrck-n-ALL.txt"
+            ;;
+        "bsd")
+            ;;
+        "linux")
+            run_cmd "last -a -F" "$COLLECTOR_OUTPUT_DIR/last-a-F.txt"
+            run_cmd "lastlog" "$COLLECTOR_OUTPUT_DIR/lastlog.txt"
+            run_cmd "pwck -r" "$COLLECTOR_OUTPUT_DIR/pwck-r.txt"
+            ;;
+        "macos")
+            run_cmd "dscacheutil -q group" "$COLLECTOR_OUTPUT_DIR/dscacheutil-q-group.txt"
+            run_cmd "dscacheutil -q user" "$COLLECTOR_OUTPUT_DIR/dscacheutil-q-user.txt"
+            ;;
+        "solaris")
+            run_cmd "grpck /etc/group" "$COLLECTOR_OUTPUT_DIR/grpck-etc-group.txt"
+            run_cmd "last -a" "$COLLECTOR_OUTPUT_DIR/last-a.txt"
+            run_cmd "pwck /etc/passwd" "$COLLECTOR_OUTPUT_DIR/pwck-etc-passwd.txt"
+            ;;
+    esac
+fi
 
-# remove any UAC directories from the collection
-run_cmd "cat \"$COLLECTOR_OUTPUT_DIR/user_files.tmp\" | grep -v \"$CWD\" | grep -v \"$DESTINATION_DIR/$TMP_DATA_DIR\" > \"$COLLECTOR_OUTPUT_DIR/user_files.txt\""
+# get the list of home directories
+ETC_PASSWD=`sanitize_path "$MOUNT_POINT/etc/passwd"`
+run_cmd "cat \"$ETC_PASSWD\" | cut -d\":\" -f6 | sort | uniq" "$COLLECTOR_OUTPUT_DIR/.home_directories.txt"
+if [ -s "$COLLECTOR_OUTPUT_DIR/.home_directories.txt" ]; then
 
-# remove temporary files
-run_cmd "rm -f \"$COLLECTOR_OUTPUT_DIR/user_files.tmp\""
+    FIND_MAXDEPTH_PARAMETER=""
+    if [ "$USER_FILES_MAX_DEPTH" -gt 0 ]; then
+        FIND_MAXDEPTH_PARAMETER="-maxdepth $USER_FILES_MAX_DEPTH"
+    fi
 
-# compress data
-run_cmd "compress_data \"$COLLECTOR_OUTPUT_DIR/user_files.txt\" \"$COLLECTOR_OUTPUT_DIR/user_files.tar.$COMPRESS_EXT\" \"$UAC_LOG_FILE\""
+    FIND_SIZE_PARAMETER=""
+    if [ "$USER_FILES_MAX_FILE_SIZE" -gt 0 ]; then
+        FIND_SIZE_PARAMETER="-size -${USER_FILES_MAX_FILE_SIZE}c"
+    fi
+    
+    # cannot use a "while read USER_HOME_DIR; do ... ; done < $COLLECTOR_OUTPUT_DIR/.home_directories.txt" loop here because it does not work properly with Ctrl+C
+    cat "$COLLECTOR_OUTPUT_DIR/.home_directories.txt" | while read USER_HOME_DIR; do
+        USER_HOME_DIR=`sanitize_path "${MOUNT_POINT}/$USER_HOME_DIR"`
+        logging D "Collecting user files from $USER_HOME_DIR\n"
+
+        # process log paths
+        run_cmd "cat \"$CWD/conf/user_files.conf\" | grep -v \"^#\" | grep -v \"^$\" | grep \"^/\" | sed 's://*:/:g; s:/$::g' | while read line; do $FIND_TOOL \"\${USER_HOME_DIR}\$line\" $FIND_MAXDEPTH_PARAMETER -type f $FIND_SIZE_PARAMETER ; done" "$COLLECTOR_OUTPUT_DIR/user_files.tmp"
+        # process log files/directories names
+        run_cmd "cat \"$CWD/conf/user_files.conf\" | grep -v \"^#\" | grep -v \"^$\" | grep -v \"^/\" | while read line; do $FIND_TOOL \"$USER_HOME_DIR\" -name \"\$line\" $FIND_MAXDEPTH_PARAMETER -type f $FIND_SIZE_PARAMETER ; done" "$COLLECTOR_OUTPUT_DIR/user_files.tmp"
+    done
+
+    # remove any UAC directories from the collection
+    run_cmd "cat \"$COLLECTOR_OUTPUT_DIR/user_files.tmp\" | grep -v \"$CWD\" | grep -v \"$DESTINATION_DIR/$TMP_DATA_DIR\" > \"$COLLECTOR_OUTPUT_DIR/user_files.txt\""
+
+    # remove temporary files
+    run_cmd "rm -f \"$COLLECTOR_OUTPUT_DIR/user_files.tmp\""
+
+    # compress data
+    run_cmd "compress_data \"$COLLECTOR_OUTPUT_DIR/user_files.txt\" \"$COLLECTOR_OUTPUT_DIR/user_files.tar.$COMPRESS_EXT\" \"$UAC_LOG_FILE\""
+fi
