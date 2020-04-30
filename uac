@@ -51,7 +51,7 @@ init_vars
 trap terminate INT TERM
 
 SHIFT_OPT=""
-while getopts "apnuywsdblfre:P:R:VDUh" opt; do
+while getopts "apnuywsdblfre:P:R:VDUvh" opt; do
     case $opt in
         # collectors
         a)  COLLECTOR_PROCESS_LISTING=true
@@ -186,6 +186,10 @@ while getopts "apnuywsdblfre:P:R:VDUh" opt; do
         U)  RUN_AS_NON_ROOT=true
             SHIFT_OPT="$SHIFT_OPT U"
             ;;
+        v)  VERSION=`get_version`
+            uprintf "UAC (Unix-like Artifacts Collector) v$VERSION\n"
+            exit 0
+            ;;
         h)  usage
             exit 0
             ;;
@@ -195,12 +199,12 @@ while getopts "apnuywsdblfre:P:R:VDUh" opt; do
 done
 for SHIFT in $SHIFT_OPT; do shift; done
 
-if [ "$ANY_COLLECTOR_SELECTED" = true ] || [ "$ANY_EXTENSION_SELECTED" = true ]; then
+if $ANY_COLLECTOR_SELECTED || $ANY_EXTENSION_SELECTED; then
     if [ ! "$PROFILE" ]; then
         PROFILE=`get_profile`
     fi
     if [ "$PROFILE" = "aix" ] || [ "$PROFILE" = "bsd" ] || [ "$PROFILE" = "linux" ] || [ "$PROFILE" = "macos" ] || [ "$PROFILE" = "solaris" ]; then
-        if is_running_as_root || [ "$RUN_AS_NON_ROOT" = true ]; then
+        if is_running_as_root || $RUN_AS_NON_ROOT; then
 
             # the current directory will be used as the destination directory if none was provided by the user
             if [ "$1" ]; then
@@ -244,11 +248,12 @@ if [ "$ANY_COLLECTOR_SELECTED" = true ] || [ "$ANY_EXTENSION_SELECTED" = true ];
                         logging I "--------------------------------------------------------------------------------\n"
                         logging I "  __   __ _______ _______ \n"
                         logging I " |: | |  |:  _   |:  ____|\n"
-                        logging I " |  |_|  |  |_|  |  |____ \n"
+                        logging I " |  |_|  |  | |  |  |____ \n"
                         logging I " |_______|__| |__|_______|\n"
                         logging I "\n"
                         logging I "UAC (Unix-like Artifacts Collector) v$VERSION\n"
-                        logging I "--------------------------------------------------------------------------------\n"                        $VERBOSE && logging I "Command Line: $CMD\n" || logging D "Command Line: $CMD\n"
+                        logging I "--------------------------------------------------------------------------------\n"
+                        $VERBOSE && logging I "Command Line: $CMD\n" || logging D "Command Line: $CMD\n"
                         logging I "Destination: $DESTINATION_DIR/$TMP_DATA_DIR\n"
                         $LIVE_COLLECTION && logging I "Kernel Name (Arch): $KERNEL_NAME ($MACHINE_ARCH)\n"
                         logging I "Profile: $PROFILE\n"
@@ -263,7 +268,7 @@ if [ "$ANY_COLLECTOR_SELECTED" = true ] || [ "$ANY_EXTENSION_SELECTED" = true ];
                         $LIVE_COLLECTION || logging I "Live/volatile data collectors will be disabled automatically.\n"
                         $LIVE_COLLECTION || logging I "--------------------------------------------------------------------------------\n"
 
-                        if [ "$LIVE_COLLECTION" = true ]; then
+                        if $LIVE_COLLECTION; then
                             KERNEL_NAME_LOWERCASE=`to_lower $KERNEL_NAME`
                             MACHINE_ARCH_LOWERCASE=`to_lower $MACHINE_ARCH`
                             # add validated tools (binary files) directory to the system PATH
@@ -296,10 +301,10 @@ if [ "$ANY_COLLECTOR_SELECTED" = true ] || [ "$ANY_EXTENSION_SELECTED" = true ];
                         $COLLECTOR_NETWORK && $LIVE_COLLECTION && run_collector network 2>> "$UAC_LOG_FILE"
 
                         # run user_accounts collector
-                        $COLLECTOR_USER_ACCOUNTS && $LIVE_COLLECTION && run_collector user_accounts 2>> "$UAC_LOG_FILE"
+                        $COLLECTOR_USER_ACCOUNTS && run_collector user_accounts 2>> "$UAC_LOG_FILE"
 
                         # run system collector
-                        $COLLECTOR_SYSTEM && $LIVE_COLLECTION && run_collector system 2>> "$UAC_LOG_FILE"
+                        $COLLECTOR_SYSTEM && run_collector system 2>> "$UAC_LOG_FILE"
 
                         # run hardware collector
                         $COLLECTOR_HARDWARE && $LIVE_COLLECTION && run_collector hardware 2>> "$UAC_LOG_FILE"
@@ -311,13 +316,13 @@ if [ "$ANY_COLLECTOR_SELECTED" = true ] || [ "$ANY_EXTENSION_SELECTED" = true ];
                         $COLLECTOR_DISK_VOLUME_FILE_SYSTEM && $LIVE_COLLECTION && run_collector disk_volume_file_system 2>> "$UAC_LOG_FILE"
 
                         # run body_file collector
-                        $COLLECTOR_BODY_FILE && $LIVE_COLLECTION && run_collector body_file 2>> "$UAC_LOG_FILE"
+                        $COLLECTOR_BODY_FILE && run_collector body_file 2>> "$UAC_LOG_FILE"
 
                         # run logs collector
-                        $COLLECTOR_LOGS && $LIVE_COLLECTION && run_collector logs 2>> "$UAC_LOG_FILE"
+                        $COLLECTOR_LOGS && run_collector logs 2>> "$UAC_LOG_FILE"
 
                         # run misc_files collector
-                        $COLLECTOR_MISC_FILES && $LIVE_COLLECTION && run_collector misc_files 2>> "$UAC_LOG_FILE"
+                        $COLLECTOR_MISC_FILES && run_collector misc_files 2>> "$UAC_LOG_FILE"
 
                         # run hash_running_processes collector
                         $COLLECTOR_HASH_RUNNING_PROCESSES && $LIVE_COLLECTION && run_collector hash_running_processes 2>> "$UAC_LOG_FILE"
