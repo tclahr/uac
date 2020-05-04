@@ -51,7 +51,13 @@ fi
 
 # get the list of home directories
 ETC_PASSWD=`sanitize_path "$MOUNT_POINT/etc/passwd"`
-run_cmd "cat \"$ETC_PASSWD\" | cut -d\":\" -f6 | sort | uniq" "$COLLECTOR_OUTPUT_DIR/.home_directories.txt"
+run_cmd "cat \"$ETC_PASSWD\" | grep -v \"^#\" | grep -v \"^$\" | cut -d\":\" -f6 | sort | uniq" "$COLLECTOR_OUTPUT_DIR/.home_directories.txt"
+
+if [ "$PROFILE" = "macos" ]; then
+    USERS_DIR=`sanitize_path "$MOUNT_POINT/Users"`
+    run_cmd "$FIND_TOOL $USERS_DIR ! -path \"$USERS_DIR\" -type d -maxdepth 1" "$COLLECTOR_OUTPUT_DIR/.home_directories.txt"
+fi
+
 if [ -s "$COLLECTOR_OUTPUT_DIR/.home_directories.txt" ]; then
 
     FIND_MAXDEPTH_PARAMETER=""
