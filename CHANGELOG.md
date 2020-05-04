@@ -12,6 +12,9 @@ All notable changes to this project will be documented in this file.
 - New disk_volume_file_system collectors
   - solaris
     - iostat
+- New harware collectors
+  - linux
+    - lsscsi
 - New software collectors
   - linux
     - dnf history list
