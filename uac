@@ -224,15 +224,13 @@ if $ANY_COLLECTOR_SELECTED || $ANY_EXTENSION_SELECTED; then
                     CURRENT_DATE_TIME=`get_date "+%Y%m%d%H%M%S"`
                     TIME_ZONE=`get_date "+%z"`
 
-                    if [ "$MOUNT_POINT" = "/" ]; then
-                        LIVE_COLLECTION=true
+                    if $LIVE_COLLECTION; then
                         HOSTNAME=`get_hostname`
                         KERNEL_NAME=`uname -s`
                         MACHINE_ARCH=`get_machine_arch`
                         # create a tmp dir to store all collected data
                         TMP_DATA_DIR="uac-$HOSTNAME-$PROFILE-$CURRENT_DATE_TIME"
                     else
-                        LIVE_COLLECTION=false
                         # create a tmp dir to store all collected data
                         TMP_DATA_DIR="uac-mounted_image-$PROFILE-$CURRENT_DATE_TIME"
                     fi
@@ -392,5 +390,4 @@ else
     usage
     exit 1
 fi
-
 exit 0

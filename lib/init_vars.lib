@@ -60,6 +60,11 @@ init_vars() {
     DATE_RANGE_T1=""
     DATE_RANGE_T2=""
 
+    LIVE_COLLECTION=true
+    if [ ! "$MOUNT_POINT" = "/" ]; then
+        LIVE_COLLECTION=false
+    fi
+
     # test to check if expr tool supports --
     # some embedded linux does not support it
     EXPR_DASH_DASH="--"
