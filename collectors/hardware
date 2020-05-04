@@ -41,6 +41,7 @@ case "$PROFILE" in
         run_cmd "lshw" "$COLLECTOR_OUTPUT_DIR/lshw.txt"
         run_cmd "lspci" "$COLLECTOR_OUTPUT_DIR/lspci.txt"
         run_cmd "lspci -vv" "$COLLECTOR_OUTPUT_DIR/lspci-vv.txt"
+        run_cmd "lsscsi" "$COLLECTOR_OUTPUT_DIR/lsscsi.txt"
         run_cmd "lsusb" "$COLLECTOR_OUTPUT_DIR/lsusb.txt"
         run_cmd "lsusb -vv" "$COLLECTOR_OUTPUT_DIR/lsusb-vv.txt"
         ;;
