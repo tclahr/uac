@@ -42,6 +42,7 @@ usage() {
     logging I "                 Comma separated list of extensions.\n"
     logging I "                 all: Enable all extensions.\n"
     logging I "                 chkrootkit: Run chkrootkit tool.\n"
+    logging I "                 fls: Run Sleuth Kit fls tool.\n"
     logging I "                 hash_exec: Hash executable files.\n"
     logging I "\n"
     logging I "PROFILES:\n"

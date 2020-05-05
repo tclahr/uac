@@ -117,10 +117,14 @@ while getopts "apnuywsdblfre:P:R:VDUvh" opt; do
                 case "$EXTENSION" in
                     "all")
                         EXTENSION_CHKROOTKIT=true
+                        EXTENSION_FLS=true
                         EXTENSION_HASH_EXEC=true
                         ;;
                     "chkrootkit")
                         EXTENSION_CHKROOTKIT=true
+                        ;;
+                    "fls")
+                        EXTENSION_FLS=true
                         ;;
                     "hash_exec")
                         EXTENSION_HASH_EXEC=true
@@ -328,6 +332,9 @@ if $ANY_COLLECTOR_SELECTED || $ANY_EXTENSION_SELECTED; then
                         # extensions
                         # run chkrootkit extension
                         $EXTENSION_CHKROOTKIT && run_extension chkrootkit 2>> "$UAC_LOG_FILE"
+
+                        # run fls extension
+                        $EXTENSION_FLS && run_extension fls 2>> "$UAC_LOG_FILE"
 
                         # run hash_exec extension
                         $EXTENSION_HASH_EXEC && run_extension hash_exec 2>> "$UAC_LOG_FILE"

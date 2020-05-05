@@ -62,7 +62,11 @@ Collect current process listing with hash (MD5) values.
 
 ### chkrootkit
 Run [chkrootkit](http://www.chkrootkit.org) tool (if available).
-Note that chrootkit is not provided by UAC. You need to either install it on the target system or download and compile it, and then copy the binary file to ```bin``` directory. Please refer to ```bin/README.txt``` for more information.
+Note that chrootkit tool is not provided by UAC. You need to either have it available on the target system or download and compile it, and make its static binary file available through ```bin``` directory. Please refer to ```bin/README.txt``` for more information.
+
+### fls
+Run Sleuth Kit [fls](http://wiki.sleuthkit.org/index.php?title=Fls) tool (if available).
+Note that fls tool is not provided by UAC. You need to either have it available on the target system or download and compile it, and make its static binary file available through ```bin``` directory. Please refer to ```bin/README.txt``` for more information.
 
 ### hash_exec
 Collect MD5 hashes for all executable files. By default, only files smaller than 3072000 bytes (3MB) will be hashed. Please take a look on the ```extensions/hash_exec/hash_exec.conf``` file more details.
@@ -146,6 +150,7 @@ EXTENSIONS:
                  Comma separated list of extensions.
                  all: Enable all extensions.
                  chkrootkit: Run chkrootkit tool.
+                 fls: Run Sleuth Kit fls tool.
                  hash_exec: Hash executable files.
 
 PROFILES:

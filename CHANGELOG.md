@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 - Now you can use your own validated tools (binary files) during artifacts collection. Please refer to ```bin/README.txt``` for more information.
 - Date Range (-R) option can be used to limit the amount of data collected by logs (-l) and misc_files (-f) collectors.
+- Sleuthkit fls tool extension.
 - New misc_files (-f) collector. Please refer to ```conf/misc_files.conf``` for more information.
 - Files and directories added to ```conf/user_files.conf``` will be collected by the user_accounts (-u) collector.
 - You can set a max depth and max file size for logs (-l), misc_files (-f) and user_accounts (-u) collectors. Please refer to ```conf/uac.conf``` for more information.
