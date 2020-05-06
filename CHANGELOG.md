@@ -31,6 +31,8 @@ All notable changes to this project will be documented in this file.
   - aix
     - mpstat
   - linux
+    - systemctl list-timers --all
+    - systemctl list-unit-files
     - vmstat
   - solaris
     - mpstat

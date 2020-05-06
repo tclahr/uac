@@ -51,6 +51,8 @@ if $LIVE_COLLECTION; then
             run_cmd "service --status-all" "$COLLECTOR_OUTPUT_DIR/service-status-all.txt"
             run_cmd "sysctl -a" "$COLLECTOR_OUTPUT_DIR/sysctl-a.txt"
             run_cmd "systemctl -l" "$COLLECTOR_OUTPUT_DIR/systemctl-l.txt"
+            run_cmd "systemctl list-timers --all" "$COLLECTOR_OUTPUT_DIR/systemctl-list-timers-all.txt"
+            run_cmd "systemctl list-unit-files" "$COLLECTOR_OUTPUT_DIR/systemctl-list-unit-files.txt"
             run_cmd "vmstat" "$COLLECTOR_OUTPUT_DIR/vmstat.txt"
             ;;
         "macos")
