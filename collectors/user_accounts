@@ -76,7 +76,7 @@ if [ -s "$COLLECTOR_OUTPUT_DIR/.home_directories.txt" ]; then
         logging D "Collecting user files from $USER_HOME_DIR\n"
 
         # process log paths
-        run_cmd "cat \"$CWD/conf/user_files.conf\" | grep -v \"^#\" | grep -v \"^$\" | grep \"^/\" | sed 's://*:/:g; s:/$::g' | while read line; do $FIND_TOOL \"\${USER_HOME_DIR}\$line\" $FIND_MAXDEPTH_PARAMETER -type f $FIND_SIZE_PARAMETER ; done" "$COLLECTOR_OUTPUT_DIR/user_files.tmp"
+        run_cmd "cat \"$CWD/conf/user_files.conf\" | grep -v \"^#\" | grep -v \"^$\" | grep \"^/\" | sed 's:^/:'\"$USER_HOME_DIR\"'/:; s://*:/:g; s:/$::g' | while read line; do $FIND_TOOL \"\$line\" $FIND_MAXDEPTH_PARAMETER -type f $FIND_SIZE_PARAMETER ; done" "$COLLECTOR_OUTPUT_DIR/user_files.tmp"
         # process log files/directories names
         run_cmd "cat \"$CWD/conf/user_files.conf\" | grep -v \"^#\" | grep -v \"^$\" | grep -v \"^/\" | while read line; do $FIND_TOOL \"$USER_HOME_DIR\" -name \"\$line\" $FIND_MAXDEPTH_PARAMETER -type f $FIND_SIZE_PARAMETER ; done" "$COLLECTOR_OUTPUT_DIR/user_files.tmp"
     done
