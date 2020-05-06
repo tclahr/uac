@@ -20,6 +20,9 @@
 ################################################################################
 init_vars() {
 
+    # get UAC version from file
+    UAC_VERSION=`head -1 "$CWD/VERSION" 2>/dev/null`
+
     # true     one or more collectors were selected
     # false    no collectors were selected
     ANY_COLLECTOR_SELECTED=false
@@ -55,8 +58,6 @@ init_vars() {
     EXTENSION_FLS=false
     EXTENSION_HASH_EXEC=false
 
-    FIND_TOOL="find"
-
     # set default value for date range vars
     DATE_RANGE_T1=""
     DATE_RANGE_T2=""
@@ -74,13 +75,27 @@ init_vars() {
         EXPR_DASH_DASH=""
     fi
 
+    FIND_TOOL="find"
+
+    # find available MD5 sum tool
+    MD5SUM_TOOL="md5sum"
+    eval echo "uac" | eval md5 > /dev/null 2> /dev/null
+    if [ $? -eq 0 ]; then
+        MD5SUM_TOOL="md5"
+    else
+        eval echo "uac" | eval digest -a md5 > /dev/null 2> /dev/null
+        if [ $? -eq 0 ]; then
+            MD5SUM_TOOL="digest -v -a md5"
+        fi
+    fi
+
     # set compress as the default compression tool because some systems do not have gzip
     COMPRESS_TOOL="compress"
     COMPRESS_EXT="Z"
 
     # each command needs to be tested individually as some systems do not have 'type' or 'which' tool
     HAS_GZIP_TOOL=false
-    eval echo "uac" | gzip >/dev/null 2>/dev/null
+    eval echo "uac" | eval gzip >/dev/null 2>/dev/null
     if [ $? -eq 0 ]; then
         HAS_GZIP_TOOL=true
         COMPRESS_TOOL="gzip"

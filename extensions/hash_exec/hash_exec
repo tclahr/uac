@@ -16,9 +16,6 @@
 
 if $HAS_FILE_TOOL; then
 
-    MD5SUM_BIN=`get_md5sum_bin`
-    logging D "MD5SUM_BIN: $MD5SUM_BIN\n"
-
     FIND_MAXDEPTH_PARAMETER="-maxdepth $HASH_EXEC_MAX_DEPTH"
     # disable find's -maxdepth parameter if HASH_EXEC_MAX_DEPTH=0
     if [ "$HASH_EXEC_MAX_DEPTH" -eq 0 ]; then
@@ -31,7 +28,7 @@ if $HAS_FILE_TOOL; then
         FIND_SIZE_PARAMETER=""
     fi
 
-    run_cmd "$FIND_TOOL \"$MOUNT_POINT\" -type f $FIND_MAXDEPTH_PARAMETER $FIND_SIZE_PARAMETER | while read line; do file \"\$line\" | egrep -q \"(ELF|MZ|executable|PE32|shared object|script)\" && $MD5SUM_BIN \"\$line\"; done" "$EXTENSION_OUTPUT_DIR/hash_exec.txt"
+    run_cmd "$FIND_TOOL \"$MOUNT_POINT\" $FIND_MAXDEPTH_PARAMETER -type f $FIND_SIZE_PARAMETER | while read line; do file \"\$line\" | egrep -q \"(ELF|MZ|executable|PE32|shared object|script)\" && $MD5SUM_TOOL \"\$line\"; done" "$EXTENSION_OUTPUT_DIR/hash_exec.txt"
 
 else
     logging D "Cannot run hash_exec extension. file command not found.\n"
