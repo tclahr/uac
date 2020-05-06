@@ -19,8 +19,7 @@
 #   usage
 ################################################################################
 usage() {
-    VERSION=`get_version`
-    logging I "UAC (Unix-like Artifacts Collector) v$VERSION\n"
+    logging I "UAC (Unix-like Artifacts Collector) v$UAC_VERSION\n"
     logging I "Usage: $0 COLLECTORS [-e EXTENSION_LIST] [-P PROFILE] [OPTIONS] [DESTINATION]\n"
     logging I "\n"
     logging I "COLLECTORS:\n"

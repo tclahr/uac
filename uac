@@ -159,12 +159,12 @@ while getopts "apnuywsdblfre:P:R:VDUvh" opt; do
             fi
             if [ "$DATE_RANGE_T1" -gt 0 ]; then
                 uprintf "Invalid date range $OPTARG\n"
-                exit 11
+                exit 10
             fi
             if [ "$DATE_RANGE_T2" ]; then                
                 if [ "$DATE_RANGE_T1" -gt "$DATE_RANGE_T2" ]; then
                     uprintf "Invalid date range $OPTARG\n"
-                    exit 12
+                    exit 11
                 fi
                 # one more day to be inclusive
                 DATE_RANGE_T1=`expr $EXPR_DASH_DASH $DATE_RANGE_T1 - 1`
@@ -190,8 +190,7 @@ while getopts "apnuywsdblfre:P:R:VDUvh" opt; do
         U)  RUN_AS_NON_ROOT=true
             SHIFT_OPT="$SHIFT_OPT U"
             ;;
-        v)  VERSION=`get_version`
-            uprintf "UAC (Unix-like Artifacts Collector) v$VERSION\n"
+        v)  uprintf "UAC (Unix-like Artifacts Collector) v$UAC_VERSION\n"
             exit 0
             ;;
         h)  usage
@@ -226,7 +225,6 @@ if $ANY_COLLECTOR_SELECTED || $ANY_EXTENSION_SELECTED; then
                 if [ -d "$MOUNT_POINT" ]; then
 
                     CURRENT_DATE_TIME=`get_date "+%Y%m%d%H%M%S"`
-                    TIME_ZONE=`get_date "+%z"`
 
                     if $LIVE_COLLECTION; then
                         HOSTNAME=`get_hostname`
@@ -246,14 +244,13 @@ if $ANY_COLLECTOR_SELECTED || $ANY_EXTENSION_SELECTED; then
                         UAC_LOG_FILE="$DESTINATION_DIR/$TMP_DATA_DIR/uac.log"
 
                         CURRENT_LOGGED_IN_USER=`get_current_logged_in_user`
-                        VERSION=`get_version`
                         logging I "--------------------------------------------------------------------------------\n"
                         logging I "  __   __ _______ _______ \n"
                         logging I " |: | |  |:  _   |:  ____|\n"
                         logging I " |  |_|  |  | |  |  |____ \n"
                         logging I " |_______|__| |__|_______|\n"
                         logging I "\n"
-                        logging I "UAC (Unix-like Artifacts Collector) v$VERSION\n"
+                        logging I "UAC (Unix-like Artifacts Collector) v$UAC_VERSION\n"
                         logging I "--------------------------------------------------------------------------------\n"
                         $VERBOSE && logging I "Command Line: $CMD\n" || logging D "Command Line: $CMD\n"
                         logging I "Destination: $DESTINATION_DIR/$TMP_DATA_DIR\n"
@@ -354,7 +351,7 @@ if $ANY_COLLECTOR_SELECTED || $ANY_EXTENSION_SELECTED; then
                             uprintf "Compressed output file created at $DESTINATION_DIR/$COMPRESSED_OUTPUT_FILE\n"
 
                             uprintf "Computing MD5 hash. Please wait...\n"
-                            `get_md5sum_bin` "$COMPRESSED_OUTPUT_FILE" > "$COMPRESSED_OUTPUT_FILE.md5"
+                            $MD5SUM_TOOL "$COMPRESSED_OUTPUT_FILE" > "$COMPRESSED_OUTPUT_FILE.md5"
                             if [ ! -z "$COMPRESSED_OUTPUT_FILE.md5" ]; then
                                 uprintf "MD5 hash output file created at $DESTINATION_DIR/$COMPRESSED_OUTPUT_FILE.md5\n"
                             else
