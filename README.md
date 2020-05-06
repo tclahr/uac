@@ -65,7 +65,7 @@ Run [chkrootkit](http://www.chkrootkit.org) tool (if available).
 Note that chrootkit tool is not provided by UAC. You need to either have it available on the target system or download and compile it, and make its static binary file available through ```bin``` directory. Please refer to ```bin/README.txt``` for more information.
 
 ### fls
-Run Sleuth Kit [fls](http://wiki.sleuthkit.org/index.php?title=Fls) tool (if available).
+Run Sleuth Kit [fls](http://wiki.sleuthkit.org/index.php?title=Fls) tool (if available) against all mounted file systems.
 Note that fls tool is not provided by UAC. You need to either have it available on the target system or download and compile it, and make its static binary file available through ```bin``` directory. Please refer to ```bin/README.txt``` for more information.
 
 ### hash_exec
