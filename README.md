@@ -93,7 +93,7 @@ Use this profile to collect Solaris artifacts.
 ## Options
 
 ### Date Range (-R)
-The range of dates to be used by logs (-l) and misc_files (-f) collectors. The date range is used to limit the amount of data collected by filtering files using find's -atime, -mtime or -ctime parameter. By default, UAC will search for files that data was last modified (-mtime) OR status last changed (-ctime) within the given date range. Please refer to ```conf/uac.conf``` for more details.
+The range of dates to be used by logs (-l), misc_files (-f) and user_accounts (-u) collectors. The date range is used to limit the amount of data collected by filtering files using find's -atime, -mtime or -ctime parameter. By default, UAC will search for files that data was last modified (-mtime) OR status last changed (-ctime) within the given date range. Please refer to ```conf/uac.conf``` for more details.
 The standard format is YYYY-MM-DD for a starting date and no ending date. For an ending date, use YYYY-MM-DD..YYYY-MM-DD.
 
 ### Debug (-D)
