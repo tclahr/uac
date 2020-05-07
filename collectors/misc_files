@@ -54,8 +54,8 @@ else
     run_cmd "cat \"$CWD/conf/misc_files.conf\" | grep -v \"^#\" | grep -v \"^$\" | grep -v \"^/\" | while read line; do $FIND_TOOL \"$MOUNT_POINT\" -name \"\$line\" $FIND_MAXDEPTH_PARAMETER -type f $FIND_SIZE_PARAMETER ; done" "$COLLECTOR_OUTPUT_DIR/misc_files.tmp"
 fi
 
-# remove any UAC directories from the collection
-run_cmd "cat \"$COLLECTOR_OUTPUT_DIR/misc_files.tmp\" | grep -v \"$CWD\" | grep -v \"$DESTINATION_DIR/$TMP_DATA_DIR\" > \"$COLLECTOR_OUTPUT_DIR/misc_files.txt\""
+# remove any UAC directories from the collection, sort and uniq
+run_cmd "cat \"$COLLECTOR_OUTPUT_DIR/misc_files.tmp\" | grep -v \"$CWD\" | grep -v \"$DESTINATION_DIR/$TMP_DATA_DIR\" | sort | uniq > \"$COLLECTOR_OUTPUT_DIR/misc_files.txt\""
 
 # remove temporary files
 run_cmd "rm -f \"$COLLECTOR_OUTPUT_DIR/misc_files.tmp\""
