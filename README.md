@@ -2,7 +2,7 @@
 
 ## Description
 
-UAC is a command line shell script that makes use of built-in tools to automate the collection of system artifacts. The script respects the order of volatility and artifacts that are changed during the execution. It can also be run against mounted forensic images. Please take a look on the ```conf/uac.conf``` file for more details.
+UAC is a command line shell script that makes use of built-in tools to automate the collection of Unix-like systems artifacts. The script respects the order of volatility and artifacts that are changed during the execution. It can also be run against mounted forensic images. Please take a look on the ```conf/uac.conf``` file for more details.
 
 UAC was created for Incident Responders, Forensic Analysts, Auditors and System Administrators to facilitate and speed up data collection, and depend less on remote support.
 
@@ -17,7 +17,7 @@ The project's [maintainers](MAINTAINERS.md) are responsible for reviewing and me
 ## Supported Systems
 
 - AIX
-- BSD (FreeBSD, NetBSD, OpenBSD...)
+- BSD
 - Linux
 - macOS
 - Solaris
@@ -79,10 +79,12 @@ One of the following profiles will be selected automatically according to the ke
 Use this profile to collect AIX artifacts.
 
 ### bsd
-Use this profile to collect BSD (OpenBSD, FreeBSD, NetBSD...) artifacts.
+Use this profile to collect BSD-based systems artifacts.
+*e.g. FreeBSD, NetBSD, OpenBSD, NetScaler...*
 
 ### linux
-Use this profile to collect Linux artifacts.
+Use this profile to collect Linux-based systems artifacts.
+*e.g. Debian, Red Hat, SuSE, Arch Linux, OpenWRT, QNAP QTS, Windows Subsystem for Linux...*
 
 ### macos
 Use this profile to collect macOS artifacts.
@@ -156,8 +158,8 @@ EXTENSIONS:
 PROFILES:
     -P PROFILE   Force UAC to use a specific profile.
                  aix: Use this one to collect AIX artifacts.
-                 bsd: Use this one to collect BSD (OpenBSD, FreeBSD, NetBSD...) artifacts.
-                 linux: Use this one to collect Linux artifacts.
+                 bsd: Use this one to collect BSD-based systems artifacts.
+                 linux: Use this one to collect Linux-based systems artifacts.
                  macos: Use this one to collect macOS artifacts.
                  solaris: Use this one to collect Solaris artifacts.
 
