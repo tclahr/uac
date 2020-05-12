@@ -67,6 +67,13 @@ init_vars() {
         LIVE_COLLECTION=false
     fi
 
+    # check if system can convert date to epoch
+    DATE_RANGE_OPTION_SUPPORTED=true
+    eval get_epoch 2020-02-04 > /dev/null 2> /dev/null
+    if [ ! $? -eq 0 ]; then
+        DATE_RANGE_OPTION_SUPPORTED=false
+    fi
+
     # test to check if expr tool supports --
     # some embedded linux does not support it
     EXPR_DASH_DASH="--"
