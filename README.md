@@ -79,11 +79,11 @@ One of the following profiles will be selected automatically according to the ke
 Use this profile to collect AIX artifacts.
 
 ### bsd
-Use this profile to collect BSD-based systems artifacts.
+Use this profile to collect BSD-based systems artifacts.  
 *e.g. FreeBSD, NetBSD, OpenBSD, NetScaler...*
 
 ### linux
-Use this profile to collect Linux-based systems artifacts.
+Use this profile to collect Linux-based systems artifacts.  
 *e.g. Debian, Red Hat, SuSE, Arch Linux, OpenWRT, QNAP QTS, Windows Subsystem for Linux...*
 
 ### macos
