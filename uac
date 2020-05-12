@@ -145,39 +145,44 @@ while getopts "apnuywsdblfre:P:R:VDUvh" opt; do
             fi
             SHIFT_OPT="$SHIFT_OPT P $PROFILE"
             ;;
-        R)  TODAY=`get_date "+%Y-%m-%d"`
-            if regex_match "^((19|20)[0-9][0-9])-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$" "$OPTARG"; then
-                DATE_RANGE_T1=`get_days_between_dates "$TODAY" "$OPTARG"`
-            elif regex_match "^((19|20)[0-9][0-9])-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])..((19|20)[0-9][0-9])-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$" "$OPTARG"; then
-                DATE_T1=`echo "$OPTARG" | cut -d"." -f 1`
-                DATE_T2=`echo "$OPTARG" | cut -d"." -f 3`
-                DATE_RANGE_T1=`get_days_between_dates "$TODAY" "$DATE_T1"`
-                DATE_RANGE_T2=`get_days_between_dates "$TODAY" "$DATE_T2"`
-            else
-                uprintf "Invalid date range $OPTARG\n"
-                exit 9
-            fi
-            if [ "$DATE_RANGE_T1" -gt 0 ]; then
-                uprintf "Invalid date range $OPTARG\n"
-                exit 10
-            fi
-            if [ "$DATE_RANGE_T2" ]; then                
-                if [ "$DATE_RANGE_T1" -gt "$DATE_RANGE_T2" ]; then
+        R)  if $DATE_RANGE_OPTION_SUPPORTED; then
+                TODAY=`get_date "+%Y-%m-%d"`
+                if regex_match "^((19|20)[0-9][0-9])-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$" "$OPTARG"; then
+                    DATE_RANGE_T1=`get_days_between_dates "$TODAY" "$OPTARG"`
+                elif regex_match "^((19|20)[0-9][0-9])-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])..((19|20)[0-9][0-9])-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$" "$OPTARG"; then
+                    DATE_T1=`echo "$OPTARG" | cut -d"." -f 1`
+                    DATE_T2=`echo "$OPTARG" | cut -d"." -f 3`
+                    DATE_RANGE_T1=`get_days_between_dates "$TODAY" "$DATE_T1"`
+                    DATE_RANGE_T2=`get_days_between_dates "$TODAY" "$DATE_T2"`
+                else
+                    uprintf "Invalid date range $OPTARG\n"
+                    exit 10
+                fi
+                if [ "$DATE_RANGE_T1" -gt 0 ]; then
                     uprintf "Invalid date range $OPTARG\n"
                     exit 11
                 fi
-                # one more day to be inclusive
-                DATE_RANGE_T1=`expr $EXPR_DASH_DASH $DATE_RANGE_T1 - 1`
-                DATE_RANGE_T2=`expr $EXPR_DASH_DASH $DATE_RANGE_T2 + 1`
-                if [ "$DATE_RANGE_T2" -eq 0 ] || [ "$DATE_RANGE_T2" -gt 0 ]; then
-                    DATE_RANGE_T2=""
+                if [ "$DATE_RANGE_T2" ]; then                
+                    if [ "$DATE_RANGE_T1" -gt "$DATE_RANGE_T2" ]; then
+                        uprintf "Invalid date range $OPTARG\n"
+                        exit 12
+                    fi
+                    # one more day to be inclusive
+                    DATE_RANGE_T1=`expr $EXPR_DASH_DASH $DATE_RANGE_T1 - 1`
+                    DATE_RANGE_T2=`expr $EXPR_DASH_DASH $DATE_RANGE_T2 + 1`
+                    if [ "$DATE_RANGE_T2" -eq 0 ] || [ "$DATE_RANGE_T2" -gt 0 ]; then
+                        DATE_RANGE_T2=""
+                    else
+                        # to be used properly with find -atime, -mtime or -ctime, second parameter needs to be positive
+                        DATE_RANGE_T2=`expr $EXPR_DASH_DASH $DATE_RANGE_T2 \* -1`
+                    fi
                 else
-                    # to be used properly with find -atime, -mtime or -ctime, second parameter needs to be positive
-                    DATE_RANGE_T2=`expr $EXPR_DASH_DASH $DATE_RANGE_T2 \* -1`
+                    # one more day to be inclusive
+                    DATE_RANGE_T1=`expr $EXPR_DASH_DASH $DATE_RANGE_T1 - 1`
                 fi
             else
-                # one more day to be inclusive
-                DATE_RANGE_T1=`expr $EXPR_DASH_DASH $DATE_RANGE_T1 - 1`
+                uprintf "Date range option is not supported by this system.\n"
+                exit 9
             fi
             SHIFT_OPT="$SHIFT_OPT R $OPTARG"
             ;;
