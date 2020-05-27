@@ -14,38 +14,43 @@
 
 # body_file collector
 
-FIND_MAXDEPTH_PARAMETER="-maxdepth $BODY_FILE_MAX_DEPTH"
-# disable find's -maxdepth parameter if BODY_FILE_MAX_DEPTH=0
-if [ "$BODY_FILE_MAX_DEPTH" -eq "0" ]; then
-    FIND_MAXDEPTH_PARAMETER=""
-fi
+if $HAS_STAT_TOOL || $HAS_PERL_TOOL; then
+    
+    FIND_MAXDEPTH_PARAMETER="-maxdepth $BODY_FILE_MAX_DEPTH"
+    # disable find's -maxdepth parameter if BODY_FILE_MAX_DEPTH=0
+    if [ "$BODY_FILE_MAX_DEPTH" -eq "0" ]; then
+        FIND_MAXDEPTH_PARAMETER=""
+    fi
 
-case "$PROFILE" in
-    "aix")
-        run_cmd "perl \"$CWD/tools/find/find.pl\" $FIND_MAXDEPTH_PARAMETER \"$MOUNT_POINT\" | while read line; do perl \"$CWD/tools/stat/stat.pl\" \"\$line\"; done" "$COLLECTOR_OUTPUT_DIR/body_file.txt"
-        ;;
-    "bsd")
-        if has_tool stat; then
-            run_cmd "find \"$MOUNT_POINT\" $FIND_MAXDEPTH_PARAMETER -exec stat -f \"0|%N|%i|%Sp|%u|%g|%z|%a|%m|%c|%B\" \"{}\" \\;" "$COLLECTOR_OUTPUT_DIR/body_file.txt"
-        else
-            run_cmd "find \"$MOUNT_POINT\" $FIND_MAXDEPTH_PARAMETER -exec perl \"$CWD/tools/stat/stat.pl\" \"{}\" \\;" "$COLLECTOR_OUTPUT_DIR/body_file.txt"
-        fi
-        ;;
-    "linux")
-        if has_tool stat; then
-            run_cmd "find \"$MOUNT_POINT\" $FIND_MAXDEPTH_PARAMETER -exec stat -c \"0|%n|%i|%A|%u|%g|%s|%X|%Y|%Z|%W\" \"{}\" \\;" "$COLLECTOR_OUTPUT_DIR/body_file.txt"
-        else
-            run_cmd "find \"$MOUNT_POINT\" $FIND_MAXDEPTH_PARAMETER -exec perl \"$CWD/tools/stat/stat.pl\" \"{}\" \\;" "$COLLECTOR_OUTPUT_DIR/body_file.txt"
-        fi
-        ;;
-    "macos")
-        run_cmd "find \"$MOUNT_POINT\" $FIND_MAXDEPTH_PARAMETER -exec stat -f \"0|%N|%i|%Sp|%u|%g|%z|%a|%m|%c|%B\" \"{}\" \\;" "$COLLECTOR_OUTPUT_DIR/body_file.txt"
-        ;;
-    "solaris")
-        if has_tool stat; then
-            run_cmd "perl \"$CWD/tools/find/find.pl\" $FIND_MAXDEPTH_PARAMETER \"$MOUNT_POINT\" | while read line; do stat -c '0|%n|%i|%A|%u|%g|%s|%X|%Y|%Z|%W' \"\$line\"; done" "$COLLECTOR_OUTPUT_DIR/body_file.txt"
-        else
-            run_cmd "perl \"$CWD/tools/find/find.pl\" $FIND_MAXDEPTH_PARAMETER \"$MOUNT_POINT\" | while read line; do perl \"$CWD/tools/stat/stat.pl\" \"\$line\"; done" "$COLLECTOR_OUTPUT_DIR/body_file.txt"
-        fi
-        ;;
-esac
+    case "$PROFILE" in
+        "aix")
+            run_cmd "$FIND_TOOL \"$MOUNT_POINT\" $FIND_MAXDEPTH_PARAMETER | while read line; do perl \"$CWD/tools/stat/stat.pl\" \"\$line\"; done" "$COLLECTOR_OUTPUT_DIR/body_file.txt"
+            ;;
+        "bsd")
+            if $HAS_STAT_TOOL; then
+                run_cmd "$FIND_TOOL \"$MOUNT_POINT\" $FIND_MAXDEPTH_PARAMETER -exec stat -f \"0|%N|%i|%Sp|%u|%g|%z|%a|%m|%c|%B\" \"{}\" \\;" "$COLLECTOR_OUTPUT_DIR/body_file.txt"
+            else
+                run_cmd "$FIND_TOOL \"$MOUNT_POINT\" $FIND_MAXDEPTH_PARAMETER -exec perl \"$CWD/tools/stat/stat.pl\" \"{}\" \\;" "$COLLECTOR_OUTPUT_DIR/body_file.txt"
+            fi
+            ;;
+        "linux")
+            if $HAS_STAT_TOOL; then
+                run_cmd "$FIND_TOOL \"$MOUNT_POINT\" $FIND_MAXDEPTH_PARAMETER -exec stat -c \"0|%n|%i|%A|%u|%g|%s|%X|%Y|%Z|%W\" \"{}\" \\;" "$COLLECTOR_OUTPUT_DIR/body_file.txt"
+            else
+                run_cmd "$FIND_TOOL \"$MOUNT_POINT\" $FIND_MAXDEPTH_PARAMETER -exec perl \"$CWD/tools/stat/stat.pl\" \"{}\" \\;" "$COLLECTOR_OUTPUT_DIR/body_file.txt"
+            fi
+            ;;
+        "macos")
+            run_cmd "$FIND_TOOL \"$MOUNT_POINT\" $FIND_MAXDEPTH_PARAMETER -exec stat -f \"0|%N|%i|%Sp|%u|%g|%z|%a|%m|%c|%B\" \"{}\" \\;" "$COLLECTOR_OUTPUT_DIR/body_file.txt"
+            ;;
+        "solaris")
+            if $HAS_STAT_TOOL; then
+                run_cmd "$FIND_TOOL \"$MOUNT_POINT\" $FIND_MAXDEPTH_PARAMETER | while read line; do stat -c '0|%n|%i|%A|%u|%g|%s|%X|%Y|%Z|%W' \"\$line\"; done" "$COLLECTOR_OUTPUT_DIR/body_file.txt"
+            else
+                run_cmd "$FIND_TOOL \"$MOUNT_POINT\" $FIND_MAXDEPTH_PARAMETER | while read line; do perl \"$CWD/tools/stat/stat.pl\" \"\$line\"; done" "$COLLECTOR_OUTPUT_DIR/body_file.txt"
+            fi
+            ;;
+    esac
+else
+    logging D "Cannot run body_file collector. stat or perl not found.\n"
+fi

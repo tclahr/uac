@@ -12,7 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# chkrootkit extension
-
-run_cmd "chkrootkit -n -r \"$MOUNT_POINT\"" "$EXTENSION_OUTPUT_DIR/chkrootkit-n.txt"
-run_cmd "chkrootkit -x -r \"$MOUNT_POINT\"" "$EXTENSION_OUTPUT_DIR/chkrootkit-x.txt"
+################################################################################
+# NAME
+#   get_hostname - get the current system hostname
+# SYNOPSIS
+#   get_hostname
+# RETURN VALUE
+#   hostname
+################################################################################
+get_hostname() {
+    if $HAS_HOSTNAME_TOOL; then
+        hostname
+    elif [ -r "/etc/hostname" ];then
+        head -1 "/etc/hostname" 2>/dev/null
+    else
+        echo "unknown"
+    fi
+}

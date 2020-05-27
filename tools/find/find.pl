@@ -16,64 +16,126 @@
 
 use strict;
 use File::Find;
-use Getopt::Long;
-
-my $max_depth_option = 0;
-my $regex_option = "";
-my $size_option_value = 0;
-my $size_option_prefix = ""; # less or greater than
-my $size_option_unit = "c"; # for bytes
 
 sub usage {
-    print("Usage: find.pl [OPTIONS] starting-point\n");
+    print("Usage: find.pl starting-point [OPTIONS]\n");
     print("\n");
     print("OPTIONS\n");
     print("    -maxdepth LEVELS\n");
-    print("       Descend at most levels (a non-negative integer) levels of directories below the starting-point.\n");
+    print("        Descend at most levels (a non-negative integer) levels of directories below the starting-point.\n");
     print("\n");
-    print("    -regex PATTERN\n");
-    print("       File name matches regular expression pattern. This is a match on the whole path, not a search.\n");
+    print("    -name PATTERN\n");
+    print("        File name matches specified glob wildcard pattern (just as with using find).\n");
+    print("\n");
+    print("    -iname PATTERN\n");
+    print("        Like -name, but the match is case insensitive.\n");
+    print("\n");
+    print("    -atime N\n");
+    print("        File was last accessed N*24 hours ago. When find figures out how many 24-hour periods ago the file was\n");
+    print("        last accessed, any fractional part is ignored, so to match -atime +1, a file has to have been accessed\n");
+    print("        at least two days ago.\n");
+    print("\n");
+    print("    -mtime N\n");
+    print("        File's data was last modified N*24 hours ago. See the comments for -atime to understand how rounding\n");
+    print("        affects the interpretation of file status change times.\n");
+    print("\n");
+    print("    -ctime N\n");
+    print("        File's status was last changed N*24 hours ago. See the comments for -atime to understand how rounding\n");
+    print("        affects the interpretation of file status change times.\n");
+    print("\n");
+    print("    -type X\n");
+    print("        File is of type X:\n");
+    print("\n");
+    print("        f   regular file\n");
+    print("        d   directory\n");
+    print("        l   symbolic link\n");
+    print("        p   named pipe (FIFO)\n");
+    print("        s   socket\n");
+    print("        b   block special\n");
+    print("        c   character special\n");
     print("\n");
     print("    -size N[ckMG]\n");
-    print("       File uses N units of space. The following suffixes can be used:\n");
+    print("        File uses N units of space. The following suffixes can be used:\n");
     print("\n");
-    print("       c   for bytes (this is the default if no suffix is used)\n");
-    print("       k   for kilobytes (kB, units of 1024 bytes)\n");
-    print("       M   for megabyte (MB, units of 1024 * 1024 bytes)\n");
-    print("       G   for gigabyte (GB, units of 1024 * 1024 * 1024 bytes)\n");
+    print("        c   for bytes (this is the default if no suffix is used)\n");
+    print("        k   for kilobytes (kB, units of 1024 bytes)\n");
+    print("        M   for megabyte (MB, units of 1024 * 1024 bytes)\n");
+    print("        G   for gigabyte (GB, units of 1024 * 1024 * 1024 bytes)\n");
     print("\n");
-    print("       The + and - prefixes signify greater than and less than, as usual.\n");
+    print("    Predicates which take a numeric argument N can come in three forms:\n");
+    print("        N is prefixed with a +: match values greater than N\n");
+    print("        N is prefixed with a -: match values less than N\n");
+    print("        N is not prefixed with either + or -: match only values equal to N\n");
     print("\n");
     exit 1;
 }
 
-sub size_option_handler {
-    my ($opt_name, $opt_value) = @_;
-    if ($opt_value =~ /([\+\-]?)(\d+)([ckMG]?)/) {
-        $size_option_prefix = ($1 eq "+" or $1 eq "-") ? $1 : "";
-        $size_option_value = $2;
-        $size_option_unit = ($3 eq "c" or $3 eq "k" or $3 eq "M" or $3 eq "G") ? $3 : usage();
-    } else {
-        usage();
-    }
+sub fileglob_to_regex($) {
+    my $retval = shift;
+    $retval =~ s#([./^\$()+])#\\$1#g;
+    $retval =~ s#\*#.*#g;
+    $retval =~ s#\?#.#g;
+    "^$retval\\z";
 }
 
-GetOptions(
-    "maxdepth=i"    => \$max_depth_option,
-    "regex=s"       => \$regex_option,
-    "size=s"        => \&size_option_handler
-) or usage();
-
-my $root = defined $ARGV[0] ? $ARGV[0] : ".";
+my $root = $ARGV[0] || usage();
 if (-e $root) {
+    shift;
+    my $wanted = "print(\"\$File::Find::name\\n\");";
+    my $maxdepth = 0;
     my $depth = 0;
-    $size_option_value = ($size_option_unit eq "k") ? $size_option_value * 1024 : $size_option_value;
-    $size_option_value = ($size_option_unit eq "M") ? $size_option_value * 1024 * 1024 : $size_option_value;
-    $size_option_value = ($size_option_unit eq "G") ? $size_option_value * 1024 * 1024 * 1024 : $size_option_value;
+    my $lstat_needed = 0;
+    while(@ARGV) {
+        my $arg_option = shift;
+        if ($arg_option =~ /^-maxdepth$/) {
+            $maxdepth = shift;
+            ($maxdepth =~ /^\d+$/) || die ("Expected a positive decimal integer argument to -maxdepth, but got $maxdepth\n");
+        } elsif ($arg_option =~ /^-name$/) {
+            $wanted = "/" . fileglob_to_regex(shift) . "/ && " . $wanted;
+        } elsif ($arg_option =~ /^-iname$/) {
+            $wanted = "/" . fileglob_to_regex(shift) . "/i && " . $wanted;
+        } elsif ($arg_option =~ /^-atime$/) {
+            my $atime = shift;
+            ($atime =~ /^([\+\-]?)(\d+)$/) || die ("Invalid argument to -atime: $atime\n");
+            $atime =~ s/^-/< / || $atime =~ s/^\+/> / || $atime =~ s/^/== /;
+            $wanted = "int(-A _) $atime && " . $wanted;
+            $lstat_needed = 1;
+        } elsif ($arg_option =~ /^-mtime$/) {
+            my $mtime = shift;
+            ($mtime =~ /^([\+\-]?)(\d+)$/) || die ("Invalid argument to -mtime: $mtime\n");
+            $mtime =~ s/^-/< / || $mtime =~ s/^\+/> / || $mtime =~ s/^/== /;
+            $wanted = "int(-M _) $mtime && " . $wanted;
+            $lstat_needed = 1;
+        } elsif ($arg_option =~ /^-ctime$/) {
+            my $ctime = shift;
+            ($ctime =~ /^([\+\-]?)(\d+)$/) || die ("Invalid argument to -ctime: $ctime\n");
+            $ctime =~ s/^-/< / || $ctime =~ s/^\+/> / || $ctime =~ s/^/== /;
+            $wanted = "int(-C _) $ctime && " . $wanted;
+            $lstat_needed = 1;
+        } elsif ($arg_option =~ /^-type$/) {
+            my $type = shift;
+            $type =~ /^[fdlpsbc]$/ || die ("Unknown argument to -type: $type\n");
+            $type =~ tr/s/S/;
+            $wanted = "(-$type _) && " . $wanted;
+            $lstat_needed = 1;
+        } elsif ($arg_option =~ /^-size$/) {
+            my $size = shift;
+            ($size =~ /^([\+\-]?)(\d+)([ckMG]?)$/) || die ("Invalid argument to -size: $size\n");
+            $size =~ s/^-/< / || $size =~ s/^\+/> / || $size =~ s/^/== /;
+            $size =~ s/c$// || $size =~ s/k$/000/ || $size =~ s/M$/000000/ || $size =~ s/G$/000000000/;
+            $wanted = "int(-s _) $size && " . $wanted;
+            $lstat_needed = 1;
+        } else {
+            die("Unrecognized option: $arg_option\n");
+        }
+    }
+    if ($lstat_needed) {
+        $wanted = "lstat(\$File::Find::name) && " . $wanted;
+    }
     find({
         preprocess => sub {
             $depth += 1;
-            return if ($depth > $max_depth_option) and ($max_depth_option > 0);
+            return if ($depth > $maxdepth) and ($maxdepth > 0);
             @_;
         },
         postprocess => sub {
@@ -81,40 +143,11 @@ if (-e $root) {
             @_;
         },
         wanted => sub {
-            my $regex_option_passed = 1;
-            my $size_option_passed = 1;
-
-            if ($regex_option) {
-                if ($File::Find::name !~ /$regex_option/) {
-                    $regex_option_passed = 0;
-                }
-            }
-
-            if ($size_option_value) {
-                my ($dev,$inode,$mode,$nlink,$uid,$gid,$rdev,$size,$atime,$mtime,$ctime,$blksize,$blocks) = stat($File::Find::name);
-                if ($size_option_prefix eq "+") {
-                    if ($size <= $size_option_value) {
-                        $size_option_passed = 0;
-                    }
-                } elsif ($size_option_prefix eq "-") {
-                    if ($size >= $size_option_value) {
-                        $size_option_passed = 0;
-                    }
-                } else {
-                    if ($size != $size_option_value) {
-                        $size_option_passed = 0;
-                    }
-                }
-            }
-
-            if ($regex_option_passed and $size_option_passed) {
-                print("$File::Find::name\n");
-            }
+            eval $wanted;
         },
-        no_chdir => 1,
+        no_chdir => 0,
         follow_skip => 1
     }, $root);
-
 } else {
-    die("'$root': No such file or directory\n")
+    die("$root: No such file or directory\n")
 }

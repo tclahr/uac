@@ -12,7 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# chkrootkit extension
-
-run_cmd "chkrootkit -n -r \"$MOUNT_POINT\"" "$EXTENSION_OUTPUT_DIR/chkrootkit-n.txt"
-run_cmd "chkrootkit -x -r \"$MOUNT_POINT\"" "$EXTENSION_OUTPUT_DIR/chkrootkit-x.txt"
+################################################################################
+# NAME
+#   to_lower - convert string to its lowercase equivalent
+# SYNOPSIS
+#   to_lower STRING
+# RETURN VALUE
+#   the lowercase equivalent to STRING
+################################################################################
+to_lower() {
+    # had to use sed here because tr is not available on all busybox/toybox based systems
+    echo "$1" | sed 'y:ABCDEFGHIJKLMNOPQRSTUVWXYZ:abcdefghijklmnopqrstuvwxyz:'
+}

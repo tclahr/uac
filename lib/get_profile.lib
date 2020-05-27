@@ -23,14 +23,14 @@
 get_profile() {
     KERNEL_NAME=`uname -s`
     case "$KERNEL_NAME" in
-        "AIX"       ) printf %s "aix" ;;
-        "FreeBSD"   ) printf %s "bsd" ;;
-        "OpenBSD"   ) printf %s "bsd" ;;
-        "NetBSD"    ) printf %s "bsd" ;;
-        "DragonFly" ) printf %s "bsd" ;;
-        "Linux"     ) printf %s "linux" ;;
-        "Darwin"    ) printf %s "macos" ;;
-        "SunOS"     ) printf %s "solaris" ;;
-        *           ) printf %s "$KERNEL_NAME" ;;
+        "AIX"       ) echo "aix" ;;
+        "FreeBSD"   ) echo "bsd" ;;
+        "OpenBSD"   ) echo "bsd" ;;
+        "NetBSD"    ) echo "bsd" ;;
+        "DragonFly" ) echo "bsd" ;;
+        "Linux"     ) echo "linux" ;;
+        "Darwin"    ) echo "macos" ;;
+        "SunOS"     ) echo "solaris" ;;
+        *           ) echo "$KERNEL_NAME" ;;
     esac
 }

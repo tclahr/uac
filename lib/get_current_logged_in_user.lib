@@ -14,12 +14,16 @@
 
 ################################################################################
 # NAME
-#   get_version - get the current UAC version
+#   get_current_logged_in_user - get the current logged in user
 # SYNOPSIS
-#   get_version
+#   get_current_logged_in_user
 # RETURN VALUE
-#   current UAC version
+#   current logged in user
 ################################################################################
-get_version() {
-    head -1 "$CWD/VERSION"
+get_current_logged_in_user() {
+    if [ "$LOGNAME" ]; then
+        echo "$LOGNAME"
+    else
+        echo "$USER"
+    fi
 }

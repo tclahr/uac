@@ -14,22 +14,15 @@
 
 ################################################################################
 # NAME
-#   get_md5sum_bin - find available MD5 sum tool
+#   get_days_between_dates - return the number of days between dates
 # SYNOPSIS
-#   get_md5sum_bin
+#   get_days_between_dates YYYY-MM-DD YYYY-MM-DD
 # RETURN VALUE
-#   path for the available MD5 sum tool
+#   number of days between dates
 ################################################################################
-get_md5sum_bin() {
-    RETVAL="md5sum"
-    type md5 > /dev/null 2> /dev/null
-    if [ $? -eq 0 ]; then
-        RETVAL="md5"
-    else
-        type digest > /dev/null 2> /dev/null
-        if [ $? -eq 0 ]; then
-            RETVAL="digest -v -a md5"
-        fi
-    fi
-    printf %s "$RETVAL"
+get_days_between_dates() {
+    EPOCH_DATE_T1=`get_epoch "$1"`
+    EPOCH_DATE_T2=`get_epoch "$2"`
+    DIFFERENCE=`expr $EXPR_DASH_DASH $EPOCH_DATE_T2 - $EPOCH_DATE_T1`
+    expr $EXPR_DASH_DASH $DIFFERENCE / 86400
 }

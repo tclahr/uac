@@ -14,59 +14,80 @@
 
 # system collector
 
-run_cmd "date" "$COLLECTOR_OUTPUT_DIR/date.txt"
-run_cmd "env" "$COLLECTOR_OUTPUT_DIR/env.txt"
-run_cmd "uptime" "$COLLECTOR_OUTPUT_DIR/uptime.txt"
+if $LIVE_COLLECTION; then
 
-case "$PROFILE" in
-    "aix")
-        run_cmd "errpt -a" "$COLLECTOR_OUTPUT_DIR/errpt-a.txt"
-        run_cmd "genkex" "$COLLECTOR_OUTPUT_DIR/genkex.txt"
-        run_cmd "iostat" "$COLLECTOR_OUTPUT_DIR/iostat.txt"
-        run_cmd "lparstat -i" "$COLLECTOR_OUTPUT_DIR/lparstat-i.txt"
-        run_cmd "lsps -a" "$COLLECTOR_OUTPUT_DIR/lsps-a.txt"
-        run_cmd "lssrc -a" "$COLLECTOR_OUTPUT_DIR/lssrc-a.txt"
-        run_cmd "lssrc -l -s inetd" "$COLLECTOR_OUTPUT_DIR/lssrc-l-s-inetd.txt"
-        run_cmd "oslevel" "$COLLECTOR_OUTPUT_DIR/oslevel.txt"
-        run_cmd "oslevel -r" "$COLLECTOR_OUTPUT_DIR/oslevel-r.txt"
-        run_cmd "oslevel -s" "$COLLECTOR_OUTPUT_DIR/oslevel-s.txt"
-        run_cmd "vmstat" "$COLLECTOR_OUTPUT_DIR/vmstat.txt"
-        run_cmd "who -r" "$COLLECTOR_OUTPUT_DIR/who-r.txt"
-        ;;
-    "bsd")
-        run_cmd "iostat" "$COLLECTOR_OUTPUT_DIR/iostat.txt"
-        run_cmd "kldstat -v" "$COLLECTOR_OUTPUT_DIR/kldstat-v.txt"
-        run_cmd "swapctl -l" "$COLLECTOR_OUTPUT_DIR/swapctl-l.txt"
-        run_cmd "swapinfo" "$COLLECTOR_OUTPUT_DIR/swapinfo.txt"
-        run_cmd "sysctl -a" "$COLLECTOR_OUTPUT_DIR/sysctl-a.txt"
-        run_cmd "vmstat" "$COLLECTOR_OUTPUT_DIR/vmstat.txt"
-        ;;
-    "linux")
-        run_cmd "chkconfig --list" "$COLLECTOR_OUTPUT_DIR/chkconfig-list.txt"
-        run_cmd "free" "$COLLECTOR_OUTPUT_DIR/free.txt"
-        run_cmd "hwclock" "$COLLECTOR_OUTPUT_DIR/hwclock.txt"
-        run_cmd "lsmod" "$COLLECTOR_OUTPUT_DIR/lsmod.txt"
-        run_cmd "runlevel" "$COLLECTOR_OUTPUT_DIR/runlevel.txt"
-        run_cmd "service --status-all" "$COLLECTOR_OUTPUT_DIR/service-status-all.txt"
-        run_cmd "sysctl -a" "$COLLECTOR_OUTPUT_DIR/sysctl-a.txt"
-        run_cmd "systemctl -l" "$COLLECTOR_OUTPUT_DIR/systemctl-l.txt"
-        ;;
-    "macos")
-        run_cmd "kextstat" "$COLLECTOR_OUTPUT_DIR/kextstat.txt"
-        run_cmd "launchctl list" "$COLLECTOR_OUTPUT_DIR/launchctl-list.txt"
-        run_cmd "sw_vers" "$COLLECTOR_OUTPUT_DIR/sw_vers.txt"
-        run_cmd "sysctl -a" "$COLLECTOR_OUTPUT_DIR/sysctl-a.txt"
-        run_cmd "vm_stat" "$COLLECTOR_OUTPUT_DIR/vm_stat.txt"
-        ;;
-    "solaris")
-        run_cmd "crle" "$COLLECTOR_OUTPUT_DIR/crle.txt"
-        run_cmd "isainfo -v -k" "$COLLECTOR_OUTPUT_DIR/isainfo-v-k.txt"
-        run_cmd "modinfo" "$COLLECTOR_OUTPUT_DIR/modinfo.txt"
-        run_cmd "prtdiag -v" "$COLLECTOR_OUTPUT_DIR/prtdiag-v.txt"
-        run_cmd "showrev" "$COLLECTOR_OUTPUT_DIR/showrev.txt"
-        run_cmd "showrev -p" "$COLLECTOR_OUTPUT_DIR/showrev-p.txt"
-        run_cmd "svcs -a" "$COLLECTOR_OUTPUT_DIR/svcs-a.txt"
-        run_cmd "svcs -x -v" "$COLLECTOR_OUTPUT_DIR/svcs-x-v.txt"
-        run_cmd "sysdef -D" "$COLLECTOR_OUTPUT_DIR/sysdef-D.txt"
-        ;;
-esac
+    run_cmd "date" "$COLLECTOR_OUTPUT_DIR/date.txt"
+    run_cmd "env" "$COLLECTOR_OUTPUT_DIR/env.txt"
+    run_cmd "uptime" "$COLLECTOR_OUTPUT_DIR/uptime.txt"
+
+    case "$PROFILE" in
+        "aix")
+            run_cmd "errpt -a" "$COLLECTOR_OUTPUT_DIR/errpt-a.txt"
+            run_cmd "genkex" "$COLLECTOR_OUTPUT_DIR/genkex.txt"
+            run_cmd "lparstat -i" "$COLLECTOR_OUTPUT_DIR/lparstat-i.txt"
+            run_cmd "lsps -a" "$COLLECTOR_OUTPUT_DIR/lsps-a.txt"
+            run_cmd "lssrc -a" "$COLLECTOR_OUTPUT_DIR/lssrc-a.txt"
+            run_cmd "lssrc -l -s inetd" "$COLLECTOR_OUTPUT_DIR/lssrc-l-s-inetd.txt"
+            run_cmd "mpstat" "$COLLECTOR_OUTPUT_DIR/mpstat.txt"
+            run_cmd "oslevel" "$COLLECTOR_OUTPUT_DIR/oslevel.txt"
+            run_cmd "oslevel -r" "$COLLECTOR_OUTPUT_DIR/oslevel-r.txt"
+            run_cmd "oslevel -s" "$COLLECTOR_OUTPUT_DIR/oslevel-s.txt"
+            run_cmd "vmstat" "$COLLECTOR_OUTPUT_DIR/vmstat.txt"
+            run_cmd "who -r" "$COLLECTOR_OUTPUT_DIR/who-r.txt"
+            ;;
+        "bsd")
+            run_cmd "kldstat -v" "$COLLECTOR_OUTPUT_DIR/kldstat-v.txt"
+            run_cmd "swapctl -l" "$COLLECTOR_OUTPUT_DIR/swapctl-l.txt"
+            run_cmd "swapinfo" "$COLLECTOR_OUTPUT_DIR/swapinfo.txt"
+            run_cmd "sysctl -a" "$COLLECTOR_OUTPUT_DIR/sysctl-a.txt"
+            run_cmd "vmstat" "$COLLECTOR_OUTPUT_DIR/vmstat.txt"
+            ;;
+        "linux")
+            run_cmd "chkconfig --list" "$COLLECTOR_OUTPUT_DIR/chkconfig-list.txt"
+            run_cmd "free" "$COLLECTOR_OUTPUT_DIR/free.txt"
+            run_cmd "hwclock" "$COLLECTOR_OUTPUT_DIR/hwclock.txt"
+            run_cmd "lsmod" "$COLLECTOR_OUTPUT_DIR/lsmod.txt"
+            run_cmd "runlevel" "$COLLECTOR_OUTPUT_DIR/runlevel.txt"
+            run_cmd "service --status-all" "$COLLECTOR_OUTPUT_DIR/service-status-all.txt"
+            run_cmd "sysctl -a" "$COLLECTOR_OUTPUT_DIR/sysctl-a.txt"
+            run_cmd "systemctl -l" "$COLLECTOR_OUTPUT_DIR/systemctl-l.txt"
+            run_cmd "systemctl list-timers --all" "$COLLECTOR_OUTPUT_DIR/systemctl-list-timers-all.txt"
+            run_cmd "systemctl list-unit-files" "$COLLECTOR_OUTPUT_DIR/systemctl-list-unit-files.txt"
+            run_cmd "vmstat" "$COLLECTOR_OUTPUT_DIR/vmstat.txt"
+            ;;
+        "macos")
+            run_cmd "kextstat" "$COLLECTOR_OUTPUT_DIR/kextstat.txt"
+            run_cmd "launchctl list" "$COLLECTOR_OUTPUT_DIR/launchctl-list.txt"
+            run_cmd "sw_vers" "$COLLECTOR_OUTPUT_DIR/sw_vers.txt"
+            run_cmd "sysctl -a" "$COLLECTOR_OUTPUT_DIR/sysctl-a.txt"
+            run_cmd "vm_stat" "$COLLECTOR_OUTPUT_DIR/vm_stat.txt"
+            ;;
+        "solaris")
+            run_cmd "crle" "$COLLECTOR_OUTPUT_DIR/crle.txt"
+            run_cmd "isainfo -v -k" "$COLLECTOR_OUTPUT_DIR/isainfo-v-k.txt"
+            run_cmd "modinfo" "$COLLECTOR_OUTPUT_DIR/modinfo.txt"
+            run_cmd "mpstat" "$COLLECTOR_OUTPUT_DIR/mpstat.txt"
+            run_cmd "prtdiag -v" "$COLLECTOR_OUTPUT_DIR/prtdiag-v.txt"
+            run_cmd "showrev" "$COLLECTOR_OUTPUT_DIR/showrev.txt"
+            run_cmd "showrev -p" "$COLLECTOR_OUTPUT_DIR/showrev-p.txt"
+            run_cmd "svcs -a" "$COLLECTOR_OUTPUT_DIR/svcs-a.txt"
+            run_cmd "svcs -x -v" "$COLLECTOR_OUTPUT_DIR/svcs-x-v.txt"
+            run_cmd "sysdef -D" "$COLLECTOR_OUTPUT_DIR/sysdef-D.txt"
+            run_cmd "vmstat" "$COLLECTOR_OUTPUT_DIR/vmstat.txt"
+            ;;
+    esac
+fi
+
+# process system_files paths
+run_cmd "cat \"$CWD/conf/system_files.conf\" | grep -v \"^#\" | grep -v \"^$\" | grep \"^/\" | sed 's:^/:'\"$MOUNT_POINT\"'/:; s://*:/:g; s:/$::g' | while read line; do find \"\$line\" -type f ; done" "$COLLECTOR_OUTPUT_DIR/system_files.tmp"
+# process system_files files/directories names
+run_cmd "cat \"$CWD/conf/system_files.conf\" | grep -v \"^#\" | grep -v \"^$\" | grep -v \"^/\" | while read line; do find \"$MOUNT_POINT\" -name \"\$line\" -type f ; done" "$COLLECTOR_OUTPUT_DIR/system_files.tmp"
+
+# remove any UAC directories from the collection, sort and uniq
+run_cmd "cat \"$COLLECTOR_OUTPUT_DIR/system_files.tmp\" | grep -v \"$CWD\" | grep -v \"$DESTINATION_DIR/$TMP_DATA_DIR\" | sort | uniq > \"$COLLECTOR_OUTPUT_DIR/system_files.txt\""
+
+# remove temporary files
+run_cmd "rm -f \"$COLLECTOR_OUTPUT_DIR/system_files.tmp\""
+
+# compress data
+run_cmd "compress_data \"$COLLECTOR_OUTPUT_DIR/system_files.txt\" \"$COLLECTOR_OUTPUT_DIR/system_files.tar.$COMPRESS_EXT\" \"$UAC_LOG_FILE\""

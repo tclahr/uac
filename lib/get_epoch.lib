@@ -14,16 +14,35 @@
 
 ################################################################################
 # NAME
-#   get_epoch - get current epoch timestamp
+#   get_epoch - get current or epoch timestamp for the given date
 # SYNOPSIS
-#   get_epoch
+#   get_epoch [YYYY-MM-DD]
 # RETURN VALUE
-#   current epoch timestamp
+#   epoch timestamp
 ################################################################################
 get_epoch() {
-    if has_tool perl; then
-        perl -e 'print time'
+    if [ "$1" ]; then
+        # date format as YYYY-MM-DD (GNU date)
+        date -d "$1" "+%s" 2>/dev/null
+        if [ ! $? -eq 0 ]; then
+            # date format as YYYY-MM-DD (BSD date)
+            date -j -f "%Y-%m-%d" "$1" "+%s" 2>/dev/null
+            if [ ! $? -eq 0 ]; then
+                # date format as MMDDhhmmYYYY (old busybox date)
+                DATE_YEAR=`echo "$1" | cut -d"-" -f 1`
+                DATE_MONTH=`echo "$1" | cut -d"-" -f 2`
+                DATE_DAY=`echo "$1" | cut -d"-" -f 3`
+                date -d "${DATE_MONTH}${DATE_DAY}0000${DATE_YEAR}" "+%s" 2>/dev/null
+                if [ ! $? -eq 0 ]; then
+                    perl "$CWD/tools/date_to_epoch/date_to_epoch.pl" "$1" 2>/dev/null
+                fi
+            fi
+        fi
     else
-        date "+%s"
+        if $HAS_PERL_TOOL; then
+            perl -e 'print time' 2>/dev/null
+        else
+            date "+%s" 2>/dev/null
+        fi
     fi
 }

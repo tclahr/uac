@@ -2,9 +2,11 @@
 
 ## Description
 
-UAC is a command line shell script that makes use of built-in tools to automate the collection of system artifacts. The script respects the order of volatility and artifacts that are changed during the execution. It can also be run against mounted forensic images. Please take a look on the ```conf/uac.conf``` file for more details.
+UAC is a command line shell script that makes use of built-in tools to automate the collection of Unix-like systems artifacts. The script respects the order of volatility and artifacts that are changed during the execution. It can also be run against mounted forensic images. Please take a look on the ```conf/uac.conf``` file for more details.
 
 UAC was created for Incident Responders, Forensic Analysts, Auditors and System Administrators to facilitate and speed up data collection, and depend less on remote support.
+
+You can use your own validated tools during artifacts collection. They will be used instead of the built-in ones provided by the target system. Please refer to ```bin/README.txt``` for more information.
 
 ## Contributing to the project
 We welcome contributions to the uac Project in many forms. There's always plenty to do! Full details of how to contribute to this project are documented in the [CONTRIBUTING.md](CONTRIBUTING.md) file.
@@ -15,7 +17,7 @@ The project's [maintainers](MAINTAINERS.md) are responsible for reviewing and me
 ## Supported Systems
 
 - AIX
-- BSD (FreeBSD, NetBSD, OpenBSD...)
+- BSD
 - Linux
 - macOS
 - Solaris
@@ -24,25 +26,35 @@ The project's [maintainers](MAINTAINERS.md) are responsible for reviewing and me
 
 ### Process Listing (-p)
 Collect current process listing.
+
 ### Network (-n)
 Collect active network connections with related process information.
+
 ### User Accounts (-u)
-Collect information about user accounts and login activities.
+Collect user accounts information, login related files and activities. The list of files and directories that will be collected can be found in the ```conf/user_files.conf``` file.
+
 ### System (-y)
-Collect low level system information and kernel related details.
+Collect system information, system configuration files and kernel related details. The list of files and directories that will be collected can be found in the ```conf/system_files.conf``` file.
+
 ### Hardware (-w)
 Collect low level hardware information.
+
 ### Software (-s)
 Collect information about installed packages and software.
+
 ### Disk Volume and File System (-d)
-Collect information about disk volumes and file systems.
+Collect information about disks, volumes and file systems.
+
 ### Body File (-b)
 Extract information from files and directories using the ```stat``` tool to create a [body file](https://wiki.sleuthkit.org/index.php?title=Body_file). The body file is an intermediate file when creating a timeline of file activity. It is a pipe ("|") delimited text file that contains one line for each file.
 The [mactime](https://wiki.sleuthkit.org/index.php?title=Mactime) tool can be used to read this file and sorts the contents.
+
 ### Logs (-l)
 Collect log files and directories. The list of files and directories that will be collected can be found in the ```conf/logs.conf``` file.
-### System Files (-f)
-Collect system wide configuration files and directories. The list of files and directories that will be collected can be found in the ```conf/system_files.conf``` file.
+
+### Misc Files (-f)
+Collect misc files and directories. The list of files and directories that will be collected can be found in the ```conf/misc_files.conf``` file.
+
 ### Hash Running Processes (-r)
 Collect current process listing with hash (MD5) values.
 
@@ -50,7 +62,11 @@ Collect current process listing with hash (MD5) values.
 
 ### chkrootkit
 Run [chkrootkit](http://www.chkrootkit.org) tool (if available).
-Note that chrootkit is not provided by UAC. You need to either install it on the target system or download and compile it, and then copy the binary file to ```extensions/chkrootkit/bin``` directory.
+Note that chrootkit tool is not provided by UAC. You need to either have it available on the target system or download and compile it, and make its static binary file available through ```bin``` directory. Please refer to ```bin/README.txt``` for more information.
+
+### fls
+Run Sleuth Kit [fls](http://wiki.sleuthkit.org/index.php?title=Fls) tool (if available) against all mounted file systems.
+Note that fls tool is not provided by UAC. You need to either have it available on the target system or download and compile it, and make its static binary file available through ```bin``` directory. Please refer to ```bin/README.txt``` for more information.
 
 ### hash_exec
 Collect MD5 hashes for all executable files. By default, only files smaller than 3072000 bytes (3MB) will be hashed. Please take a look on the ```extensions/hash_exec/hash_exec.conf``` file more details.
@@ -63,10 +79,12 @@ One of the following profiles will be selected automatically according to the ke
 Use this profile to collect AIX artifacts.
 
 ### bsd
-Use this profile to collect BSD (OpenBSD, FreeBSD, NetBSD...) artifacts.
+Use this profile to collect BSD-based systems artifacts.  
+*e.g. FreeBSD, NetBSD, OpenBSD, NetScaler...*
 
 ### linux
-Use this profile to collect Linux artifacts.
+Use this profile to collect Linux-based systems artifacts.  
+*e.g. Debian, Red Hat, SuSE, Arch Linux, OpenWRT, QNAP QTS, Windows Subsystem for Linux...*
 
 ### macos
 Use this profile to collect macOS artifacts.
@@ -74,38 +92,59 @@ Use this profile to collect macOS artifacts.
 ### solaris
 Use this profile to collect Solaris artifacts.
 
+## Options
+
+### Date Range (-R)
+The range of dates to be used by logs (-l), misc_files (-f) and user_accounts (-u) collectors. The date range is used to limit the amount of data collected by filtering files using find's -atime, -mtime or -ctime parameter. By default, UAC will search for files that data was last modified (-mtime) OR status last changed (-ctime) within the given date range. Please refer to ```conf/uac.conf``` for more details.
+The standard format is YYYY-MM-DD for a starting date and no ending date. For an ending date, use YYYY-MM-DD..YYYY-MM-DD.
+
+### Debug (-D)
+Increase debugging level.
+
+### Verbose (-V)
+Increase verbosity level.
+
+### Run as non-root (-U)
+Allow UAC to be run by a non-root user. Note that data collection will be limited.
+
 ## Configuration Files
 
 ### conf/uac.conf
 The main UAC configuration file.
 
 ### conf/logs.conf
-Directory or file paths that will be searched and collected by the logs collector. If a directory path is added, all files and subdirectories will be collected automatically.
+Directory or file paths that will be searched and collected by the logs (-l) collector. If a directory path is added, all files and subdirectories will be collected automatically.
+The ```find``` command line tool will be used to search for files and directories, so the patterns added to this file need to be compatible with the ```-name``` option. Please check ```find``` man pages for instructions.
+
+### conf/misc_files.conf
+Directory or file paths that will be searched and collected by the misc_files (-f) collector. If a directory path is added, all files and subdirectories will be collected automatically.
 The ```find``` command line tool will be used to search for files and directories, so the patterns added to this file need to be compatible with the ```-name``` option. Please check ```find``` man pages for instructions.
 
 ### conf/system_files.conf
-Directory or file paths that will be searched and collected by the system_files collector. If a directory path is added, all files and subdirectories will be collected automatically.
+Directory or file paths that will be searched and collected by the system (-y) collector. If a directory path is added, all files and subdirectories will be collected automatically.
+The ```find``` command line tool will be used to search for files and directories, so the patterns added to this file need to be compatible with the ```-name``` option. Please check ```find``` man pages for instructions.
+
+### conf/user_files.conf
+Directory or file paths that will be searched and collected by the user_accounts (-u) collector. If a directory path is added, all files and subdirectories will be collected automatically.
 The ```find``` command line tool will be used to search for files and directories, so the patterns added to this file need to be compatible with the ```-name``` option. Please check ```find``` man pages for instructions.
 
 ## Usage
 ```
 UAC (Unix-like Artifacts Collector)
-Collects artifacts from Unix-like systems
-
 Usage: ./uac COLLECTORS [-e EXTENSION_LIST] [-P PROFILE] [OPTIONS] [DESTINATION]
 
 COLLECTORS:
     -a           Enable all collectors.
     -p           Collect current process listing.
     -n           Collect active network connections with related process information.
-    -u           Collect information about user accounts and login activities.
-    -y           Collect low level system information and kernel related details.
+    -u           Collect user accounts information, login related files and activities.
+    -y           Collect system information, system configuration files and kernel related details.
     -w           Collect low level hardware information.
     -s           Collect information about installed packages and software.
-    -d           Collect information about disk volumes and file systems.
+    -d           Collect information about disks, volumes and file systems.
     -b           Extract information from files and directories using the stat tool to create a body file.
     -l           Collect log files and directories.
-    -f           Collect system wide configuration files and directories.
+    -f           Collect misc files and directories.
     -r           Collect current process listing with hash (MD5) values.
 
 EXTENSIONS:
@@ -113,20 +152,23 @@ EXTENSIONS:
                  Comma separated list of extensions.
                  all: Enable all extensions.
                  chkrootkit: Run chkrootkit tool.
+                 fls: Run Sleuth Kit fls tool.
                  hash_exec: Hash executable files.
 
 PROFILES:
     -P PROFILE   Force UAC to use a specific profile.
-                 aix: Use this to collect AIX artifacts.
-                 bsd: Use this to collect BSD (OpenBSD, FreeBSD, NetBSD...) artifacts.
-                 linux: Use this to collect Linux artifacts.
-                 macos: Use this to collect macOS artifacts.
-                 solaris: Use this to collect Solaris artifacts.
+                 aix: Use this one to collect AIX artifacts.
+                 bsd: Use this one to collect BSD-based systems artifacts.
+                 linux: Use this one to collect Linux-based systems artifacts.
+                 macos: Use this one to collect macOS artifacts.
+                 solaris: Use this one to collect Solaris artifacts.
 
 OPTIONS:
+    -R           Starting date YYYY-MM-DD or range YYYY-MM-DD..YYYY-MM-DD
     -D           Increase debugging level.
     -V           Increase verbosity level.
     -U           Allow UAC to be run by a non-root user. Note that data collection will be limited.
+    -v           Print version number.
     -h           Print this help summary page.
 
 DESTINATION:
