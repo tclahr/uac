@@ -93,6 +93,11 @@ init_vars() {
         eval echo "uac" | eval digest -a md5 > /dev/null 2> /dev/null
         if [ $? -eq 0 ]; then
             MD5SUM_TOOL="digest -v -a md5"
+        else
+            eval csum -h MD5 "$CWD/uac" > /dev/null 2> /dev/null
+            if [ $? -eq 0 ]; then
+                MD5SUM_TOOL="csum -h MD5"
+            fi
         fi
     fi
 
