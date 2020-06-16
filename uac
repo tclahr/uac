@@ -181,7 +181,7 @@ while getopts "apnuywsdblfre:P:R:VDUvh" opt; do
                     DATE_RANGE_T1=`expr $EXPR_DASH_DASH $DATE_RANGE_T1 - 1`
                 fi
             else
-                uprintf "Date range option is not supported by this system.\n"
+                uprintf "Date range option is not supported by this system\n"
                 exit 9
             fi
             SHIFT_OPT="$SHIFT_OPT R $OPTARG"
@@ -216,176 +216,175 @@ if $ANY_COLLECTOR_SELECTED || $ANY_EXTENSION_SELECTED; then
 
             # the current directory will be used as the destination directory if none was provided by the user
             if [ "$1" ]; then
-                # get the absolute path for the destination directory
-                cd "$1" && DESTINATION_DIR=`pwd` && cd "$CWD"
+                # check if the destination directory exists
+                if [ -d "$1" ]; then
+                    # get the absolute path for the destination directory
+                    cd "$1" && DESTINATION_DIR=`pwd` && cd "$CWD"
+                else
+                    uprintf "Destination directory $1 does not exist\n"
+                    exit 4
+                fi
             else
                 # set the current diretory as the destination directory
                 DESTINATION_DIR="$CWD"
             fi
 
-            # check if the destination directory exists
-            if [ -d "$DESTINATION_DIR" ]; then
+            MOUNT_POINT=`sanitize_path "$MOUNT_POINT"`
+            if [ -d "$MOUNT_POINT" ]; then
 
-                MOUNT_POINT=`sanitize_path "$MOUNT_POINT"`
-                if [ -d "$MOUNT_POINT" ]; then
+                CURRENT_DATE_TIME=`get_date "+%Y%m%d%H%M%S"`
 
-                    CURRENT_DATE_TIME=`get_date "+%Y%m%d%H%M%S"`
+                if $LIVE_COLLECTION; then
+                    HOSTNAME=`get_hostname`
+                    KERNEL_NAME=`uname -s`
+                    MACHINE_ARCH=`get_machine_arch`
+                    # create a tmp dir to store all collected data
+                    TMP_DATA_DIR="uac-$HOSTNAME-$PROFILE-$CURRENT_DATE_TIME"
+                else
+                    # create a tmp dir to store all collected data
+                    TMP_DATA_DIR="uac-mounted_image-$PROFILE-$CURRENT_DATE_TIME"
+                fi
+
+                mkdir "$DESTINATION_DIR/$TMP_DATA_DIR" > /dev/null
+                if [ -d "$DESTINATION_DIR/$TMP_DATA_DIR" ]; then
+
+                    # uac log file
+                    UAC_LOG_FILE="$DESTINATION_DIR/$TMP_DATA_DIR/uac.log"
+
+                    CURRENT_LOGGED_IN_USER=`get_current_logged_in_user`
+                    logging I "--------------------------------------------------------------------------------\n"
+                    logging I "  __   __ _______ _______ \n"
+                    logging I " |: | |  |:  _   |:  ____|\n"
+                    logging I " |  |_|  |  | |  |  |____ \n"
+                    logging I " |_______|__| |__|_______|\n"
+                    logging I "\n"
+                    logging I "UAC (Unix-like Artifacts Collector) v$UAC_VERSION\n"
+                    logging I "--------------------------------------------------------------------------------\n"
+                    $VERBOSE && logging I "Command Line: $CMD\n" || logging D "Command Line: $CMD\n"
+                    logging I "Destination: $DESTINATION_DIR/$TMP_DATA_DIR\n"
+                    $LIVE_COLLECTION && logging I "Kernel Name (Arch): $KERNEL_NAME ($MACHINE_ARCH)\n"
+                    logging I "Profile: $PROFILE\n"
+                    $LIVE_COLLECTION && logging I "Hostname: $HOSTNAME\n"
+                    logging I "Mount Point: $MOUNT_POINT\n"
+                    logging I "Current User: $CURRENT_LOGGED_IN_USER\n"
+                    logging I "--------------------------------------------------------------------------------\n"
+                    logging I "Some collectors may take several minutes to finish, so please wait!\n"
+                    logging I "Press Ctrl+C any time to cancel the script.\n"
+                    logging I "--------------------------------------------------------------------------------\n"
+                    $LIVE_COLLECTION || logging I "UAC is being run against a forensic image mounted at $MOUNT_POINT\n"
+                    $LIVE_COLLECTION || logging I "Live/volatile data collectors will be disabled automatically.\n"
+                    $LIVE_COLLECTION || logging I "--------------------------------------------------------------------------------\n"
 
                     if $LIVE_COLLECTION; then
-                        HOSTNAME=`get_hostname`
-                        KERNEL_NAME=`uname -s`
-                        MACHINE_ARCH=`get_machine_arch`
-                        # create a tmp dir to store all collected data
-                        TMP_DATA_DIR="uac-$HOSTNAME-$PROFILE-$CURRENT_DATE_TIME"
-                    else
-                        # create a tmp dir to store all collected data
-                        TMP_DATA_DIR="uac-mounted_image-$PROFILE-$CURRENT_DATE_TIME"
+                        KERNEL_NAME_LOWERCASE=`to_lower $KERNEL_NAME`
+                        MACHINE_ARCH_LOWERCASE=`to_lower $MACHINE_ARCH`
+                        # add validated tools (binary files) directory to the system PATH
+                        if [ -d "$CWD/bin/$KERNEL_NAME_LOWERCASE/$MACHINE_ARCH_LOWERCASE" ]; then
+                            logging D "Validated tools directory found at $CWD/bin/$KERNEL_NAME_LOWERCASE/$MACHINE_ARCH_LOWERCASE\n"
+                            run_cmd "ls \"$CWD/bin/$KERNEL_NAME_LOWERCASE/$MACHINE_ARCH_LOWERCASE\"" "$UAC_LOG_FILE"
+                            PATH="$CWD/bin/$KERNEL_NAME_LOWERCASE/$MACHINE_ARCH_LOWERCASE:$PATH"
+                            export PATH
+                        fi
                     fi
 
-                    mkdir "$DESTINATION_DIR/$TMP_DATA_DIR" > /dev/null
-                    if [ -d "$DESTINATION_DIR/$TMP_DATA_DIR" ]; then
+                    logging D "PATH: $PATH\n"
 
-                        # uac log file
-                        UAC_LOG_FILE="$DESTINATION_DIR/$TMP_DATA_DIR/uac.log"
+                    if [ "$PROFILE" = "aix" ] || [ "$PROFILE" = "solaris" ]; then
+                        FIND_TOOL="perl \"$CWD/tools/find/find.pl\""
+                    fi
 
-                        CURRENT_LOGGED_IN_USER=`get_current_logged_in_user`
-                        logging I "--------------------------------------------------------------------------------\n"
-                        logging I "  __   __ _______ _______ \n"
-                        logging I " |: | |  |:  _   |:  ____|\n"
-                        logging I " |  |_|  |  | |  |  |____ \n"
-                        logging I " |_______|__| |__|_______|\n"
-                        logging I "\n"
-                        logging I "UAC (Unix-like Artifacts Collector) v$UAC_VERSION\n"
-                        logging I "--------------------------------------------------------------------------------\n"
-                        $VERBOSE && logging I "Command Line: $CMD\n" || logging D "Command Line: $CMD\n"
-                        logging I "Destination: $DESTINATION_DIR/$TMP_DATA_DIR\n"
-                        $LIVE_COLLECTION && logging I "Kernel Name (Arch): $KERNEL_NAME ($MACHINE_ARCH)\n"
-                        logging I "Profile: $PROFILE\n"
-                        $LIVE_COLLECTION && logging I "Hostname: $HOSTNAME\n"
-                        logging I "Mount Point: $MOUNT_POINT\n"
-                        logging I "Current User: $CURRENT_LOGGED_IN_USER\n"
-                        logging I "--------------------------------------------------------------------------------\n"
-                        logging I "Some collectors may take several minutes to finish, so please wait!\n"
-                        logging I "Press Ctrl+C any time to cancel the script.\n"
-                        logging I "--------------------------------------------------------------------------------\n"
-                        $LIVE_COLLECTION || logging I "UAC is being run against a forensic image mounted at $MOUNT_POINT\n"
-                        $LIVE_COLLECTION || logging I "Live/volatile data collectors will be disabled automatically.\n"
-                        $LIVE_COLLECTION || logging I "--------------------------------------------------------------------------------\n"
+                    # make a backup of the configuration files used during the collection
+                    run_cmd "cp -r \"$CWD/conf\" \"$DESTINATION_DIR/$TMP_DATA_DIR/conf\""
 
-                        if $LIVE_COLLECTION; then
-                            KERNEL_NAME_LOWERCASE=`to_lower $KERNEL_NAME`
-                            MACHINE_ARCH_LOWERCASE=`to_lower $MACHINE_ARCH`
-                            # add validated tools (binary files) directory to the system PATH
-                            if [ -d "$CWD/bin/$KERNEL_NAME_LOWERCASE/$MACHINE_ARCH_LOWERCASE" ]; then
-                                logging D "Validated tools directory found at $CWD/bin/$KERNEL_NAME_LOWERCASE/$MACHINE_ARCH_LOWERCASE\n"
-                                run_cmd "ls \"$CWD/bin/$KERNEL_NAME_LOWERCASE/$MACHINE_ARCH_LOWERCASE\"" "$UAC_LOG_FILE"
-                                PATH="$CWD/bin/$KERNEL_NAME_LOWERCASE/$MACHINE_ARCH_LOWERCASE:$PATH"
-                                export PATH
-                            fi
-                        fi
+                    UAC_START_EPOCH=`get_epoch`
+                    CURRENT_DATE_TIME=`get_date "+%a %b %d %H:%M:%S %Y %z"`
+                    logging D "Collection started: $CURRENT_DATE_TIME\n"
 
-                        logging D "PATH: $PATH\n"
+                    # collectors
+                    # run process_listing collector
+                    $COLLECTOR_PROCESS_LISTING && $LIVE_COLLECTION && run_collector process_listing 2>> "$UAC_LOG_FILE"
 
-                        if [ "$PROFILE" = "aix" ] || [ "$PROFILE" = "solaris" ]; then
-                            FIND_TOOL="perl \"$CWD/tools/find/find.pl\""
-                        fi
+                    # run network collector
+                    $COLLECTOR_NETWORK && $LIVE_COLLECTION && run_collector network 2>> "$UAC_LOG_FILE"
 
-                        # make a backup of the configuration files used during the collection
-                        run_cmd "cp -r \"$CWD/conf\" \"$DESTINATION_DIR/$TMP_DATA_DIR/conf\""
+                    # run user_accounts collector
+                    $COLLECTOR_USER_ACCOUNTS && run_collector user_accounts 2>> "$UAC_LOG_FILE"
 
-                        UAC_START_EPOCH=`get_epoch`
-                        CURRENT_DATE_TIME=`get_date "+%a %b %d %H:%M:%S %Y %z"`
-                        logging D "Collection started: $CURRENT_DATE_TIME\n"
+                    # run system collector
+                    $COLLECTOR_SYSTEM && run_collector system 2>> "$UAC_LOG_FILE"
 
-                        # collectors
-                        # run process_listing collector
-                        $COLLECTOR_PROCESS_LISTING && $LIVE_COLLECTION && run_collector process_listing 2>> "$UAC_LOG_FILE"
+                    # run hardware collector
+                    $COLLECTOR_HARDWARE && $LIVE_COLLECTION && run_collector hardware 2>> "$UAC_LOG_FILE"
 
-                        # run network collector
-                        $COLLECTOR_NETWORK && $LIVE_COLLECTION && run_collector network 2>> "$UAC_LOG_FILE"
+                    # run software collector
+                    $COLLECTOR_SOFTWARE && $LIVE_COLLECTION && run_collector software 2>> "$UAC_LOG_FILE"
 
-                        # run user_accounts collector
-                        $COLLECTOR_USER_ACCOUNTS && run_collector user_accounts 2>> "$UAC_LOG_FILE"
+                    # run disk_volume_file_system collector
+                    $COLLECTOR_DISK_VOLUME_FILE_SYSTEM && $LIVE_COLLECTION && run_collector disk_volume_file_system 2>> "$UAC_LOG_FILE"
 
-                        # run system collector
-                        $COLLECTOR_SYSTEM && run_collector system 2>> "$UAC_LOG_FILE"
+                    # run body_file collector
+                    $COLLECTOR_BODY_FILE && run_collector body_file 2>> "$UAC_LOG_FILE"
 
-                        # run hardware collector
-                        $COLLECTOR_HARDWARE && $LIVE_COLLECTION && run_collector hardware 2>> "$UAC_LOG_FILE"
+                    # run logs collector
+                    $COLLECTOR_LOGS && run_collector logs 2>> "$UAC_LOG_FILE"
 
-                        # run software collector
-                        $COLLECTOR_SOFTWARE && $LIVE_COLLECTION && run_collector software 2>> "$UAC_LOG_FILE"
+                    # run misc_files collector
+                    $COLLECTOR_MISC_FILES && run_collector misc_files 2>> "$UAC_LOG_FILE"
 
-                        # run disk_volume_file_system collector
-                        $COLLECTOR_DISK_VOLUME_FILE_SYSTEM && $LIVE_COLLECTION && run_collector disk_volume_file_system 2>> "$UAC_LOG_FILE"
+                    # run hash_running_processes collector
+                    $COLLECTOR_HASH_RUNNING_PROCESSES && $LIVE_COLLECTION && run_collector hash_running_processes 2>> "$UAC_LOG_FILE"
 
-                        # run body_file collector
-                        $COLLECTOR_BODY_FILE && run_collector body_file 2>> "$UAC_LOG_FILE"
+                    # extensions
+                    # run chkrootkit extension
+                    $EXTENSION_CHKROOTKIT && run_extension chkrootkit 2>> "$UAC_LOG_FILE"
 
-                        # run logs collector
-                        $COLLECTOR_LOGS && run_collector logs 2>> "$UAC_LOG_FILE"
+                    # run fls extension
+                    $EXTENSION_FLS && run_extension fls 2>> "$UAC_LOG_FILE"
 
-                        # run misc_files collector
-                        $COLLECTOR_MISC_FILES && run_collector misc_files 2>> "$UAC_LOG_FILE"
+                    # run hash_exec extension
+                    $EXTENSION_HASH_EXEC && run_extension hash_exec 2>> "$UAC_LOG_FILE"
+                    
+                    logging I "--------------------------------------------------------------------------------\n"
+                    UAC_END_EPOCH=`get_epoch`
+                    UAC_TOTAL_RUNNING_TIME=`expr $UAC_END_EPOCH - $UAC_START_EPOCH`
+                    CURRENT_DATE_TIME=`get_date "+%a %b %d %H:%M:%S %Y %z"`
+                    logging D "Collection finished: $CURRENT_DATE_TIME\n"
+                    logging D "Total running time: $UAC_TOTAL_RUNNING_TIME seconds.\n"
 
-                        # run hash_running_processes collector
-                        $COLLECTOR_HASH_RUNNING_PROCESSES && $LIVE_COLLECTION && run_collector hash_running_processes 2>> "$UAC_LOG_FILE"
+                    uprintf "Collection finished! Total running time: $UAC_TOTAL_RUNNING_TIME seconds.\n"
+                    uprintf "Creating compressed output file. Please wait...\n"
+                    COMPRESSED_OUTPUT_FILE="$TMP_DATA_DIR.tar.$COMPRESS_EXT"
+                    cd "$DESTINATION_DIR"
+                    if compress_data "$TMP_DATA_DIR" "$COMPRESSED_OUTPUT_FILE"; then
+                        uprintf "Compressed output file created at $DESTINATION_DIR/$COMPRESSED_OUTPUT_FILE\n"
 
-                        # extensions
-                        # run chkrootkit extension
-                        $EXTENSION_CHKROOTKIT && run_extension chkrootkit 2>> "$UAC_LOG_FILE"
-
-                        # run fls extension
-                        $EXTENSION_FLS && run_extension fls 2>> "$UAC_LOG_FILE"
-
-                        # run hash_exec extension
-                        $EXTENSION_HASH_EXEC && run_extension hash_exec 2>> "$UAC_LOG_FILE"
-                        
-                        logging I "--------------------------------------------------------------------------------\n"
-                        UAC_END_EPOCH=`get_epoch`
-                        UAC_TOTAL_RUNNING_TIME=`expr $UAC_END_EPOCH - $UAC_START_EPOCH`
-                        CURRENT_DATE_TIME=`get_date "+%a %b %d %H:%M:%S %Y %z"`
-                        logging D "Collection finished: $CURRENT_DATE_TIME\n"
-                        logging D "Total running time: $UAC_TOTAL_RUNNING_TIME seconds.\n"
-
-                        uprintf "Collection finished! Total running time: $UAC_TOTAL_RUNNING_TIME seconds.\n"
-                        uprintf "Creating compressed output file. Please wait...\n"
-                        COMPRESSED_OUTPUT_FILE="$TMP_DATA_DIR.tar.$COMPRESS_EXT"
-                        cd "$DESTINATION_DIR"
-                        if compress_data "$TMP_DATA_DIR" "$COMPRESSED_OUTPUT_FILE"; then
-                            uprintf "Compressed output file created at $DESTINATION_DIR/$COMPRESSED_OUTPUT_FILE\n"
-
-                            uprintf "Computing MD5 hash. Please wait...\n"
-                            $MD5SUM_TOOL "$COMPRESSED_OUTPUT_FILE" > "$COMPRESSED_OUTPUT_FILE.md5"
-                            if [ ! -z "$COMPRESSED_OUTPUT_FILE.md5" ]; then
-                                uprintf "MD5 hash output file created at $DESTINATION_DIR/$COMPRESSED_OUTPUT_FILE.md5\n"
-                            else
-                                uprintf "Cannot compute MD5 hash for $DESTINATION_DIR/$COMPRESSED_OUTPUT_FILE\n"
-                                rm "$COMPRESSED_OUTPUT_FILE.MD5"
-                            fi
-
-                            rm -rf "$TMP_DATA_DIR" > /dev/null 2> /dev/null
-                            if [ -d "$TMP_DATA_DIR" ]; then
-                                uprintf "Cannot remove temporary directory at $DESTINATION_DIR/$TMP_DATA_DIR\n"
-                            fi
-
+                        uprintf "Computing MD5 hash. Please wait...\n"
+                        $MD5SUM_TOOL "$COMPRESSED_OUTPUT_FILE" > "$COMPRESSED_OUTPUT_FILE.md5"
+                        if [ ! -z "$COMPRESSED_OUTPUT_FILE.md5" ]; then
+                            uprintf "MD5 hash output file created at $DESTINATION_DIR/$COMPRESSED_OUTPUT_FILE.md5\n"
                         else
-                            uprintf "Cannot create compressed file.\n"
-                            uprintf "Please check the output directory at $DESTINATION_DIR/$TMP_DATA_DIR\n"
+                            uprintf "Cannot compute MD5 hash for $DESTINATION_DIR/$COMPRESSED_OUTPUT_FILE\n"
+                            rm "$COMPRESSED_OUTPUT_FILE.MD5"
                         fi
-                        cd "$CWD"
+
+                        rm -rf "$TMP_DATA_DIR" > /dev/null 2> /dev/null
+                        if [ -d "$TMP_DATA_DIR" ]; then
+                            uprintf "Cannot remove temporary directory at $DESTINATION_DIR/$TMP_DATA_DIR\n"
+                        fi
 
                     else
-                        uprintf "Cannot create temporary directory $DESTINATION_DIR/$TMP_DATA_DIR\n"
-                        exit 6
+                        uprintf "Cannot create compressed file\n"
+                        uprintf "Please check the output directory at $DESTINATION_DIR/$TMP_DATA_DIR\n"
                     fi
+                    cd "$CWD"
+
                 else
-                    uprintf "Invalid mount point $MOUNT_POINT\n"
-                    exit 5
+                    uprintf "Cannot create temporary directory $DESTINATION_DIR/$TMP_DATA_DIR\n"
+                    exit 6
                 fi
             else
-                uprintf "Destination directory $1 does not exists\n"
-                exit 4
+                uprintf "Invalid mount point $MOUNT_POINT\n"
+                exit 5
             fi
         else
             uprintf "This script requires root privileges to run properly\n"

@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.1.1 (2020-06-16)
+
+### Fixed
+- Operating system error message being sent to terminal if an invalid directory is used as destination ([#5](https://github.com/tclahr/uac/issues/5)).
+- hash_running_processes collector and hash_exec extension not working on AIX 6 ([#6](https://github.com/tclahr/uac/issues/6)).
+
 ## 1.1.0 (2020-05-27)
 
 ### Added
@@ -93,7 +99,7 @@ All notable changes to this project will be documented in this file.
 ## 1.0.1 (2020-03-26)
 
 ### Fixed
-- running UAC and quickly terminating the process was making it to propose the user to delete the root folder "/" [#1](https://github.com/tclahr/uac/issues/1)
+- running UAC and quickly terminating the process was making it to propose the user to delete the root folder "/" ([#1](https://github.com/tclahr/uac/issues/1)).
 
 ## 1.0.0 (2020-02-04)
 - Initial Release
