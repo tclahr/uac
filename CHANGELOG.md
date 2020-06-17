@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.2.0-dev
+
+
+
 ## 1.1.1 (2020-06-16)
 
 ### Fixed
