@@ -18,55 +18,81 @@ use strict;
 use File::Find;
 
 sub usage {
-    print("Usage: find.pl starting-point [OPTIONS]\n");
-    print("\n");
-    print("OPTIONS\n");
-    print("    -maxdepth LEVELS\n");
-    print("        Descend at most levels (a non-negative integer) levels of directories below the starting-point.\n");
-    print("\n");
-    print("    -name PATTERN\n");
-    print("        File name matches specified glob wildcard pattern (just as with using find).\n");
-    print("\n");
-    print("    -iname PATTERN\n");
-    print("        Like -name, but the match is case insensitive.\n");
-    print("\n");
-    print("    -atime N\n");
-    print("        File was last accessed N*24 hours ago. When find figures out how many 24-hour periods ago the file was\n");
-    print("        last accessed, any fractional part is ignored, so to match -atime +1, a file has to have been accessed\n");
-    print("        at least two days ago.\n");
-    print("\n");
-    print("    -mtime N\n");
-    print("        File's data was last modified N*24 hours ago. See the comments for -atime to understand how rounding\n");
-    print("        affects the interpretation of file status change times.\n");
-    print("\n");
-    print("    -ctime N\n");
-    print("        File's status was last changed N*24 hours ago. See the comments for -atime to understand how rounding\n");
-    print("        affects the interpretation of file status change times.\n");
-    print("\n");
-    print("    -type X\n");
-    print("        File is of type X:\n");
-    print("\n");
-    print("        f   regular file\n");
-    print("        d   directory\n");
-    print("        l   symbolic link\n");
-    print("        p   named pipe (FIFO)\n");
-    print("        s   socket\n");
-    print("        b   block special\n");
-    print("        c   character special\n");
-    print("\n");
-    print("    -size N[ckMG]\n");
-    print("        File uses N units of space. The following suffixes can be used:\n");
-    print("\n");
-    print("        c   for bytes (this is the default if no suffix is used)\n");
-    print("        k   for kilobytes (kB, units of 1024 bytes)\n");
-    print("        M   for megabyte (MB, units of 1024 * 1024 bytes)\n");
-    print("        G   for gigabyte (GB, units of 1024 * 1024 * 1024 bytes)\n");
-    print("\n");
-    print("    Predicates which take a numeric argument N can come in three forms:\n");
-    print("        N is prefixed with a +: match values greater than N\n");
-    print("        N is prefixed with a -: match values less than N\n");
-    print("        N is not prefixed with either + or -: match only values equal to N\n");
-    print("\n");
+    print <<"USAGE";
+Usage: find.pl starting-point [OPTIONS]
+
+OPERATORS
+    \\( expression \\)
+        Evaluates to the value True if the expression in parentheses is true.
+        Since parentheses are special to the shell, you will need to use backslashes \\( \\).
+
+    !   not
+    -a  and
+    -o  or
+
+OPTIONS
+    -maxdepth LEVELS
+        Descend at most levels (a non-negative integer) levels of directories below the starting-point.
+
+    -name PATTERN
+        File name matches specified glob wildcard pattern (just as with using find).
+
+    -iname PATTERN
+        Like -name, but the match is case insensitive.
+
+    -path PATTERN
+        File path matches specified glob wildcard pattern (just as with using find).
+
+    -ipath PATTERN
+        Like -path, but the match is case insensitive.
+
+    -atime N
+        File was last accessed N*24 hours ago. When find figures out how many 24-hour periods ago the file was
+        last accessed, any fractional part is ignored, so to match -atime +1, a file has to have been accessed
+        at least two days ago.
+
+    -mtime N
+        File's data was last modified N*24 hours ago. See the comments for -atime to understand how rounding
+        affects the interpretation of file status change times.
+
+    -ctime N
+        File's status was last changed N*24 hours ago. See the comments for -atime to understand how rounding
+        affects the interpretation of file status change times.
+
+    -type X
+        File is of type X:
+
+        f   regular file
+        d   directory
+        l   symbolic link
+        p   named pipe (FIFO)
+        s   socket
+        b   block special
+        c   character special
+
+    -size N[ckMG]
+        File uses N units of space. The following suffixes can be used:
+
+        c   for bytes (this is the default if no suffix is used)
+        k   for kilobytes (kB, units of 1024 bytes)
+        M   for megabyte (MB, units of 1024 * 1024 bytes)
+        G   for gigabyte (GB, units of 1024 * 1024 * 1024 bytes)
+
+    -prune
+        Always evaluates to the value True. If the file is a directory, do not descend into it.
+
+    -print
+        Always evaluates to the value True. Print the full file name on the standard output, followed by a newline.
+
+    -print0
+        Always evaluates to the value True. Print the full file name on the standard output, followed by a null character.
+
+    Predicates which take a numeric argument N can come in three forms:
+        N is prefixed with a +: match values greater than N
+        N is prefixed with a -: match values less than N
+        N is not prefixed with either + or -: match only values equal to N
+
+USAGE
     exit 1;
 }
 
@@ -81,57 +107,90 @@ sub fileglob_to_regex($) {
 my $root = $ARGV[0] || usage();
 if (-e $root) {
     shift;
-    my $wanted = "print(\"\$File::Find::name\\n\");";
-    my $maxdepth = 0;
+    my $wanted = "my (\$dev,\$inode,\$mode,\$nlink,\$uid,\$gid,\$rdev,\$size,\$atime,\$mtime,\$ctime,\$blksize,\$blocks) = lstat(\$File::Find::name) && ";
     my $depth = 0;
-    my $lstat_needed = 0;
-    while(@ARGV) {
+    my $maxdepth = 0;
+    my $print_needed = 1;
+    while (@ARGV) {
         my $arg_option = shift;
-        if ($arg_option =~ /^-maxdepth$/) {
+        if ($arg_option eq "!") {
+            $wanted .= "!";
+            next;
+        } elsif ($arg_option eq "(") {
+            $wanted .= "(";
+            next;
+        } elsif ($arg_option eq ")") {
+            $wanted .= ")";
+        } elsif ($arg_option eq "-maxdepth") {
             $maxdepth = shift;
             ($maxdepth =~ /^\d+$/) || die ("Expected a positive decimal integer argument to -maxdepth, but got $maxdepth\n");
-        } elsif ($arg_option =~ /^-name$/) {
-            $wanted = "/" . fileglob_to_regex(shift) . "/ && " . $wanted;
-        } elsif ($arg_option =~ /^-iname$/) {
-            $wanted = "/" . fileglob_to_regex(shift) . "/i && " . $wanted;
-        } elsif ($arg_option =~ /^-atime$/) {
+            next;
+        } elsif ($arg_option eq "-name") {
+            $wanted .= "/" . fileglob_to_regex(shift) . "/s";
+        } elsif ($arg_option eq "-iname") {
+            $wanted .= "/" . fileglob_to_regex(shift) . "/si";
+        } elsif ($arg_option eq "-path") {
+            $wanted .= "\$File::Find::name =~ /" . fileglob_to_regex(shift) . "/s";
+        } elsif ($arg_option eq "-ipath") {
+            $wanted .= "\$File::Find::name =~ /" . fileglob_to_regex(shift) . "/si";
+        } elsif ($arg_option eq "-atime") {
             my $atime = shift;
             ($atime =~ /^([\+\-]?)(\d+)$/) || die ("Invalid argument to -atime: $atime\n");
             $atime =~ s/^-/< / || $atime =~ s/^\+/> / || $atime =~ s/^/== /;
-            $wanted = "int(-A _) $atime && " . $wanted;
-            $lstat_needed = 1;
-        } elsif ($arg_option =~ /^-mtime$/) {
+            $wanted .= "int(-A _) $atime";
+        } elsif ($arg_option eq "-mtime") {
             my $mtime = shift;
             ($mtime =~ /^([\+\-]?)(\d+)$/) || die ("Invalid argument to -mtime: $mtime\n");
             $mtime =~ s/^-/< / || $mtime =~ s/^\+/> / || $mtime =~ s/^/== /;
-            $wanted = "int(-M _) $mtime && " . $wanted;
-            $lstat_needed = 1;
-        } elsif ($arg_option =~ /^-ctime$/) {
+            $wanted .= "int(-M _) $mtime";
+        } elsif ($arg_option eq "-ctime") {
             my $ctime = shift;
             ($ctime =~ /^([\+\-]?)(\d+)$/) || die ("Invalid argument to -ctime: $ctime\n");
             $ctime =~ s/^-/< / || $ctime =~ s/^\+/> / || $ctime =~ s/^/== /;
-            $wanted = "int(-C _) $ctime && " . $wanted;
-            $lstat_needed = 1;
-        } elsif ($arg_option =~ /^-type$/) {
+            $wanted .= "int(-C _) $ctime";
+        } elsif ($arg_option eq "-type") {
             my $type = shift;
             $type =~ /^[fdlpsbc]$/ || die ("Unknown argument to -type: $type\n");
             $type =~ tr/s/S/;
-            $wanted = "(-$type _) && " . $wanted;
-            $lstat_needed = 1;
-        } elsif ($arg_option =~ /^-size$/) {
+            $wanted .= "(-$type _)";
+        } elsif ($arg_option eq "-size") {
             my $size = shift;
             ($size =~ /^([\+\-]?)(\d+)([ckMG]?)$/) || die ("Invalid argument to -size: $size\n");
             $size =~ s/^-/< / || $size =~ s/^\+/> / || $size =~ s/^/== /;
             $size =~ s/c$// || $size =~ s/k$/000/ || $size =~ s/M$/000000/ || $size =~ s/G$/000000000/;
-            $wanted = "int(-s _) $size && " . $wanted;
-            $lstat_needed = 1;
+            $wanted .= "int(-s _) $size";
+        } elsif ($arg_option eq "-prune") {
+            $wanted .= "(\$File::Find::prune = 1)";
+        } elsif ($arg_option eq "-print") {
+            $wanted .= "print(\"\$File::Find::name\\n\");";
+            $print_needed = 0;
+        } elsif ($arg_option eq "-print0") {
+            $wanted .= "print(\"\$File::Find::name\");";
+            $print_needed = 0;
         } else {
             die("Unrecognized option: $arg_option\n");
         }
+
+        if (@ARGV) {
+            if ($ARGV[0] eq "-o") {
+                $wanted .= " || ";
+                shift;
+            } else {
+                $wanted .= " && " unless $ARGV[0] eq ")";
+                shift if $ARGV[0] eq "-a";
+            }
+        }
+
     }
-    if ($lstat_needed) {
-        $wanted = "lstat(\$File::Find::name) && " . $wanted;
-    }
+    
+    if ($print_needed) {
+        if ($wanted =~ /&&\s*$/) {
+            $wanted .= " print(\"\$File::Find::name\\n\");";
+        } else {
+            $wanted .= " && print(\"\$File::Find::name\\n\");";
+        }
+    } 
+
     find({
         preprocess => sub {
             $depth += 1;

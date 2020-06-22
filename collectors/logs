@@ -14,51 +14,8 @@
 
 # logs collector
 
-FIND_MAXDEPTH_PARAMETER=""
-if [ "$LOGS_MAX_DEPTH" -gt 0 ]; then
-    FIND_MAXDEPTH_PARAMETER="-maxdepth $LOGS_MAX_DEPTH"
-fi
-
-FIND_SIZE_PARAMETER=""
-if [ "$LOGS_MAX_FILE_SIZE" -gt 0 ]; then
-    FIND_SIZE_PARAMETER="-size -${LOGS_MAX_FILE_SIZE}c"
-fi
-
-FIND_ATIME_PARAMETER=""
-FIND_MTIME_PARAMETER=""
-FIND_CTIME_PARAMETER=""
-if [ "$DATE_RANGE_T1" ]; then
-    $DATE_RANGE_ATIME && FIND_ATIME_PARAMETER="-atime $DATE_RANGE_T1"
-    $DATE_RANGE_MTIME && FIND_MTIME_PARAMETER="-mtime $DATE_RANGE_T1"
-    $DATE_RANGE_CTIME && FIND_CTIME_PARAMETER="-ctime $DATE_RANGE_T1"
-fi
-if [ "$DATE_RANGE_T2" ]; then
-    $DATE_RANGE_ATIME && FIND_ATIME_PARAMETER="$FIND_ATIME_PARAMETER -atime $DATE_RANGE_T2"
-    $DATE_RANGE_MTIME && FIND_MTIME_PARAMETER="$FIND_MTIME_PARAMETER -mtime $DATE_RANGE_T2"
-    $DATE_RANGE_CTIME && FIND_CTIME_PARAMETER="$FIND_CTIME_PARAMETER -ctime $DATE_RANGE_T2"
-fi
-
-if [ "$DATE_RANGE_T1" ]; then
-    # process log paths
-    $DATE_RANGE_ATIME && run_cmd "cat \"$CWD/conf/logs.conf\" | grep -v \"^#\" | grep -v \"^$\" | grep \"^/\" | sed 's:^/:'\"$MOUNT_POINT\"'/:; s://*:/:g; s:/$::g' | while read line; do $FIND_TOOL \"\$line\" $FIND_MAXDEPTH_PARAMETER -type f $FIND_SIZE_PARAMETER $FIND_ATIME_PARAMETER ; done" "$COLLECTOR_OUTPUT_DIR/logs.tmp"
-    $DATE_RANGE_MTIME && run_cmd "cat \"$CWD/conf/logs.conf\" | grep -v \"^#\" | grep -v \"^$\" | grep \"^/\" | sed 's:^/:'\"$MOUNT_POINT\"'/:; s://*:/:g; s:/$::g' | while read line; do $FIND_TOOL \"\$line\" $FIND_MAXDEPTH_PARAMETER -type f $FIND_SIZE_PARAMETER $FIND_MTIME_PARAMETER ; done" "$COLLECTOR_OUTPUT_DIR/logs.tmp"
-    $DATE_RANGE_CTIME && run_cmd "cat \"$CWD/conf/logs.conf\" | grep -v \"^#\" | grep -v \"^$\" | grep \"^/\" | sed 's:^/:'\"$MOUNT_POINT\"'/:; s://*:/:g; s:/$::g' | while read line; do $FIND_TOOL \"\$line\" $FIND_MAXDEPTH_PARAMETER -type f $FIND_SIZE_PARAMETER $FIND_CTIME_PARAMETER ; done" "$COLLECTOR_OUTPUT_DIR/logs.tmp"
-    # process log files/directories names
-    $DATE_RANGE_ATIME && run_cmd "cat \"$CWD/conf/logs.conf\" | grep -v \"^#\" | grep -v \"^$\" | grep -v \"^/\" | while read line; do $FIND_TOOL \"$MOUNT_POINT\" -name \"\$line\" $FIND_MAXDEPTH_PARAMETER -type f $FIND_SIZE_PARAMETER $FIND_ATIME_PARAMETER ; done" "$COLLECTOR_OUTPUT_DIR/logs.tmp"
-    $DATE_RANGE_MTIME && run_cmd "cat \"$CWD/conf/logs.conf\" | grep -v \"^#\" | grep -v \"^$\" | grep -v \"^/\" | while read line; do $FIND_TOOL \"$MOUNT_POINT\" -name \"\$line\" $FIND_MAXDEPTH_PARAMETER -type f $FIND_SIZE_PARAMETER $FIND_MTIME_PARAMETER ; done" "$COLLECTOR_OUTPUT_DIR/logs.tmp"
-    $DATE_RANGE_CTIME && run_cmd "cat \"$CWD/conf/logs.conf\" | grep -v \"^#\" | grep -v \"^$\" | grep -v \"^/\" | while read line; do $FIND_TOOL \"$MOUNT_POINT\" -name \"\$line\" $FIND_MAXDEPTH_PARAMETER -type f $FIND_SIZE_PARAMETER $FIND_CTIME_PARAMETER ; done" "$COLLECTOR_OUTPUT_DIR/logs.tmp"               
-else
-    # process log paths
-    run_cmd "cat \"$CWD/conf/logs.conf\" | grep -v \"^#\" | grep -v \"^$\" | grep \"^/\" | sed 's:^/:'\"$MOUNT_POINT\"'/:; s://*:/:g; s:/$::g' | while read line; do $FIND_TOOL \"\$line\" $FIND_MAXDEPTH_PARAMETER -type f $FIND_SIZE_PARAMETER ; done" "$COLLECTOR_OUTPUT_DIR/logs.tmp"
-    # process log files/directories names
-    run_cmd "cat \"$CWD/conf/logs.conf\" | grep -v \"^#\" | grep -v \"^$\" | grep -v \"^/\" | while read line; do $FIND_TOOL \"$MOUNT_POINT\" -name \"\$line\" $FIND_MAXDEPTH_PARAMETER -type f $FIND_SIZE_PARAMETER ; done" "$COLLECTOR_OUTPUT_DIR/logs.tmp"
-fi
-
-# remove any UAC directories from the collection, sort and uniq
-run_cmd "cat \"$COLLECTOR_OUTPUT_DIR/logs.tmp\" | grep -v \"$CWD\" | grep -v \"$DESTINATION_DIR/$TMP_DATA_DIR\" | sort | uniq > \"$COLLECTOR_OUTPUT_DIR/logs.txt\""
-
-# remove temporary files
-run_cmd "rm -f \"$COLLECTOR_OUTPUT_DIR/logs.tmp\""
+# search for log files and directories
+run_cmd "file_search \"$FIND_TOOL\" \"$MOUNT_POINT\" \"$CWD/conf/logs.conf\" \"$COLLECTOR_OUTPUT_DIR/logs.txt\" \"$CWD/conf/exclude.conf\" $LOGS_MAX_DEPTH $LOGS_MAX_FILE_SIZE $DATE_RANGE_T1 $DATE_RANGE_T2"
 
 # compress data
 run_cmd "compress_data \"$COLLECTOR_OUTPUT_DIR/logs.txt\" \"$COLLECTOR_OUTPUT_DIR/logs.tar.$COMPRESS_EXT\" \"$UAC_LOG_FILE\""
