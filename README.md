@@ -128,6 +128,10 @@ The ```find``` command line tool will be used to search for files and directorie
 Directory or file paths that will be searched and collected by the user_accounts (-u) collector. If a directory path is added, all files and subdirectories will be collected automatically.
 The ```find``` command line tool will be used to search for files and directories, so the patterns added to this file need to be compatible with the ```-name``` option. Please check ```find``` man pages for instructions.
 
+### conf/exclude.conf
+Directory or file paths that will be excluded from logs, user, system and suspicious files collectors. If a directory path is added, all files and subdirectories will be skilled automatically.
+The ```find``` command line tool will be used to search for files and directories, so the patterns added to this file need to be compatible with ```-path``` and ```-name``` options. Please check ```find``` man pages for instructions.
+
 ## Usage
 ```
 UAC (Unix-like Artifacts Collector)

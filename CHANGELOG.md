@@ -3,7 +3,7 @@ All notable changes to this project will be documented in this file.
 
 ## 1.2.0-dev
 
-
+- Files and directories can be excluded from collection if added to ```conf/exclude.conf``` file.
 
 ## 1.1.1 (2020-06-16)
 
