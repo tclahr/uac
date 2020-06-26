@@ -29,7 +29,9 @@ run_collector() {
 
         if [ -d "$COLLECTOR_OUTPUT_DIR" ]; then
             logging I ">> Running $1 collector\n"
+            $DEBUG && set -x
             . "$CWD/collectors/$1" 2>> "$UAC_LOG_FILE"
+            $DEBUG && set +x
         else
             logging E "Cannot run collector: $1. $COLLECTOR_OUTPUT_DIR not found.\n"
         fi

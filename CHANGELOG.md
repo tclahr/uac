@@ -3,7 +3,16 @@ All notable changes to this project will be documented in this file.
 
 ## 1.2.0-dev
 
-- Files and directories can be excluded from collection if added to ```conf/exclude.conf``` file.
+### Added
+- Files and directories added to ```conf/exclude.conf``` will be skipped during collection.
+
+### Changed
+- misc files was renamed to suspicious files collector.
+- hash_exec extension configuration file
+  - HASH_EXEC_MAX_DEPTH default value was changed from 4 to 6.
+
+### Fixed
+- Data range option not adding the "+" prefix for the second -atime, -mtime and -ctime parameters ([#10](https://github.com/tclahr/uac/issues/10)).
 
 ## 1.1.1 (2020-06-16)
 

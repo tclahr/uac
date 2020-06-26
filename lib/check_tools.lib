@@ -1,0 +1,148 @@
+# Copyright (C) 2019,2020 IBM Corporation
+#
+# Licensed under the Apache License, Version 2.0 (the “License”);
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an “AS IS” BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+################################################################################
+# NAME
+#   check_tools - set some variables according to the available tools on the target system
+# SYNOPSIS
+#   check_tools
+################################################################################
+check_tools() {
+
+    # each command needs to be tested individually as some systems do not have 'type' or 'which' tool
+
+    # find available MD5 sum tool
+    MD5SUM_TOOL=""
+    logging D "Selecting the best available MD5 hashing tool\n"
+    run_command "echo uac | md5sum" "/dev/null"
+    if [ $? -eq 0 ]; then
+        MD5SUM_TOOL="md5sum"
+    else
+        run_command "echo \"uac\" | md5" "/dev/null"
+        if [ $? -eq 0 ]; then
+            MD5SUM_TOOL="md5"
+        else
+            run_command "echo \"uac\" | digest -a md5" "/dev/null"
+            if [ $? -eq 0 ]; then
+                MD5SUM_TOOL="digest -v -a md5"
+            else
+                run_command "csum -h MD5 \"$CWD/uac\"" "/dev/null"
+                if [ $? -eq 0 ]; then
+                    MD5SUM_TOOL="csum -h MD5"
+                fi
+            fi
+        fi
+    fi
+    logging D "MD5SUM_TOOL: $MD5SUM_TOOL\n"
+
+    # set compress as the default compression tool because some systems do not have gzip
+    COMPRESS_TOOL="compress"
+    COMPRESS_EXT="Z"
+
+    # check if gzip is available
+    logging D "Checking if gzip is avalable\n"
+    run_command "echo \"uac\" | gzip" "/dev/null"
+    if [ $? -eq 0 ]; then
+        COMPRESS_TOOL="gzip"
+        COMPRESS_EXT="gz"
+    fi
+    logging D "COMPRESS_TOOL: $COMPRESS_TOOL\n"
+    logging D "COMPRESS_EXT: $COMPRESS_EXT\n"
+   
+    # check if perl is available
+    PERL_TOOL=""
+    logging D "Checking if perl is available\n"
+    run_command "perl \"$CWD/tools/stat/stat.pl\"" "/dev/null"
+    if [ $? -eq 0 ]; then
+        PERL_TOOL="perl"
+    fi
+    logging D "PERL_TOOL: $PERL_TOOL\n"
+    
+    # check if stat is available
+    STAT_TOOL=""
+    logging D "Checking if stat is available\n"
+    run_command "stat \"$CWD/uac\"" "/dev/null"
+    if [ $? -eq 0 ]; then
+        STAT_TOOL="stat"
+    fi
+    logging D "STAT_TOOL: $STAT_TOOL\n"
+
+    # check if file is available
+    FILE_TOOL=""
+    logging D "Checking if file is available\n"
+    run_command "file \"$CWD/uac\"" "/dev/null"
+    if [ $? -eq 0 ]; then
+        FILE_TOOL="file"
+    fi
+    logging D "FILE_TOOL: $FILE_TOOL\n"
+
+    # check which options are supported by find tool
+    FIND_OPERATORS_SUPPORT=true
+    FIND_PATH_SUPPORT=true
+    FIND_SIZE_SUPPORT=true
+    FIND_MAXDEPTH_SUPPORT=true
+    FIND_ATIME_SUPPORT=true
+    FIND_MTIME_SUPPORT=true
+    FIND_CTIME_SUPPORT=true
+
+    logging D "Checking if find supports operators\n"
+    run_command "find \"$CWD\" \( -name \"uac\" -o -name \"uac\" \) -type f -print" "/dev/null"
+    if [ ! $? -eq 0 ]; then
+        FIND_OPERATORS_SUPPORT=false
+    fi
+    logging D "FIND_OPERATORS_SUPPORT: $FIND_OPERATORS_SUPPORT\n"
+
+    logging D "Checking if find supports -path\n"
+    run_command "find \"$CWD\" -path \"$CWD\" -print" "/dev/null"
+    if [ ! $? -eq 0 ]; then
+        FIND_PATH_SUPPORT=false
+    fi
+    logging D "FIND_PATH_SUPPORT: $FIND_PATH_SUPPORT\n"
+
+    logging D "Checking if find supports -size\n"
+    run_command "find \"$CWD/uac\" -size +1c -print" "/dev/null"
+    if [ ! $? -eq 0 ]; then
+        FIND_SIZE_SUPPORT=false
+    fi
+    logging D "FIND_SIZE_SUPPORT: $FIND_SIZE_SUPPORT\n"
+    
+    logging D "Checking if find supports -maxdepth\n"
+    run_command "find \"$CWD/uac\" -maxdepth 1 -print" "/dev/null"
+    if [ ! $? -eq 0 ]; then
+        FIND_MAXDEPTH_SUPPORT=false
+    fi
+    logging D "FIND_MAXDEPTH_SUPPORT: $FIND_MAXDEPTH_SUPPORT\n"
+
+    logging D "Checking if find supports -atime\n"
+    run_command "find \"$CWD/uac\" -atime +1 -print" "/dev/null"
+    if [ ! $? -eq 0 ]; then
+        FIND_ATIME_SUPPORT=false
+    fi
+    logging D "FIND_ATIME_SUPPORT: $FIND_ATIME_SUPPORT\n"
+
+    logging D "Checking if find supports -mtime\n"
+    run_command "find \"$CWD/uac\" -mtime +1 -print" "/dev/null"
+    if [ ! $? -eq 0 ]; then
+        FIND_MTIME_SUPPORT=false
+    fi
+    logging D "FIND_MTIME_SUPPORT: $FIND_MTIME_SUPPORT\n"
+
+    logging D "Checking if find supports -ctime\n"
+    run_command "find \"$CWD/uac\" -ctime +1 -print" "/dev/null"
+    if [ ! $? -eq 0 ]; then
+        FIND_CTIME_SUPPORT=false
+    fi
+    logging D "FIND_CTIME_SUPPORT: $FIND_CTIME_SUPPORT\n"
+
+}

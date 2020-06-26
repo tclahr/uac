@@ -16,22 +16,22 @@
 
 case "$PROFILE" in
     "aix")
-        run_cmd "ps ax | awk '{print \$5}' | grep \"^/\" | sort | uniq | while read line; do \$MD5SUM_TOOL \"\$line\"; done" "$COLLECTOR_OUTPUT_DIR/hash_running_processes.txt"
+        run_command "ps ax | awk '{print \$5}' | grep \"^/\" | sort | uniq | while read line; do \$MD5SUM_TOOL \"\$line\"; done" "$COLLECTOR_OUTPUT_DIR/hash_running_processes.txt"
         ;;
     "bsd")
-        run_cmd "ps ax | awk '{print \$5}' | grep \"^/\" | sort | uniq | while read line; do \$MD5SUM_TOOL \"\$line\"; done" "$COLLECTOR_OUTPUT_DIR/hash_running_processes.txt"
+        run_command "ps ax | awk '{print \$5}' | grep \"^/\" | sort | uniq | while read line; do \$MD5SUM_TOOL \"\$line\"; done" "$COLLECTOR_OUTPUT_DIR/hash_running_processes.txt"
         ;;
     "linux")
-        run_cmd "ps ax | awk '{print \$5}' | grep \"^/\" | sort | uniq | while read line; do \$MD5SUM_TOOL \"\$line\"; done" "$COLLECTOR_OUTPUT_DIR/hash_running_processes.txt"
+        run_command "ps ax | awk '{print \$5}' | grep \"^/\" | sort | uniq | while read line; do \$MD5SUM_TOOL \"\$line\"; done" "$COLLECTOR_OUTPUT_DIR/hash_running_processes.txt"
         # OpenWrt support
         if [ ! -s "$COLLECTOR_OUTPUT_DIR/hash_running_processes.txt" ]; then
-            run_cmd "ps | awk '{print \$5}' | grep \"^/\" | sort | uniq | while read line; do \$MD5SUM_TOOL \"\$line\"; done" "$COLLECTOR_OUTPUT_DIR/hash_running_processes.txt"
+            run_command "ps | awk '{print \$5}' | grep \"^/\" | sort | uniq | while read line; do \$MD5SUM_TOOL \"\$line\"; done" "$COLLECTOR_OUTPUT_DIR/hash_running_processes.txt"
         fi
         ;;
     "macos")
-        run_cmd "ps ax | awk '{print \$5}' | grep \"^/\" | sort | uniq | while read line; do \$MD5SUM_TOOL \"\$line\"; done" "$COLLECTOR_OUTPUT_DIR/hash_running_processes.txt"
+        run_command "ps ax | awk '{print \$5}' | grep \"^/\" | sort | uniq | while read line; do \$MD5SUM_TOOL \"\$line\"; done" "$COLLECTOR_OUTPUT_DIR/hash_running_processes.txt"
         ;;
     "solaris")
-        run_cmd "ps -ef | awk '{print \$8}' | grep \"^/\" | sort | uniq | while read line; do \$MD5SUM_TOOL \"\$line\"; done" "$COLLECTOR_OUTPUT_DIR/hash_running_processes.txt"
+        run_command "ps -ef | awk '{print \$8}' | grep \"^/\" | sort | uniq | while read line; do \$MD5SUM_TOOL \"\$line\"; done" "$COLLECTOR_OUTPUT_DIR/hash_running_processes.txt"
         ;;
 esac

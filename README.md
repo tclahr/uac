@@ -52,8 +52,8 @@ The [mactime](https://wiki.sleuthkit.org/index.php?title=Mactime) tool can be us
 ### Logs (-l)
 Collect log files and directories. The list of files and directories that will be collected can be found in the ```conf/logs.conf``` file.
 
-### Misc Files (-f)
-Collect misc files and directories. The list of files and directories that will be collected can be found in the ```conf/misc_files.conf``` file.
+### Suspicious Files (-f)
+Collect suspicious files and directories. The list of files and directories that will be collected can be found in the ```conf/suspicious_files.conf``` file.
 
 ### Hash Running Processes (-r)
 Collect current process listing with hash (MD5) values.
@@ -95,7 +95,7 @@ Use this profile to collect Solaris artifacts.
 ## Options
 
 ### Date Range (-R)
-The range of dates to be used by logs (-l), misc_files (-f) and user_accounts (-u) collectors. The date range is used to limit the amount of data collected by filtering files using find's -atime, -mtime or -ctime parameter. By default, UAC will search for files that data was last modified (-mtime) OR status last changed (-ctime) within the given date range. Please refer to ```conf/uac.conf``` for more details.
+The range of dates to be used during logs, suspicious files, user files and hashing executable files collection. The date range is used to limit the amount of data collected by filtering files using find's -atime, -mtime or -ctime parameter. By default, UAC will search for files that data was last modified (-mtime) OR status last changed (-ctime) within the given date range. Please refer to ```conf/uac.conf``` for more details.
 The standard format is YYYY-MM-DD for a starting date and no ending date. For an ending date, use YYYY-MM-DD..YYYY-MM-DD.
 
 ### Debug (-D)
@@ -116,20 +116,20 @@ The main UAC configuration file.
 Directory or file paths that will be searched and collected by the logs (-l) collector. If a directory path is added, all files and subdirectories will be collected automatically.
 The ```find``` command line tool will be used to search for files and directories, so the patterns added to this file need to be compatible with the ```-name``` option. Please check ```find``` man pages for instructions.
 
-### conf/misc_files.conf
-Directory or file paths that will be searched and collected by the misc_files (-f) collector. If a directory path is added, all files and subdirectories will be collected automatically.
+### conf/suspicious_files.conf
+Directory or file paths that will be searched and collected by the suspicious files (-f) collector. If a directory path is added, all files and subdirectories will be collected automatically.
 The ```find``` command line tool will be used to search for files and directories, so the patterns added to this file need to be compatible with the ```-name``` option. Please check ```find``` man pages for instructions.
 
 ### conf/system_files.conf
-Directory or file paths that will be searched and collected by the system (-y) collector. If a directory path is added, all files and subdirectories will be collected automatically.
+Directory or file paths that will be searched and collected by the system files (-y) collector. If a directory path is added, all files and subdirectories will be collected automatically.
 The ```find``` command line tool will be used to search for files and directories, so the patterns added to this file need to be compatible with the ```-name``` option. Please check ```find``` man pages for instructions.
 
 ### conf/user_files.conf
-Directory or file paths that will be searched and collected by the user_accounts (-u) collector. If a directory path is added, all files and subdirectories will be collected automatically.
+Directory or file paths that will be searched and collected by the user files (-u) collector. If a directory path is added, all files and subdirectories will be collected automatically.
 The ```find``` command line tool will be used to search for files and directories, so the patterns added to this file need to be compatible with the ```-name``` option. Please check ```find``` man pages for instructions.
 
 ### conf/exclude.conf
-Directory or file paths that will be excluded from logs, user, system and suspicious files collectors. If a directory path is added, all files and subdirectories will be skilled automatically.
+Directory or file paths that will be excluded from collection. If a directory path is added, all files and subdirectories will be skilled automatically.
 The ```find``` command line tool will be used to search for files and directories, so the patterns added to this file need to be compatible with ```-path``` and ```-name``` options. Please check ```find``` man pages for instructions.
 
 ## Usage
@@ -148,7 +148,7 @@ COLLECTORS:
     -d           Collect information about disks, volumes and file systems.
     -b           Extract information from files and directories using the stat tool to create a body file.
     -l           Collect log files and directories.
-    -f           Collect misc files and directories.
+    -f           Collect suspicious files and directories.
     -r           Collect current process listing with hash (MD5) values.
 
 EXTENSIONS:

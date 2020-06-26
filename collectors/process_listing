@@ -14,39 +14,39 @@
 
 # process_listing collector
 
-run_cmd "ps" "$COLLECTOR_OUTPUT_DIR/ps.txt"
-run_cmd "ps auxwww" "$COLLECTOR_OUTPUT_DIR/ps-auxwww.txt"
-run_cmd "ps -deaf" "$COLLECTOR_OUTPUT_DIR/ps-deaf.txt"
-run_cmd "ps -ef" "$COLLECTOR_OUTPUT_DIR/ps-ef.txt"
-run_cmd "ps -efl" "$COLLECTOR_OUTPUT_DIR/ps-efl.txt"
-run_cmd "lsof -n -P -l" "$COLLECTOR_OUTPUT_DIR/lsof-n-P-l.txt"
+run_command "ps" "$COLLECTOR_OUTPUT_DIR/ps.txt"
+run_command "ps auxwww" "$COLLECTOR_OUTPUT_DIR/ps-auxwww.txt"
+run_command "ps -deaf" "$COLLECTOR_OUTPUT_DIR/ps-deaf.txt"
+run_command "ps -ef" "$COLLECTOR_OUTPUT_DIR/ps-ef.txt"
+run_command "ps -efl" "$COLLECTOR_OUTPUT_DIR/ps-efl.txt"
+run_command "lsof -n -P -l" "$COLLECTOR_OUTPUT_DIR/lsof-n-P-l.txt"
 
 case "$PROFILE" in
     "aix")
-        run_cmd "ps ax | awk '{print \$5}' | grep \"^/\" | sort | uniq" "$COLLECTOR_OUTPUT_DIR/running_processes_full_path.txt"
-        run_cmd "pstat -a" "$COLLECTOR_OUTPUT_DIR/pstat-a.txt"
-        run_cmd "pstat -A" "$COLLECTOR_OUTPUT_DIR/pstat-A.txt"
-        run_cmd "pstat -f" "$COLLECTOR_OUTPUT_DIR/pstat-f.txt"
-        run_cmd "pstat -p" "$COLLECTOR_OUTPUT_DIR/pstat-p.txt"
+        run_command "ps ax | awk '{print \$5}' | grep \"^/\" | sort | uniq" "$COLLECTOR_OUTPUT_DIR/running_processes_full_path.txt"
+        run_command "pstat -a" "$COLLECTOR_OUTPUT_DIR/pstat-a.txt"
+        run_command "pstat -A" "$COLLECTOR_OUTPUT_DIR/pstat-A.txt"
+        run_command "pstat -f" "$COLLECTOR_OUTPUT_DIR/pstat-f.txt"
+        run_command "pstat -p" "$COLLECTOR_OUTPUT_DIR/pstat-p.txt"
         ;;
     "bsd")
-        run_cmd "ps ax | awk '{print \$5}' | grep \"^/\" | sort | uniq" "$COLLECTOR_OUTPUT_DIR/running_processes_full_path.txt"
-        run_cmd "fstat" "$COLLECTOR_OUTPUT_DIR/fstat.txt"
-        run_cmd "top -b" "$COLLECTOR_OUTPUT_DIR/top-b.txt"
+        run_command "ps ax | awk '{print \$5}' | grep \"^/\" | sort | uniq" "$COLLECTOR_OUTPUT_DIR/running_processes_full_path.txt"
+        run_command "fstat" "$COLLECTOR_OUTPUT_DIR/fstat.txt"
+        run_command "top -b" "$COLLECTOR_OUTPUT_DIR/top-b.txt"
         ;;
     "linux")
-        run_cmd "ps -ef | awk '{print \$8}' | grep \"^/\" | sort | uniq" "$COLLECTOR_OUTPUT_DIR/running_processes_full_path.txt"
-        run_cmd "top -b -n1" "$COLLECTOR_OUTPUT_DIR/top-b-n1.txt"
+        run_command "ps -ef | awk '{print \$8}' | grep \"^/\" | sort | uniq" "$COLLECTOR_OUTPUT_DIR/running_processes_full_path.txt"
+        run_command "top -b -n1" "$COLLECTOR_OUTPUT_DIR/top-b-n1.txt"
         ;;
     "macos")
-        run_cmd "ps ax | awk '{print \$5}' | grep \"^/\" | sort | uniq" "$COLLECTOR_OUTPUT_DIR/running_processes_full_path.txt"
-        run_cmd "top -l1" "$COLLECTOR_OUTPUT_DIR/top-l1.txt"
+        run_command "ps ax | awk '{print \$5}' | grep \"^/\" | sort | uniq" "$COLLECTOR_OUTPUT_DIR/running_processes_full_path.txt"
+        run_command "top -l1" "$COLLECTOR_OUTPUT_DIR/top-l1.txt"
         ;;
     "solaris")
-        run_cmd "ps -ef | awk '{print \$8}' | grep \"^/\" | sort | uniq" "$COLLECTOR_OUTPUT_DIR/running_processes_full_path.txt"
-        run_cmd "ptree -a" "$COLLECTOR_OUTPUT_DIR/ptree-a.txt"
-        run_cmd "top -b" "$COLLECTOR_OUTPUT_DIR/top-b-n1.txt"
-        run_cmd "find /proc -type d -name path -exec ls -la \"{}\" \\;" "$COLLECTOR_OUTPUT_DIR/running_processes_files.txt"
-        run_cmd "pfiles /proc/*" "$COLLECTOR_OUTPUT_DIR/pfiles-proc.txt"
+        run_command "ps -ef | awk '{print \$8}' | grep \"^/\" | sort | uniq" "$COLLECTOR_OUTPUT_DIR/running_processes_full_path.txt"
+        run_command "ptree -a" "$COLLECTOR_OUTPUT_DIR/ptree-a.txt"
+        run_command "top -b" "$COLLECTOR_OUTPUT_DIR/top-b-n1.txt"
+        run_command "find /proc -type d -name path -exec ls -la \"{}\" \\;" "$COLLECTOR_OUTPUT_DIR/running_processes_files.txt"
+        run_command "pfiles /proc/*" "$COLLECTOR_OUTPUT_DIR/pfiles-proc.txt"
         ;;
 esac
