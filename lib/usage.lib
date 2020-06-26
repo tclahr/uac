@@ -33,7 +33,7 @@ usage() {
     logging I "    -d           Collect information about disks, volumes and file systems.\n"
     logging I "    -b           Extract information from files and directories using the stat tool to create a body file.\n"
     logging I "    -l           Collect log files and directories.\n"
-    logging I "    -f           Collect misc files and directories.\n"
+    logging I "    -f           Collect suspicious files and directories.\n"
     logging I "    -r           Collect current process listing with hash (MD5) values.\n"
     logging I "\n"
     logging I "EXTENSIONS:\n"
