@@ -14,74 +14,34 @@
 
 # user_accounts collector
 
-if $LIVE_COLLECTION; then
+run_command "last" "$COLLECTOR_OUTPUT_DIR/last.txt"
+run_command "last -i" "$COLLECTOR_OUTPUT_DIR/last-i.txt"
+run_command "w" "$COLLECTOR_OUTPUT_DIR/w.txt"
+run_command "who" "$COLLECTOR_OUTPUT_DIR/who.txt"
+run_command "whoami" "$COLLECTOR_OUTPUT_DIR/whoami.txt"
 
-    run_cmd "last" "$COLLECTOR_OUTPUT_DIR/last.txt"
-    run_cmd "last -i" "$COLLECTOR_OUTPUT_DIR/last-i.txt"
-    run_cmd "w" "$COLLECTOR_OUTPUT_DIR/w.txt"
-    run_cmd "who" "$COLLECTOR_OUTPUT_DIR/who.txt"
-    run_cmd "whoami" "$COLLECTOR_OUTPUT_DIR/whoami.txt"
-
-    case "$PROFILE" in
-        "aix")
-            run_cmd "grpck -n ALL" "$COLLECTOR_OUTPUT_DIR/grpck-n-ALL.txt"
-            run_cmd "last -X" "$COLLECTOR_OUTPUT_DIR/last-X.txt"
-            run_cmd "lsgroup -f ALL" "$COLLECTOR_OUTPUT_DIR/lsgroup-f-ALL.txt"
-            run_cmd "lsuser -f ALL" "$COLLECTOR_OUTPUT_DIR/lsuser-f-ALL.txt"
-            run_cmd "usrck -n ALL" "$COLLECTOR_OUTPUT_DIR/usrck-n-ALL.txt"
-            ;;
-        "bsd")
-            ;;
-        "linux")
-            run_cmd "last -a -F" "$COLLECTOR_OUTPUT_DIR/last-a-F.txt"
-            run_cmd "lastlog" "$COLLECTOR_OUTPUT_DIR/lastlog.txt"
-            run_cmd "pwck -r" "$COLLECTOR_OUTPUT_DIR/pwck-r.txt"
-            ;;
-        "macos")
-            run_cmd "dscacheutil -q group" "$COLLECTOR_OUTPUT_DIR/dscacheutil-q-group.txt"
-            run_cmd "dscacheutil -q user" "$COLLECTOR_OUTPUT_DIR/dscacheutil-q-user.txt"
-            ;;
-        "solaris")
-            run_cmd "grpck /etc/group" "$COLLECTOR_OUTPUT_DIR/grpck-etc-group.txt"
-            run_cmd "last -a" "$COLLECTOR_OUTPUT_DIR/last-a.txt"
-            run_cmd "pwck /etc/passwd" "$COLLECTOR_OUTPUT_DIR/pwck-etc-passwd.txt"
-            ;;
-    esac
-fi
-
-# get the list of home directories
-ETC_PASSWD=`sanitize_path "$MOUNT_POINT/etc/passwd"`
-run_cmd "cat \"$ETC_PASSWD\" | grep -v \"^#\" | grep -v \"^$\" | cut -d\":\" -f6 | sort | uniq" "$COLLECTOR_OUTPUT_DIR/.home_directories.txt"
-
-if [ "$PROFILE" = "macos" ]; then
-    USERS_DIR=`sanitize_path "$MOUNT_POINT/Users"`
-    run_cmd "$FIND_TOOL $USERS_DIR ! -path \"$USERS_DIR\" -type d -maxdepth 1" "$COLLECTOR_OUTPUT_DIR/.home_directories.txt"
-fi
-
-if [ -s "$COLLECTOR_OUTPUT_DIR/.home_directories.txt" ]; then
-    
-    # cannot use a "while read USER_HOME_DIR; do ... ; done < $COLLECTOR_OUTPUT_DIR/.home_directories.txt" loop here because it does not work properly with Ctrl+C
-    cat "$COLLECTOR_OUTPUT_DIR/.home_directories.txt" | while read USER_HOME_DIR; do
-        USER_HOME_DIR=`sanitize_path "${MOUNT_POINT}/$USER_HOME_DIR"`
-        logging D "Collecting user files from $USER_HOME_DIR\n"
-
-        # if home dir is / (like in some systems where root home dir is /)
-        # uac will limit the search by setting the -maxdepth to 2
-        FIND_MAXDEPTH_PARAMETER=""
-        if [ "$USER_HOME_DIR" = "/" ]; then
-            FIND_MAXDEPTH_PARAMETER="2"
-        else
-            if [ "$USER_FILES_MAX_DEPTH" -gt 0 ]; then
-                FIND_MAXDEPTH_PARAMETER="$USER_FILES_MAX_DEPTH"
-            fi
-        fi
-
-        # search for log files and directories
-        run_cmd "file_search \"$FIND_TOOL\" \"$USER_HOME_DIR\" \"$CWD/conf/user_files.conf\" \"$COLLECTOR_OUTPUT_DIR/user_files.txt\" \"$CWD/conf/exclude.conf\" $FIND_MAXDEPTH_PARAMETER $USER_FILES_MAX_FILE_SIZE $DATE_RANGE_T1 $DATE_RANGE_T2"
-        
-    done
-
-    # compress data
-    run_cmd "compress_data \"$COLLECTOR_OUTPUT_DIR/user_files.txt\" \"$COLLECTOR_OUTPUT_DIR/user_files.tar.$COMPRESS_EXT\" \"$UAC_LOG_FILE\""
-
-fi
+case "$PROFILE" in
+    "aix")
+        run_command "grpck -n ALL" "$COLLECTOR_OUTPUT_DIR/grpck-n-ALL.txt"
+        run_command "last -X" "$COLLECTOR_OUTPUT_DIR/last-X.txt"
+        run_command "lsgroup -f ALL" "$COLLECTOR_OUTPUT_DIR/lsgroup-f-ALL.txt"
+        run_command "lsuser -f ALL" "$COLLECTOR_OUTPUT_DIR/lsuser-f-ALL.txt"
+        run_command "usrck -n ALL" "$COLLECTOR_OUTPUT_DIR/usrck-n-ALL.txt"
+        ;;
+    "bsd")
+        ;;
+    "linux")
+        run_command "last -a -F" "$COLLECTOR_OUTPUT_DIR/last-a-F.txt"
+        run_command "lastlog" "$COLLECTOR_OUTPUT_DIR/lastlog.txt"
+        run_command "pwck -r" "$COLLECTOR_OUTPUT_DIR/pwck-r.txt"
+        ;;
+    "macos")
+        run_command "dscacheutil -q group" "$COLLECTOR_OUTPUT_DIR/dscacheutil-q-group.txt"
+        run_command "dscacheutil -q user" "$COLLECTOR_OUTPUT_DIR/dscacheutil-q-user.txt"
+        ;;
+    "solaris")
+        run_command "grpck /etc/group" "$COLLECTOR_OUTPUT_DIR/grpck-etc-group.txt"
+        run_command "last -a" "$COLLECTOR_OUTPUT_DIR/last-a.txt"
+        run_command "pwck /etc/passwd" "$COLLECTOR_OUTPUT_DIR/pwck-etc-passwd.txt"
+        ;;
+esac
