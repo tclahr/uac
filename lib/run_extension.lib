@@ -32,10 +32,14 @@ run_extension() {
                 logging D "Loading ${1}.conf configuration file\n"
                 logging D "Copying ${1}.conf file to $EXTENSION_OUTPUT_DIR\n"
                 cp "$CWD/extensions/$1/${1}.conf" "$EXTENSION_OUTPUT_DIR/${1}.conf"
+                $DEBUG && set -x
                 . "$CWD/extensions/$1/${1}.conf" > /dev/null
+                $DEBUG && set +x
             fi
             logging I ">> Running $1 extension\n"
+            $DEBUG && set -x
             . "$CWD/extensions/$1/$1" 2>> "$UAC_LOG_FILE"
+            $DEBUG && set +x
         else
             logging E "Cannot run extension: $1. $EXTENSION_OUTPUT_DIR not found.\n"
         fi
