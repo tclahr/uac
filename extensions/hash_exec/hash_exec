@@ -14,22 +14,10 @@
 
 # hash_exec extension
 
-if $HAS_FILE_TOOL; then
+if [ ! -z "$FILE_TOOL" ]; then
 
-    FIND_MAXDEPTH_PARAMETER="-maxdepth $HASH_EXEC_MAX_DEPTH"
-    # disable find's -maxdepth parameter if HASH_EXEC_MAX_DEPTH=0
-    if [ "$HASH_EXEC_MAX_DEPTH" -eq 0 ]; then
-        FIND_MAXDEPTH_PARAMETER=""
-    fi
-
-    FIND_SIZE_PARAMETER="-size -${HASH_EXEC_MAX_FILE_SIZE}c"
-    # disable find's -size parameter if HASH_EXEC_MAX_FILE_SIZE=0
-    if [ "$HASH_EXEC_MAX_FILE_SIZE" -eq 0 ]; then
-        FIND_SIZE_PARAMETER=""
-    fi
-
-    run_cmd "$FIND_TOOL \"$MOUNT_POINT\" $FIND_MAXDEPTH_PARAMETER -type f $FIND_SIZE_PARAMETER | while read line; do file \"\$line\" | egrep -q \"(ELF|MZ|executable|PE32|shared object|script)\" && $MD5SUM_TOOL \"\$line\"; done" "$EXTENSION_OUTPUT_DIR/hash_exec.txt"
+    run_command "ufind \"$MOUNT_POINT\" \"$HASH_EXEC_MAX_DEPTH\" \"$CWD/conf/exclude.conf\" \"\" \"f\" \"$HASH_EXEC_MAX_FILE_SIZE\" \"$DATE_RANGE_T1\" \"$DATE_RANGE_T2\" | while read line; do $FILE_TOOL \"\$line\" | egrep -q \"(ELF|MZ|executable|PE32|shared object|script)\" && $MD5SUM_TOOL \"\$line\"; done" "$EXTENSION_OUTPUT_DIR/hash_exec.txt"
 
 else
-    logging D "Cannot run hash_exec extension. file command not found.\n"
+    logging D "Cannot hash executable files. No file tool found on the system.\n"
 fi
