@@ -22,11 +22,11 @@
 ################################################################################
 get_hostname() {
     # some systems do not have hostname tool installed
-    run_command "hostname" "/dev/null"
+    hostname >/dev/null 2>/dev/null
     if [ $? -eq 0 ]; then
         hostname
     elif [ -r "/etc/hostname" ]; then
-        head -1 "/etc/hostname" 2>/dev/null
+        head -1 "/etc/hostname"
     else
         echo "unknown"
     fi
