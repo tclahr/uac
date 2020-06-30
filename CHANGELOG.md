@@ -7,6 +7,10 @@ All notable changes to this project will be documented in this file.
 - Files and directories added to ```conf/exclude.conf``` will be skipped during collection.
 - By default, mounted remote file systems will be excluded from the collection. Please refer to ```conf/uac.conf``` for more information.
 
+- New entries in logs.conf
+  - /var/nsproflog
+  - /var/nssynclog
+  - catalina.out
 - New entries in user_files.conf
   - /.xsession-errors
 
