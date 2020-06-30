@@ -54,9 +54,9 @@ SHIFT_OPT=""
 while getopts "apnuywsdblfre:P:R:VDUvh" opt; do
     case $opt in
         # collectors
-        a)  COLLECTOR_PROCESS_LISTING=true
+        a)  COLLECTOR_PROCESS=true
             COLLECTOR_NETWORK=true
-            COLLECTOR_USER_ACCOUNTS=true
+            COLLECTOR_USER=true
             COLLECTOR_SYSTEM=true
             COLLECTOR_HARDWARE=true
             COLLECTOR_SOFTWARE=true
@@ -68,7 +68,7 @@ while getopts "apnuywsdblfre:P:R:VDUvh" opt; do
             ANY_COLLECTOR_SELECTED=true
             SHIFT_OPT="$SHIFT_OPT A"
             ;;
-        p)  COLLECTOR_PROCESS_LISTING=true
+        p)  COLLECTOR_PROCESS=true
             ANY_COLLECTOR_SELECTED=true
             SHIFT_OPT="$SHIFT_OPT p"
             ;;
@@ -76,7 +76,7 @@ while getopts "apnuywsdblfre:P:R:VDUvh" opt; do
             ANY_COLLECTOR_SELECTED=true
             SHIFT_OPT="$SHIFT_OPT n"
             ;;
-        u)  COLLECTOR_USER_ACCOUNTS=true
+        u)  COLLECTOR_USER=true
             ANY_COLLECTOR_SELECTED=true
             SHIFT_OPT="$SHIFT_OPT u"
             ;;
@@ -303,14 +303,14 @@ if $ANY_COLLECTOR_SELECTED || $ANY_EXTENSION_SELECTED; then
                     logging D "Collection started: $CURRENT_DATE_TIME\n"
 
                     # collectors
-                    # run process_listing collector
-                    $COLLECTOR_PROCESS_LISTING && $LIVE_COLLECTION && run_collector process_listing 2>> "$UAC_LOG_FILE"
+                    # run process collector
+                    $COLLECTOR_PROCESS && $LIVE_COLLECTION && run_collector process 2>> "$UAC_LOG_FILE"
 
                     # run network collector
                     $COLLECTOR_NETWORK && $LIVE_COLLECTION && run_collector network 2>> "$UAC_LOG_FILE"
 
-                    # run user_accounts collector
-                    $COLLECTOR_USER_ACCOUNTS && $LIVE_COLLECTION && run_collector user_accounts 2>> "$UAC_LOG_FILE"
+                    # run user collector
+                    $COLLECTOR_USER && $LIVE_COLLECTION && run_collector user 2>> "$UAC_LOG_FILE"
 
                     # run system collector
                     $COLLECTOR_SYSTEM && $LIVE_COLLECTION && run_collector system 2>> "$UAC_LOG_FILE"
@@ -331,7 +331,7 @@ if $ANY_COLLECTOR_SELECTED || $ANY_EXTENSION_SELECTED; then
                     $COLLECTOR_SYSTEM && run_collector system_files 2>> "$UAC_LOG_FILE"
 
                     # run user_files collector
-                    $COLLECTOR_USER_ACCOUNTS && run_collector user_files 2>> "$UAC_LOG_FILE"
+                    $COLLECTOR_USER && run_collector user_files 2>> "$UAC_LOG_FILE"
 
                     # run logs collector
                     $COLLECTOR_LOGS && run_collector logs 2>> "$UAC_LOG_FILE"

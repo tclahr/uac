@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# user_accounts collector
+# user collector
 
 run_command "last" "$COLLECTOR_OUTPUT_DIR/last.txt"
 run_command "last -i" "$COLLECTOR_OUTPUT_DIR/last-i.txt"

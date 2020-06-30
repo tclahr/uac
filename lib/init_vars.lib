@@ -41,9 +41,9 @@ init_vars() {
     RUN_AS_NON_ROOT=false
 
     # set default value for all collectors
-    COLLECTOR_PROCESS_LISTING=false
+    COLLECTOR_PROCESS=false
     COLLECTOR_NETWORK=false
-    COLLECTOR_USER_ACCOUNTS=false
+    COLLECTOR_USER=false
     COLLECTOR_SYSTEM=false
     COLLECTOR_HARDWARE=false
     COLLECTOR_SOFTWARE=false
