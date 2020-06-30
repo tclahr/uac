@@ -47,6 +47,7 @@ case "$PROFILE" in
         run_command "lsmod" "$COLLECTOR_OUTPUT_DIR/lsmod.txt"
         run_command "runlevel" "$COLLECTOR_OUTPUT_DIR/runlevel.txt"
         run_command "service --status-all" "$COLLECTOR_OUTPUT_DIR/service-status-all.txt"
+        run_command "service list" "$COLLECTOR_OUTPUT_DIR/service-list.txt"
         run_command "sysctl -a" "$COLLECTOR_OUTPUT_DIR/sysctl-a.txt"
         run_command "systemctl -l" "$COLLECTOR_OUTPUT_DIR/systemctl-l.txt"
         run_command "systemctl list-timers --all" "$COLLECTOR_OUTPUT_DIR/systemctl-list-timers-all.txt"
