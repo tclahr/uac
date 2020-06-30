@@ -14,9 +14,13 @@
 
 # logs collector
 
+# exclude paths
 run_command "cat \"$CWD/conf/exclude.conf\" | grep -v \"^#\" | grep -v \"^$\" | grep \"^/\" | sed 's:^/:'\"$MOUNT_POINT\"'/:; s://*:/:g; s:/$::g'" "$COLLECTOR_OUTPUT_DIR/.exclude.tmp"
+# exclude names
 run_command "cat \"$CWD/conf/exclude.conf\" | grep -v \"^#\" | grep -v \"^$\" | grep -v \"^/\"" "$COLLECTOR_OUTPUT_DIR/.exclude.tmp"
 run_command "cat \"$CWD/conf/exclude.conf\" | grep -v \"^#\" | grep -v \"^$\" | grep -v \"^/\"" "$COLLECTOR_OUTPUT_DIR/.exclude_names.tmp"
+# exclude mounted network file systems
+$EXCLUDE_MOUNTED_REMOTE_FILE_SYSTEMS && run_command "get_mount_points_to_exclude" "$COLLECTOR_OUTPUT_DIR/.exclude.tmp"
 
 # first we need to search for directories which names were added to conf/logs.conf
 run_command "ufind \"$MOUNT_POINT\" \"$LOGS_MAX_DEPTH\" \"$COLLECTOR_OUTPUT_DIR/.exclude.tmp\" \"$CWD/conf/logs.conf\" \"d\" \"0\" " "$COLLECTOR_OUTPUT_DIR/.directories.tmp"

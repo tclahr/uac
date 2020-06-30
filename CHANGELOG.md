@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 - Files and directories added to ```conf/exclude.conf``` will be skipped during collection.
+- By default, mounted remote file systems will be excluded from the collection. Please refer to ```conf/uac.conf``` for more information.
 
 ### Changed
 - misc files was renamed to suspicious files collector.
