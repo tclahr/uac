@@ -67,6 +67,9 @@ init_vars() {
         LIVE_COLLECTION=false
     fi
 
+    DESTINATION_DIR=""
+    TMP_DATA_DIR=""
+
     # test to check if expr tool supports --
     # some embedded linux does not support it
     EXPR_DASH_DASH="--"
