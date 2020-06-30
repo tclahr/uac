@@ -48,6 +48,7 @@ case "$PROFILE" in
         run_command "iptables -L -v -n" "$COLLECTOR_OUTPUT_DIR/iptables-L-v-n.txt"
         run_command "iptables -t nat -L -v -n" "$COLLECTOR_OUTPUT_DIR/iptables-t-nat-L-v-n.txt"
         run_command "netstat -a -n -p" "$COLLECTOR_OUTPUT_DIR/netstat-a-n-p.txt"
+        run_command "netstat -l -p -e -a -n -u -t" "$COLLECTOR_OUTPUT_DIR/netstat-l-p-e-a-n-u-t.txt"
         run_command "ss -a -n -p" "$COLLECTOR_OUTPUT_DIR/ss-a-n-p.txt"
         run_command "ss -a -p" "$COLLECTOR_OUTPUT_DIR/ss-a-p.txt"
         ;;
