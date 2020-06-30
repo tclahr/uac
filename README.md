@@ -46,8 +46,8 @@ Collect information about installed packages and software.
 Collect information about disks, volumes and file systems.
 
 ### Body File (-b)
-Extract information from files and directories using the ```stat``` tool to create a [body file](https://wiki.sleuthkit.org/index.php?title=Body_file). The body file is an intermediate file when creating a timeline of file activity. It is a pipe ("|") delimited text file that contains one line for each file.
-The [mactime](https://wiki.sleuthkit.org/index.php?title=Mactime) tool can be used to read this file and sorts the contents.
+Extract information from files and directories using the ```stat``` or ```stat.pl``` tool to create a [body file](https://wiki.sleuthkit.org/index.php?title=Body_file). The body file is an intermediate file when creating a timeline of file activity. It is a pipe ("|") delimited text file that contains one line for each file.
+[Plaso](https://github.com/log2timeline/plaso) or [mactime](https://wiki.sleuthkit.org/index.php?title=Mactime) tools can be used to read this file and sorts the contents.
 
 ### Logs (-l)
 Collect log files and directories. The list of files and directories that will be collected can be found in the ```conf/logs.conf``` file.
@@ -95,7 +95,7 @@ Use this profile to collect Solaris artifacts.
 ## Options
 
 ### Date Range (-R)
-The range of dates to be used during logs, suspicious files, user files and hashing executable files collection. The date range is used to limit the amount of data collected by filtering files using find's -atime, -mtime or -ctime parameter. By default, UAC will search for files that data was last modified (-mtime) OR status last changed (-ctime) within the given date range. Please refer to ```conf/uac.conf``` for more details.
+The range of dates to be used during logs, suspicious files, user files and hash executable files collection. The date range is used to limit the amount of data collected by filtering files using find's -atime, -mtime or -ctime parameter. By default, UAC will search for files that data was last modified (-mtime) OR status last changed (-ctime) within the given date range. Please refer to ```conf/uac.conf``` for more details.
 The standard format is YYYY-MM-DD for a starting date and no ending date. For an ending date, use YYYY-MM-DD..YYYY-MM-DD.
 
 ### Debug (-D)

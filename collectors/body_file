@@ -16,8 +16,12 @@
 
 if [ ! -z "$STAT_TOOL" ] || [ ! -z "$PERL_TOOL" ]; then
 
+    # exclude paths
     run_command "cat \"$CWD/conf/exclude.conf\" | grep -v \"^#\" | grep -v \"^$\" | grep \"^/\" | sed 's:^/:'\"$MOUNT_POINT\"'/:; s://*:/:g; s:/$::g'" "$COLLECTOR_OUTPUT_DIR/.exclude.tmp"
+    # exclude names
     run_command "cat \"$CWD/conf/exclude.conf\" | grep -v \"^#\" | grep -v \"^$\" | grep -v \"^/\"" "$COLLECTOR_OUTPUT_DIR/.exclude.tmp"
+    # exclude mounted network file systems
+    $EXCLUDE_MOUNTED_REMOTE_FILE_SYSTEMS && run_command "get_mount_points_to_exclude" "$COLLECTOR_OUTPUT_DIR/.exclude.tmp"
 
     case "$PROFILE" in
         "aix")

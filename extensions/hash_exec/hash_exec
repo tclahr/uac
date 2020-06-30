@@ -14,10 +14,21 @@
 
 # hash_exec extension
 
-if [ ! -z "$FILE_TOOL" ]; then
+if [ ! -z "$MD5SUM_TOOL" ]; then
+    if [ ! -z "$FILE_TOOL" ]; then
 
-    run_command "ufind \"$MOUNT_POINT\" \"$HASH_EXEC_MAX_DEPTH\" \"$CWD/conf/exclude.conf\" \"\" \"f\" \"$HASH_EXEC_MAX_FILE_SIZE\" \"$DATE_RANGE_T1\" \"$DATE_RANGE_T2\" | while read line; do $FILE_TOOL \"\$line\" | egrep -q \"(ELF|MZ|executable|PE32|shared object|script)\" && $MD5SUM_TOOL \"\$line\"; done" "$EXTENSION_OUTPUT_DIR/hash_exec.txt"
+        # exclude paths
+        run_command "cat \"$CWD/conf/exclude.conf\" | grep -v \"^#\" | grep -v \"^$\" | grep \"^/\" | sed 's:^/:'\"$MOUNT_POINT\"'/:; s://*:/:g; s:/$::g'" "$EXTENSION_OUTPUT_DIR/.exclude.tmp"
+        # exclude regex
+        run_command "cat \"$CWD/conf/exclude.conf\" | grep -v \"^#\" | grep -v \"^$\" | grep -v \"^/\"" "$EXTENSION_OUTPUT_DIR/.exclude.tmp"
+        # exclude mounted network file systems
+        $EXCLUDE_MOUNTED_REMOTE_FILE_SYSTEMS && run_command "get_mount_points_to_exclude" "$EXTENSION_OUTPUT_DIR/.exclude.tmp"
 
+        run_command "ufind \"$MOUNT_POINT\" \"$HASH_EXEC_MAX_DEPTH\" \"$EXTENSION_OUTPUT_DIR/.exclude.tmp\" \"\" \"f\" \"$HASH_EXEC_MAX_FILE_SIZE\" \"$DATE_RANGE_T1\" \"$DATE_RANGE_T2\" | while read line; do $FILE_TOOL \"\$line\" | egrep -q \"(ELF|MZ|executable|PE32|shared object|script)\" && $MD5SUM_TOOL \"\$line\"; done" "$EXTENSION_OUTPUT_DIR/hash_exec.txt"
+
+    else
+        logging D "Cannot hash executable files. No file tool was found on the system.\n"
+    fi
 else
-    logging D "Cannot hash executable files. No file tool found on the system.\n"
+    logging D "Cannot hash executable files. No MD5 hashing tool was found on the system.\n"
 fi
