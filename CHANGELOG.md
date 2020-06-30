@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 - Files and directories added to ```conf/exclude.conf``` will be skipped during collection.
 - By default, mounted remote file systems will be excluded from the collection. Please refer to ```conf/uac.conf``` for more information.
+- Hash running processes will now be executed by process collector (-p).
 
 - New process collectors
   - linux
@@ -25,6 +26,9 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 - misc files was renamed to suspicious files collector.
+
+### Removed
+- hash running processes collector (-r).
 
 ### Fixed
 - Data range option not adding the "+" prefix for the second -atime, -mtime and -ctime parameters ([#10](https://github.com/tclahr/uac/issues/10)).

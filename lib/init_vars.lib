@@ -51,7 +51,6 @@ init_vars() {
     COLLECTOR_BODY_FILE=false
     COLLECTOR_LOGS=false
     COLLECTOR_SUSPICIOUS_FILES=false
-    COLLECTOR_HASH_RUNNING_PROCESSES=false
 
     # set default value for all extensions
     EXTENSION_CHKROOTKIT=false

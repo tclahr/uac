@@ -51,7 +51,7 @@ init_vars
 trap terminate INT TERM
 
 SHIFT_OPT=""
-while getopts "apnuywsdblfre:P:R:VDUvh" opt; do
+while getopts "apnuywsdblfe:P:R:VDUvh" opt; do
     case $opt in
         # collectors
         a)  COLLECTOR_PROCESS=true
@@ -64,7 +64,6 @@ while getopts "apnuywsdblfre:P:R:VDUvh" opt; do
             COLLECTOR_BODY_FILE=true
             COLLECTOR_LOGS=true
             COLLECTOR_SUSPICIOUS_FILES=true
-            COLLECTOR_HASH_RUNNING_PROCESSES=true
             ANY_COLLECTOR_SELECTED=true
             SHIFT_OPT="$SHIFT_OPT A"
             ;;
@@ -107,10 +106,6 @@ while getopts "apnuywsdblfre:P:R:VDUvh" opt; do
         f)  COLLECTOR_SUSPICIOUS_FILES=true
             ANY_COLLECTOR_SELECTED=true
             SHIFT_OPT="$SHIFT_OPT f"
-            ;;
-        r)  COLLECTOR_HASH_RUNNING_PROCESSES=true
-            ANY_COLLECTOR_SELECTED=true
-            SHIFT_OPT="$SHIFT_OPT r"
             ;;
         # extensions
         e)  for EXTENSION in `echo "$OPTARG" | sed 's:,: :g'`; do
@@ -338,9 +333,6 @@ if $ANY_COLLECTOR_SELECTED || $ANY_EXTENSION_SELECTED; then
 
                     # run suspicious_files collector
                     $COLLECTOR_SUSPICIOUS_FILES && run_collector suspicious_files 2>> "$UAC_LOG_FILE"
-
-                    # run hash_running_processes collector
-                    $COLLECTOR_HASH_RUNNING_PROCESSES && $LIVE_COLLECTION && run_collector hash_running_processes 2>> "$UAC_LOG_FILE"
 
                     # extensions
                     # run chkrootkit extension

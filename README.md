@@ -24,13 +24,13 @@ The project's [maintainers](MAINTAINERS.md) are responsible for reviewing and me
 
 ## Collectors
 
-### Process Listing (-p)
-Collect current process listing.
+### Process (-p)
+Collect running processes information.
 
 ### Network (-n)
 Collect active network connections with related process information.
 
-### User Accounts (-u)
+### User (-u)
 Collect user accounts information, login related files and activities. The list of files and directories that will be collected can be found in the ```conf/user_files.conf``` file.
 
 ### System (-y)
@@ -54,9 +54,6 @@ Collect log files and directories. The list of files and directories that will b
 
 ### Suspicious Files (-f)
 Collect suspicious files and directories. The list of files and directories that will be collected can be found in the ```conf/suspicious_files.conf``` file.
-
-### Hash Running Processes (-r)
-Collect current process listing with hash (MD5) values.
 
 ## Extensions
 
@@ -139,7 +136,7 @@ Usage: ./uac COLLECTORS [-e EXTENSION_LIST] [-P PROFILE] [OPTIONS] [DESTINATION]
 
 COLLECTORS:
     -a           Enable all collectors.
-    -p           Collect current process listing.
+    -p           Collect running processes information.
     -n           Collect active network connections with related process information.
     -u           Collect user accounts information, login related files and activities.
     -y           Collect system information, system configuration files and kernel related details.
@@ -149,7 +146,6 @@ COLLECTORS:
     -b           Extract information from files and directories using the stat tool to create a body file.
     -l           Collect log files and directories.
     -f           Collect suspicious files and directories.
-    -r           Collect current process listing with hash (MD5) values.
 
 EXTENSIONS:
     -e EXTENSION_LIST
@@ -196,7 +192,7 @@ Run only hash_exec and chkrootkit extensions against the current running system,
 ```
 ./uac -e hash_exec,chkrootkit -P linux /mnt/share
 ```
-Run only process listing, hardware and logs collectors against the current running system, force ```solaris``` profile, use ```/tmp``` as the destination directory and increase verbosity level:
+Run only process, hardware and logs collectors against the current running system, force ```solaris``` profile, use ```/tmp``` as the destination directory and increase verbosity level:
 ```
 ./uac -p -w -l -P solaris -V /tmp
 ```
