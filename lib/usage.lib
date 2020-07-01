@@ -31,6 +31,7 @@ usage() {
     logging I "    -w           Collect low level hardware information.\n"
     logging I "    -s           Collect information about installed packages and software.\n"
     logging I "    -d           Collect information about disks, volumes and file systems.\n"
+    logging I "    -k           Collect docker and guest virtual machines information.\n"
     logging I "    -b           Extract information from files and directories using the stat tool to create a body file.\n"
     logging I "    -l           Collect log files and directories.\n"
     logging I "    -f           Collect suspicious files and directories.\n"

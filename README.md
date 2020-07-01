@@ -45,6 +45,9 @@ Collect information about installed packages and software.
 ### Disk Volume and File System (-d)
 Collect information about disks, volumes and file systems.
 
+### Docker and Virtual Machine (-k)
+Collect docker and guest virtual machines information.
+
 ### Body File (-b)
 Extract information from files and directories using the ```stat``` or ```stat.pl``` tool to create a [body file](https://wiki.sleuthkit.org/index.php?title=Body_file). The body file is an intermediate file when creating a timeline of file activity. It is a pipe ("|") delimited text file that contains one line for each file.
 [Plaso](https://github.com/log2timeline/plaso) or [mactime](https://wiki.sleuthkit.org/index.php?title=Mactime) tools can be used to read this file and sorts the contents.
@@ -143,6 +146,7 @@ COLLECTORS:
     -w           Collect low level hardware information.
     -s           Collect information about installed packages and software.
     -d           Collect information about disks, volumes and file systems.
+    -k           Collect docker and guest virtual machines information.
     -b           Extract information from files and directories using the stat tool to create a body file.
     -l           Collect log files and directories.
     -f           Collect suspicious files and directories.

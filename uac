@@ -51,7 +51,7 @@ init_vars
 trap terminate INT TERM
 
 SHIFT_OPT=""
-while getopts "apnuywsdblfe:P:R:VDUvh" opt; do
+while getopts "apnuywsdkblfe:P:R:VDUvh" opt; do
     case $opt in
         # collectors
         a)  COLLECTOR_PROCESS=true
@@ -61,6 +61,7 @@ while getopts "apnuywsdblfe:P:R:VDUvh" opt; do
             COLLECTOR_HARDWARE=true
             COLLECTOR_SOFTWARE=true
             COLLECTOR_DISK_VOLUME_FILE_SYSTEM=true
+            COLLECTOR_DOCKER_VIRTUAL_MACHINE=true
             COLLECTOR_BODY_FILE=true
             COLLECTOR_LOGS=true
             COLLECTOR_SUSPICIOUS_FILES=true
@@ -94,6 +95,10 @@ while getopts "apnuywsdblfe:P:R:VDUvh" opt; do
         d)  COLLECTOR_DISK_VOLUME_FILE_SYSTEM=true
             ANY_COLLECTOR_SELECTED=true
             SHIFT_OPT="$SHIFT_OPT d"
+            ;;
+        k)  COLLECTOR_DOCKER_VIRTUAL_MACHINE=true
+            ANY_COLLECTOR_SELECTED=true
+            SHIFT_OPT="$SHIFT_OPT k"
             ;;
         b)  COLLECTOR_BODY_FILE=true
             ANY_COLLECTOR_SELECTED=true
@@ -319,6 +324,9 @@ if $ANY_COLLECTOR_SELECTED || $ANY_EXTENSION_SELECTED; then
 
                     # run disk_volume_file_system collector
                     $COLLECTOR_DISK_VOLUME_FILE_SYSTEM && $LIVE_COLLECTION && run_collector disk_volume_file_system 2>> "$UAC_LOG_FILE"
+
+                    # run docker_virtual_machine collector
+                    $COLLECTOR_DOCKER_VIRTUAL_MACHINE && $LIVE_COLLECTION && run_collector docker_virtual_machine 2>> "$UAC_LOG_FILE"
 
                     # run body_file collector
                     $COLLECTOR_BODY_FILE && run_collector body_file 2>> "$UAC_LOG_FILE"

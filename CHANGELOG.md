@@ -4,10 +4,20 @@ All notable changes to this project will be documented in this file.
 ## 1.2.0-dev
 
 ### Added
+- New docker and guest virtual machines information collector (-k).
 - Files and directories added to ```conf/exclude.conf``` will be skipped during collection.
 - By default, mounted remote file systems will be excluded from the collection. Please refer to ```conf/uac.conf``` for more information.
 - Hash running processes will now be executed by process collector (-p).
 
+- New docker_virtual_machine collectors
+    - docker container ls --all --size
+    - docker image ls --all
+    - docker info
+    - docker inspect ID
+    - docker network inspect ID
+    - docker top ID
+    - docker version
+    - docker container logs
 - New process collectors
   - ps -eo pid,etime,args
   - ps -eo pid,lstart,args
@@ -17,24 +27,13 @@ All notable changes to this project will be documented in this file.
   - linux
     - netstat -l -p -e -a -n -u -t
 - New system collectors
-  - bsd, linux and macos
-    - docker container ls --all --size
-    - docker image ls --all
-    - docker info
-    - docker ps -all
-    - docker ps -all --format "table {{.ID}}\t{{.Image}}\t{{.Command}}\t{{.CreatedAt}}\t{{.Status}}\t{{.Ports}}\t{{.Names}}"
-    - docker inspect ID
-    - docker network inspect ID
-    - docker top ID
-    - docker version
   - linux
     - service list
-- logs collector will also collect docker container logs
-- New entries in logs.conf
+- New entries added to logs.conf
   - /var/nsproflog
   - /var/nssynclog
   - catalina.out
-- New entries in user_files.conf
+- New entries added to user_files.conf
   - /.xsession-errors
 
 ### Changed
