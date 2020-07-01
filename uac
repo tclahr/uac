@@ -145,7 +145,8 @@ while getopts "apnuywsdblfe:P:R:VDUvh" opt; do
             if [ $? -eq 0 ]; then
                 TODAY=`get_date "+%Y-%m-%d"`
                 if regex_match "^((19|20)[0-9][0-9])-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$" "$OPTARG"; then
-                    DATE_RANGE_T1=`get_days_between_dates "$TODAY" "$OPTARG"`
+                    DATE_T1="$OPTARG"
+                    DATE_RANGE_T1=`get_days_between_dates "$TODAY" "$DATE_T1"`
                 elif regex_match "^((19|20)[0-9][0-9])-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])..((19|20)[0-9][0-9])-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$" "$OPTARG"; then
                     DATE_T1=`echo "$OPTARG" | cut -d"." -f 1`
                     DATE_T2=`echo "$OPTARG" | cut -d"." -f 3`

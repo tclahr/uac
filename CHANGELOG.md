@@ -27,6 +27,7 @@ All notable changes to this project will be documented in this file.
     - docker version
   - linux
     - service list
+- logs collector will also collect docker container logs
 - New entries in logs.conf
   - /var/nsproflog
   - /var/nssynclog

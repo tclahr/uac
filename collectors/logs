@@ -46,3 +46,14 @@ run_command "rm -f \"$COLLECTOR_OUTPUT_DIR/.logs.tmp\"" "/dev/null"
 
 # compress data
 run_command "compress_data \"$COLLECTOR_OUTPUT_DIR/logs.txt\" \"$COLLECTOR_OUTPUT_DIR/logs.tar.$COMPRESS_EXT\" \"$UAC_LOG_FILE\""
+
+# docker logs
+LOCAL_DOCKER_CONTAINER_LOGS_SINCE=""
+LOCAL_DOCKER_CONTAINER_LOGS_UNTIL=""
+if [ ! -z "$DATE_T1" ]; then
+    LOCAL_DOCKER_CONTAINER_LOGS_SINCE="--since $DATE_T1"
+    if [ ! -z "$DATE_T2" ]; then
+        LOCAL_DOCKER_CONTAINER_LOGS_UNTIL="--until $DATE_T2"
+    fi
+fi
+run_command "docker container ps -all | sed 1d | cut -d\" \" -f 1 | while read line; do docker container logs --timestamps $LOCAL_DOCKER_CONTAINER_LOGS_SINCE $LOCAL_DOCKER_CONTAINER_LOGS_UNTIL \$line | $COMPRESS_TOOL > \"$COLLECTOR_OUTPUT_DIR/docker-container-logs-\$line.$COMPRESS_EXT\"; done" "/dev/null"
