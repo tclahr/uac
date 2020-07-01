@@ -50,8 +50,13 @@ case "$PROFILE" in
 esac
 
 # hash running processes
-run_command "ps -eo args | grep \"^/\" | awk '{print \$1}' | sort | uniq | while read line; do \$MD5SUM_TOOL \"\$line\"; done" "$COLLECTOR_OUTPUT_DIR/running_processes_hashes.txt"
-# old busybox support
-if [ ! -s "$COLLECTOR_OUTPUT_DIR/running_processes_hashes.txt" ]; then
-    run_command "ps | grep \"^/\" | awk '{print \$5}' | sort | uniq | while read line; do \$MD5SUM_TOOL \"\$line\"; done" "$COLLECTOR_OUTPUT_DIR/running_processes_hashes.txt"
+logging D "Hashing running processes\n"
+if [ ! -z "$MD5SUM_TOOL" ]; then
+    run_command "ps -eo args | grep \"^/\" | awk '{print \$1}' | sort | uniq | while read line; do \$MD5SUM_TOOL \"\$line\"; done" "$COLLECTOR_OUTPUT_DIR/running_processes_hashes.txt"
+    # old busybox support
+    if [ ! -s "$COLLECTOR_OUTPUT_DIR/running_processes_hashes.txt" ]; then
+        run_command "ps | grep \"^/\" | awk '{print \$5}' | sort | uniq | while read line; do \$MD5SUM_TOOL \"\$line\"; done" "$COLLECTOR_OUTPUT_DIR/running_processes_hashes.txt"
+    fi
+else
+    logging D "Cannot hash executable files. No MD5 hashing tool was found on the system.\n"
 fi
