@@ -34,6 +34,15 @@ case "$PROFILE" in
         run_command "who -r" "$COLLECTOR_OUTPUT_DIR/who-r.txt"
         ;;
     "bsd")
+        run_command "docker container ls --all --size" "$COLLECTOR_OUTPUT_DIR/docker-container-ls-all-size.txt"
+        run_command "docker image ls --all" "$COLLECTOR_OUTPUT_DIR/docker-container-ls-all.txt"
+        run_command "docker info" "$COLLECTOR_OUTPUT_DIR/docker-info.txt"
+        run_command "docker ps -all" "$COLLECTOR_OUTPUT_DIR/docker-ps-all.txt"
+        run_command "docker ps -all --format \"table {{.ID}}\t{{.Image}}\t{{.Command}}\t{{.CreatedAt}}\t{{.Status}}\t{{.Ports}}\t{{.Names}}\"" "$COLLECTOR_OUTPUT_DIR/docker-ps-all-format.txt"
+        run_command "docker container ps -all | sed 1d | cut -d\" \" -f 1 | while read line; do run_command \"docker inspect \$line\" \"$COLLECTOR_OUTPUT_DIR/docker-inspect-\$line.txt\"; done" "$COLLECTOR_OUTPUT_DIR/docker-inspect.txt"
+        run_command "docker network ls | sed 1d | cut -d\" \" -f 1 | while read line; do run_command \"docker network inspect \$line\" \"$COLLECTOR_OUTPUT_DIR/docker-network-inspect-\$line.txt\"; done" "$COLLECTOR_OUTPUT_DIR/docker-network-inspect.txt"
+        run_command "docker ps | sed 1d | cut -d\" \" -f 1 | while read line; do run_command \"docker top \$line\" \"$COLLECTOR_OUTPUT_DIR/docker-top-\$line.txt\"; done" "$COLLECTOR_OUTPUT_DIR/docker-top.txt"
+        run_command "docker version" "$COLLECTOR_OUTPUT_DIR/docker-version.txt"
         run_command "kldstat -v" "$COLLECTOR_OUTPUT_DIR/kldstat-v.txt"
         run_command "swapctl -l" "$COLLECTOR_OUTPUT_DIR/swapctl-l.txt"
         run_command "swapinfo" "$COLLECTOR_OUTPUT_DIR/swapinfo.txt"
@@ -42,6 +51,15 @@ case "$PROFILE" in
         ;;
     "linux")
         run_command "chkconfig --list" "$COLLECTOR_OUTPUT_DIR/chkconfig-list.txt"
+        run_command "docker container ls --all --size" "$COLLECTOR_OUTPUT_DIR/docker-container-ls-all-size.txt"
+        run_command "docker image ls --all" "$COLLECTOR_OUTPUT_DIR/docker-container-ls-all.txt"
+        run_command "docker info" "$COLLECTOR_OUTPUT_DIR/docker-info.txt"
+        run_command "docker ps -all" "$COLLECTOR_OUTPUT_DIR/docker-ps-all.txt"
+        run_command "docker ps -all --format \"table {{.ID}}\t{{.Image}}\t{{.Command}}\t{{.CreatedAt}}\t{{.Status}}\t{{.Ports}}\t{{.Names}}\"" "$COLLECTOR_OUTPUT_DIR/docker-ps-all-format.txt"
+        run_command "docker container ps -all | sed 1d | cut -d\" \" -f 1 | while read line; do run_command \"docker inspect \$line\" \"$COLLECTOR_OUTPUT_DIR/docker-inspect-\$line.txt\"; done" "$COLLECTOR_OUTPUT_DIR/docker-inspect.txt"
+        run_command "docker network ls | sed 1d | cut -d\" \" -f 1 | while read line; do run_command \"docker network inspect \$line\" \"$COLLECTOR_OUTPUT_DIR/docker-network-inspect-\$line.txt\"; done" "$COLLECTOR_OUTPUT_DIR/docker-network-inspect.txt"
+        run_command "docker ps | sed 1d | cut -d\" \" -f 1 | while read line; do run_command \"docker top \$line\" \"$COLLECTOR_OUTPUT_DIR/docker-top-\$line.txt\"; done" "$COLLECTOR_OUTPUT_DIR/docker-top.txt"
+        run_command "docker version" "$COLLECTOR_OUTPUT_DIR/docker-version.txt"
         run_command "free" "$COLLECTOR_OUTPUT_DIR/free.txt"
         run_command "hwclock" "$COLLECTOR_OUTPUT_DIR/hwclock.txt"
         run_command "lsmod" "$COLLECTOR_OUTPUT_DIR/lsmod.txt"
@@ -55,6 +73,15 @@ case "$PROFILE" in
         run_command "vmstat" "$COLLECTOR_OUTPUT_DIR/vmstat.txt"
         ;;
     "macos")
+        run_command "docker container ls --all --size" "$COLLECTOR_OUTPUT_DIR/docker-container-ls-all-size.txt"
+        run_command "docker image ls --all" "$COLLECTOR_OUTPUT_DIR/docker-container-ls-all.txt"
+        run_command "docker info" "$COLLECTOR_OUTPUT_DIR/docker-info.txt"
+        run_command "docker ps -all" "$COLLECTOR_OUTPUT_DIR/docker-ps-all.txt"
+        run_command "docker ps -all --format \"table {{.ID}}\t{{.Image}}\t{{.Command}}\t{{.CreatedAt}}\t{{.Status}}\t{{.Ports}}\t{{.Names}}\"" "$COLLECTOR_OUTPUT_DIR/docker-ps-all-format.txt"
+        run_command "docker container ps -all | sed 1d | cut -d\" \" -f 1 | while read line; do run_command \"docker inspect \$line\" \"$COLLECTOR_OUTPUT_DIR/docker-inspect-\$line.txt\"; done" "$COLLECTOR_OUTPUT_DIR/docker-inspect.txt"
+        run_command "docker network ls | sed 1d | cut -d\" \" -f 1 | while read line; do run_command \"docker network inspect \$line\" \"$COLLECTOR_OUTPUT_DIR/docker-network-inspect-\$line.txt\"; done" "$COLLECTOR_OUTPUT_DIR/docker-network-inspect.txt"
+        run_command "docker ps | sed 1d | cut -d\" \" -f 1 | while read line; do run_command \"docker top \$line\" \"$COLLECTOR_OUTPUT_DIR/docker-top-\$line.txt\"; done" "$COLLECTOR_OUTPUT_DIR/docker-top.txt"
+        run_command "docker version" "$COLLECTOR_OUTPUT_DIR/docker-version.txt"
         run_command "kextstat" "$COLLECTOR_OUTPUT_DIR/kextstat.txt"
         run_command "launchctl list" "$COLLECTOR_OUTPUT_DIR/launchctl-list.txt"
         run_command "sw_vers" "$COLLECTOR_OUTPUT_DIR/sw_vers.txt"

@@ -15,6 +15,16 @@ All notable changes to this project will be documented in this file.
   - linux
     - netstat -l -p -e -a -n -u -t
 - New system collectors
+  - bsd, linux and macos
+    - docker container ls --all --size
+    - docker image ls --all
+    - docker info
+    - docker ps -all
+    - docker ps -all --format "table {{.ID}}\t{{.Image}}\t{{.Command}}\t{{.CreatedAt}}\t{{.Status}}\t{{.Ports}}\t{{.Names}}"
+    - docker inspect ID
+    - docker network inspect ID
+    - docker top ID
+    - docker version
   - linux
     - service list
 - New entries in logs.conf
