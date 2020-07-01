@@ -9,6 +9,8 @@ All notable changes to this project will be documented in this file.
 - Hash running processes will now be executed by process collector (-p).
 
 - New process collectors
+  - ps -eo pid,etime,args
+  - ps -eo pid,lstart,args
   - linux
     - pstree
 - New network collectors

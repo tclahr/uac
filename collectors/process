@@ -19,6 +19,8 @@ run_command "ps auxwww" "$COLLECTOR_OUTPUT_DIR/ps-auxwww.txt"
 run_command "ps -deaf" "$COLLECTOR_OUTPUT_DIR/ps-deaf.txt"
 run_command "ps -ef" "$COLLECTOR_OUTPUT_DIR/ps-ef.txt"
 run_command "ps -efl" "$COLLECTOR_OUTPUT_DIR/ps-efl.txt"
+run_command "ps -eo pid,etime,args" "$COLLECTOR_OUTPUT_DIR/ps-eo-pid-etime-args.txt"
+run_command "ps -eo pid,lstart,args" "$COLLECTOR_OUTPUT_DIR/ps-eo-pid-lstart-args.txt"
 run_command "lsof -n -P -l" "$COLLECTOR_OUTPUT_DIR/lsof-n-P-l.txt"
 
 case "$PROFILE" in
