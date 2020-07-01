@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# process_listing collector
+# process collector
 
 run_command "ps" "$COLLECTOR_OUTPUT_DIR/ps.txt"
 run_command "ps auxwww" "$COLLECTOR_OUTPUT_DIR/ps-auxwww.txt"
@@ -25,45 +25,33 @@ run_command "lsof -n -P -l" "$COLLECTOR_OUTPUT_DIR/lsof-n-P-l.txt"
 
 case "$PROFILE" in
     "aix")
-        run_command "ps ax | awk '{print \$5}' | grep \"^/\" | sort | uniq" "$COLLECTOR_OUTPUT_DIR/running_processes_full_paths.txt"
         run_command "pstat -a" "$COLLECTOR_OUTPUT_DIR/pstat-a.txt"
         run_command "pstat -A" "$COLLECTOR_OUTPUT_DIR/pstat-A.txt"
         run_command "pstat -f" "$COLLECTOR_OUTPUT_DIR/pstat-f.txt"
         run_command "pstat -p" "$COLLECTOR_OUTPUT_DIR/pstat-p.txt"
-        # hash running processes
-        run_command "ps ax | awk '{print \$5}' | grep \"^/\" | sort | uniq | while read line; do \$MD5SUM_TOOL \"\$line\"; done" "$COLLECTOR_OUTPUT_DIR/running_processes_hashes.txt"
         ;;
     "bsd")
-        run_command "ps ax | awk '{print \$5}' | grep \"^/\" | sort | uniq" "$COLLECTOR_OUTPUT_DIR/running_processes_full_paths.txt"
         run_command "fstat" "$COLLECTOR_OUTPUT_DIR/fstat.txt"
         run_command "top -b" "$COLLECTOR_OUTPUT_DIR/top-b.txt"
-        # hash running processes
-        run_command "ps ax | awk '{print \$5}' | grep \"^/\" | sort | uniq | while read line; do \$MD5SUM_TOOL \"\$line\"; done" "$COLLECTOR_OUTPUT_DIR/running_processes_hashes.txt"
         ;;
     "linux")
-        run_command "ps -ef | awk '{print \$8}' | grep \"^/\" | sort | uniq" "$COLLECTOR_OUTPUT_DIR/running_processes_full_paths.txt"
         run_command "pstree" "$COLLECTOR_OUTPUT_DIR/pstree.txt"
         run_command "top -b -n1" "$COLLECTOR_OUTPUT_DIR/top-b-n1.txt"
-        # hash running processes
-        run_command "ps ax | awk '{print \$5}' | grep \"^/\" | sort | uniq | while read line; do \$MD5SUM_TOOL \"\$line\"; done" "$COLLECTOR_OUTPUT_DIR/running_processes_hashes.txt"
-        # OpenWrt support
-        if [ ! -s "$COLLECTOR_OUTPUT_DIR/running_processes_hashes.txt" ]; then
-            run_command "ps | awk '{print \$5}' | grep \"^/\" | sort | uniq | while read line; do \$MD5SUM_TOOL \"\$line\"; done" "$COLLECTOR_OUTPUT_DIR/running_processes_hashes.txt"
-        fi
         ;;
     "macos")
-        run_command "ps ax | awk '{print \$5}' | grep \"^/\" | sort | uniq" "$COLLECTOR_OUTPUT_DIR/running_processes_full_paths.txt"
         run_command "top -l1" "$COLLECTOR_OUTPUT_DIR/top-l1.txt"
-        # hash running processes
-        run_command "ps ax | awk '{print \$5}' | grep \"^/\" | sort | uniq | while read line; do \$MD5SUM_TOOL \"\$line\"; done" "$COLLECTOR_OUTPUT_DIR/running_processes_hashes.txt"
         ;;
     "solaris")
-        run_command "ps -ef | awk '{print \$8}' | grep \"^/\" | sort | uniq" "$COLLECTOR_OUTPUT_DIR/running_processes_full_paths.txt"
         run_command "ptree -a" "$COLLECTOR_OUTPUT_DIR/ptree-a.txt"
-        run_command "top -b" "$COLLECTOR_OUTPUT_DIR/top-b-n1.txt"
+        run_command "top -b" "$COLLECTOR_OUTPUT_DIR/top-b.txt"
         run_command "find /proc -type d -name path -exec ls -la \"{}\" \\;" "$COLLECTOR_OUTPUT_DIR/running_processes_files.txt"
         run_command "pfiles /proc/*" "$COLLECTOR_OUTPUT_DIR/pfiles-proc.txt"
-        # hash running processes
-        run_command "ps -ef | awk '{print \$8}' | grep \"^/\" | sort | uniq | while read line; do \$MD5SUM_TOOL \"\$line\"; done" "$COLLECTOR_OUTPUT_DIR/running_processes_hashes.txt"
         ;;
 esac
+
+# hash running processes
+run_command "ps -eo args | grep \"^/\" | awk '{print \$1}' | sort | uniq | while read line; do \$MD5SUM_TOOL \"\$line\"; done" "$COLLECTOR_OUTPUT_DIR/running_processes_hashes.txt"
+# old busybox support
+if [ ! -s "$COLLECTOR_OUTPUT_DIR/running_processes_hashes.txt" ]; then
+    run_command "ps | grep \"^/\" | awk '{print \$5}' | sort | uniq | while read line; do \$MD5SUM_TOOL \"\$line\"; done" "$COLLECTOR_OUTPUT_DIR/running_processes_hashes.txt"
+fi
