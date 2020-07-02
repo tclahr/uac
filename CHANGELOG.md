@@ -18,6 +18,17 @@ All notable changes to this project will be documented in this file.
     - docker top ID
     - docker version
     - docker container logs
+    - virsh list --all
+    - virsh domifaddr NAME
+    - virsh dominfo NAME
+    - virsh dommemstat NAME
+    - virsh snapshot-list NAME
+    - virsh vcpuinfo DOMAIN
+    - virsh net-list --all
+    - virsh net-info NAME
+    - virsh nodeinfo
+    - virsh pool-list --all
+    - virt-top -n 1
 - New process collectors
   - ps -eo pid,etime,args
   - ps -eo pid,lstart,args
