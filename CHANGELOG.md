@@ -37,6 +37,8 @@ All notable changes to this project will be documented in this file.
   - /.xsession-errors
 
 ### Changed
+- conf/uac.conf
+  - BODY_FILE_MAX_DEPTH default value changed from 4 to 6.
 - misc files was renamed to suspicious files collector.
 
 ### Removed
