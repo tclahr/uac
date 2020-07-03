@@ -26,6 +26,7 @@ All notable changes to this project will be documented in this file.
     - virsh vcpuinfo DOMAIN
     - virsh net-list --all
     - virsh net-info NAME
+    - virsh net-dhcp-leases NAME
     - virsh nodeinfo
     - virsh pool-list --all
     - virt-top -n 1

@@ -29,6 +29,7 @@ run_command "virsh list --name | while read line; do run_command \"virsh snapsho
 run_command "virsh list --name | while read line; do run_command \"virsh vcpuinfo \$line\" \"$COLLECTOR_OUTPUT_DIR/virsh-vcpuinfo-\$line.txt\"; done" "/dev/null"
 run_command "virsh net-list --all" "$COLLECTOR_OUTPUT_DIR/virsh-net-list-all.txt"
 run_command "virsh net-list --all --name | while read line; do run_command \"virsh net-info \$line\" \"$COLLECTOR_OUTPUT_DIR/virsh-net-info-\$line.txt\"; done" "/dev/null"
+run_command "virsh net-list --all --name | while read line; do run_command \"virsh net-dhcp-leases \$line\" \"$COLLECTOR_OUTPUT_DIR/virsh-net-dhcp-leases-\$line.txt\"; done" "/dev/null"
 run_command "virsh nodeinfo" "$COLLECTOR_OUTPUT_DIR/virsh-nodeinfo.txt"
 run_command "virsh pool-list --all" "$COLLECTOR_OUTPUT_DIR/virsh-pool-list-all.txt"
 run_command "virt-top -n 1" "$COLLECTOR_OUTPUT_DIR/virt-top-n-1.txt"
