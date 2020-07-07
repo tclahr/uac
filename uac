@@ -293,6 +293,9 @@ if $ANY_COLLECTOR_SELECTED || $ANY_EXTENSION_SELECTED; then
 
                     logging D "PATH: $PATH\n"
 
+                    # get current PID
+                    logging D "Current PID: $$\n"
+
                     # set some variables according to the available tools on the target system
                     check_tools
 
