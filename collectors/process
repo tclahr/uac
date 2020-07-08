@@ -23,20 +23,37 @@ run_command "ps -eo pid,etime,args" "$COLLECTOR_OUTPUT_DIR/ps-eo-pid-etime-args.
 run_command "ps -eo pid,lstart,args" "$COLLECTOR_OUTPUT_DIR/ps-eo-pid-lstart-args.txt"
 run_command "lsof -n -P -l" "$COLLECTOR_OUTPUT_DIR/lsof-n-P-l.txt"
 
+LOCAL_PROC_PID_EXE_LINK=""
+
 case "$PROFILE" in
     "aix")
         run_command "pstat -a" "$COLLECTOR_OUTPUT_DIR/pstat-a.txt"
         run_command "pstat -A" "$COLLECTOR_OUTPUT_DIR/pstat-A.txt"
         run_command "pstat -f" "$COLLECTOR_OUTPUT_DIR/pstat-f.txt"
         run_command "pstat -p" "$COLLECTOR_OUTPUT_DIR/pstat-p.txt"
+        # aix uses /proc/PID/object/a.out file
+        if [ -f "/proc/$$/object/a.out" ]; then
+            LOCAL_PROC_PID_EXE_LINK="object/a.out"
+        fi
         ;;
     "bsd")
         run_command "fstat" "$COLLECTOR_OUTPUT_DIR/fstat.txt"
         run_command "top -b" "$COLLECTOR_OUTPUT_DIR/top-b.txt"
+        # some BSD distros use /proc/PID/exe symlink
+        if [ -h "/proc/$$/exe" ]; then
+            LOCAL_PROC_PID_EXE_LINK="exe"
+        elif [ -f "/proc/$$/file" ]; then
+            # some BSD distros use /proc/PID/file file
+            LOCAL_PROC_PID_EXE_LINK="file"
+        fi
         ;;
     "linux")
         run_command "pstree" "$COLLECTOR_OUTPUT_DIR/pstree.txt"
         run_command "top -b -n1" "$COLLECTOR_OUTPUT_DIR/top-b-n1.txt"
+        # most linux distros use /proc/PID/exe symlink
+        if [ -h "/proc/$$/exe" ]; then
+            LOCAL_PROC_PID_EXE_LINK="exe"
+        fi
         ;;
     "macos")
         run_command "top -l1" "$COLLECTOR_OUTPUT_DIR/top-l1.txt"
@@ -46,17 +63,46 @@ case "$PROFILE" in
         run_command "top -b" "$COLLECTOR_OUTPUT_DIR/top-b.txt"
         run_command "find /proc -type d -name path -exec ls -la \"{}\" \\;" "$COLLECTOR_OUTPUT_DIR/running_processes_files.txt"
         run_command "pfiles /proc/*" "$COLLECTOR_OUTPUT_DIR/pfiles-proc.txt"
+        # solaris uses /proc/PID/path/a.out symlink
+        if [ -h "/proc/$$/path/a.out" ]; then
+            LOCAL_PROC_PID_EXE_LINK="path/a.out"
+        fi
         ;;
 esac
 
-# hash running processes
-logging D "Hashing running processes\n"
-if [ ! -z "$MD5SUM_TOOL" ]; then
-    run_command "ps -eo args | grep \"^/\" | awk '{print \$1}' | sort | uniq | while read line; do \$MD5SUM_TOOL \"\$line\"; done" "$COLLECTOR_OUTPUT_DIR/running_processes_hashes.txt"
-    # old busybox support
-    if [ ! -s "$COLLECTOR_OUTPUT_DIR/running_processes_hashes.txt" ]; then
-        run_command "ps | grep \"^/\" | awk '{print \$5}' | sort | uniq | while read line; do \$MD5SUM_TOOL \"\$line\"; done" "$COLLECTOR_OUTPUT_DIR/running_processes_hashes.txt"
+# if /proc exists, lets use it to generate the hashes and extract strings from running processes
+if [ ! -z "$LOCAL_PROC_PID_EXE_LINK" ]; then
+
+    run_command "find /proc/*/$LOCAL_PROC_PID_EXE_LINK -print | while read line; do ls -l \$line; done" "$COLLECTOR_OUTPUT_DIR/running_processes_full_paths.txt"
+    if [ ! -z "$MD5SUM_TOOL" ]; then
+        # hash running processes from /proc/PID/LOCAL_PROC_PID_EXE_LINK
+        run_command "find /proc/*/$LOCAL_PROC_PID_EXE_LINK -print | while read line; do \$MD5SUM_TOOL \$line; done" "$COLLECTOR_OUTPUT_DIR/running_processes_hashes.txt"
+    else
+        logging D "Cannot hash running processes. No MD5 hashing tool was found on the system.\n"
     fi
+
+    # extracting strings from running processes
+    $EXTRACT_STRINGS_RUNNING_PROCESSES && run_command "mkdir -p \"$COLLECTOR_OUTPUT_DIR/strings\"" "/dev/null"
+    $EXTRACT_STRINGS_RUNNING_PROCESSES && run_command "find /proc/*/$LOCAL_PROC_PID_EXE_LINK -print | while read line; do cut -d\"/\" -f 3; done | while read pid; do strings -a /proc/\$pid/$LOCAL_PROC_PID_EXE_LINK | $COMPRESS_TOOL > \"$COLLECTOR_OUTPUT_DIR/strings/\$pid.txt.$COMPRESS_EXT\"; done" "/dev/null"
+
 else
-    logging D "Cannot hash executable files. No MD5 hashing tool was found on the system.\n"
+    # lets use ps output to generate the hashes and extract strings from running processes
+    
+    run_command "ps -eo args | grep \"^/\" | awk '{print \$1}' | sort | uniq" "$COLLECTOR_OUTPUT_DIR/running_processes_full_paths.txt"
+    # old busybox support
+    if [ ! -s "$COLLECTOR_OUTPUT_DIR/running_processes_full_paths.txt" ]; then
+        run_command "ps | grep \"^/\" | awk '{print \$5}' | sort | uniq" "$COLLECTOR_OUTPUT_DIR/running_processes_full_paths.txt"
+    fi
+
+    if [ ! -z "$MD5SUM_TOOL" ]; then
+        run_command "cat \"$COLLECTOR_OUTPUT_DIR/running_processes_full_paths.txt\" | while read line; do \$MD5SUM_TOOL \$line; done" "$COLLECTOR_OUTPUT_DIR/running_processes_hashes.txt"
+    else
+        logging D "Cannot hash running processes. No MD5 hashing tool was found on the system.\n"
+    fi
+
+    # extracting strings from running processes
+    $EXTRACT_STRINGS_RUNNING_PROCESSES && run_command "mkdir -p \"$COLLECTOR_OUTPUT_DIR/strings\"" "/dev/null"
+    $EXTRACT_STRINGS_RUNNING_PROCESSES && run_command "cat \"$COLLECTOR_OUTPUT_DIR/running_processes_full_paths.txt\" | while read line; do LOCAL_PROC_NAME=\`echo \$line | sed 's:^/::; s:/:_:g'\` && strings -a \$line | $COMPRESS_TOOL > \"$COLLECTOR_OUTPUT_DIR/strings/\$LOCAL_PROC_NAME.txt.$COMPRESS_EXT\"; done" "/dev/null"
+
 fi
+
