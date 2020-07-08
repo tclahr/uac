@@ -17,6 +17,8 @@
 if [ ! -z "$MD5SUM_TOOL" ]; then
     if [ ! -z "$FILE_TOOL" ]; then
 
+        logging I ">> Hashing executable files\n"
+
         # exclude paths
         run_command "cat \"$CWD/conf/exclude.conf\" | grep -v \"^#\" | grep -v \"^$\" | grep \"^/\" | sed 's:^/:'\"$MOUNT_POINT\"'/:; s://*:/:g; s:/$::g'" "$EXTENSION_OUTPUT_DIR/.exclude.tmp"
         # exclude regex

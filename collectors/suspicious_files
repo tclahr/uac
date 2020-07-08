@@ -14,6 +14,8 @@
 
 # suspicious_files collector
 
+logging I ">> Searching and collecting suspicious files\n"
+
 # exclude paths
 run_command "cat \"$CWD/conf/exclude.conf\" | grep -v \"^#\" | grep -v \"^$\" | grep \"^/\" | sed 's:^/:'\"$MOUNT_POINT\"'/:; s://*:/:g; s:/$::g'" "$COLLECTOR_OUTPUT_DIR/.exclude.tmp"
 # exclude names

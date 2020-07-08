@@ -14,6 +14,8 @@
 
 # docker_virtual_machine collector
 
+logging I ">> Collecting docker and virtual machines information\n"
+
 run_command "docker container ls --all --size" "$COLLECTOR_OUTPUT_DIR/docker-container-ls-all-size.txt"
 run_command "docker image ls --all" "$COLLECTOR_OUTPUT_DIR/docker-image-ls-all.txt"
 run_command "docker info" "$COLLECTOR_OUTPUT_DIR/docker-info.txt"

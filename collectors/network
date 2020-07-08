@@ -14,6 +14,8 @@
 
 # network collector
 
+logging I ">> Collecting network information\n"
+
 run_command "arp -a" "$COLLECTOR_OUTPUT_DIR/arp-a.txt"
 run_command "hostname" "$COLLECTOR_OUTPUT_DIR/hostname.txt"
 run_command "ifconfig -a" "$COLLECTOR_OUTPUT_DIR/ifconfig-a.txt"

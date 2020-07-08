@@ -14,6 +14,8 @@
 
 # user collector
 
+logging I ">> Collecting user accounts information and login activities\n"
+
 run_command "last" "$COLLECTOR_OUTPUT_DIR/last.txt"
 run_command "last -i" "$COLLECTOR_OUTPUT_DIR/last-i.txt"
 run_command "w" "$COLLECTOR_OUTPUT_DIR/w.txt"

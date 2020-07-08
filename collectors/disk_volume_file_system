@@ -14,6 +14,8 @@
 
 # disk_volume_file_system collector
 
+logging I ">> Collecting disks, volumes and file systems information\n"
+
 run_command "df" "$COLLECTOR_OUTPUT_DIR/df.txt"
 run_command "mount" "$COLLECTOR_OUTPUT_DIR/mount.txt"
 run_command "zfs list" "$COLLECTOR_OUTPUT_DIR/zfs-list.txt"

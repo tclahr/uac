@@ -14,6 +14,8 @@
 
 # system_files collector
 
+logging I ">> Searching and collecting system files\n"
+
 run_command "cat \"$CWD/conf/exclude.conf\" | grep -v \"^#\" | grep -v \"^$\" | grep \"^/\" | sed 's:^/:'\"$MOUNT_POINT\"'/:; s://*:/:g; s:/$::g'" "$COLLECTOR_OUTPUT_DIR/.exclude.tmp"
 run_command "cat \"$CWD/conf/exclude.conf\" | grep -v \"^#\" | grep -v \"^$\" | grep -v \"^/\"" "$COLLECTOR_OUTPUT_DIR/.exclude.tmp"
 run_command "cat \"$CWD/conf/exclude.conf\" | grep -v \"^#\" | grep -v \"^$\" | grep -v \"^/\"" "$COLLECTOR_OUTPUT_DIR/.exclude_names.tmp"

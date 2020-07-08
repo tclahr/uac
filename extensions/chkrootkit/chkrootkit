@@ -14,5 +14,7 @@
 
 # chkrootkit extension
 
+logging I ">> Running chkrootkit (if available)\n"
+
 run_command "chkrootkit -n -r \"$MOUNT_POINT\"" "$EXTENSION_OUTPUT_DIR/chkrootkit-n.txt"
-run_command "chkrootkit -x -r \"$MOUNT_POINT\"" "$EXTENSION_OUTPUT_DIR/chkrootkit-x.txt"
+run_command "chkrootkit -n -x -r \"$MOUNT_POINT\"" "$EXTENSION_OUTPUT_DIR/chkrootkit-x.txt"

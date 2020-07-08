@@ -14,6 +14,8 @@
 
 # software collector
 
+logging I ">> Collecting installed packages and software information\n"
+
 case "$PROFILE" in
     "aix")
         run_command "instfix -i -v" "$COLLECTOR_OUTPUT_DIR/instfix-i-v.txt"

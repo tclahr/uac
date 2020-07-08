@@ -21,21 +21,21 @@
 #   COLLECTOR_OUTPUT_DIR  directory which collector data will be stored in
 ################################################################################
 run_collector() {
-    logging D "Loading $1 collector\n"
-    if [ -r "$CWD/collectors/$1" ]; then
-        COLLECTOR_OUTPUT_DIR="$DESTINATION_DIR/$TMP_DATA_DIR/collected_data/$1"
-        logging D "Creating $1 collector output directory: $COLLECTOR_OUTPUT_DIR\n"
+    LOCAL_COLLECTOR_NAME="$1"
+    logging D "Loading $LOCAL_COLLECTOR_NAME collector\n"
+    if [ -r "$CWD/collectors/$LOCAL_COLLECTOR_NAME" ]; then
+        COLLECTOR_OUTPUT_DIR="$DESTINATION_DIR/$TMP_DATA_DIR/collected_data/$LOCAL_COLLECTOR_NAME"
+        logging D "Creating $LOCAL_COLLECTOR_NAME collector output directory: $COLLECTOR_OUTPUT_DIR\n"
         mkdir -p "$COLLECTOR_OUTPUT_DIR"
 
         if [ -d "$COLLECTOR_OUTPUT_DIR" ]; then
-            logging I ">> Running $1 collector\n"
             $DEBUG && set -x
-            . "$CWD/collectors/$1" 2>> "$UAC_LOG_FILE"
+            . "$CWD/collectors/$LOCAL_COLLECTOR_NAME" 2>> "$UAC_LOG_FILE"
             $DEBUG && set +x
         else
-            logging E "Cannot run collector: $1. $COLLECTOR_OUTPUT_DIR not found.\n"
+            logging E "Cannot run collector: $LOCAL_COLLECTOR_NAME. $COLLECTOR_OUTPUT_DIR not found.\n"
         fi
     else
-        logging E "Cannot load collector: $1\n"
+        logging E "Cannot load collector: $LOCAL_COLLECTOR_NAME\n"
     fi
 }

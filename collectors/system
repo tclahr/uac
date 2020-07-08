@@ -14,6 +14,8 @@
 
 # system collector
 
+logging I ">> Collecting system information\n"
+
 run_command "date" "$COLLECTOR_OUTPUT_DIR/date.txt"
 run_command "env" "$COLLECTOR_OUTPUT_DIR/env.txt"
 run_command "uptime" "$COLLECTOR_OUTPUT_DIR/uptime.txt"
