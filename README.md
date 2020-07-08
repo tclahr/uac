@@ -46,7 +46,7 @@ Collect information about installed packages and software.
 Collect information about disks, volumes and file systems.
 
 ### Docker and Virtual Machine (-k)
-Collect docker and guest virtual machines information.
+Collect docker and virtual machines information.
 
 ### Body File (-b)
 Extract information from files and directories using the ```stat``` or ```stat.pl``` tool to create a [body file](https://wiki.sleuthkit.org/index.php?title=Body_file). The body file is an intermediate file when creating a timeline of file activity. It is a pipe ("|") delimited text file that contains one line for each file.

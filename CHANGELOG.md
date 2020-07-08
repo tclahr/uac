@@ -4,10 +4,11 @@ All notable changes to this project will be documented in this file.
 ## 1.2.0-dev
 
 ### Added
-- New docker and guest virtual machines information collector (-k).
+- New docker and virtual machines information collector (-k).
 - Files and directories added to ```conf/exclude.conf``` will be skipped during collection.
 - By default, mounted remote file systems will be excluded from the collection. Please refer to ```conf/uac.conf``` for more information.
 - Hash running processes will now be executed by process collector (-p).
+- Strings will be extracted from running processes by process collector (-p).
 
 - New docker_virtual_machine collectors
     - docker container ls --all --size
