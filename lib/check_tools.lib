@@ -145,4 +145,13 @@ check_tools() {
     fi
     logging D "FIND_CTIME_SUPPORT: $FIND_CTIME_SUPPORT\n"
 
+    # check if fls is available
+    FLS_TOOL=""
+    logging D "Checking if fls tool is available\n"
+    run_command "fls -V" "/dev/null"
+    if [ $? -eq 0 ]; then
+        FLS_TOOL="fls"
+    fi
+    logging D "FLS_TOOL: $FLS_TOOL\n"
+
 }
