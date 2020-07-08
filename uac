@@ -371,13 +371,13 @@ if $ANY_COLLECTOR_SELECTED || $ANY_EXTENSION_SELECTED; then
                         uprintf "Compressed output file created at $DESTINATION_DIR/$COMPRESSED_OUTPUT_FILE\n"
 
                         if [ ! -z "$MD5SUM_TOOL" ]; then
-                            uprintf "Computing MD5 hash. Please wait...\n"
+                            uprintf "Hashing output file. Please wait...\n"
                             $MD5SUM_TOOL "$COMPRESSED_OUTPUT_FILE" > "$COMPRESSED_OUTPUT_FILE.md5"
                             if [ ! -z "$COMPRESSED_OUTPUT_FILE.md5" ]; then
                                 uprintf "MD5 hash output file created at $DESTINATION_DIR/$COMPRESSED_OUTPUT_FILE.md5\n"
                             else
                                 uprintf "Cannot compute MD5 hash for $DESTINATION_DIR/$COMPRESSED_OUTPUT_FILE\n"
-                                rm "$COMPRESSED_OUTPUT_FILE.MD5"
+                                rm "$COMPRESSED_OUTPUT_FILE.md5"
                             fi
                         fi
 
