@@ -25,7 +25,7 @@ The project's [maintainers](MAINTAINERS.md) are responsible for reviewing and me
 ## Collectors
 
 ### Process (-p)
-Collect running processes information.
+Collect information, hash (MD5) and extract strings from running processes.
 
 ### Network (-n)
 Collect active network connections with related process information.
