@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 1.2.0-dev
+## 1.2.0-rc1
 
 ### Added
 - New docker and virtual machines information collector (-k).
