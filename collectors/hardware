@@ -31,6 +31,7 @@ case "$PROFILE" in
         run_command "devinfo -r" "$COLLECTOR_OUTPUT_DIR/devinfo-r.txt"
         run_command "dmesg" "$COLLECTOR_OUTPUT_DIR/dmesg.txt"
         run_command "pciconf -l" "$COLLECTOR_OUTPUT_DIR/pciconf-l.txt"
+        run_command "pciconf -l -v" "$COLLECTOR_OUTPUT_DIR/pciconf-l-v.txt"
         run_command "pcidump -v" "$COLLECTOR_OUTPUT_DIR/pcidump-v.txt"
         run_command "usbconfig" "$COLLECTOR_OUTPUT_DIR/usbconfig.txt"
         run_command "usbdevs -v" "$COLLECTOR_OUTPUT_DIR/usbdevs-v.txt"
