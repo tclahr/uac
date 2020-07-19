@@ -154,4 +154,13 @@ check_tools() {
     fi
     logging D "FLS_TOOL: $FLS_TOOL\n"
 
+    # check if procstat is available
+    PROCSTAT_TOOL=""
+    logging D "Checking if procstat tool is available\n"
+    run_command "procstat $$" "/dev/null"
+    if [ $? -eq 0 ]; then
+        PROCSTAT_TOOL="procstat"
+    fi
+    logging D "PROCSTAT_TOOL: $PROCSTAT_TOOL\n"
+
 }
