@@ -40,6 +40,7 @@ case "$PROFILE" in
     "bsd")
         run_command "ipfw list" "$COLLECTOR_OUTPUT_DIR/ipfw-list.txt"
         run_command "pfctl -sa" "$COLLECTOR_OUTPUT_DIR/pfctl-sa.txt"
+        run_command "sockstat -w" "$COLLECTOR_OUTPUT_DIR/sockstat-w.txt"
         ;;
     "linux")
         run_command "hostname -f" "$COLLECTOR_OUTPUT_DIR/hostname-f.txt"
@@ -60,7 +61,9 @@ case "$PROFILE" in
         run_command "netstat -a -n -p udp" "$COLLECTOR_OUTPUT_DIR/netstat-a-n-p-udp.txt"
         run_command "netstat -v" "$COLLECTOR_OUTPUT_DIR/netstat-v.txt"
         run_command "nfso -a" "$COLLECTOR_OUTPUT_DIR/nfso-a.txt"
+        run_command "plutil -p /Library/Preferences/SystemConfiguration/preferences.plist" "$COLLECTOR_OUTPUT_DIR/plutil-library-preferences-systemconfiguration-preferences.plist.txt"
         run_command "scutil --dns" "$COLLECTOR_OUTPUT_DIR/scutil-dns.txt"
+        run_command "scutil --proxy" "$COLLECTOR_OUTPUT_DIR/scutil-proxy.txt"
         ;;
     "solaris")
         run_command "inetadm" "$COLLECTOR_OUTPUT_DIR/inetadm.txt"
