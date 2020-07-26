@@ -19,5 +19,5 @@
 #   uprintf MESSAGE...
 ################################################################################
 uprintf() {
-    printf %b "$*" >/dev/tty
+    printf %b "$*" >/dev/tty 2> /dev/null
 }

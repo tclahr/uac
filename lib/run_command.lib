@@ -14,23 +14,24 @@
 
 ################################################################################
 # NAME
-#   run_cmd - run command
+#   run_command - run command
 # SYNOPSIS
-#   run_cmd COMMAND DESTINATION
+#   run_command COMMAND DESTINATION
 # OPTIONS
 #   COMMAND        command
 #   DESTINATION    file name where the command output will be stored at
 # RETURN VALUE
 #   Eval command exit status code
 ################################################################################
-run_cmd() {
-    OUTPUT_DESTINATION="$2"
-    if [ ! "$OUTPUT_DESTINATION" ]; then
-        OUTPUT_DESTINATION="/dev/null"
-    fi
-    logging D "run_cmd: $1\n"
+run_command() {
+    LOCAL_COMMAND="$1"
+    LOCAL_OUTPUT_DESTINATION="$2"
+
+    logging D "run_command: $1\n"
     $VERBOSE && uprintf "   $ $1\n"
-    $DEBUG && set -x
-    eval "($1)" >> "$OUTPUT_DESTINATION" 2>> "$UAC_LOG_FILE"
-    $DEBUG && set +x
+    if [ ! "$LOCAL_OUTPUT_DESTINATION" ]; then
+        eval "($LOCAL_COMMAND)" 2>> "$UAC_LOG_FILE"
+    else
+        eval "($LOCAL_COMMAND)" >> "$LOCAL_OUTPUT_DESTINATION" 2>> "$UAC_LOG_FILE"
+    fi
 }

@@ -21,25 +21,29 @@
 #   EXTENSION_OUTPUT_DIR  directory which extension data will be stored in
 ################################################################################
 run_extension() {
-    logging D "Loading $1 extension\n"
-    if [ -r "$CWD/extensions/$1/$1" ]; then
-        EXTENSION_OUTPUT_DIR="$DESTINATION_DIR/$TMP_DATA_DIR/collected_data/$1"
-        logging D "Creating $1 extension output dir: $EXTENSION_OUTPUT_DIR\n"
+    LOCAL_EXTENSION_NAME="$1"
+    logging D "Loading $LOCAL_EXTENSION_NAME extension\n"
+    if [ -r "$CWD/extensions/$LOCAL_EXTENSION_NAME/$LOCAL_EXTENSION_NAME" ]; then
+        EXTENSION_OUTPUT_DIR="$DESTINATION_DIR/$TMP_DATA_DIR/collected_data/$LOCAL_EXTENSION_NAME"
+        logging D "Creating $LOCAL_EXTENSION_NAME extension output dir: $EXTENSION_OUTPUT_DIR\n"
         mkdir -p "$EXTENSION_OUTPUT_DIR"
 
         if [ -d "$EXTENSION_OUTPUT_DIR" ]; then
-            if [ -r "$CWD/extensions/$1/${1}.conf" ]; then
-                logging D "Loading ${1}.conf configuration file\n"
-                logging D "Copying ${1}.conf file to $EXTENSION_OUTPUT_DIR\n"
-                cp "$CWD/extensions/$1/${1}.conf" "$EXTENSION_OUTPUT_DIR/${1}.conf"
-                . "$CWD/extensions/$1/${1}.conf" > /dev/null
+            if [ -r "$CWD/extensions/$LOCAL_EXTENSION_NAME/$LOCAL_EXTENSION_NAME.conf" ]; then
+                logging D "Loading $LOCAL_EXTENSION_NAME.conf configuration file\n"
+                logging D "Copying $LOCAL_EXTENSION_NAME.conf file to $DESTINATION_DIR/$TMP_DATA_DIR/conf\n"
+                cp "$CWD/extensions/$LOCAL_EXTENSION_NAME/$LOCAL_EXTENSION_NAME.conf" "$DESTINATION_DIR/$TMP_DATA_DIR/conf/$LOCAL_EXTENSION_NAME.conf"
+                $DEBUG && set -x
+                . "$CWD/extensions/$LOCAL_EXTENSION_NAME/$LOCAL_EXTENSION_NAME.conf" > /dev/null
+                $DEBUG && set +x
             fi
-            logging I ">> Running $1 extension\n"
-            . "$CWD/extensions/$1/$1" 2>> "$UAC_LOG_FILE"
+            $DEBUG && set -x
+            . "$CWD/extensions/$LOCAL_EXTENSION_NAME/$LOCAL_EXTENSION_NAME" 2>> "$UAC_LOG_FILE"
+            $DEBUG && set +x
         else
-            logging E "Cannot run extension: $1. $EXTENSION_OUTPUT_DIR not found.\n"
+            logging E "Cannot run extension: $LOCAL_EXTENSION_NAME. $EXTENSION_OUTPUT_DIR not found.\n"
         fi
     else
-        logging E "Cannot load extension: $1\n"
+        logging E "Cannot load extension: $LOCAL_EXTENSION_NAME\n"
     fi
 }

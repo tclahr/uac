@@ -1,0 +1,37 @@
+# Copyright (C) 2019,2020 IBM Corporation
+#
+# Licensed under the Apache License, Version 2.0 (the “License”);
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an “AS IS” BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# docker_virtual_machine collector
+
+logging I ">> Collecting docker and virtual machines information\n"
+
+run_command "docker container ls --all --size" "$COLLECTOR_OUTPUT_DIR/docker-container-ls-all-size.txt"
+run_command "docker image ls --all" "$COLLECTOR_OUTPUT_DIR/docker-image-ls-all.txt"
+run_command "docker info" "$COLLECTOR_OUTPUT_DIR/docker-info.txt"
+run_command "docker container ps -all | sed 1d | cut -d\" \" -f 1 | while read line; do run_command \"docker inspect \$line\" \"$COLLECTOR_OUTPUT_DIR/docker-inspect-\$line.txt\"; done" "/dev/null"
+run_command "docker network ls | sed 1d | cut -d\" \" -f 1 | while read line; do run_command \"docker network inspect \$line\" \"$COLLECTOR_OUTPUT_DIR/docker-network-inspect-\$line.txt\"; done" "/dev/null"
+run_command "docker ps | sed 1d | cut -d\" \" -f 1 | while read line; do run_command \"docker top \$line\" \"$COLLECTOR_OUTPUT_DIR/docker-top-\$line.txt\"; done" "/dev/null"
+run_command "docker version" "$COLLECTOR_OUTPUT_DIR/docker-version.txt"
+run_command "virsh list --all" "$COLLECTOR_OUTPUT_DIR/virsh-list-all.txt"
+run_command "virsh list --name | while read line; do run_command \"virsh domifaddr \$line\" \"$COLLECTOR_OUTPUT_DIR/virsh-domifaddr-\$line.txt\"; done" "/dev/null"
+run_command "virsh list --name | while read line; do run_command \"virsh dominfo \$line\" \"$COLLECTOR_OUTPUT_DIR/virsh-dominfo-\$line.txt\"; done" "/dev/null"
+run_command "virsh list --name | while read line; do run_command \"virsh dommemstat \$line\" \"$COLLECTOR_OUTPUT_DIR/virsh-dommemstat-\$line.txt\"; done" "/dev/null"
+run_command "virsh list --name | while read line; do run_command \"virsh snapshot-list \$line\" \"$COLLECTOR_OUTPUT_DIR/virsh-snapshot-list-\$line.txt\"; done" "/dev/null"
+run_command "virsh list --name | while read line; do run_command \"virsh vcpuinfo \$line\" \"$COLLECTOR_OUTPUT_DIR/virsh-vcpuinfo-\$line.txt\"; done" "/dev/null"
+run_command "virsh net-list --all" "$COLLECTOR_OUTPUT_DIR/virsh-net-list-all.txt"
+run_command "virsh net-list --all --name | while read line; do run_command \"virsh net-info \$line\" \"$COLLECTOR_OUTPUT_DIR/virsh-net-info-\$line.txt\"; done" "/dev/null"
+run_command "virsh net-list --all --name | while read line; do run_command \"virsh net-dhcp-leases \$line\" \"$COLLECTOR_OUTPUT_DIR/virsh-net-dhcp-leases-\$line.txt\"; done" "/dev/null"
+run_command "virsh nodeinfo" "$COLLECTOR_OUTPUT_DIR/virsh-nodeinfo.txt"
+run_command "virsh pool-list --all" "$COLLECTOR_OUTPUT_DIR/virsh-pool-list-all.txt"
+run_command "virt-top -n 1" "$COLLECTOR_OUTPUT_DIR/virt-top-n-1.txt"

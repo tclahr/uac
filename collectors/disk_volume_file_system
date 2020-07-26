@@ -14,50 +14,52 @@
 
 # disk_volume_file_system collector
 
-run_cmd "df" "$COLLECTOR_OUTPUT_DIR/df.txt"
-run_cmd "mount" "$COLLECTOR_OUTPUT_DIR/mount.txt"
-run_cmd "zfs list" "$COLLECTOR_OUTPUT_DIR/zfs-list.txt"
-run_cmd "zfs list -o name,avail,used,usedsnap,usedds,usedrefreserv,usedchild,sharenfs,mountpoint" "$COLLECTOR_OUTPUT_DIR/zfs-list-o.txt"
-run_cmd "zpool list" "$COLLECTOR_OUTPUT_DIR/zpool-list.txt"
-run_cmd "zpool status -v" "$COLLECTOR_OUTPUT_DIR/zpool-status-v.txt"
+logging I ">> Collecting disks, volumes and file systems information\n"
+
+run_command "df" "$COLLECTOR_OUTPUT_DIR/df.txt"
+run_command "mount" "$COLLECTOR_OUTPUT_DIR/mount.txt"
+run_command "zfs list" "$COLLECTOR_OUTPUT_DIR/zfs-list.txt"
+run_command "zfs list -o name,avail,used,usedsnap,usedds,usedrefreserv,usedchild,sharenfs,mountpoint" "$COLLECTOR_OUTPUT_DIR/zfs-list-o.txt"
+run_command "zpool list" "$COLLECTOR_OUTPUT_DIR/zpool-list.txt"
+run_command "zpool status -v" "$COLLECTOR_OUTPUT_DIR/zpool-status-v.txt"
 
 case "$PROFILE" in
     "aix")
-        run_cmd "iostat" "$COLLECTOR_OUTPUT_DIR/iostat.txt"
-        run_cmd "lsfs" "$COLLECTOR_OUTPUT_DIR/lsfs.txt"
-        run_cmd "lspv" "$COLLECTOR_OUTPUT_DIR/lspv.txt"
-        run_cmd "lsvg" "$COLLECTOR_OUTPUT_DIR/lsvg.txt"
-        run_cmd "lsvg -o | lsvg -il" "$COLLECTOR_OUTPUT_DIR/lsvg-o-lsvg-il.txt"
+        run_command "iostat" "$COLLECTOR_OUTPUT_DIR/iostat.txt"
+        run_command "lsfs" "$COLLECTOR_OUTPUT_DIR/lsfs.txt"
+        run_command "lspv" "$COLLECTOR_OUTPUT_DIR/lspv.txt"
+        run_command "lsvg" "$COLLECTOR_OUTPUT_DIR/lsvg.txt"
+        run_command "lsvg -o | lsvg -il" "$COLLECTOR_OUTPUT_DIR/lsvg-o-lsvg-il.txt"
         ;;
     "bsd")
-        run_cmd "df -h" "$COLLECTOR_OUTPUT_DIR/df-h.txt"
-        run_cmd "geom disk list" "$COLLECTOR_OUTPUT_DIR/geom-disk-list.txt"
-        run_cmd "geom -t" "$COLLECTOR_OUTPUT_DIR/geom-t.txt"
-        run_cmd "iostat" "$COLLECTOR_OUTPUT_DIR/iostat.txt"
+        run_command "df -h" "$COLLECTOR_OUTPUT_DIR/df-h.txt"
+        run_command "geom disk list" "$COLLECTOR_OUTPUT_DIR/geom-disk-list.txt"
+        run_command "geom -t" "$COLLECTOR_OUTPUT_DIR/geom-t.txt"
+        run_command "iostat" "$COLLECTOR_OUTPUT_DIR/iostat.txt"
         ;;
     "linux")
-        run_cmd "df -h" "$COLLECTOR_OUTPUT_DIR/df-h.txt"
-        run_cmd "blkid" "$COLLECTOR_OUTPUT_DIR/blkid.txt"
-        run_cmd "fdisk -l" "$COLLECTOR_OUTPUT_DIR/fdisk-l.txt"
-        run_cmd "lsblk" "$COLLECTOR_OUTPUT_DIR/lsblk.txt"
-        run_cmd "lsblk -l" "$COLLECTOR_OUTPUT_DIR/lsblk-l.txt"
-        run_cmd "lvdisplay" "$COLLECTOR_OUTPUT_DIR/lvdisplay.txt"
-        run_cmd "lvs" "$COLLECTOR_OUTPUT_DIR/lvs.txt"
-        run_cmd "pvdisplay" "$COLLECTOR_OUTPUT_DIR/pvdisplay.txt"
-        run_cmd "pvs" "$COLLECTOR_OUTPUT_DIR/pvs.txt"
-        run_cmd "vgdisplay" "$COLLECTOR_OUTPUT_DIR/vgdisplay.txt"
-        run_cmd "vgs" "$COLLECTOR_OUTPUT_DIR/vgs.txt"
+        run_command "df -h" "$COLLECTOR_OUTPUT_DIR/df-h.txt"
+        run_command "blkid" "$COLLECTOR_OUTPUT_DIR/blkid.txt"
+        run_command "fdisk -l" "$COLLECTOR_OUTPUT_DIR/fdisk-l.txt"
+        run_command "lsblk" "$COLLECTOR_OUTPUT_DIR/lsblk.txt"
+        run_command "lsblk -l" "$COLLECTOR_OUTPUT_DIR/lsblk-l.txt"
+        run_command "lvdisplay" "$COLLECTOR_OUTPUT_DIR/lvdisplay.txt"
+        run_command "lvs" "$COLLECTOR_OUTPUT_DIR/lvs.txt"
+        run_command "pvdisplay" "$COLLECTOR_OUTPUT_DIR/pvdisplay.txt"
+        run_command "pvs" "$COLLECTOR_OUTPUT_DIR/pvs.txt"
+        run_command "vgdisplay" "$COLLECTOR_OUTPUT_DIR/vgdisplay.txt"
+        run_command "vgs" "$COLLECTOR_OUTPUT_DIR/vgs.txt"
         ;;
     "macos")
-        run_cmd "df -h" "$COLLECTOR_OUTPUT_DIR/df-h.txt"
-        run_cmd "diskutil list" "$COLLECTOR_OUTPUT_DIR/diskutil-list.txt"
-        run_cmd "fs_usage -e -w -t 60" "$COLLECTOR_OUTPUT_DIR/fs_usage-e-w-t-60.txt"
-        run_cmd "pdisk -l" "$COLLECTOR_OUTPUT_DIR/pdisk-l.txt"
+        run_command "df -h" "$COLLECTOR_OUTPUT_DIR/df-h.txt"
+        run_command "diskutil list" "$COLLECTOR_OUTPUT_DIR/diskutil-list.txt"
+        run_command "fs_usage -e -w -t 60" "$COLLECTOR_OUTPUT_DIR/fs_usage-e-w-t-60.txt"
+        run_command "pdisk -l" "$COLLECTOR_OUTPUT_DIR/pdisk-l.txt"
         ;;
     "solaris")
-        run_cmd "df -h" "$COLLECTOR_OUTPUT_DIR/df-h.txt"
-        run_cmd "echo | format" "$COLLECTOR_OUTPUT_DIR/format.txt"
-        run_cmd "iostat" "$COLLECTOR_OUTPUT_DIR/iostat.txt"
-        run_cmd "iostat -E -n" "$COLLECTOR_OUTPUT_DIR/iostat-E-n.txt"
+        run_command "df -h" "$COLLECTOR_OUTPUT_DIR/df-h.txt"
+        run_command "echo | format" "$COLLECTOR_OUTPUT_DIR/format.txt"
+        run_command "iostat" "$COLLECTOR_OUTPUT_DIR/iostat.txt"
+        run_command "iostat -E -n" "$COLLECTOR_OUTPUT_DIR/iostat-E-n.txt"
         ;;
 esac

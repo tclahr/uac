@@ -12,39 +12,35 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# logs collector
+# system_files collector
 
-logging I ">> Searching and collecting logs\n"
+logging I ">> Searching and collecting system files\n"
 
-# exclude paths
 run_command "cat \"$CWD/conf/exclude.conf\" | grep -v \"^#\" | grep -v \"^$\" | grep \"^/\" | sed 's:^/:'\"$MOUNT_POINT\"'/:; s://*:/:g; s:/$::g'" "$COLLECTOR_OUTPUT_DIR/.exclude.tmp"
-# exclude names
 run_command "cat \"$CWD/conf/exclude.conf\" | grep -v \"^#\" | grep -v \"^$\" | grep -v \"^/\"" "$COLLECTOR_OUTPUT_DIR/.exclude.tmp"
 run_command "cat \"$CWD/conf/exclude.conf\" | grep -v \"^#\" | grep -v \"^$\" | grep -v \"^/\"" "$COLLECTOR_OUTPUT_DIR/.exclude_names.tmp"
-# exclude mounted network file systems
-$EXCLUDE_MOUNTED_REMOTE_FILE_SYSTEMS && run_command "get_mount_points_to_exclude" "$COLLECTOR_OUTPUT_DIR/.exclude.tmp"
 
-# first we need to search for directories which names were added to conf/logs.conf
-run_command "ufind \"$MOUNT_POINT\" \"$LOGS_MAX_DEPTH\" \"$COLLECTOR_OUTPUT_DIR/.exclude.tmp\" \"$CWD/conf/logs.conf\" \"d\" \"0\" " "$COLLECTOR_OUTPUT_DIR/.directories.tmp"
-# merge the paths added to conf/logs.conf with the ones found above
-run_command "cat \"$CWD/conf/logs.conf\" | grep -v \"^#\" | grep -v \"^$\" | grep \"^/\" | sed 's:^/:'\"$MOUNT_POINT\"'/:; s://*:/:g; s:/$::g'" "$COLLECTOR_OUTPUT_DIR/.directories.tmp"
+# first we need to search for directories which names were added to conf/system_files.conf
+run_command "ufind \"$MOUNT_POINT\" \"$SYSTEM_FILES_MAX_DEPTH\" \"$COLLECTOR_OUTPUT_DIR/.exclude.tmp\" \"$CWD/conf/system_files.conf\" \"d\" \"0\" " "$COLLECTOR_OUTPUT_DIR/.directories.tmp"
+# merge the paths added to conf/system_files.conf with the ones found above
+run_command "cat \"$CWD/conf/system_files.conf\" | grep -v \"^#\" | grep -v \"^$\" | grep \"^/\" | sed 's:^/:'\"$MOUNT_POINT\"'/:; s://*:/:g; s:/$::g'" "$COLLECTOR_OUTPUT_DIR/.directories.tmp"
 # sort and uniq
 run_command "cat \"$COLLECTOR_OUTPUT_DIR/.directories.tmp\" | sort | uniq" "$COLLECTOR_OUTPUT_DIR/.directories_sort_uniq.tmp"
 # search paths
-run_command "cat \"$COLLECTOR_OUTPUT_DIR/.directories_sort_uniq.tmp\" | while read line; do ufind \"\$line\" \"$LOGS_MAX_DEPTH\" \"$COLLECTOR_OUTPUT_DIR/.exclude_names.tmp\" \"\" \"f\" \"$LOGS_MAX_FILE_SIZE\" \"$DATE_RANGE_T1\" \"$DATE_RANGE_T2\"; done " "$COLLECTOR_OUTPUT_DIR/.logs.tmp"
+run_command "cat \"$COLLECTOR_OUTPUT_DIR/.directories_sort_uniq.tmp\" | while read line; do ufind \"\$line\" \"$SYSTEM_FILES_MAX_DEPTH\" \"$COLLECTOR_OUTPUT_DIR/.exclude_names.tmp\" \"\" \"f\" \"$SYSTEM_FILES_MAX_FILE_SIZE\" \"\" \"\"; done " "$COLLECTOR_OUTPUT_DIR/.system_files.tmp"
 
 # search for file names
-run_command "ufind \"$MOUNT_POINT\" \"$LOGS_MAX_DEPTH\" \"$COLLECTOR_OUTPUT_DIR/.exclude.tmp\" \"$CWD/conf/logs.conf\" \"f\" \"$LOGS_MAX_FILE_SIZE\" \"$DATE_RANGE_T1\" \"$DATE_RANGE_T2\"" "$COLLECTOR_OUTPUT_DIR/.logs.tmp"
+run_command "ufind \"$MOUNT_POINT\" \"$SYSTEM_FILES_MAX_DEPTH\" \"$COLLECTOR_OUTPUT_DIR/.exclude.tmp\" \"$CWD/conf/system_files.conf\" \"f\" \"$SYSTEM_FILES_MAX_FILE_SIZE\" \"\" \"\"" "$COLLECTOR_OUTPUT_DIR/.system_files.tmp"
 
 # remove UAC working directory from the collection, sort and uniq
-run_command "cat \"$COLLECTOR_OUTPUT_DIR/.logs.tmp\" | grep -v \"$CWD\" | sort | uniq" "$COLLECTOR_OUTPUT_DIR/logs.txt"
+run_command "cat \"$COLLECTOR_OUTPUT_DIR/.system_files.tmp\" | grep -v \"$CWD\" | sort | uniq" "$COLLECTOR_OUTPUT_DIR/system_files.txt"
 
 # remove temporary files
 run_command "rm -f \"$COLLECTOR_OUTPUT_DIR/.exclude.tmp\"" "/dev/null"
 run_command "rm -f \"$COLLECTOR_OUTPUT_DIR/.exclude_names.tmp\"" "/dev/null"
 run_command "rm -f \"$COLLECTOR_OUTPUT_DIR/.directories.tmp\"" "/dev/null"
 run_command "rm -f \"$COLLECTOR_OUTPUT_DIR/.directories_sort_uniq.tmp\"" "/dev/null"
-run_command "rm -f \"$COLLECTOR_OUTPUT_DIR/.logs.tmp\"" "/dev/null"
+run_command "rm -f \"$COLLECTOR_OUTPUT_DIR/.system_files.tmp\"" "/dev/null"
 
 # compress data
-run_command "compress_data \"$COLLECTOR_OUTPUT_DIR/logs.txt\" \"$COLLECTOR_OUTPUT_DIR/logs.tar.$COMPRESS_EXT\" \"$UAC_LOG_FILE\""
+run_command "compress_data \"$COLLECTOR_OUTPUT_DIR/system_files.txt\" \"$COLLECTOR_OUTPUT_DIR/system_files.tar.$COMPRESS_EXT\" \"$UAC_LOG_FILE\""

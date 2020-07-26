@@ -2,17 +2,11 @@
 
 ## Description
 
-UAC is a command line shell script that makes use of built-in tools to automate the collection of Unix-like systems artifacts. The script respects the order of volatility and artifacts that are changed during the execution. It can also be run against mounted forensic images. Please take a look on the ```conf/uac.conf``` file for more details.
+UAC is a command line shell script that makes use of built-in tools to automate the collection of Unix-like systems artifacts. The script respects the order of volatility and artifacts that are changed during the execution. It was created to facilitate and speed up data collection, and depend less on remote support during incident response engagements.
 
-UAC was created for Incident Responders, Forensic Analysts, Auditors and System Administrators to facilitate and speed up data collection, and depend less on remote support.
+UAC can also be run against mounted forensic images. Please take a look on the ```conf/uac.conf``` file for more details.
 
 You can use your own validated tools during artifacts collection. They will be used instead of the built-in ones provided by the target system. Please refer to ```bin/README.txt``` for more information.
-
-## Contributing to the project
-We welcome contributions to the uac Project in many forms. There's always plenty to do! Full details of how to contribute to this project are documented in the [CONTRIBUTING.md](CONTRIBUTING.md) file.
-
-## Maintainers
-The project's [maintainers](MAINTAINERS.md) are responsible for reviewing and merging all pull requests and they guide the over-all technical direction of the project.
 
 ## Supported Systems
 
@@ -24,13 +18,13 @@ The project's [maintainers](MAINTAINERS.md) are responsible for reviewing and me
 
 ## Collectors
 
-### Process Listing (-p)
-Collect current process listing.
+### Process (-p)
+Collect information, calculate MD5 hash and extract strings from running processes.
 
 ### Network (-n)
 Collect active network connections with related process information.
 
-### User Accounts (-u)
+### User (-u)
 Collect user accounts information, login related files and activities. The list of files and directories that will be collected can be found in the ```conf/user_files.conf``` file.
 
 ### System (-y)
@@ -45,18 +39,18 @@ Collect information about installed packages and software.
 ### Disk Volume and File System (-d)
 Collect information about disks, volumes and file systems.
 
+### Docker and Virtual Machine (-k)
+Collect docker and virtual machines information.
+
 ### Body File (-b)
-Extract information from files and directories using the ```stat``` tool to create a [body file](https://wiki.sleuthkit.org/index.php?title=Body_file). The body file is an intermediate file when creating a timeline of file activity. It is a pipe ("|") delimited text file that contains one line for each file.
-The [mactime](https://wiki.sleuthkit.org/index.php?title=Mactime) tool can be used to read this file and sorts the contents.
+Extract information from files and directories using the ```stat``` or ```stat.pl``` tool to create a [body file](https://wiki.sleuthkit.org/index.php?title=Body_file). The body file is an intermediate file when creating a timeline of file activity. It is a pipe ("|") delimited text file that contains one line for each file.
+[Plaso](https://github.com/log2timeline/plaso) or [mactime](https://wiki.sleuthkit.org/index.php?title=Mactime) tools can be used to read this file and sorts the contents.
 
 ### Logs (-l)
 Collect log files and directories. The list of files and directories that will be collected can be found in the ```conf/logs.conf``` file.
 
-### Misc Files (-f)
-Collect misc files and directories. The list of files and directories that will be collected can be found in the ```conf/misc_files.conf``` file.
-
-### Hash Running Processes (-r)
-Collect current process listing with hash (MD5) values.
+### Suspicious Files (-f)
+Collect suspicious files and directories. The list of files and directories that will be collected can be found in the ```conf/suspicious_files.conf``` file.
 
 ## Extensions
 
@@ -84,7 +78,7 @@ Use this profile to collect BSD-based systems artifacts.
 
 ### linux
 Use this profile to collect Linux-based systems artifacts.  
-*e.g. Debian, Red Hat, SuSE, Arch Linux, OpenWRT, QNAP QTS, Windows Subsystem for Linux...*
+*e.g. Debian, Red Hat, SuSE, Arch Linux, OpenWRT, QNAP QTS, Linux running on top of Windows (WSL)...
 
 ### macos
 Use this profile to collect macOS artifacts.
@@ -95,7 +89,7 @@ Use this profile to collect Solaris artifacts.
 ## Options
 
 ### Date Range (-R)
-The range of dates to be used by logs (-l), misc_files (-f) and user_accounts (-u) collectors. The date range is used to limit the amount of data collected by filtering files using find's -atime, -mtime or -ctime parameter. By default, UAC will search for files that data was last modified (-mtime) OR status last changed (-ctime) within the given date range. Please refer to ```conf/uac.conf``` for more details.
+The range of dates to be used during logs, suspicious files, user files and hash executable files collection. The date range is used to limit the amount of data collected by filtering files using find's -atime, -mtime or -ctime parameter. By default, UAC will search for files that data was last modified (-mtime) OR status last changed (-ctime) within the given date range. Please refer to ```conf/uac.conf``` for more details.
 The standard format is YYYY-MM-DD for a starting date and no ending date. For an ending date, use YYYY-MM-DD..YYYY-MM-DD.
 
 ### Debug (-D)
@@ -116,17 +110,21 @@ The main UAC configuration file.
 Directory or file paths that will be searched and collected by the logs (-l) collector. If a directory path is added, all files and subdirectories will be collected automatically.
 The ```find``` command line tool will be used to search for files and directories, so the patterns added to this file need to be compatible with the ```-name``` option. Please check ```find``` man pages for instructions.
 
-### conf/misc_files.conf
-Directory or file paths that will be searched and collected by the misc_files (-f) collector. If a directory path is added, all files and subdirectories will be collected automatically.
+### conf/suspicious_files.conf
+Directory or file paths that will be searched and collected by the suspicious files (-f) collector. If a directory path is added, all files and subdirectories will be collected automatically.
 The ```find``` command line tool will be used to search for files and directories, so the patterns added to this file need to be compatible with the ```-name``` option. Please check ```find``` man pages for instructions.
 
 ### conf/system_files.conf
-Directory or file paths that will be searched and collected by the system (-y) collector. If a directory path is added, all files and subdirectories will be collected automatically.
+Directory or file paths that will be searched and collected by the system files (-y) collector. If a directory path is added, all files and subdirectories will be collected automatically.
 The ```find``` command line tool will be used to search for files and directories, so the patterns added to this file need to be compatible with the ```-name``` option. Please check ```find``` man pages for instructions.
 
 ### conf/user_files.conf
-Directory or file paths that will be searched and collected by the user_accounts (-u) collector. If a directory path is added, all files and subdirectories will be collected automatically.
+Directory or file paths that will be searched and collected by the user files (-u) collector. If a directory path is added, all files and subdirectories will be collected automatically.
 The ```find``` command line tool will be used to search for files and directories, so the patterns added to this file need to be compatible with the ```-name``` option. Please check ```find``` man pages for instructions.
+
+### conf/exclude.conf
+Directory or file paths that will be excluded from collection. If a directory path is added, all files and subdirectories will be skilled automatically.
+The ```find``` command line tool will be used to search for files and directories, so the patterns added to this file need to be compatible with ```-path``` and ```-name``` options. Please check ```find``` man pages for instructions.
 
 ## Usage
 ```
@@ -135,17 +133,17 @@ Usage: ./uac COLLECTORS [-e EXTENSION_LIST] [-P PROFILE] [OPTIONS] [DESTINATION]
 
 COLLECTORS:
     -a           Enable all collectors.
-    -p           Collect current process listing.
+    -p           Collect information, calculate MD5 hash and extract strings from running processes.
     -n           Collect active network connections with related process information.
     -u           Collect user accounts information, login related files and activities.
     -y           Collect system information, system configuration files and kernel related details.
     -w           Collect low level hardware information.
     -s           Collect information about installed packages and software.
     -d           Collect information about disks, volumes and file systems.
+    -k           Collect docker and virtual machines information.
     -b           Extract information from files and directories using the stat tool to create a body file.
     -l           Collect log files and directories.
-    -f           Collect misc files and directories.
-    -r           Collect current process listing with hash (MD5) values.
+    -f           Collect suspicious files and directories.
 
 EXTENSIONS:
     -e EXTENSION_LIST
@@ -192,7 +190,7 @@ Run only hash_exec and chkrootkit extensions against the current running system,
 ```
 ./uac -e hash_exec,chkrootkit -P linux /mnt/share
 ```
-Run only process listing, hardware and logs collectors against the current running system, force ```solaris``` profile, use ```/tmp``` as the destination directory and increase verbosity level:
+Run only process, hardware and logs collectors against the current running system, force ```solaris``` profile, use ```/tmp``` as the destination directory and increase verbosity level:
 ```
 ./uac -p -w -l -P solaris -V /tmp
 ```

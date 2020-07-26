@@ -41,17 +41,17 @@ init_vars() {
     RUN_AS_NON_ROOT=false
 
     # set default value for all collectors
-    COLLECTOR_PROCESS_LISTING=false
+    COLLECTOR_PROCESS=false
     COLLECTOR_NETWORK=false
-    COLLECTOR_USER_ACCOUNTS=false
+    COLLECTOR_USER=false
     COLLECTOR_SYSTEM=false
     COLLECTOR_HARDWARE=false
     COLLECTOR_SOFTWARE=false
     COLLECTOR_DISK_VOLUME_FILE_SYSTEM=false
+    COLLECTOR_DOCKER_VIRTUAL_MACHINE=false
     COLLECTOR_BODY_FILE=false
     COLLECTOR_LOGS=false
-    COLLECTOR_MISC_FILES=false
-    COLLECTOR_HASH_RUNNING_PROCESSES=false
+    COLLECTOR_SUSPICIOUS_FILES=false
 
     # set default value for all extensions
     EXTENSION_CHKROOTKIT=false
@@ -67,12 +67,8 @@ init_vars() {
         LIVE_COLLECTION=false
     fi
 
-    # check if system can convert date to epoch
-    DATE_RANGE_OPTION_SUPPORTED=true
-    eval get_epoch 2020-02-04 > /dev/null 2> /dev/null
-    if [ ! $? -eq 0 ]; then
-        DATE_RANGE_OPTION_SUPPORTED=false
-    fi
+    DESTINATION_DIR=""
+    TMP_DATA_DIR=""
 
     # test to check if expr tool supports --
     # some embedded linux does not support it
@@ -80,63 +76,6 @@ init_vars() {
     expr -- 1 + 1 >/dev/null 2>/dev/null
     if [ ! $? -eq 0 ]; then
         EXPR_DASH_DASH=""
-    fi
-
-    FIND_TOOL="find"
-
-    # find available MD5 sum tool
-    MD5SUM_TOOL="md5sum"
-    eval echo "uac" | eval md5 > /dev/null 2> /dev/null
-    if [ $? -eq 0 ]; then
-        MD5SUM_TOOL="md5"
-    else
-        eval echo "uac" | eval digest -a md5 > /dev/null 2> /dev/null
-        if [ $? -eq 0 ]; then
-            MD5SUM_TOOL="digest -v -a md5"
-        else
-            eval csum -h MD5 "$CWD/uac" > /dev/null 2> /dev/null
-            if [ $? -eq 0 ]; then
-                MD5SUM_TOOL="csum -h MD5"
-            fi
-        fi
-    fi
-
-    # set compress as the default compression tool because some systems do not have gzip
-    COMPRESS_TOOL="compress"
-    COMPRESS_EXT="Z"
-
-    # each command needs to be tested individually as some systems do not have 'type' or 'which' tool
-    HAS_GZIP_TOOL=false
-    eval echo "uac" | eval gzip >/dev/null 2>/dev/null
-    if [ $? -eq 0 ]; then
-        HAS_GZIP_TOOL=true
-        COMPRESS_TOOL="gzip"
-        COMPRESS_EXT="gz"
-    fi
-   
-    # some systems do not have hostname tool installed
-    HAS_HOSTNAME_TOOL=false
-    eval hostname >/dev/null 2>/dev/null
-    if [ $? -eq 0 ]; then
-        HAS_HOSTNAME_TOOL=true
-    fi
-
-    HAS_STAT_TOOL=false
-    eval stat "$CWD/uac" >/dev/null 2>/dev/null
-    if [ $? -eq 0 ]; then
-        HAS_STAT_TOOL=true
-    fi
-
-    HAS_PERL_TOOL=false
-    eval perl "$CWD/tools/stat/stat.pl" >/dev/null 2>/dev/null
-    if [ $? -eq 0 ]; then
-        HAS_PERL_TOOL=true
-    fi
-
-    HAS_FILE_TOOL=false
-    eval file "$CWD/uac" >/dev/null 2>/dev/null
-    if [ $? -eq 0 ]; then
-        HAS_FILE_TOOL=true
     fi
 
 }

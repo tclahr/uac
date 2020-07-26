@@ -14,51 +14,54 @@
 
 # hardware collector
 
-run_cmd "uname -a" "$COLLECTOR_OUTPUT_DIR/uname-a.txt"
+logging I ">> Collecting hardware information\n"
+
+run_command "uname -a" "$COLLECTOR_OUTPUT_DIR/uname-a.txt"
 
 case "$PROFILE" in
     "aix")
-        run_cmd "alog -o -t boot" "$COLLECTOR_OUTPUT_DIR/alog-o-t-boot.txt"
-        run_cmd "bootlist -o -m normal" "$COLLECTOR_OUTPUT_DIR/bootlist-o-m-normal.txt"
-        run_cmd "lsdev -P" "$COLLECTOR_OUTPUT_DIR/lsdev-P.txt"
-        run_cmd "prtconf" "$COLLECTOR_OUTPUT_DIR/prtconf.txt"
-        run_cmd "prtconf -v" "$COLLECTOR_OUTPUT_DIR/prtconf-v.txt"
-        run_cmd "uname -L" "$COLLECTOR_OUTPUT_DIR/uname-L.txt"
+        run_command "alog -o -t boot" "$COLLECTOR_OUTPUT_DIR/alog-o-t-boot.txt"
+        run_command "bootlist -o -m normal" "$COLLECTOR_OUTPUT_DIR/bootlist-o-m-normal.txt"
+        run_command "lsdev -P" "$COLLECTOR_OUTPUT_DIR/lsdev-P.txt"
+        run_command "prtconf" "$COLLECTOR_OUTPUT_DIR/prtconf.txt"
+        run_command "prtconf -v" "$COLLECTOR_OUTPUT_DIR/prtconf-v.txt"
+        run_command "uname -L" "$COLLECTOR_OUTPUT_DIR/uname-L.txt"
         ;;
     "bsd")
-        run_cmd "devinfo -r" "$COLLECTOR_OUTPUT_DIR/devinfo-r.txt"
-        run_cmd "dmesg" "$COLLECTOR_OUTPUT_DIR/dmesg.txt"
-        run_cmd "pciconf -l" "$COLLECTOR_OUTPUT_DIR/pciconf-l.txt"
-        run_cmd "pcidump -v" "$COLLECTOR_OUTPUT_DIR/pcidump-v.txt"
-        run_cmd "usbconfig" "$COLLECTOR_OUTPUT_DIR/usbconfig.txt"
-        run_cmd "usbdevs -v" "$COLLECTOR_OUTPUT_DIR/usbdevs-v.txt"
+        run_command "devinfo -r" "$COLLECTOR_OUTPUT_DIR/devinfo-r.txt"
+        run_command "dmesg" "$COLLECTOR_OUTPUT_DIR/dmesg.txt"
+        run_command "pciconf -l" "$COLLECTOR_OUTPUT_DIR/pciconf-l.txt"
+        run_command "pciconf -l -v" "$COLLECTOR_OUTPUT_DIR/pciconf-l-v.txt"
+        run_command "pcidump -v" "$COLLECTOR_OUTPUT_DIR/pcidump-v.txt"
+        run_command "usbconfig" "$COLLECTOR_OUTPUT_DIR/usbconfig.txt"
+        run_command "usbdevs -v" "$COLLECTOR_OUTPUT_DIR/usbdevs-v.txt"
         ;;
     "linux")
-        run_cmd "dmesg" "$COLLECTOR_OUTPUT_DIR/dmesg.txt"
-        run_cmd "dmidecode" "$COLLECTOR_OUTPUT_DIR/dmidecode.txt"
-        run_cmd "hwinfo" "$COLLECTOR_OUTPUT_DIR/hwinfo.txt"
-        run_cmd "lscpu" "$COLLECTOR_OUTPUT_DIR/lscpu.txt"
-        run_cmd "lshw" "$COLLECTOR_OUTPUT_DIR/lshw.txt"
-        run_cmd "lspci" "$COLLECTOR_OUTPUT_DIR/lspci.txt"
-        run_cmd "lspci -vv" "$COLLECTOR_OUTPUT_DIR/lspci-vv.txt"
-        run_cmd "lsscsi" "$COLLECTOR_OUTPUT_DIR/lsscsi.txt"
-        run_cmd "lsusb" "$COLLECTOR_OUTPUT_DIR/lsusb.txt"
-        run_cmd "lsusb -vv" "$COLLECTOR_OUTPUT_DIR/lsusb-vv.txt"
+        run_command "dmesg" "$COLLECTOR_OUTPUT_DIR/dmesg.txt"
+        run_command "dmidecode" "$COLLECTOR_OUTPUT_DIR/dmidecode.txt"
+        run_command "hwinfo" "$COLLECTOR_OUTPUT_DIR/hwinfo.txt"
+        run_command "lscpu" "$COLLECTOR_OUTPUT_DIR/lscpu.txt"
+        run_command "lshw" "$COLLECTOR_OUTPUT_DIR/lshw.txt"
+        run_command "lspci" "$COLLECTOR_OUTPUT_DIR/lspci.txt"
+        run_command "lspci -vv" "$COLLECTOR_OUTPUT_DIR/lspci-vv.txt"
+        run_command "lsscsi" "$COLLECTOR_OUTPUT_DIR/lsscsi.txt"
+        run_command "lsusb" "$COLLECTOR_OUTPUT_DIR/lsusb.txt"
+        run_command "lsusb -vv" "$COLLECTOR_OUTPUT_DIR/lsusb-vv.txt"
         ;;
     "macos")
-        run_cmd "dmesg" "$COLLECTOR_OUTPUT_DIR/dmesg.txt"
-        run_cmd "hostinfo" "$COLLECTOR_OUTPUT_DIR/hostinfo.txt"
-        run_cmd "ioreg -l" "$COLLECTOR_OUTPUT_DIR/ioreg-l.txt"
-        run_cmd "nvram -p" "$COLLECTOR_OUTPUT_DIR/nvram-p.txt"
-        run_cmd "system_profiler" "$COLLECTOR_OUTPUT_DIR/system_profiler.txt"
-        run_cmd "systemstats" "$COLLECTOR_OUTPUT_DIR/systemstats.txt"
+        run_command "dmesg" "$COLLECTOR_OUTPUT_DIR/dmesg.txt"
+        run_command "hostinfo" "$COLLECTOR_OUTPUT_DIR/hostinfo.txt"
+        run_command "ioreg -l" "$COLLECTOR_OUTPUT_DIR/ioreg-l.txt"
+        run_command "nvram -p" "$COLLECTOR_OUTPUT_DIR/nvram-p.txt"
+        run_command "system_profiler" "$COLLECTOR_OUTPUT_DIR/system_profiler.txt"
+        run_command "systemstats" "$COLLECTOR_OUTPUT_DIR/systemstats.txt"
         ;;
     "solaris")
-        run_cmd "cfgadm -l" "$COLLECTOR_OUTPUT_DIR/cfgadm-l.txt"
-        run_cmd "dmesg" "$COLLECTOR_OUTPUT_DIR/dmesg.txt"
-        run_cmd "prtconf" "$COLLECTOR_OUTPUT_DIR/prtconf.txt"
-        run_cmd "prtconf -v" "$COLLECTOR_OUTPUT_DIR/prtconf-v.txt"
-        run_cmd "psrinfo -v" "$COLLECTOR_OUTPUT_DIR/psrinfo-v.txt"
-        run_cmd "smbios" "$COLLECTOR_OUTPUT_DIR/smbios.txt"
+        run_command "cfgadm -l" "$COLLECTOR_OUTPUT_DIR/cfgadm-l.txt"
+        run_command "dmesg" "$COLLECTOR_OUTPUT_DIR/dmesg.txt"
+        run_command "prtconf" "$COLLECTOR_OUTPUT_DIR/prtconf.txt"
+        run_command "prtconf -v" "$COLLECTOR_OUTPUT_DIR/prtconf-v.txt"
+        run_command "psrinfo -v" "$COLLECTOR_OUTPUT_DIR/psrinfo-v.txt"
+        run_command "smbios" "$COLLECTOR_OUTPUT_DIR/smbios.txt"
         ;;
 esac

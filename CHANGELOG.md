@@ -1,6 +1,88 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.2.0 (2020-07-26)
+
+### Added
+- UAC will collect even more information about running processes.
+- Strings will now be extracted from running processes by the process collector.
+- New docker and virtual machines information collector (-k).
+- Files and directories added to ```conf/exclude.conf``` will be skipped during collection.
+- By default, mounted remote file systems will be excluded from the collection. Please refer to ```conf/uac.conf``` for more information.
+
+- New docker_virtual_machine collectors
+    - docker container ls --all --size
+    - docker image ls --all
+    - docker info
+    - docker inspect <ID>
+    - docker network inspect <ID>
+    - docker top <ID>
+    - docker version
+    - docker container logs
+    - virsh list --all
+    - virsh domifaddr <NAME>
+    - virsh dominfo <NAME>
+    - virsh dommemstat <NAME>
+    - virsh snapshot-list <NAME>
+    - virsh vcpuinfo <DOMAIN>
+    - virsh net-list --all
+    - virsh net-info <NAME>
+    - virsh net-dhcp-leases <NAME>
+    - virsh nodeinfo
+    - virsh pool-list --all
+    - virt-top -n 1
+- New process collectors
+  - ps -eo pid,etime,args
+  - ps -eo pid,lstart,args
+  - aix
+    - strings /proc/<PID>/psinfo
+  - linux
+    - pstree
+    - cat /proc/<PID>/comm
+    - strings /proc/<PID>/cmdline
+    - cat /proc/<PID>/maps
+    - strings /proc/<PID>/environ
+    - cat /proc/<PID>/task/<PID>/children
+    - ls -la /proc/<PID>/fd
+- New network collectors
+  - bsd
+    - sockstat -w
+  - linux
+    - netstat -l -p -e -a -n -u -t
+  - macos
+    - plutil -p /Library/Preferences/SystemConfiguration/preferences.plist
+    - scutil --proxy
+- New hardware collectors
+  - bsd
+    - pciconf -l -v
+- New system collectors
+  - linux
+    - service list
+- New software collectors
+  - macos
+    - lsappinfo list
+- New user collectors
+  - macos
+    - dscl . list /Users UniqueID
+- New entries added to logs.conf
+  - /var/nsproflog
+  - /var/nssynclog
+  - catalina.out
+- New entries added to user_files.conf
+  - /.xsession-errors
+
+### Changed
+- Hash running processes will now be executed by the process collector (-p).
+- conf/uac.conf
+  - BODY_FILE_MAX_DEPTH default value changed from 4 to 5.
+- misc files was renamed to suspicious files collector.
+
+### Removed
+- hash running processes collector (-r).
+
+### Fixed
+- Data range option not adding the "+" prefix for the second -atime, -mtime and -ctime parameters ([#10](https://github.com/tclahr/uac/issues/10)).
+
 ## 1.1.1 (2020-06-16)
 
 ### Fixed

@@ -1,0 +1,183 @@
+# Copyright (C) 2019,2020 IBM Corporation
+#
+# Licensed under the Apache License, Version 2.0 (the “License”);
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an “AS IS” BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+################################################################################
+# NAME
+#   ufind - run find or find.pl using the given parameters
+# SYNOPSIS
+#   ufind MOUNT_POINT MAXDEPTH EXCLUDE_FILE INCLUDE_FILE TYPE SIZE DATE_RANGE_T1 DATE_RANGE_T2
+# RETURN VALUE
+#   find results
+################################################################################
+ufind() {
+
+    LOCAL_MOUNT_POINT="$1"
+    LOCAL_MAXDEPTH="$2"
+    LOCAL_EXCLUDE_FILE="$3"
+    LOCAL_INCLUDE_FILE="$4"
+    LOCAL_TYPE="$5"
+    LOCAL_SIZE="$6"
+    LOCAL_DATE_RANGE_T1="$7"
+    LOCAL_DATE_RANGE_T2="$8"
+
+    LOCAL_FIND_MAXDEPTH_PARAMETER=""
+    LOCAL_FIND_PATH_PRUNE_PARAMETER=""
+    LOCAL_FIND_NAME_PRUNE_PARAMETER=""
+    LOCAL_FIND_NAME_PARAMETER=""
+    LOCAL_FIND_TYPE_PARAMETER=""    
+    LOCAL_FIND_SIZE_PARAMETER=""
+    LOCAL_FIND_DATE_RANGE_PARAMETER=""
+    
+    LOCAL_FIND_TOOL="find"
+
+    if [ "$LOCAL_MAXDEPTH" -gt 0 ]; then
+        if $FIND_MAXDEPTH_SUPPORT; then
+            LOCAL_FIND_MAXDEPTH_PARAMETER="-maxdepth $LOCAL_MAXDEPTH"
+        elif [ ! -z "$PERL_TOOL" ]; then
+            LOCAL_FIND_MAXDEPTH_PARAMETER="-maxdepth $LOCAL_MAXDEPTH"
+            LOCAL_FIND_TOOL="$PERL_TOOL \"$CWD/tools/find/find.pl\""
+        fi
+    fi
+
+    if [ -f "$LOCAL_EXCLUDE_FILE" ] && $FIND_OPERATORS_SUPPORT; then
+        LOCAL_FIND_PATH_PRUNE=`cat "$LOCAL_EXCLUDE_FILE" | grep -v "^#" | grep -v "^$" | grep "^/" | head -1 | while read line; do printf %s "-path \"$line\""; done; cat "$LOCAL_EXCLUDE_FILE" | grep -v "^#" | grep -v "^$" | grep "^/" | sed 1d | while read line; do printf %s " -o -path \"$line\"" ;done`
+        if [ ! -z "$LOCAL_FIND_PATH_PRUNE" ] && $FIND_PATH_SUPPORT; then
+            LOCAL_FIND_PATH_PRUNE_PARAMETER="\( $LOCAL_FIND_PATH_PRUNE \) -prune -o"
+        elif [ ! -z "$LOCAL_FIND_PATH_PRUNE" ] && [ ! -z "$PERL_TOOL" ]; then
+            LOCAL_FIND_PATH_PRUNE_PARAMETER="\( $LOCAL_FIND_PATH_PRUNE \) -prune -o"
+            LOCAL_FIND_TOOL="$PERL_TOOL \"$CWD/tools/find/find.pl\""
+        fi
+
+        LOCAL_FIND_NAME_PRUNE=`cat "$LOCAL_EXCLUDE_FILE" | grep -v "^#" | grep -v "^$" | grep -v "^/" | head -1 | while read line; do printf %s "-name \"$line\""; done; cat "$LOCAL_EXCLUDE_FILE" | grep -v "^#" | grep -v "^$" | grep -v "^/" | sed 1d | while read line; do printf %s " -o -name \"$line\"" ;done`
+        if [ ! -z "$LOCAL_FIND_NAME_PRUNE" ] && $FIND_PATH_SUPPORT; then
+            LOCAL_FIND_NAME_PRUNE_PARAMETER="\( $LOCAL_FIND_NAME_PRUNE \) -prune -o"
+        elif [ ! -z "$LOCAL_FIND_NAME_PRUNE" ] && [ ! -z "$PERL_TOOL" ]; then
+            LOCAL_FIND_NAME_PRUNE_PARAMETER="\( $LOCAL_FIND_NAME_PRUNE \) -prune -o"
+            LOCAL_FIND_TOOL="$PERL_TOOL \"$CWD/tools/find/find.pl\""
+        fi
+    fi
+
+    if [ ! -z "$LOCAL_TYPE" ]; then
+        LOCAL_FIND_TYPE_PARAMETER="-type $LOCAL_TYPE"
+    fi
+
+    if [ "$LOCAL_SIZE" -gt 0 ]; then
+        if $FIND_SIZE_SUPPORT; then
+            LOCAL_FIND_SIZE_PARAMETER="-size -${LOCAL_SIZE}c"
+        elif [ ! -z "$PERL_TOOL" ]; then
+            LOCAL_FIND_SIZE_PARAMETER="-size -${LOCAL_SIZE}c"
+            LOCAL_FIND_TOOL="$PERL_TOOL \"$CWD/tools/find/find.pl\""
+        fi
+    fi
+
+    LOCAL_FIND_ATIME_PARAMETER=""
+    LOCAL_FIND_MTIME_PARAMETER=""
+    LOCAL_FIND_CTIME_PARAMETER=""
+
+    if [ ! -z "$LOCAL_DATE_RANGE_T1" ]; then
+
+        if $DATE_RANGE_ATIME; then
+            if $FIND_ATIME_SUPPORT; then
+                LOCAL_FIND_ATIME_PARAMETER="-atime $LOCAL_DATE_RANGE_T1"
+            elif [ ! -z "$PERL_TOOL" ]; then
+                LOCAL_FIND_ATIME_PARAMETER="-atime $LOCAL_DATE_RANGE_T1"
+                LOCAL_FIND_TOOL="$PERL_TOOL \"$CWD/tools/find/find.pl\""
+            fi
+        fi
+        if $DATE_RANGE_MTIME; then
+            if $FIND_MTIME_SUPPORT; then
+                LOCAL_FIND_MTIME_PARAMETER="-mtime $LOCAL_DATE_RANGE_T1"
+            elif [ ! -z "$PERL_TOOL" ]; then
+                LOCAL_FIND_MTIME_PARAMETER="-mtime $LOCAL_DATE_RANGE_T1"
+                LOCAL_FIND_TOOL="$PERL_TOOL \"$CWD/tools/find/find.pl\""
+            fi
+        fi
+        if $DATE_RANGE_CTIME; then
+            if $FIND_CTIME_SUPPORT; then
+                LOCAL_FIND_CTIME_PARAMETER="-ctime $LOCAL_DATE_RANGE_T1"
+            elif [ ! -z "$PERL_TOOL" ]; then
+                LOCAL_FIND_CTIME_PARAMETER="-ctime $LOCAL_DATE_RANGE_T1"
+                LOCAL_FIND_TOOL="$PERL_TOOL \"$CWD/tools/find/find.pl\""
+            fi
+        fi
+
+        if [ ! -z "$LOCAL_DATE_RANGE_T2" ]; then
+
+            if $DATE_RANGE_ATIME; then
+                if $FIND_ATIME_SUPPORT; then
+                    LOCAL_FIND_ATIME_PARAMETER="$LOCAL_FIND_ATIME_PARAMETER -atime $LOCAL_DATE_RANGE_T2"
+                elif [ ! -z "$PERL_TOOL" ]; then
+                    LOCAL_FIND_ATIME_PARAMETER="$LOCAL_FIND_ATIME_PARAMETER -atime $LOCAL_DATE_RANGE_T2"
+                fi
+            fi
+            if $DATE_RANGE_MTIME; then
+                if $FIND_MTIME_SUPPORT; then
+                    LOCAL_FIND_MTIME_PARAMETER="$LOCAL_FIND_MTIME_PARAMETER -mtime $LOCAL_DATE_RANGE_T2"
+                elif [ ! -z "$PERL_TOOL" ]; then
+                    LOCAL_FIND_MTIME_PARAMETER="$LOCAL_FIND_MTIME_PARAMETER -mtime $LOCAL_DATE_RANGE_T2"
+                fi
+            fi
+            if $DATE_RANGE_CTIME; then
+                if $FIND_CTIME_SUPPORT; then
+                    LOCAL_FIND_CTIME_PARAMETER="$LOCAL_FIND_CTIME_PARAMETER -ctime $LOCAL_DATE_RANGE_T2"
+                elif [ ! -z "$PERL_TOOL" ]; then
+                    LOCAL_FIND_CTIME_PARAMETER="$LOCAL_FIND_CTIME_PARAMETER -ctime $LOCAL_DATE_RANGE_T2"
+                fi
+            fi
+
+        fi
+    fi
+
+    if ( [ ! -z "$LOCAL_FIND_ATIME_PARAMETER" ] && [ ! -z "$LOCAL_FIND_MTIME_PARAMETER" ] ) || ( [ ! -z "$LOCAL_FIND_ATIME_PARAMETER" ] && [ ! -z "$LOCAL_FIND_CTIME_PARAMETER" ] ) || ( [ ! -z "$LOCAL_FIND_MTIME_PARAMETER" ] && [ ! -z "$LOCAL_FIND_CTIME_PARAMETER" ] ); then
+        # multiples parameters enabled
+        if [ ! -z "$LOCAL_FIND_ATIME_PARAMETER" ]; then
+            LOCAL_FIND_DATE_RANGE_PARAMETER="\( $LOCAL_FIND_ATIME_PARAMETER \)"
+        fi
+        if [ ! -z "$LOCAL_FIND_MTIME_PARAMETER" ]; then
+            if [ ! -z "$LOCAL_FIND_DATE_RANGE_PARAMETER" ]; then
+                LOCAL_FIND_DATE_RANGE_PARAMETER="$LOCAL_FIND_DATE_RANGE_PARAMETER -o "
+            fi
+            LOCAL_FIND_DATE_RANGE_PARAMETER="$LOCAL_FIND_DATE_RANGE_PARAMETER \( $LOCAL_FIND_MTIME_PARAMETER \)"
+        fi
+        if [ ! -z "$LOCAL_FIND_CTIME_PARAMETER" ]; then
+            if [ ! -z "$LOCAL_FIND_DATE_RANGE_PARAMETER" ]; then
+                LOCAL_FIND_DATE_RANGE_PARAMETER="$LOCAL_FIND_DATE_RANGE_PARAMETER -o "
+            fi
+            LOCAL_FIND_DATE_RANGE_PARAMETER="$LOCAL_FIND_DATE_RANGE_PARAMETER \( $LOCAL_FIND_CTIME_PARAMETER \)"
+        fi
+        LOCAL_FIND_DATE_RANGE_PARAMETER="\( $LOCAL_FIND_DATE_RANGE_PARAMETER \)"
+    else
+        # only one of them enabled
+        LOCAL_FIND_DATE_RANGE_PARAMETER="$LOCAL_FIND_ATIME_PARAMETER $LOCAL_FIND_MTIME_PARAMETER $LOCAL_FIND_CTIME_PARAMETER"
+    fi
+
+    if [ -f "$LOCAL_INCLUDE_FILE" ]; then
+        run_command "cat \"$LOCAL_INCLUDE_FILE\" | grep -v \"^#\" | grep -v \"^$\" | grep -v \"^/\"" "/dev/null"
+        if [ $? -eq 0 ]; then
+            if $FIND_OPERATORS_SUPPORT; then
+                LOCAL_FIND_NAME_PARAMETER=`cat "$LOCAL_INCLUDE_FILE" | grep -v "^#" | grep -v "^$" | grep -v "^/" | head -1 | while read line; do printf %s "-name \"$line\""; done; cat "$LOCAL_INCLUDE_FILE" | grep -v "^#" | grep -v "^$" | grep -v "^/" | sed 1d | while read line; do printf %s " -o -name \"$line\""; done`
+                if [ ! -z "$LOCAL_FIND_NAME_PARAMETER" ]; then
+                    LOCAL_FIND_NAME_PARAMETER="\( $LOCAL_FIND_NAME_PARAMETER \)"
+                fi
+                run_command "$LOCAL_FIND_TOOL \"$LOCAL_MOUNT_POINT\" $LOCAL_FIND_MAXDEPTH_PARAMETER $LOCAL_FIND_PATH_PRUNE_PARAMETER $LOCAL_FIND_NAME_PRUNE_PARAMETER $LOCAL_FIND_NAME_PARAMETER $LOCAL_FIND_TYPE_PARAMETER $LOCAL_FIND_SIZE_PARAMETER $LOCAL_FIND_DATE_RANGE_PARAMETER -print"
+            else
+                # if find does not support operators, we need to have multiple find commands, one for each -name parameter
+                cat "$LOCAL_INCLUDE_FILE" | grep -v "^#" | grep -v "^$" | grep -v "^/" | while read line; do run_command "$LOCAL_FIND_TOOL \"$LOCAL_MOUNT_POINT\" $LOCAL_FIND_MAXDEPTH_PARAMETER $LOCAL_FIND_PATH_PRUNE_PARAMETER $LOCAL_FIND_NAME_PRUNE_PARAMETER -name \"$line\" $LOCAL_FIND_TYPE_PARAMETER $LOCAL_FIND_SIZE_PARAMETER $LOCAL_FIND_DATE_RANGE_PARAMETER -print "; done
+            fi
+        fi
+    else
+        run_command "$LOCAL_FIND_TOOL \"$LOCAL_MOUNT_POINT\" $LOCAL_FIND_MAXDEPTH_PARAMETER $LOCAL_FIND_PATH_PRUNE_PARAMETER $LOCAL_FIND_NAME_PRUNE_PARAMETER $LOCAL_FIND_TYPE_PARAMETER $LOCAL_FIND_SIZE_PARAMETER $LOCAL_FIND_DATE_RANGE_PARAMETER -print"
+    fi
+
+}

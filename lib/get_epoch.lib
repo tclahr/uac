@@ -39,7 +39,7 @@ get_epoch() {
             fi
         fi
     else
-        if $HAS_PERL_TOOL; then
+        if [ ! -z "$PERL_TOOL" ]; then
             perl -e 'print time' 2>/dev/null
         else
             date "+%s" 2>/dev/null

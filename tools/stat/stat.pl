@@ -43,5 +43,9 @@ if (defined $filename) {
 
     $mode_as_string = join '', $ftype, @permstrs;
 
+    if (-l $filename) {
+        $filename = "$filename -> " . readlink "$filename";
+    }
+
     print("0|$filename|$inode|$mode_as_string|$uid|$gid|$size|$atime|$mtime|$ctime|0\n");
 }

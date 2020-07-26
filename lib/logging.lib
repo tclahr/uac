@@ -28,7 +28,7 @@
 logging() {
     if [ -d "$DESTINATION_DIR" ] && [ -d "$DESTINATION_DIR/$TMP_DATA_DIR" ]; then
         LOG_TIMESTAMP=`get_date "+%Y-%m-%d %H:%M:%S %z"`
-        printf %b "[$LOG_TIMESTAMP] [$1] $2" >> "$UAC_LOG_FILE"
+        printf %b "$LOG_TIMESTAMP $1 $2" >> "$UAC_LOG_FILE" 2>> "$UAC_LOG_FILE"
     fi
     if [ "$1" = "E" ] || [ "$1" = "W" ] || [ "$1" = "I" ]; then
         uprintf "$2"
