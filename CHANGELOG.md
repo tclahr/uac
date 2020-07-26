@@ -1,11 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 1.2.0-rc2
+## 1.2.0 (2020-07-26)
 
 ### Added
-- UAC will collect even more information about running processes (including deleted ones).
-- Strings will now be extracted from running processes by the process collector (-p).
+- UAC will collect even more information about running processes.
+- Strings will now be extracted from running processes by the process collector.
 - New docker and virtual machines information collector (-k).
 - Files and directories added to ```conf/exclude.conf``` will be skipped during collection.
 - By default, mounted remote file systems will be excluded from the collection. Please refer to ```conf/uac.conf``` for more information.
