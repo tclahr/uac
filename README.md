@@ -2,17 +2,11 @@
 
 ## Description
 
-UAC is a command line shell script that makes use of built-in tools to automate the collection of Unix-like systems artifacts. The script respects the order of volatility and artifacts that are changed during the execution. It can also be run against mounted forensic images. Please take a look on the ```conf/uac.conf``` file for more details.
+UAC is a command line shell script that makes use of built-in tools to automate the collection of Unix-like systems artifacts. The script respects the order of volatility and artifacts that are changed during the execution. It was created to facilitate and speed up data collection, and depend less on remote support during incident response engagements.
 
-UAC was created for Incident Responders, Forensic Analysts, Auditors and System Administrators to facilitate and speed up data collection, and depend less on remote support.
+UAC can also be run against mounted forensic images. Please take a look on the ```conf/uac.conf``` file for more details.
 
 You can use your own validated tools during artifacts collection. They will be used instead of the built-in ones provided by the target system. Please refer to ```bin/README.txt``` for more information.
-
-## Contributing to the project
-We welcome contributions to the uac Project in many forms. There's always plenty to do! Full details of how to contribute to this project are documented in the [CONTRIBUTING.md](CONTRIBUTING.md) file.
-
-## Maintainers
-The project's [maintainers](MAINTAINERS.md) are responsible for reviewing and merging all pull requests and they guide the over-all technical direction of the project.
 
 ## Supported Systems
 
@@ -25,7 +19,7 @@ The project's [maintainers](MAINTAINERS.md) are responsible for reviewing and me
 ## Collectors
 
 ### Process (-p)
-Collect information, hash (MD5) and extract strings from running processes.
+Collect information, calculate MD5 hash and extract strings from running processes.
 
 ### Network (-n)
 Collect active network connections with related process information.
@@ -84,7 +78,7 @@ Use this profile to collect BSD-based systems artifacts.
 
 ### linux
 Use this profile to collect Linux-based systems artifacts.  
-*e.g. Debian, Red Hat, SuSE, Arch Linux, OpenWRT, QNAP QTS, Windows Subsystem for Linux...*
+*e.g. Debian, Red Hat, SuSE, Arch Linux, OpenWRT, QNAP QTS, Linux running on top of Windows (WSL)...
 
 ### macos
 Use this profile to collect macOS artifacts.
@@ -139,14 +133,14 @@ Usage: ./uac COLLECTORS [-e EXTENSION_LIST] [-P PROFILE] [OPTIONS] [DESTINATION]
 
 COLLECTORS:
     -a           Enable all collectors.
-    -p           Collect running processes information.
+    -p           Collect information, calculate MD5 hash and extract strings from running processes.
     -n           Collect active network connections with related process information.
     -u           Collect user accounts information, login related files and activities.
     -y           Collect system information, system configuration files and kernel related details.
     -w           Collect low level hardware information.
     -s           Collect information about installed packages and software.
     -d           Collect information about disks, volumes and file systems.
-    -k           Collect docker and guest virtual machines information.
+    -k           Collect docker and virtual machines information.
     -b           Extract information from files and directories using the stat tool to create a body file.
     -l           Collect log files and directories.
     -f           Collect suspicious files and directories.
