@@ -78,6 +78,12 @@ OPTIONS
         M   for megabyte (MB, units of 1024 * 1024 bytes)
         G   for gigabyte (GB, units of 1024 * 1024 * 1024 bytes)
 
+    -perm MODE
+        File's permission bits are exactly mode (octal). Symbolic mode is not supported.
+
+    -perm -MODE
+        All of the permission bits mode (octal) are set for the file. Symbolic mode is not supported.
+
     -prune
         Always evaluates to the value True. If the file is a directory, do not descend into it.
 
@@ -107,7 +113,7 @@ sub fileglob_to_regex($) {
 my $root = $ARGV[0] || usage();
 if (-e $root) {
     shift;
-    my $wanted = "my (\$dev,\$inode,\$mode,\$nlink,\$uid,\$gid,\$rdev,\$size,\$atime,\$mtime,\$ctime,\$blksize,\$blocks) = lstat(\$File::Find::name) && ";
+    my $wanted = "my (\$dev,\$inode,\$mode,\$nlink,\$uid,\$gid,\$rdev,\$size,\$atime,\$mtime,\$ctime,\$blksize,\$blocks); ((\$dev,\$inode,\$mode,\$nlink,\$uid,\$gid,\$rdev,\$size,\$atime,\$mtime,\$ctime,\$blksize,\$blocks) = lstat(\$File::Find::name)) && ";
     my $depth = 0;
     my $maxdepth = 0;
     my $print_needed = 1;
@@ -148,6 +154,16 @@ if (-e $root) {
             ($ctime =~ /^([\+\-]?)(\d+)$/) || die ("Invalid argument to -ctime: $ctime\n");
             $ctime =~ s/^-/< / || $ctime =~ s/^\+/> / || $ctime =~ s/^/== /;
             $wanted .= "int(-C _) $ctime";
+        } elsif ($arg_option eq "-perm") {
+            my $perm = shift;
+            ($perm =~ /^-?[0-7]{3,4}$/) || die ("Invalid argument to -perm: $perm\n");
+            if ($perm =~ s/^-//) {
+                $perm = sprintf("0%s", $perm & 07777);
+                $wanted .= "((\$mode & $perm) == $perm)";
+            } else {
+                $perm =~ s/^0*/0/;
+                $wanted .= "((\$mode & 07777) == $perm)";
+            }
         } elsif ($arg_option eq "-type") {
             my $type = shift;
             $type =~ /^[fdlpsbc]$/ || die ("Unknown argument to -type: $type\n");

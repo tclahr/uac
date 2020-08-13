@@ -92,6 +92,7 @@ check_tools() {
     FIND_PATH_SUPPORT=true
     FIND_SIZE_SUPPORT=true
     FIND_MAXDEPTH_SUPPORT=true
+    FIND_PERM_SUPPORT=true
     FIND_ATIME_SUPPORT=true
     FIND_MTIME_SUPPORT=true
     FIND_CTIME_SUPPORT=true
@@ -123,6 +124,13 @@ check_tools() {
         FIND_MAXDEPTH_SUPPORT=false
     fi
     logging D "FIND_MAXDEPTH_SUPPORT: $FIND_MAXDEPTH_SUPPORT\n"
+
+    logging D "Checking if find supports -perm\n"
+    run_command "find \"$CWD/uac\" -perm -0000 -print" "/dev/null"
+    if [ ! $? -eq 0 ]; then
+        FIND_PERM_SUPPORT=false
+    fi
+    logging D "FIND_PERM_SUPPORT: $FIND_PERM_SUPPORT\n"
 
     logging D "Checking if find supports -atime\n"
     run_command "find \"$CWD/uac\" -atime +1 -print" "/dev/null"

@@ -25,7 +25,7 @@ run_command "cat \"$CWD/conf/exclude.conf\" | grep -v \"^#\" | grep -v \"^$\" | 
 $EXCLUDE_MOUNTED_REMOTE_FILE_SYSTEMS && run_command "get_mount_points_to_exclude" "$COLLECTOR_OUTPUT_DIR/.exclude.tmp"
 
 # first we need to search for directories which names were added to conf/suspicious_files.conf
-run_command "ufind \"$MOUNT_POINT\" \"$SUSPICIOUS_FILES_MAX_DEPTH\" \"$COLLECTOR_OUTPUT_DIR/.exclude.tmp\" \"$CWD/conf/suspicious_files.conf\" \"d\" \"0\" " "$COLLECTOR_OUTPUT_DIR/.directories.tmp"
+run_command "ufind \"$MOUNT_POINT\" \"$SUSPICIOUS_FILES_MAX_DEPTH\" \"$COLLECTOR_OUTPUT_DIR/.exclude.tmp\" \"$CWD/conf/suspicious_files.conf\" \"d\" \"\" " "$COLLECTOR_OUTPUT_DIR/.directories.tmp"
 # merge the paths added to conf/suspicious_files.conf with the ones found above
 run_command "cat \"$CWD/conf/suspicious_files.conf\" | grep -v \"^#\" | grep -v \"^$\" | grep \"^/\" | sed 's:^/:'\"$MOUNT_POINT\"'/:; s://*:/:g; s:/$::g'" "$COLLECTOR_OUTPUT_DIR/.directories.tmp"
 # sort and uniq

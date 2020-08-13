@@ -21,16 +21,16 @@ run_command "cat \"$CWD/conf/exclude.conf\" | grep -v \"^#\" | grep -v \"^$\" | 
 run_command "cat \"$CWD/conf/exclude.conf\" | grep -v \"^#\" | grep -v \"^$\" | grep -v \"^/\"" "$COLLECTOR_OUTPUT_DIR/.exclude_names.tmp"
 
 # first we need to search for directories which names were added to conf/system_files.conf
-run_command "ufind \"$MOUNT_POINT\" \"$SYSTEM_FILES_MAX_DEPTH\" \"$COLLECTOR_OUTPUT_DIR/.exclude.tmp\" \"$CWD/conf/system_files.conf\" \"d\" \"0\" " "$COLLECTOR_OUTPUT_DIR/.directories.tmp"
+run_command "ufind \"$MOUNT_POINT\" \"$SYSTEM_FILES_MAX_DEPTH\" \"$COLLECTOR_OUTPUT_DIR/.exclude.tmp\" \"$CWD/conf/system_files.conf\" \"d\" \"\" " "$COLLECTOR_OUTPUT_DIR/.directories.tmp"
 # merge the paths added to conf/system_files.conf with the ones found above
 run_command "cat \"$CWD/conf/system_files.conf\" | grep -v \"^#\" | grep -v \"^$\" | grep \"^/\" | sed 's:^/:'\"$MOUNT_POINT\"'/:; s://*:/:g; s:/$::g'" "$COLLECTOR_OUTPUT_DIR/.directories.tmp"
 # sort and uniq
 run_command "cat \"$COLLECTOR_OUTPUT_DIR/.directories.tmp\" | sort | uniq" "$COLLECTOR_OUTPUT_DIR/.directories_sort_uniq.tmp"
 # search paths
-run_command "cat \"$COLLECTOR_OUTPUT_DIR/.directories_sort_uniq.tmp\" | while read line; do ufind \"\$line\" \"$SYSTEM_FILES_MAX_DEPTH\" \"$COLLECTOR_OUTPUT_DIR/.exclude_names.tmp\" \"\" \"f\" \"$SYSTEM_FILES_MAX_FILE_SIZE\" \"\" \"\"; done " "$COLLECTOR_OUTPUT_DIR/.system_files.tmp"
+run_command "cat \"$COLLECTOR_OUTPUT_DIR/.directories_sort_uniq.tmp\" | while read line; do ufind \"\$line\" \"$SYSTEM_FILES_MAX_DEPTH\" \"$COLLECTOR_OUTPUT_DIR/.exclude_names.tmp\" \"\" \"f\" \"$SYSTEM_FILES_MAX_FILE_SIZE\"; done " "$COLLECTOR_OUTPUT_DIR/.system_files.tmp"
 
 # search for file names
-run_command "ufind \"$MOUNT_POINT\" \"$SYSTEM_FILES_MAX_DEPTH\" \"$COLLECTOR_OUTPUT_DIR/.exclude.tmp\" \"$CWD/conf/system_files.conf\" \"f\" \"$SYSTEM_FILES_MAX_FILE_SIZE\" \"\" \"\"" "$COLLECTOR_OUTPUT_DIR/.system_files.tmp"
+run_command "ufind \"$MOUNT_POINT\" \"$SYSTEM_FILES_MAX_DEPTH\" \"$COLLECTOR_OUTPUT_DIR/.exclude.tmp\" \"$CWD/conf/system_files.conf\" \"f\" \"$SYSTEM_FILES_MAX_FILE_SIZE\" " "$COLLECTOR_OUTPUT_DIR/.system_files.tmp"
 
 # remove UAC working directory from the collection, sort and uniq
 run_command "cat \"$COLLECTOR_OUTPUT_DIR/.system_files.tmp\" | grep -v \"$CWD\" | sort | uniq" "$COLLECTOR_OUTPUT_DIR/system_files.txt"
