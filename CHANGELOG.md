@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.3.0-dev
+
+### Added
+- New system collector
+  - List of files that have setuid or setgid permissions set
+
 ## 1.2.0 (2020-07-26)
 
 ### Added
