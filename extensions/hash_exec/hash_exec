@@ -26,7 +26,18 @@ if [ ! -z "$MD5SUM_TOOL" ]; then
         # exclude mounted network file systems
         $EXCLUDE_MOUNTED_REMOTE_FILE_SYSTEMS && run_command "get_mount_points_to_exclude" "$EXTENSION_OUTPUT_DIR/.exclude.tmp"
 
-        run_command "ufind \"$MOUNT_POINT\" \"$HASH_EXEC_MAX_DEPTH\" \"$EXTENSION_OUTPUT_DIR/.exclude.tmp\" \"\" \"f\" \"$HASH_EXEC_MAX_FILE_SIZE\" \"$DATE_RANGE_T1\" \"$DATE_RANGE_T2\" | while read line; do $FILE_TOOL \"\$line\" | egrep -q \"(ELF|MZ|executable|PE32|shared object|script)\" && $MD5SUM_TOOL \"\$line\"; done" "$EXTENSION_OUTPUT_DIR/hash_exec.txt"
+        run_command "ufind \"$MOUNT_POINT\" \"$HASH_EXEC_MAX_DEPTH\" \"$EXTENSION_OUTPUT_DIR/.exclude.tmp\" \"\" \"f\" \"$HASH_EXEC_MAX_FILE_SIZE\" \"$DATE_RANGE_T1\" \"$DATE_RANGE_T2\" | while read line; do $FILE_TOOL \"\$line\" | egrep -q \"(ELF|MZ|executable|PE32|shared object|script)\" && $MD5SUM_TOOL \"\$line\"; done" "$EXTENSION_OUTPUT_DIR/hash_exec.md5.txt"
+
+        if $CALCULATE_SHA1; then
+            if [ ! -z "$SHA1SUM_TOOL" ]; then
+                run_command "ufind \"$MOUNT_POINT\" \"$HASH_EXEC_MAX_DEPTH\" \"$EXTENSION_OUTPUT_DIR/.exclude.tmp\" \"\" \"f\" \"$HASH_EXEC_MAX_FILE_SIZE\" \"$DATE_RANGE_T1\" \"$DATE_RANGE_T2\" | while read line; do $FILE_TOOL \"\$line\" | egrep -q \"(ELF|MZ|executable|PE32|shared object|script)\" && $SHA1SUM_TOOL \"\$line\"; done" "$EXTENSION_OUTPUT_DIR/hash_exec.sha1.txt"
+            else
+                logging D "Cannot hash executable files. No SHA1 hashing tool was found on the system.\n"
+            fi
+        fi
+
+        # remove temporary files
+        run_command "rm -f \"$COLLECTOR_OUTPUT_DIR/.exclude.tmp\"" "/dev/null"
 
     else
         logging D "Cannot hash executable files. No file tool was found on the system.\n"

@@ -25,7 +25,7 @@ check_tools() {
     # find available MD5 sum tool
     MD5SUM_TOOL=""
     logging D "Selecting the best available MD5 hashing tool\n"
-    run_command "echo uac | md5sum" "/dev/null"
+    run_command "echo \"uac\" | md5sum" "/dev/null"
     if [ $? -eq 0 ]; then
         MD5SUM_TOOL="md5sum"
     else
@@ -45,6 +45,35 @@ check_tools() {
         fi
     fi
     logging D "MD5SUM_TOOL: $MD5SUM_TOOL\n"
+
+    # find available SHA1 sum tool
+    SHA1SUM_TOOL=""
+    logging D "Selecting the best available SHA1 hashing tool\n"
+    run_command "echo \"uac\" | sha1sum" "/dev/null"
+    if [ $? -eq 0 ]; then
+        SHA1SUM_TOOL="sha1sum"
+    else
+        run_command "echo \"uac\" | shasum" "/dev/null"
+        if [ $? -eq 0 ]; then
+            SHA1SUM_TOOL="shasum"
+        else
+            run_command "echo \"uac\" | sha1" "/dev/null"
+            if [ $? -eq 0 ]; then
+                SHA1SUM_TOOL="sha1"
+            else
+                run_command "echo \"uac\" | digest -a sha1" "/dev/null"
+                if [ $? -eq 0 ]; then
+                    SHA1SUM_TOOL="digest -v -a sha1"
+                else
+                    run_command "csum -h SHA1 \"$CWD/uac\"" "/dev/null"
+                    if [ $? -eq 0 ]; then
+                        SHA1SUM_TOOL="csum -h SHA1"
+                    fi
+                fi
+            fi
+        fi
+    fi
+    logging D "SHA1SUM_TOOL: $SHA1SUM_TOOL\n"
 
     # set compress as the default compression tool because some systems do not have gzip
     COMPRESS_TOOL="compress"

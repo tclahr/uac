@@ -4,8 +4,9 @@ All notable changes to this project will be documented in this file.
 ## 1.3.0-dev
 
 ### Added
+- SHA-1 hashes will also be calculated by default. It can be disabled by editing ```conf/uac.conf``` and setting CALCULATE_SHA1 to false.
 - New system collector
-  - List of files that have setuid or setgid permissions set
+  - List of files that have setuid and/or setgid permissions set.
 
 ## 1.2.0 (2020-07-26)
 
