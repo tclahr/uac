@@ -200,4 +200,13 @@ check_tools() {
     fi
     logging D "PROCSTAT_TOOL: $PROCSTAT_TOOL\n"
 
+    # check if debugfs is available
+    DEBUGFS_TOOL=""
+    logging D "Checking if debugfs tool is available\n"
+    run_command "debugfs -R 'quit'" "/dev/null"
+    if [ $? -eq 0 ]; then
+        DEBUGFS_TOOL="debugfs"
+    fi
+    logging D "DEBUGFS_TOOL: $DEBUGFS_TOOL\n"
+
 }
