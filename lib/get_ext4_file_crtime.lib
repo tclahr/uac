@@ -1,0 +1,33 @@
+# Copyright (C) 2019,2020 IBM Corporation
+#
+# Licensed under the Apache License, Version 2.0 (the “License”);
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an “AS IS” BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+################################################################################
+# NAME
+#   get_ext4_file_crtime - get time of file birth, seconds since Epoch
+# SYNOPSIS
+#   get_ext4_file_crtime FILE
+# RETURN VALUE
+#   epoch timestamp; 0 if unknown
+################################################################################
+get_ext4_file_crtime() {
+    TARGET_FILE="$1"
+    INODE=`ls -di "$TARGET_FILE" | awk '{print $1}'`
+    FILE_SYSTEM=`df "$TARGET_FILE" | awk '/^[^Filesystem]/ && /^\// {print $1}'`
+    CRTIME=`debugfs -R 'stat <'"$INODE"'>' "$FILE_SYSTEM" 2>/dev/null | grep "crtime" | awk -F '--' '{print $2}'`
+    if [ -n "$CRTIME" ]; then
+        date -d "$CRTIME" "+%s" 2>/dev/null
+    else
+        printf %b "0"
+    fi
+}
