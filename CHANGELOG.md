@@ -1,6 +1,17 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.3.0 (2020-10-18)
+
+### Added
+- File creation time (Linux and ext4 file systems only) will now be collected by the bodyfile collector if debugfs tool is available on the target system. This will extremely increase the collection time, so it can be disabled by editing ```conf/uac.conf``` and setting BODY_FILE_CRTIME to false.
+- SHA-1 hashes will also be calculated by default. It can be disabled by editing ```conf/uac.conf``` and setting CALCULATE_SHA1 to false.
+- New disk_volume_file_system collectors
+  - solaris
+    - df -n
+- New system collector
+  - List of files that have setuid and/or setgid permissions set.
+
 ## 1.2.0 (2020-07-26)
 
 ### Added

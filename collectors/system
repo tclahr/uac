@@ -77,3 +77,18 @@ case "$PROFILE" in
         run_command "vmstat" "$COLLECTOR_OUTPUT_DIR/vmstat.txt"
         ;;
 esac
+
+# exclude paths
+run_command "cat \"$CWD/conf/exclude.conf\" | grep -v \"^#\" | grep -v \"^$\" | grep \"^/\" | sed 's:^/:'\"$MOUNT_POINT\"'/:; s://*:/:g; s:/$::g'" "$COLLECTOR_OUTPUT_DIR/.exclude.tmp"
+# exclude names
+run_command "cat \"$CWD/conf/exclude.conf\" | grep -v \"^#\" | grep -v \"^$\" | grep -v \"^/\"" "$COLLECTOR_OUTPUT_DIR/.exclude.tmp"
+run_command "cat \"$CWD/conf/exclude.conf\" | grep -v \"^#\" | grep -v \"^$\" | grep -v \"^/\"" "$COLLECTOR_OUTPUT_DIR/.exclude_names.tmp"
+# exclude mounted network file systems
+$EXCLUDE_MOUNTED_REMOTE_FILE_SYSTEMS && run_command "get_mount_points_to_exclude" "$COLLECTOR_OUTPUT_DIR/.exclude.tmp"
+# search for setuid files
+run_command "ufind \"$MOUNT_POINT\" \"\" \"$COLLECTOR_OUTPUT_DIR/.exclude.tmp\" \"\" \"f\" \"\" \"\" \"\" \"-4000\" " "$COLLECTOR_OUTPUT_DIR/setuid_files.txt"
+# search for setgid files
+run_command "ufind \"$MOUNT_POINT\" \"\" \"$COLLECTOR_OUTPUT_DIR/.exclude.tmp\" \"\" \"f\" \"\" \"\" \"\" \"-2000\" " "$COLLECTOR_OUTPUT_DIR/setgid_files.txt"
+# remove temporary files
+run_command "rm -f \"$COLLECTOR_OUTPUT_DIR/.exclude.tmp\"" "/dev/null"
+run_command "rm -f \"$COLLECTOR_OUTPUT_DIR/.exclude_names.tmp\"" "/dev/null"

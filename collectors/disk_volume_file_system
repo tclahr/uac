@@ -58,6 +58,7 @@ case "$PROFILE" in
         ;;
     "solaris")
         run_command "df -h" "$COLLECTOR_OUTPUT_DIR/df-h.txt"
+        run_command "df -n" "$COLLECTOR_OUTPUT_DIR/df-n.txt"
         run_command "echo | format" "$COLLECTOR_OUTPUT_DIR/format.txt"
         run_command "iostat" "$COLLECTOR_OUTPUT_DIR/iostat.txt"
         run_command "iostat -E -n" "$COLLECTOR_OUTPUT_DIR/iostat-E-n.txt"
