@@ -73,7 +73,15 @@ if [ -s "$COLLECTOR_OUTPUT_DIR/home_directories.txt" ]; then
     # remove temporary files
     run_command "rm -f \"$COLLECTOR_OUTPUT_DIR/home_directories.txt\"" "/dev/null"
 
-    # compress data
-    run_command "compress_data \"$COLLECTOR_OUTPUT_DIR/user_files.txt\" \"$COLLECTOR_OUTPUT_DIR/user_files.tar.$COMPRESS_EXT\" \"$UAC_LOG_FILE\""
+    if ${TAR_TOOL_AVAILABLE} && ${GZIP_TOOL_AVAILABLE}; then
+        # archive and compress data
+        run_command "archive_compress_data \"$COLLECTOR_OUTPUT_DIR/user_files.txt\" \"$COLLECTOR_OUTPUT_DIR/user_files.tar.gz\" true"
+    elif ${TAR_TOOL_AVAILABLE}; then
+        # archive data
+        run_command "archive_data \"$COLLECTOR_OUTPUT_DIR/user_files.txt\" \"$COLLECTOR_OUTPUT_DIR/user_files.tar\" true"
+    else
+        # just copy data
+        run_command "copy_data \"$COLLECTOR_OUTPUT_DIR/user_files.txt\" \"$COLLECTOR_OUTPUT_DIR\""
+    fi
 
 fi
