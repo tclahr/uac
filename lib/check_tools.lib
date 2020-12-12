@@ -75,19 +75,23 @@ check_tools() {
     fi
     logging D "SHA1SUM_TOOL: $SHA1SUM_TOOL\n"
 
-    # set compress as the default compression tool because some systems do not have gzip
-    COMPRESS_TOOL="compress"
-    COMPRESS_EXT="Z"
+    # check if tar tool is available
+    TAR_TOOL_AVAILABLE=false
+    logging D "Checking if tar tool is available on the target system\n"
+    run_command "tar -cf - \"${CWD}/uac\"" "/dev/null"
+    if [ $? -eq 0 ]; then
+        TAR_TOOL_AVAILABLE=true
+    fi
+    logging D "TAR_TOOL_AVAILABLE: ${TAR_TOOL_AVAILABLE}\n"
 
-    # check if gzip is available
-    logging D "Checking if gzip is avalable\n"
+    # check if gzip tool is available
+    GZIP_TOOL_AVAILABLE=false
+    logging D "Checking if gzip tool is available on the target system\n"
     run_command "echo \"uac\" | gzip" "/dev/null"
     if [ $? -eq 0 ]; then
-        COMPRESS_TOOL="gzip"
-        COMPRESS_EXT="gz"
+        GZIP_TOOL_AVAILABLE=true
     fi
-    logging D "COMPRESS_TOOL: $COMPRESS_TOOL\n"
-    logging D "COMPRESS_EXT: $COMPRESS_EXT\n"
+    logging D "GZIP_TOOL_AVAILABLE: ${GZIP_TOOL_AVAILABLE}\n"
    
     # check if perl is available
     PERL_TOOL=""
