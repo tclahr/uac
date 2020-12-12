@@ -364,33 +364,58 @@ if $ANY_COLLECTOR_SELECTED || $ANY_EXTENSION_SELECTED; then
                     logging D "Total running time: $UAC_TOTAL_RUNNING_TIME seconds.\n"
 
                     uprintf "Collection finished! Total running time: $UAC_TOTAL_RUNNING_TIME seconds.\n"
-                    uprintf "Creating compressed output file. Please wait...\n"
-                    COMPRESSED_OUTPUT_FILE="$TMP_DATA_DIR.tar.$COMPRESS_EXT"
-                    cd "$DESTINATION_DIR"
-                    if compress_data "$TMP_DATA_DIR" "$COMPRESSED_OUTPUT_FILE"; then
-                        uprintf "Compressed output file created at $DESTINATION_DIR/$COMPRESSED_OUTPUT_FILE\n"
 
-                        if [ ! -z "$MD5SUM_TOOL" ]; then
-                            uprintf "Hashing output file. Please wait...\n"
-                            $MD5SUM_TOOL "$COMPRESSED_OUTPUT_FILE" > "$COMPRESSED_OUTPUT_FILE.md5"
-                            if [ ! -z "$COMPRESSED_OUTPUT_FILE.md5" ]; then
-                                uprintf "MD5 hash output file created at $DESTINATION_DIR/$COMPRESSED_OUTPUT_FILE.md5\n"
-                            else
-                                uprintf "Cannot compute MD5 hash for $DESTINATION_DIR/$COMPRESSED_OUTPUT_FILE\n"
-                                rm "$COMPRESSED_OUTPUT_FILE.md5"
+                    if ${TAR_TOOL_AVAILABLE} && ${GZIP_TOOL_AVAILABLE}; then
+                        # archive and compress output to file
+                        uprintf "Creating compressed output file. Please wait...\n"
+                        OUTPUT_FILE="$TMP_DATA_DIR.tar.gz"
+                        cd "$DESTINATION_DIR"
+                        if archive_compress_data "$TMP_DATA_DIR" "$OUTPUT_FILE"; then
+                            uprintf "Compressed output file created at $DESTINATION_DIR/$OUTPUT_FILE\n"
+                            rm -rf "$TMP_DATA_DIR" > /dev/null 2> /dev/null
+                            if [ -d "$TMP_DATA_DIR" ]; then
+                                uprintf "Cannot remove temporary directory $DESTINATION_DIR/$TMP_DATA_DIR\n"
                             fi
+                        else
+                            uprintf "Cannot create compressed output file\n"
+                            uprintf "Please check collected data in $DESTINATION_DIR/$TMP_DATA_DIR\n"
                         fi
-
-                        rm -rf "$TMP_DATA_DIR" > /dev/null 2> /dev/null
-                        if [ -d "$TMP_DATA_DIR" ]; then
-                            uprintf "Cannot remove temporary directory at $DESTINATION_DIR/$TMP_DATA_DIR\n"
+                        cd "$CWD"
+                    elif ${TAR_TOOL_AVAILABLE}; then
+                        # archive output to file
+                        uprintf "Creating output file. Please wait...\n"
+                        OUTPUT_FILE="$TMP_DATA_DIR.tar"
+                        cd "$DESTINATION_DIR"
+                        if archive_data "$TMP_DATA_DIR" "$OUTPUT_FILE"; then
+                            uprintf "Output file created at $DESTINATION_DIR/$OUTPUT_FILE\n"
+                            rm -rf "$TMP_DATA_DIR" > /dev/null 2> /dev/null
+                            if [ -d "$TMP_DATA_DIR" ]; then
+                                uprintf "Cannot remove temporary directory $DESTINATION_DIR/$TMP_DATA_DIR\n"
+                            fi
+                        else
+                            uprintf "Cannot create output file\n"
+                            uprintf "Please check collected data in $DESTINATION_DIR/$TMP_DATA_DIR\n"
                         fi
-
-                    else
-                        uprintf "Cannot create compressed file\n"
-                        uprintf "Please check the output directory at $DESTINATION_DIR/$TMP_DATA_DIR\n"
+                        cd "$CWD"
                     fi
-                    cd "$CWD"
+
+                    # hash output file if it exists
+                    if [ -f "$DESTINATION_DIR/$OUTPUT_FILE" ]; then
+                        if [ -n "$MD5SUM_TOOL" ]; then
+                            uprintf "Hashing output file. Please wait...\n"
+                            cd "$DESTINATION_DIR"
+                            $MD5SUM_TOOL "$OUTPUT_FILE" > "$OUTPUT_FILE.md5"
+                            if [ -n "$OUTPUT_FILE.md5" ]; then
+                                uprintf "MD5 hash output file created at $DESTINATION_DIR/$OUTPUT_FILE.md5\n"
+                            else
+                                uprintf "Cannot compute MD5 hash for $DESTINATION_DIR/$OUTPUT_FILE\n"
+                                rm "$OUTPUT_FILE.md5"
+                            fi
+                            cd "$CWD"
+                        fi
+                    else
+                        uprintf "Please check collected data in $DESTINATION_DIR/$TMP_DATA_DIR\n"
+                    fi
 
                 else
                     uprintf "Cannot create temporary directory $DESTINATION_DIR/$TMP_DATA_DIR\n"

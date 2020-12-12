@@ -1,0 +1,105 @@
+# Copyright (C) 2020 IBM Corporation
+#
+# Licensed under the Apache License, Version 2.0 (the “License”);
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an “AS IS” BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+###############################################################################
+# Archive and compress files and directories
+# Globals:
+#   DESTINATION_DIR
+#   PROFILE
+#   TMP_DATA_DIR
+#   UAC_LOG_FILE
+# Arguments:
+#  *$1: source file or directory to be archived and compressed
+#  *$2: destination file
+#   $3: true   source is a file list
+#       false  soure is not a file list (default)
+# Outputs:
+#   None
+# Returns:
+#   true or false
+###############################################################################
+archive_compress_data() {
+  _source="${1:-}"
+  _destination="${2:-}"
+  _is_file_list="${3:-false}"
+
+  # as solaris 10- does not accept -e, -f and -d had to be used here
+  # exit if source is not a file or directory, and if destination is empty
+  if ( [ ! -f "${_source}" ] && [ ! -d "${_source}" ] ) \
+    || [ -z "${_destination}" ]; then
+    return 1 # false
+  fi
+
+  if ${_is_file_list}; then
+    if [ -s "${_source}" ]; then
+      case "${PROFILE}" in
+        "aix")
+          tar -L "${_source}" -cf - 2>>"${UAC_LOG_FILE}" \
+            | gzip >"${_destination}" 2>>"${UAC_LOG_FILE}"
+          ;;
+        "bsd")
+          tar -I "${_source}" -cf - 2>>"${UAC_LOG_FILE}" \
+            | gzip >"${_destination}" 2>>"${UAC_LOG_FILE}"
+          ;;
+        "linux")
+          # some old tar/busybox versions do not support -T, so a different
+          # solution is required to package and compress data
+          # checking if tar can create package getting names from file
+          printf %s "${CWD}/uac" \
+            >"${DESTINATION_DIR}/${TMP_DATA_DIR}/.tarcheck" 2>>"${UAC_LOG_FILE}"
+
+          tar -T "${DESTINATION_DIR}/${TMP_DATA_DIR}/.tarcheck" -cf \
+            "${DESTINATION_DIR}/${TMP_DATA_DIR}/.tarcheck.tar" \
+            2>>"${UAC_LOG_FILE}"
+          if [ $? -eq 0 ]; then
+              rm "${DESTINATION_DIR}/${TMP_DATA_DIR}/.tarcheck" \
+                2>>"${UAC_LOG_FILE}"
+              rm "${DESTINATION_DIR}/${TMP_DATA_DIR}/.tarcheck.tar" \
+                2>>"${UAC_LOG_FILE}"
+              tar -T "${_source}" -cf - 2>>"${UAC_LOG_FILE}" \
+                | gzip >"${_destination}" 2>>"${UAC_LOG_FILE}"
+          else
+              rm "${DESTINATION_DIR}/${TMP_DATA_DIR}/.tarcheck" \
+                2>>"${UAC_LOG_FILE}"
+              rm "${DESTINATION_DIR}/${TMP_DATA_DIR}/.tarcheck.tar" \
+                2>>"${UAC_LOG_FILE}"
+              # concatenate file list to one line parameter
+              _file_list=`cat "${_source}" | awk '{ printf "\"%s\" ", $0; }'`
+              if [ -n "${_file_list}" ]; then
+                eval "tar -cf - ${_file_list} | gzip > \"${_destination}\"" \
+                  2>>"${UAC_LOG_FILE}"
+              fi
+          fi
+          ;;
+        "macos")
+          tar -T "${_source}" -cf - 2>>"${UAC_LOG_FILE}" \
+            | gzip >"${_destination}" 2>>"${UAC_LOG_FILE}"
+          ;;
+        "solaris")
+          tar -cf - -I "${_source}" 2>>"${UAC_LOG_FILE}" \
+            | gzip >"${_destination}" 2>>"${UAC_LOG_FILE}"
+          ;;
+      esac
+    else
+      # return true if source file is empty
+      return 0 # true
+    fi
+  else
+    tar -cf - "${_source}" 2>>"${UAC_LOG_FILE}" \
+      | gzip >"${_destination}" 2>>"${UAC_LOG_FILE}"
+  fi
+  
+  return 0 # true
+  
+}

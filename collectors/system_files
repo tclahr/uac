@@ -42,5 +42,13 @@ run_command "rm -f \"$COLLECTOR_OUTPUT_DIR/.directories.tmp\"" "/dev/null"
 run_command "rm -f \"$COLLECTOR_OUTPUT_DIR/.directories_sort_uniq.tmp\"" "/dev/null"
 run_command "rm -f \"$COLLECTOR_OUTPUT_DIR/.system_files.tmp\"" "/dev/null"
 
-# compress data
-run_command "compress_data \"$COLLECTOR_OUTPUT_DIR/system_files.txt\" \"$COLLECTOR_OUTPUT_DIR/system_files.tar.$COMPRESS_EXT\" \"$UAC_LOG_FILE\""
+if ${TAR_TOOL_AVAILABLE} && ${GZIP_TOOL_AVAILABLE}; then
+    # archive and compress data
+    run_command "archive_compress_data \"$COLLECTOR_OUTPUT_DIR/system_files.txt\" \"$COLLECTOR_OUTPUT_DIR/system_files.tar.gz\" true"
+elif ${TAR_TOOL_AVAILABLE}; then
+    # archive data
+    run_command "archive_data \"$COLLECTOR_OUTPUT_DIR/system_files.txt\" \"$COLLECTOR_OUTPUT_DIR/system_files.tar\" true"
+else
+    # just copy data
+    run_command "copy_data \"$COLLECTOR_OUTPUT_DIR/system_files.txt\" \"$COLLECTOR_OUTPUT_DIR\""
+fi

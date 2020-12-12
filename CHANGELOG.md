@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.3.1 (2020-12-10)
+
+### Fixed
+- UAC was creating an empty output file if tar was not available in the target system ([#15](https://github.com/tclahr/uac/issues/15)).
+
 ## 1.3.0 (2020-10-18)
 
 ### Added
