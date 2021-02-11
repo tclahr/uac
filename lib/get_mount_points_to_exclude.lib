@@ -25,19 +25,19 @@ get_mount_points_to_exclude() {
 
     case "$PROFILE" in
         "aix")
-            run_command "mount | sed 's:  *: :g' | egrep \"( autofs| cifs| davfs| nfs| smbfs)\" | cut -d\" \" -f 3 | sort | uniq"
+            run_command "mount | sed 's:  *: :g' | egrep \"( afs| autofs| cifs| davfs| nfs| rpc_pipefs| smbfs)\" | cut -d\" \" -f 3 | sort | uniq"
         ;;
         "bsd")
             # FreeBSD / NetScaler
-            run_command "mount | sed 's:  *: :g' | egrep \"(\(autofs|\(cifs|\(davfs|\(nfs|\(smbfs)\" | awk -F\"on \" '{print \$2}' | cut -d\"(\" -f 1 | sort | uniq"
+            run_command "mount | sed 's:  *: :g' | egrep \"(\(afs|\(autofs|\(cifs|\(davfs|\(nfs|\(rpc_pipefs|\(smbfs)\" | awk -F\"on \" '{print \$2}' | cut -d\"(\" -f 1 | sort | uniq"
             # NetBSD / OpenBSD
-            run_command "mount | sed 's:  *: :g' | egrep \"( autofs| cifs| davfs| nfs| smbfs)\" | awk -F\"on \" '{print \$2}' | awk -F\"type\" '{print \$1}' | sort | uniq"
+            run_command "mount | sed 's:  *: :g' | egrep \"( afs| autofs| cifs| davfs| nfs| rpc_pipefs| smbfs)\" | awk -F\"on \" '{print \$2}' | awk -F\"type\" '{print \$1}' | sort | uniq"
         ;;
         "linux")
-            run_command "mount | sed 's:  *: :g' | egrep \"( autofs| cifs| davfs| nfs| smbfs)\" | awk -F\"on \" '{print \$2}' | awk -F\"type\" '{print \$1}' | sort | uniq"
+            run_command "mount | sed 's:  *: :g' | egrep \"( afs| autofs| cifs| davfs| nfs| rpc_pipefs| smbfs)\" | awk -F\"on \" '{print \$2}' | awk -F\"type\" '{print \$1}' | sort | uniq"
         ;;
         "macos")
-            run_command "mount | sed 's:  *: :g' | egrep \"(\(autofs|\(cifs|\(davfs|\(nfs|\(smbfs)\" | awk -F\"on \" '{print \$2}' | cut -d\"(\" -f 1 | sort | uniq"
+            run_command "mount | sed 's:  *: :g' | egrep \"(\(afs|\(autofs|\(cifs|\(davfs|\(nfs|\(rpc_pipefs|\(smbfs)\" | awk -F\"on \" '{print \$2}' | cut -d\"(\" -f 1 | sort | uniq"
         ;;
         "solaris")
             run_command "mount | sed 's:  *: :g' | egrep \"remote/\" | awk -F\"on \" '{print \$1}' | sort | uniq"
