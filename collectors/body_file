@@ -24,6 +24,10 @@ if [ ! -z "$STAT_TOOL" ] || [ ! -z "$PERL_TOOL" ]; then
     run_command "cat \"$CWD/conf/exclude.conf\" | grep -v \"^#\" | grep -v \"^$\" | grep -v \"^/\"" "$COLLECTOR_OUTPUT_DIR/.exclude.tmp"
     # exclude mounted network file systems
     $EXCLUDE_MOUNTED_REMOTE_FILE_SYSTEMS && run_command "get_mount_points_to_exclude" "$COLLECTOR_OUTPUT_DIR/.exclude.tmp"
+    if [ -s "$COLLECTOR_OUTPUT_DIR/.exclude.tmp" ]; then
+        logging D "File Systems excluded from collection:\n"
+        cat "$COLLECTOR_OUTPUT_DIR/.exclude.tmp" >>"$UAC_LOG_FILE"
+    fi
 
     case "$PROFILE" in
         "aix")

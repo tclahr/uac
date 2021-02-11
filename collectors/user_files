@@ -46,6 +46,10 @@ if [ -s "$COLLECTOR_OUTPUT_DIR/home_directories.txt" ]; then
         run_command "cat \"$CWD/conf/exclude.conf\" | grep -v \"^#\" | grep -v \"^$\" | grep -v \"^/\"" "$COLLECTOR_OUTPUT_DIR/.exclude.tmp"
         # exclude network mounted file systems
         $EXCLUDE_MOUNTED_REMOTE_FILE_SYSTEMS && run_command "get_mount_points_to_exclude" "$COLLECTOR_OUTPUT_DIR/.exclude.tmp"
+        if [ -s "$COLLECTOR_OUTPUT_DIR/.exclude.tmp" ]; then
+            logging D "File Systems excluded from collection:\n"
+            cat "$COLLECTOR_OUTPUT_DIR/.exclude.tmp" >>"$UAC_LOG_FILE"
+        fi
 
         # first we need to search for directories which names were added to conf/user_files.conf
         run_command "ufind \"$USER_HOME_DIR\" \"$FIND_MAXDEPTH_PARAMETER\" \"$COLLECTOR_OUTPUT_DIR/.exclude.tmp\" \"$CWD/conf/user_files.conf\" \"d\" \"\" " "$COLLECTOR_OUTPUT_DIR/.directories.tmp"
