@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.4.0-rc1 (2021-02-11)
+
+### Added
+- Output file can be automatically transferred (scp) to a remote server. Please refer to ```conf/uac.conf``` for more information.
+- ```afs``` and ```rpc_pipefs``` mounted file systems will now also be excluded from collection if EXCLUDE_MOUNTED_REMOTE_FILE_SYSTEMS option is set to true.
+
 ## 1.3.1 (2020-12-10)
 
 ### Fixed
