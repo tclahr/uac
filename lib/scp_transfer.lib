@@ -1,0 +1,46 @@
+# Copyright (C) 2021 IBM Corporation
+#
+# Licensed under the Apache License, Version 2.0 (the “License”);
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an “AS IS” BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+###############################################################################
+# Secure file transfer
+# Globals:
+#  None
+# Arguments:
+#  *$1: source file or directory
+#  *$2: remote server name/IP address
+#  *$3: remote server username
+#   $4: remote destination file or directory
+#   $5: remote server port
+# Outputs:
+#   scp command output
+# Returns:
+#   scp command exit status code
+###############################################################################
+scp_transfer() {
+  _scp_source="${1:-}"
+  _scp_server="${2:-}"
+  _scp_username="${3:-}"
+  _scp_destination="${4:-}"
+  _scp_port="${5:-22}"
+
+  if [ -z "${_scp_server}" ] || [ -z "${_scp_username}" ] \
+    || [ -z "${_scp_source}" ]; then
+      return 1 # false
+  fi
+
+  scp -r -P "${_scp_port}" -o StrictHostKeyChecking=no \
+    -o UserKnownHostsFile=/dev/null "${_scp_source}" \
+    "${_scp_username}@${_scp_server}:${_scp_destination}"
+
+}
