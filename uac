@@ -51,7 +51,7 @@ init_vars
 trap terminate INT TERM
 
 SHIFT_OPT=""
-while getopts "apnuywsdkblfe:P:R:VDUvh" opt; do
+while getopts "apnuywsdkblfe:P:R:T:VDUvh" opt; do
     case $opt in
         # collectors
         a)  COLLECTOR_PROCESS=true
@@ -189,6 +189,15 @@ while getopts "apnuywsdkblfe:P:R:VDUvh" opt; do
                 exit 9
             fi
             SHIFT_OPT="$SHIFT_OPT R $OPTARG"
+            ;;
+        T)  if [ -n "$OPTARG" ]; then
+                SCP_TRANSFER=true
+                SCP_DESTINATION="$OPTARG"
+                SHIFT_OPT="$SHIFT_OPT T $OPTARG"
+            else
+                uprintf "Invalid scp destination '$OPTARG'\n"
+                exit 13
+            fi
             ;;
         V)  VERBOSE=true
             SHIFT_OPT="$SHIFT_OPT V"
@@ -420,27 +429,28 @@ if $ANY_COLLECTOR_SELECTED || $ANY_EXTENSION_SELECTED; then
                     if $SCP_TRANSFER; then
                         if [ -f "$DESTINATION_DIR/$OUTPUT_FILE" ]; then
                             # transfer output file
-                            uprintf "Transfering '$DESTINATION_DIR/$OUTPUT_FILE' to '$SCP_SERVER'\n"
-                            if scp_transfer "$DESTINATION_DIR/$OUTPUT_FILE" "$SCP_SERVER" "$SCP_USERNAME" "$SCP_DESTINATION" "$SCP_PORT"; then
-                                uprintf "File transferred successfully.\n"
+                            uprintf "Transfering '$DESTINATION_DIR/$OUTPUT_FILE' to '$SCP_DESTINATION'\n"
+                            if scp_transfer "$DESTINATION_DIR/$OUTPUT_FILE" "$SCP_DESTINATION" "$SCP_PORT"; then
+                                uprintf "File transferred successfully\n"
                             else
-                                uprintf "Could not transfer file.\n"
+                                uprintf "Could not transfer file\n"
                             fi
                             if [ -f "$DESTINATION_DIR/$OUTPUT_FILE.md5" ]; then
-                                uprintf "Transfering '$DESTINATION_DIR/$OUTPUT_FILE.md5' to '$SCP_SERVER'\n"
-                                if scp_transfer "$DESTINATION_DIR/$OUTPUT_FILE.md5" "$SCP_SERVER" "$SCP_USERNAME" "$SCP_DESTINATION" "$SCP_PORT"; then
-                                    uprintf "File transferred successfully.\n"
+                                # transfer output file
+                                uprintf "Transfering '$DESTINATION_DIR/$OUTPUT_FILE.md5' to '$SCP_DESTINATION'\n"
+                                if scp_transfer "$DESTINATION_DIR/$OUTPUT_FILE.md5" "$SCP_DESTINATION" "$SCP_PORT"; then
+                                    uprintf "File transferred successfully\n"
                                 else
-                                    uprintf "Could not transfer file.\n"
+                                    uprintf "Could not transfer file\n"
                                 fi
                             fi
                         else
                             # transfer output directory
-                            uprintf "Transfering '$DESTINATION_DIR/$TMP_DATA_DIR' to '$SCP_SERVER'\n"
-                            if scp_transfer "$DESTINATION_DIR/$TMP_DATA_DIR" "$SCP_SERVER" "$SCP_USERNAME" "$SCP_DESTINATION" "$SCP_PORT"; then
-                                uprintf "Directory transferred successfully.\n"
+                            uprintf "Transfering '$DESTINATION_DIR/$TMP_DATA_DIR' to '$SCP_DESTINATION'\n"
+                            if scp_transfer "$DESTINATION_DIR/$TMP_DATA_DIR" "$SCP_DESTINATION" "$SCP_PORT"; then
+                                uprintf "Directory transferred successfully\n"
                             else
-                                uprintf "Could not transfer directory.\n"
+                                uprintf "Could not transfer directory\n"
                             fi
                         fi
                     fi
