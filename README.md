@@ -92,6 +92,9 @@ Use this profile to collect Solaris artifacts.
 The range of dates to be used during logs, suspicious files, user files and hash executable files collection. The date range is used to limit the amount of data collected by filtering files using find's -atime, -mtime or -ctime parameter. By default, UAC will search for files that data was last modified (-mtime) OR status last changed (-ctime) within the given date range. Please refer to ```conf/uac.conf``` for more details.
 The standard format is YYYY-MM-DD for a starting date and no ending date. For an ending date, use YYYY-MM-DD..YYYY-MM-DD.
 
+### Output File Transfer (-T)
+Transfer the output file to a remove server using scp. The destination must be specified in the form ```[user@]host:[path]```.
+
 ### Debug (-D)
 Increase debugging level.
 
@@ -163,6 +166,9 @@ PROFILES:
 
 OPTIONS:
     -R           Starting date YYYY-MM-DD or range YYYY-MM-DD..YYYY-MM-DD
+    -T DESTINATION
+                 Transfer output file to remote server using scp
+                 destination must be specified in the form [user@]host:[path]
     -D           Increase debugging level.
     -V           Increase verbosity level.
     -U           Allow UAC to be run by a non-root user. Note that data collection will be limited.
