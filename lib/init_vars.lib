@@ -62,6 +62,9 @@ init_vars() {
     DATE_RANGE_T1=""
     DATE_RANGE_T2=""
 
+    # set default value for scp transfer
+    SCP_TRANSFER=false
+
     LIVE_COLLECTION=true
     if [ ! "$MOUNT_POINT" = "/" ]; then
         LIVE_COLLECTION=false
