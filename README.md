@@ -2,7 +2,7 @@
 
 ## Description
 
-UAC is a command line shell script that makes use of built-in tools to automate the collection of Unix-like systems artifacts. The script respects the order of volatility and artifacts that are changed during the execution. It was created to facilitate and speed up data collection, and depend less on remote support during incident response engagements.
+UAC is a Live Response collection tool for Incident Response that makes use of built-in tools to automate the collection of Unix-like systems artifacts. It respects the order of volatility and artifacts that are changed during the execution. It was created to facilitate and speed up data collection, and depend less on remote support during incident response engagements.
 
 UAC can also be run against mounted forensic images. Please take a look on the ```conf/uac.conf``` file for more details.
 
