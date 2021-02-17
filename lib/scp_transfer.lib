@@ -18,10 +18,8 @@
 #  None
 # Arguments:
 #  *$1: source file or directory
-#  *$2: remote server name/IP address
-#  *$3: remote server username
-#   $4: remote destination file or directory
-#   $5: remote server port
+#  *$2: remote destination
+#   $3: remote server port
 # Outputs:
 #   scp command output
 # Returns:
@@ -29,18 +27,14 @@
 ###############################################################################
 scp_transfer() {
   _scp_source="${1:-}"
-  _scp_server="${2:-}"
-  _scp_username="${3:-}"
-  _scp_destination="${4:-}"
-  _scp_port="${5:-22}"
+  _scp_destination="${2:-}"
+  _scp_port="${3:-22}"
 
-  if [ -z "${_scp_server}" ] || [ -z "${_scp_username}" ] \
-    || [ -z "${_scp_source}" ]; then
+  if [ -z "${_scp_source}" ] || [ -z "${_scp_destination}" ]; then
       return 1 # false
   fi
 
   scp -r -P "${_scp_port}" -o StrictHostKeyChecking=no \
-    -o UserKnownHostsFile=/dev/null "${_scp_source}" \
-    "${_scp_username}@${_scp_server}:${_scp_destination}"
+    -o UserKnownHostsFile=/dev/null "${_scp_source}" "${_scp_destination}"
 
 }
