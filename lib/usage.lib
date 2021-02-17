@@ -56,7 +56,7 @@ usage() {
     logging I "    -R           Starting date YYYY-MM-DD or range YYYY-MM-DD..YYYY-MM-DD\n"
     logging I "    -T DESTINATION\n"
     logging I "                 Transfer output file to remote server using scp\n"
-    logging I "                 destination may be specified in the form [user@]host:[path]\n"
+    logging I "                 destination must be specified in the form [user@]host:[path]\n"
     logging I "    -D           Increase debugging level.\n"
     logging I "    -V           Increase verbosity level.\n"
     logging I "    -U           Allow UAC to be run by a non-root user. Note that data collection will be limited.\n"
