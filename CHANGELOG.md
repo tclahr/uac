@@ -1,11 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 1.4.0-rc2 (2021-02-16)
+## 1.4.0 (2021-02-22)
 
 ### Added
 - Output file can be automatically transferred (scp) to a remote server using -T option.
-- ```afs``` and ```rpc_pipefs``` mounted file systems will now also be excluded from collection if EXCLUDE_MOUNTED_REMOTE_FILE_SYSTEMS option is set to true.
+- ```afs``` and ```rpc_pipefs``` mounted file systems will also be excluded from the collection if EXCLUDE_MOUNTED_REMOTE_FILE_SYSTEMS option is set to true.
+- New entries added to exclude.conf
+  - /etc/shadow
 - New network collectors
   - linux
     - firewall-cmd --get-active-zones
