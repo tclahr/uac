@@ -25,6 +25,10 @@ if [ ! -z "$MD5SUM_TOOL" ]; then
         run_command "cat \"$CWD/conf/exclude.conf\" | grep -v \"^#\" | grep -v \"^$\" | grep -v \"^/\"" "$EXTENSION_OUTPUT_DIR/.exclude.tmp"
         # exclude mounted network file systems
         $EXCLUDE_MOUNTED_REMOTE_FILE_SYSTEMS && run_command "get_mount_points_to_exclude" "$EXTENSION_OUTPUT_DIR/.exclude.tmp"
+        if [ -s "$COLLECTOR_OUTPUT_DIR/.exclude.tmp" ]; then
+            logging D "File Systems excluded from collection:\n"
+            cat "$COLLECTOR_OUTPUT_DIR/.exclude.tmp" >>"$UAC_LOG_FILE"
+        fi
 
         run_command "ufind \"$MOUNT_POINT\" \"$HASH_EXEC_MAX_DEPTH\" \"$EXTENSION_OUTPUT_DIR/.exclude.tmp\" \"\" \"f\" \"$HASH_EXEC_MAX_FILE_SIZE\" \"$DATE_RANGE_T1\" \"$DATE_RANGE_T2\" | while read line; do $FILE_TOOL \"\$line\" | egrep -q \"(ELF|MZ|executable|PE32|shared object|script)\" && $MD5SUM_TOOL \"\$line\"; done" "$EXTENSION_OUTPUT_DIR/hash_exec.md5.txt"
 

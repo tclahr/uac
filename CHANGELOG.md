@@ -1,6 +1,26 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.4.0 (2021-02-22)
+
+### Added
+- Output file can be automatically transferred (scp) to a remote server using -T option.
+- ```afs``` and ```rpc_pipefs``` mounted file systems will also be excluded from the collection if EXCLUDE_MOUNTED_REMOTE_FILE_SYSTEMS option is set to true.
+- New entries added to exclude.conf
+  - /etc/shadow
+- New network collectors
+  - linux
+    - firewall-cmd --get-active-zones
+    - firewall-cmd --get-default-zone
+    - firewall-cmd --get-services
+    - firewall-cmd --list-all
+    - firewall-cmd --list-all-zones
+- New system collectors
+  - linux
+    - getenforce
+    - mdatp health
+    - sestatus -v
+
 ## 1.3.1 (2020-12-10)
 
 ### Fixed
@@ -25,7 +45,6 @@ All notable changes to this project will be documented in this file.
 - New docker and virtual machines information collector (-k).
 - Files and directories added to ```conf/exclude.conf``` will be skipped during collection.
 - By default, mounted remote file systems will be excluded from the collection. Please refer to ```conf/uac.conf``` for more information.
-
 - New docker_virtual_machine collectors
     - docker container ls --all --size
     - docker image ls --all

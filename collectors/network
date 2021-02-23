@@ -43,6 +43,11 @@ case "$PROFILE" in
         run_command "sockstat -w" "$COLLECTOR_OUTPUT_DIR/sockstat-w.txt"
         ;;
     "linux")
+        run_command "firewall-cmd --get-active-zones" "$COLLECTOR_OUTPUT_DIR/firewall-cmd-get-active-zones.txt"
+        run_command "firewall-cmd --get-default-zone" "$COLLECTOR_OUTPUT_DIR/firewall-cmd-get-default-zone.txt"
+        run_command "firewall-cmd --get-services" "$COLLECTOR_OUTPUT_DIR/firewall-cmd-get-services.txt"
+        run_command "firewall-cmd --list-all" "$COLLECTOR_OUTPUT_DIR/firewall-cmd-list-all.txt"
+        run_command "firewall-cmd --list-all-zones" "$COLLECTOR_OUTPUT_DIR/firewall-cmd-list-all-zones.txt"
         run_command "hostname -f" "$COLLECTOR_OUTPUT_DIR/hostname-f.txt"
         run_command "ip addr show" "$COLLECTOR_OUTPUT_DIR/ip-addr-show.txt"
         run_command "ip link show" "$COLLECTOR_OUTPUT_DIR/ip-link-show.txt"

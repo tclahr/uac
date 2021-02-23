@@ -45,11 +45,14 @@ case "$PROFILE" in
     "linux")
         run_command "chkconfig --list" "$COLLECTOR_OUTPUT_DIR/chkconfig-list.txt"
         run_command "free" "$COLLECTOR_OUTPUT_DIR/free.txt"
+        run_command "getenforce" "$COLLECTOR_OUTPUT_DIR/getenforce.txt"
         run_command "hwclock" "$COLLECTOR_OUTPUT_DIR/hwclock.txt"
         run_command "lsmod" "$COLLECTOR_OUTPUT_DIR/lsmod.txt"
+        run_command "mdatp health" "$COLLECTOR_OUTPUT_DIR/mdatp-health.txt"
         run_command "runlevel" "$COLLECTOR_OUTPUT_DIR/runlevel.txt"
         run_command "service --status-all" "$COLLECTOR_OUTPUT_DIR/service-status-all.txt"
         run_command "service list" "$COLLECTOR_OUTPUT_DIR/service-list.txt"
+        run_command "sestatus -v" "$COLLECTOR_OUTPUT_DIR/sestatus-v.txt"
         run_command "sysctl -a" "$COLLECTOR_OUTPUT_DIR/sysctl-a.txt"
         run_command "systemctl -l" "$COLLECTOR_OUTPUT_DIR/systemctl-l.txt"
         run_command "systemctl list-timers --all" "$COLLECTOR_OUTPUT_DIR/systemctl-list-timers-all.txt"
@@ -85,6 +88,10 @@ run_command "cat \"$CWD/conf/exclude.conf\" | grep -v \"^#\" | grep -v \"^$\" | 
 run_command "cat \"$CWD/conf/exclude.conf\" | grep -v \"^#\" | grep -v \"^$\" | grep -v \"^/\"" "$COLLECTOR_OUTPUT_DIR/.exclude_names.tmp"
 # exclude mounted network file systems
 $EXCLUDE_MOUNTED_REMOTE_FILE_SYSTEMS && run_command "get_mount_points_to_exclude" "$COLLECTOR_OUTPUT_DIR/.exclude.tmp"
+if [ -s "$COLLECTOR_OUTPUT_DIR/.exclude.tmp" ]; then
+    logging D "File Systems excluded from collection:\n"
+    cat "$COLLECTOR_OUTPUT_DIR/.exclude.tmp" >>"$UAC_LOG_FILE"
+fi
 # search for setuid files
 run_command "ufind \"$MOUNT_POINT\" \"\" \"$COLLECTOR_OUTPUT_DIR/.exclude.tmp\" \"\" \"f\" \"\" \"\" \"\" \"-4000\" " "$COLLECTOR_OUTPUT_DIR/setuid_files.txt"
 # search for setgid files

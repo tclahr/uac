@@ -2,11 +2,11 @@
 
 ## Description
 
-UAC is a command line shell script that makes use of built-in tools to automate the collection of Unix-like systems artifacts. The script respects the order of volatility and artifacts that are changed during the execution. It was created to facilitate and speed up data collection, and depend less on remote support during incident response engagements.
+UAC is a Live Response collection tool for Incident Response that makes use of built-in tools to automate the collection of Unix-like systems artifacts. It respects the order of volatility and artifacts that are changed during the execution. It was created to facilitate and speed up data collection, and depend less on remote support during incident response engagements.
 
-UAC can also be run against mounted forensic images. Please take a look on the ```conf/uac.conf``` file for more details.
+UAC can also be run against mounted forensic images. Please take a look at the ```conf/uac.conf``` file for more details.
 
-You can use your own validated tools during artifacts collection. They will be used instead of the built-in ones provided by the target system. Please refer to ```bin/README.txt``` for more information.
+You can use your own validated tools during artifact collection. They will be used instead of the built-in ones provided by the target system. Please refer to ```bin/README.txt``` for more information.
 
 ## Supported Systems
 
@@ -19,28 +19,28 @@ You can use your own validated tools during artifacts collection. They will be u
 ## Collectors
 
 ### Process (-p)
-Collect information, calculate MD5 hash and extract strings from running processes.
+Collect information, calculate MD5 hash, and extract strings from running processes.
 
 ### Network (-n)
 Collect active network connections with related process information.
 
 ### User (-u)
-Collect user accounts information, login related files and activities. The list of files and directories that will be collected can be found in the ```conf/user_files.conf``` file.
+Collect user accounts information, login related files, and activities. The list of files and directories that will be collected can be found in the ```conf/user_files.conf``` file.
 
 ### System (-y)
-Collect system information, system configuration files and kernel related details. The list of files and directories that will be collected can be found in the ```conf/system_files.conf``` file.
+Collect system information, system configuration files, and kernel related details. The list of files and directories that will be collected can be found in the ```conf/system_files.conf``` file.
 
 ### Hardware (-w)
-Collect low level hardware information.
+Collect low-level hardware information.
 
 ### Software (-s)
 Collect information about installed packages and software.
 
 ### Disk Volume and File System (-d)
-Collect information about disks, volumes and file systems.
+Collect information about disks, volumes, and file systems.
 
 ### Docker and Virtual Machine (-k)
-Collect docker and virtual machines information.
+Collect docker and virtual machines' information.
 
 ### Body File (-b)
 Extract information from files and directories using the ```stat``` or ```stat.pl``` tool to create a [body file](https://wiki.sleuthkit.org/index.php?title=Body_file). The body file is an intermediate file when creating a timeline of file activity. It is a pipe ("|") delimited text file that contains one line for each file.
@@ -89,8 +89,11 @@ Use this profile to collect Solaris artifacts.
 ## Options
 
 ### Date Range (-R)
-The range of dates to be used during logs, suspicious files, user files and hash executable files collection. The date range is used to limit the amount of data collected by filtering files using find's -atime, -mtime or -ctime parameter. By default, UAC will search for files that data was last modified (-mtime) OR status last changed (-ctime) within the given date range. Please refer to ```conf/uac.conf``` for more details.
+The range of dates to be used during logs, suspicious files, user files, and hash executable files collection. The date range is used to limit the amount of data collected by filtering files using find's -atime, -mtime or -ctime parameter. By default, UAC will search for files that data was last modified (-mtime) OR status last changed (-ctime) within the given date range. Please refer to ```conf/uac.conf``` for more details.
 The standard format is YYYY-MM-DD for a starting date and no ending date. For an ending date, use YYYY-MM-DD..YYYY-MM-DD.
+
+### Output File Transfer (-T)
+Transfer the output file to a remote server using scp. The destination must be specified in the form ```[user@]host:[path]```. It is recommended to use SSH key authentication in order to automate the transfer and avoid any password prompt during the process.
 
 ### Debug (-D)
 Increase debugging level.
@@ -123,7 +126,7 @@ Directory or file paths that will be searched and collected by the user files (-
 The ```find``` command line tool will be used to search for files and directories, so the patterns added to this file need to be compatible with the ```-name``` option. Please check ```find``` man pages for instructions.
 
 ### conf/exclude.conf
-Directory or file paths that will be excluded from collection. If a directory path is added, all files and subdirectories will be skilled automatically.
+Directory or file paths that will be excluded from the collection. If a directory path is added, all files and subdirectories will be skilled automatically.
 The ```find``` command line tool will be used to search for files and directories, so the patterns added to this file need to be compatible with ```-path``` and ```-name``` options. Please check ```find``` man pages for instructions.
 
 ## Usage
@@ -133,13 +136,13 @@ Usage: ./uac COLLECTORS [-e EXTENSION_LIST] [-P PROFILE] [OPTIONS] [DESTINATION]
 
 COLLECTORS:
     -a           Enable all collectors.
-    -p           Collect information, calculate MD5 hash and extract strings from running processes.
+    -p           Collect information, calculate MD5 hash, and extract strings from running processes.
     -n           Collect active network connections with related process information.
-    -u           Collect user accounts information, login related files and activities.
-    -y           Collect system information, system configuration files and kernel related details.
-    -w           Collect low level hardware information.
+    -u           Collect user accounts information, login related files, and activities.
+    -y           Collect system information, system configuration files, and kernel related details.
+    -w           Collect low-level hardware information.
     -s           Collect information about installed packages and software.
-    -d           Collect information about disks, volumes and file systems.
+    -d           Collect information about disks, volumes, and file systems.
     -k           Collect docker and virtual machines information.
     -b           Extract information from files and directories using the stat tool to create a body file.
     -l           Collect log files and directories.
@@ -147,7 +150,7 @@ COLLECTORS:
 
 EXTENSIONS:
     -e EXTENSION_LIST
-                 Comma separated list of extensions.
+                 Comma-separated list of extensions.
                  all: Enable all extensions.
                  chkrootkit: Run chkrootkit tool.
                  fls: Run Sleuth Kit fls tool.
@@ -163,6 +166,9 @@ PROFILES:
 
 OPTIONS:
     -R           Starting date YYYY-MM-DD or range YYYY-MM-DD..YYYY-MM-DD
+    -T DESTINATION
+                 Transfer output file to a remote server using scp.
+                 The destination must be specified in the form [user@]host:[path]
     -D           Increase debugging level.
     -V           Increase verbosity level.
     -U           Allow UAC to be run by a non-root user. Note that data collection will be limited.
@@ -190,7 +196,7 @@ Run only hash_exec and chkrootkit extensions against the current running system,
 ```
 ./uac -e hash_exec,chkrootkit -P linux /mnt/share
 ```
-Run only process, hardware and logs collectors against the current running system, force ```solaris``` profile, use ```/tmp``` as the destination directory and increase verbosity level:
+Run only process, hardware and logs collectors against the current running system, force ```solaris``` profile, use ```/tmp``` as the destination directory, and increase verbosity level:
 ```
 ./uac -p -w -l -P solaris -V /tmp
 ```
