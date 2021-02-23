@@ -93,7 +93,7 @@ The range of dates to be used during logs, suspicious files, user files and hash
 The standard format is YYYY-MM-DD for a starting date and no ending date. For an ending date, use YYYY-MM-DD..YYYY-MM-DD.
 
 ### Output File Transfer (-T)
-Transfer the output file to a remove server using scp. The destination must be specified in the form ```[user@]host:[path]```.
+Transfer the output file to a remove server using scp. The destination must be specified in the form ```[user@]host:[path]```. It is recommended to use SSH key authentication in order to automate the transfer, and avoid any password prompt during the process.
 
 ### Debug (-D)
 Increase debugging level.
