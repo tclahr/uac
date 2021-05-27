@@ -271,7 +271,7 @@ if $ANY_COLLECTOR_SELECTED || $ANY_EXTENSION_SELECTED; then
                     logging I " |  |_|  |  | |  |  |____ \n"
                     logging I " |_______|__| |__|_______|\n"
                     logging I "\n"
-                    logging I "UAC (Unix-like Artifacts Collector) v$UAC_VERSION\n"
+                    logging I "Unix-like Artifacts Collector v$UAC_VERSION\n"
                     logging I "--------------------------------------------------------------------------------\n"
                     $VERBOSE && logging I "Command Line: $CMD\n" || logging D "Command Line: $CMD\n"
                     logging I "Destination: $DESTINATION_DIR/$TMP_DATA_DIR\n"
