@@ -17,6 +17,7 @@
 logging I ">> Collecting hardware information\n"
 
 run_command "uname -a" "$COLLECTOR_OUTPUT_DIR/uname-a.txt"
+run_command "cat /proc/cpuinfo" "$COLLECTOR_OUTPUT_DIR/cpuinfo.txt"
 
 case "$PROFILE" in
     "aix")

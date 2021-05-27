@@ -1,6 +1,26 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.5.0 (2021-05-26)
+
+### Added
+- New hardware collectors
+  - cat /proc/cpuinfo
+- New network collectors
+  - hostnamectl
+- New process collectors
+  - aix
+    - procfiles -n -c <PID>
+- New system collectors
+  - mdatp exclusion list
+  - uptime -s
+- New entries added to system_files.conf
+  - /lib/systemd/system
+  - /usr/lib/systemd/system
+
+### Fixed
+- File's crtime on ext4 file system was not being collected by bodyfile collector on systems using old 'stat' tool ([#19](https://github.com/tclahr/uac/issues/19)).
+
 ## 1.4.0 (2021-02-22)
 
 ### Added

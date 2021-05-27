@@ -1,4 +1,4 @@
-# Copyright (C) 2019,2020 IBM Corporation
+# Copyright (C) 2020 IBM Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the “License”);
 # you may not use this file except in compliance with the License.
@@ -35,17 +35,18 @@ case "$PROFILE" in
         run_command "ls -la /proc/[0-9]*" "$COLLECTOR_OUTPUT_DIR/ls-la-proc-pid.txt"
         for LOCAL_PROC_DIRECTORY in /proc/[0-9]*; do
             LOCAL_PROC_PID=`echo "$LOCAL_PROC_DIRECTORY" | cut -d"/" -f 3`
-            if [ ! -z "$LOCAL_PROC_PID" ]; then
+            if [ -n "$LOCAL_PROC_PID" ]; then
                 run_command "mkdir -p \"$COLLECTOR_OUTPUT_DIR/proc/$LOCAL_PROC_PID\"" "/dev/null"
                 run_command "strings /proc/$LOCAL_PROC_PID/psinfo" "$COLLECTOR_OUTPUT_DIR/proc/$LOCAL_PROC_PID/psinfo.txt"
+                run_command "procfiles -n -c ${LOCAL_PROC_PID}" "$COLLECTOR_OUTPUT_DIR/proc/$LOCAL_PROC_PID/procfiles.txt"
             fi
         done
         # hash running processes
-        if [ ! -z "$MD5SUM_TOOL" ]; then
+        if [ -n "$MD5SUM_TOOL" ]; then
             logging I ">> Hashing running processes\n"
             run_command "find /proc/[0-9]*/object/a.out -print | while read line; do \$MD5SUM_TOOL \$line; done" "$COLLECTOR_OUTPUT_DIR/running_processes_hashes.md5.txt"
             if $CALCULATE_SHA1; then
-                if [ ! -z "$SHA1SUM_TOOL" ]; then
+                if [ -n "$SHA1SUM_TOOL" ]; then
                     run_command "find /proc/[0-9]*/object/a.out -print | while read line; do \$SHA1SUM_TOOL \$line; done" "$COLLECTOR_OUTPUT_DIR/running_processes_hashes.sha1.txt"
                 else
                     logging D "Cannot hash running processes. No SHA1 hashing tool was found on the system.\n"
@@ -72,7 +73,7 @@ case "$PROFILE" in
             run_command "find /proc/[0-9]*/exe -print | while read line; do ls -l \$line; done" "$COLLECTOR_OUTPUT_DIR/running_processes_full_paths.txt"
             for LOCAL_PROC_DIRECTORY in /proc/[0-9]*; do
                 LOCAL_PROC_PID=`echo "$LOCAL_PROC_DIRECTORY" | cut -d"/" -f 3`
-                if [ ! -z "$LOCAL_PROC_PID" ]; then
+                if [ -n "$LOCAL_PROC_PID" ]; then
                     run_command "mkdir -p \"$COLLECTOR_OUTPUT_DIR/proc/$LOCAL_PROC_PID\"" "/dev/null"
                     run_command "strings /proc/$LOCAL_PROC_PID/cmdline" "$COLLECTOR_OUTPUT_DIR/proc/$LOCAL_PROC_PID/cmdline.txt"
                     run_command "cat /proc/$LOCAL_PROC_PID/map" "$COLLECTOR_OUTPUT_DIR/proc/$LOCAL_PROC_PID/map.txt"
@@ -80,11 +81,11 @@ case "$PROFILE" in
                 fi
             done
             # hash running processes
-            if [ ! -z "$MD5SUM_TOOL" ]; then
+            if [ -n "$MD5SUM_TOOL" ]; then
                 logging I ">> Hashing running processes\n"
                 run_command "find /proc/[0-9]*/exe -print | while read line; do \$MD5SUM_TOOL \$line; done" "$COLLECTOR_OUTPUT_DIR/running_processes_hashes.md5.txt"
                 if $CALCULATE_SHA1; then
-                    if [ ! -z "$SHA1SUM_TOOL" ]; then
+                    if [ -n "$SHA1SUM_TOOL" ]; then
                         run_command "find /proc/[0-9]*/exe -print | while read line; do \$SHA1SUM_TOOL \$line; done" "$COLLECTOR_OUTPUT_DIR/running_processes_hashes.sha1.txt"
                     else
                         logging D "Cannot hash running processes. No SHA1 hashing tool was found on the system.\n"
@@ -106,7 +107,7 @@ case "$PROFILE" in
             run_command "find /proc/[0-9]*/file -print | while read line; do ls -l \$line; done" "$COLLECTOR_OUTPUT_DIR/running_processes_full_paths.txt"
             for LOCAL_PROC_DIRECTORY in /proc/[0-9]*; do
                 LOCAL_PROC_PID=`echo "$LOCAL_PROC_DIRECTORY" | cut -d"/" -f 3`
-                if [ ! -z "$LOCAL_PROC_PID" ]; then
+                if [ -n "$LOCAL_PROC_PID" ]; then
                     run_command "mkdir -p \"$COLLECTOR_OUTPUT_DIR/proc/$LOCAL_PROC_PID\"" "/dev/null"
                     run_command "strings /proc/$LOCAL_PROC_PID/cmdline" "$COLLECTOR_OUTPUT_DIR/proc/$LOCAL_PROC_PID/cmdline.txt"
                     run_command "cat /proc/$LOCAL_PROC_PID/map" "$COLLECTOR_OUTPUT_DIR/proc/$LOCAL_PROC_PID/map.txt"
@@ -114,11 +115,11 @@ case "$PROFILE" in
                 fi
             done
             # hash running processes
-            if [ ! -z "$MD5SUM_TOOL" ]; then
+            if [ -n "$MD5SUM_TOOL" ]; then
                 logging I ">> Hashing running processes\n"
                 run_command "find /proc/[0-9]*/file -print | while read line; do \$MD5SUM_TOOL \$line; done" "$COLLECTOR_OUTPUT_DIR/running_processes_hashes.md5.txt"
                 if $CALCULATE_SHA1; then
-                    if [ ! -z "$SHA1SUM_TOOL" ]; then
+                    if [ -n "$SHA1SUM_TOOL" ]; then
                         run_command "find /proc/[0-9]*/file -print | while read line; do \$SHA1SUM_TOOL \$line; done" "$COLLECTOR_OUTPUT_DIR/running_processes_hashes.sha1.txt"
                     else
                         logging D "Cannot hash running processes. No SHA1 hashing tool was found on the system.\n"
@@ -133,12 +134,12 @@ case "$PROFILE" in
                 run_command "mkdir -p \"$COLLECTOR_OUTPUT_DIR/strings\"" "/dev/null"
                 run_command "find /proc/[0-9]*/file -print | while read line; do cut -d\"/\" -f 3; done | while read pid; do strings -a /proc/\$pid/exe | $COMPRESS_TOOL > \"$COLLECTOR_OUTPUT_DIR/strings/\$pid.txt.$COMPRESS_EXT\"; done" "/dev/null"
             fi
-        elif [ ! -z "$PROCSTAT_TOOL" ]; then
+        elif [ -n "$PROCSTAT_TOOL" ]; then
             # some BSDs have procstat tool
             # e.g. FreeBSD
             run_command "ps -eo pid | sed 1d | while read line; do procstat -b \$line | sed 1d | awk '{print \$4}'; done" "$COLLECTOR_OUTPUT_DIR/running_processes_full_paths.txt"
             for LOCAL_PROC_PID in `ps -eo pid | sed 1d`; do
-                if [ ! -z "$LOCAL_PROC_PID" ]; then
+                if [ -n "$LOCAL_PROC_PID" ]; then
                     run_command "mkdir -p \"$COLLECTOR_OUTPUT_DIR/proc/$LOCAL_PROC_PID\"" "/dev/null"
                     run_command "procstat binary $LOCAL_PROC_PID" "$COLLECTOR_OUTPUT_DIR/proc/$LOCAL_PROC_PID/procstat-binary.txt"
                     run_command "procstat arguments $LOCAL_PROC_PID" "$COLLECTOR_OUTPUT_DIR/proc/$LOCAL_PROC_PID/procstat-arguments.txt"
@@ -148,11 +149,11 @@ case "$PROFILE" in
                 fi
             done
             # hash running processes
-            if [ ! -z "$MD5SUM_TOOL" ]; then
+            if [ -n "$MD5SUM_TOOL" ]; then
                 logging I ">> Hashing running processes\n"
                 run_command "cat \"$COLLECTOR_OUTPUT_DIR/running_processes_full_paths.txt\" | sort | uniq | while read line; do \$MD5SUM_TOOL \$line; done" "$COLLECTOR_OUTPUT_DIR/running_processes_hashes.md5.txt"
                 if $CALCULATE_SHA1; then
-                    if [ ! -z "$SHA1SUM_TOOL" ]; then
+                    if [ -n "$SHA1SUM_TOOL" ]; then
                         run_command "cat \"$COLLECTOR_OUTPUT_DIR/running_processes_full_paths.txt\" | sort | uniq | while read line; do \$SHA1SUM_TOOL \$line; done" "$COLLECTOR_OUTPUT_DIR/running_processes_hashes.sha1.txt"
                     else
                         logging D "Cannot hash running processes. No SHA1 hashing tool was found on the system.\n"
@@ -172,11 +173,11 @@ case "$PROFILE" in
             # e.g. OpenBSD
             run_command "ps -eo args | grep \"^/\" | awk '{print \$1}'" "$COLLECTOR_OUTPUT_DIR/running_processes_full_paths.txt"
             # hash running processes
-            if [ ! -z "$MD5SUM_TOOL" ]; then
+            if [ -n "$MD5SUM_TOOL" ]; then
                 logging I ">> Hashing running processes\n"
                 run_command "cat \"$COLLECTOR_OUTPUT_DIR/running_processes_full_paths.txt\" | sort | uniq | while read line; do \$MD5SUM_TOOL \$line; done" "$COLLECTOR_OUTPUT_DIR/running_processes_hashes.md5.txt"
                 if $CALCULATE_SHA1; then
-                    if [ ! -z "$SHA1SUM_TOOL" ]; then
+                    if [ -n "$SHA1SUM_TOOL" ]; then
                         run_command "cat \"$COLLECTOR_OUTPUT_DIR/running_processes_full_paths.txt\" | sort | uniq | while read line; do \$SHA1SUM_TOOL \$line; done" "$COLLECTOR_OUTPUT_DIR/running_processes_hashes.sha1.txt"
                     else
                         logging D "Cannot hash running processes. No SHA1 hashing tool was found on the system.\n"
@@ -201,7 +202,7 @@ case "$PROFILE" in
         run_command "find /proc/[0-9]*/exe -print | while read line; do ls -l \$line; done" "$COLLECTOR_OUTPUT_DIR/running_processes_full_paths.txt"
         for LOCAL_PROC_DIRECTORY in /proc/[0-9]*; do
             LOCAL_PROC_PID=`echo "$LOCAL_PROC_DIRECTORY" | cut -d"/" -f 3`
-            if [ ! -z "$LOCAL_PROC_PID" ]; then
+            if [ -n "$LOCAL_PROC_PID" ]; then
                 run_command "mkdir -p \"$COLLECTOR_OUTPUT_DIR/proc/$LOCAL_PROC_PID\"" "/dev/null"
                 run_command "cat /proc/$LOCAL_PROC_PID/comm" "$COLLECTOR_OUTPUT_DIR/proc/$LOCAL_PROC_PID/comm.txt"
                 run_command "strings /proc/$LOCAL_PROC_PID/cmdline" "$COLLECTOR_OUTPUT_DIR/proc/$LOCAL_PROC_PID/cmdline.txt"
@@ -212,11 +213,11 @@ case "$PROFILE" in
             fi
         done
         # hash running processes
-        if [ ! -z "$MD5SUM_TOOL" ]; then
+        if [ -n "$MD5SUM_TOOL" ]; then
             logging I ">> Hashing running processes\n"
             run_command "find /proc/[0-9]*/exe -print | while read line; do \$MD5SUM_TOOL \$line; done" "$COLLECTOR_OUTPUT_DIR/running_processes_hashes.md5.txt"
             if $CALCULATE_SHA1; then
-                if [ ! -z "$SHA1SUM_TOOL" ]; then
+                if [ -n "$SHA1SUM_TOOL" ]; then
                     run_command "find /proc/[0-9]*/exe -print | while read line; do \$SHA1SUM_TOOL \$line; done" "$COLLECTOR_OUTPUT_DIR/running_processes_hashes.sha1.txt"
                 else
                     logging D "Cannot hash running processes. No SHA1 hashing tool was found on the system.\n"
@@ -236,11 +237,11 @@ case "$PROFILE" in
         run_command "top -l1" "$COLLECTOR_OUTPUT_DIR/top-l1.txt"
         run_command "ps -eo args | grep \"^/\" | awk '{print \$1}'" "$COLLECTOR_OUTPUT_DIR/running_processes_full_paths.txt"
         # hash running processes
-        if [ ! -z "$MD5SUM_TOOL" ]; then
+        if [ -n "$MD5SUM_TOOL" ]; then
             logging I ">> Hashing running processes\n"
             run_command "cat \"$COLLECTOR_OUTPUT_DIR/running_processes_full_paths.txt\" | sort | uniq | while read line; do \$MD5SUM_TOOL \$line; done" "$COLLECTOR_OUTPUT_DIR/running_processes_hashes.md5.txt"
             if $CALCULATE_SHA1; then
-                if [ ! -z "$SHA1SUM_TOOL" ]; then
+                if [ -n "$SHA1SUM_TOOL" ]; then
                     run_command "cat \"$COLLECTOR_OUTPUT_DIR/running_processes_full_paths.txt\" | sort | uniq | while read line; do \$SHA1SUM_TOOL \$line; done" "$COLLECTOR_OUTPUT_DIR/running_processes_hashes.sha1.txt"
                 else
                     logging D "Cannot hash running processes. No SHA1 hashing tool was found on the system.\n"
@@ -264,7 +265,7 @@ case "$PROFILE" in
         run_command "find /proc/[0-9]*/path/a.out -print | while read line; do ls -l \$line; done" "$COLLECTOR_OUTPUT_DIR/running_processes_full_paths.txt"
         for LOCAL_PROC_DIRECTORY in /proc/[0-9]*; do
             LOCAL_PROC_PID=`echo "$LOCAL_PROC_DIRECTORY" | cut -d"/" -f 3`
-            if [ ! -z "$LOCAL_PROC_PID" ]; then
+            if [ -n "$LOCAL_PROC_PID" ]; then
                 run_command "mkdir -p \"$COLLECTOR_OUTPUT_DIR/proc/$LOCAL_PROC_PID\"" "/dev/null"
                 run_command "strings /proc/$LOCAL_PROC_PID/cmdline" "$COLLECTOR_OUTPUT_DIR/proc/$LOCAL_PROC_PID/cmdline.txt"
                 run_command "strings /proc/$LOCAL_PROC_PID/environ" "$COLLECTOR_OUTPUT_DIR/proc/$LOCAL_PROC_PID/environ.txt"
@@ -273,11 +274,11 @@ case "$PROFILE" in
             fi
         done
         # hash running processes
-        if [ ! -z "$MD5SUM_TOOL" ]; then
+        if [ -n "$MD5SUM_TOOL" ]; then
             logging I ">> Hashing running processes\n"
             run_command "find /proc/[0-9]*/path/a.out -print | while read line; do \$MD5SUM_TOOL \$line; done" "$COLLECTOR_OUTPUT_DIR/running_processes_hashes.md5.txt"
             if $CALCULATE_SHA1; then
-                if [ ! -z "$SHA1SUM_TOOL" ]; then
+                if [ -n "$SHA1SUM_TOOL" ]; then
                     run_command "find /proc/[0-9]*/path/a.out -print | while read line; do \$SHA1SUM_TOOL \$line; done" "$COLLECTOR_OUTPUT_DIR/running_processes_hashes.sha1.txt"
                 else
                     logging D "Cannot hash running processes. No SHA1 hashing tool was found on the system.\n"

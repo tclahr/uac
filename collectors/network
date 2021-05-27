@@ -18,6 +18,7 @@ logging I ">> Collecting network information\n"
 
 run_command "arp -a" "$COLLECTOR_OUTPUT_DIR/arp-a.txt"
 run_command "hostname" "$COLLECTOR_OUTPUT_DIR/hostname.txt"
+run_command "hostnamectl" "$COLLECTOR_OUTPUT_DIR/hostnamectl.txt"
 run_command "ifconfig -a" "$COLLECTOR_OUTPUT_DIR/ifconfig-a.txt"
 run_command "lsof -n -P -l -i" "$COLLECTOR_OUTPUT_DIR/lsof-n-P-l-i.txt"
 run_command "netstat -a" "$COLLECTOR_OUTPUT_DIR/netstat-a.txt"

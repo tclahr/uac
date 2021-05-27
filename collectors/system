@@ -19,6 +19,7 @@ logging I ">> Collecting system information\n"
 run_command "date" "$COLLECTOR_OUTPUT_DIR/date.txt"
 run_command "env" "$COLLECTOR_OUTPUT_DIR/env.txt"
 run_command "uptime" "$COLLECTOR_OUTPUT_DIR/uptime.txt"
+run_command "uptime -s" "$COLLECTOR_OUTPUT_DIR/uptime-s.txt"
 
 case "$PROFILE" in
     "aix")
@@ -48,6 +49,7 @@ case "$PROFILE" in
         run_command "getenforce" "$COLLECTOR_OUTPUT_DIR/getenforce.txt"
         run_command "hwclock" "$COLLECTOR_OUTPUT_DIR/hwclock.txt"
         run_command "lsmod" "$COLLECTOR_OUTPUT_DIR/lsmod.txt"
+        run_command "mdatp exclusion list" "$COLLECTOR_OUTPUT_DIR/mdatp-exclusion-list.txt"
         run_command "mdatp health" "$COLLECTOR_OUTPUT_DIR/mdatp-health.txt"
         run_command "runlevel" "$COLLECTOR_OUTPUT_DIR/runlevel.txt"
         run_command "service --status-all" "$COLLECTOR_OUTPUT_DIR/service-status-all.txt"
