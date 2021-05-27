@@ -44,14 +44,14 @@ if [ ! -z "$STAT_TOOL" ] || [ ! -z "$PERL_TOOL" ]; then
             MOUNT_POINT_FS_NAME=`get_file_system_name "$MOUNT_POINT"`
             logging D "Mount point file system name: $MOUNT_POINT_FS_NAME\n"
             if $BODY_FILE_CRTIME && [ "$MOUNT_POINT_FS_NAME" = "ext4" ] && [ -n "$DEBUGFS_TOOL" ]; then
-                logging D "ufind \"$MOUNT_POINT\" \"$BODY_FILE_MAX_DEPTH\" \"$COLLECTOR_OUTPUT_DIR/.exclude.tmp\" | while read line; do FILE_CRTIME=`get_ext4_file_crtime \"\$line\"`; \"$STAT_TOOL\" -c \"0|%N|%i|%A|%u|%g|%s|%X|%Y|%Z|%W\" \"\$line\" | sed -e \"s:'::g\" -e \"s/|0$/|\$FILE_CRTIME/\"; done\n"
+                logging D "ufind \"$MOUNT_POINT\" \"$BODY_FILE_MAX_DEPTH\" \"$COLLECTOR_OUTPUT_DIR/.exclude.tmp\" | while read line; do \"$STAT_TOOL\" -c \"0|%N|%i|%A|%u|%g|%s|%X|%Y|%Z|%W\" \"\$line\" | sed -e \"s:'::g\" -e \"s:\\\`::g\" -e \"s:|.$:|0:\"; done\n"
                 ufind "$MOUNT_POINT" "$BODY_FILE_MAX_DEPTH" "$COLLECTOR_OUTPUT_DIR/.exclude.tmp" | while read line; do
                     FILE_CRTIME=`get_ext4_file_crtime "$line"`
-                    "$STAT_TOOL" -c "0|%N|%i|%A|%u|%g|%s|%X|%Y|%Z|%W" "$line" | sed -e "s:'::g" -e "s/|0$/|$FILE_CRTIME/"
+                    "$STAT_TOOL" -c "0|%N|%i|%A|%u|%g|%s|%X|%Y|%Z|%W" "$line" | sed -e "s:'::g" -e "s:\`::g" -e "s/|.$/|$FILE_CRTIME/"
                 done >> "$COLLECTOR_OUTPUT_DIR/body_file.txt" 2>> "$UAC_LOG_FILE"
             else
-                if [ ! -z "$STAT_TOOL" ]; then
-                    run_command "ufind \"$MOUNT_POINT\" \"$BODY_FILE_MAX_DEPTH\" \"$COLLECTOR_OUTPUT_DIR/.exclude.tmp\" | while read line; do \"$STAT_TOOL\" -c \"0|%N|%i|%A|%u|%g|%s|%X|%Y|%Z|%W\" \"\$line\" | sed \"s:'::g\"; done" "$COLLECTOR_OUTPUT_DIR/body_file.txt"
+                if [ -n "$STAT_TOOL" ]; then
+                    run_command "ufind \"$MOUNT_POINT\" \"$BODY_FILE_MAX_DEPTH\" \"$COLLECTOR_OUTPUT_DIR/.exclude.tmp\" | while read line; do \"$STAT_TOOL\" -c \"0|%N|%i|%A|%u|%g|%s|%X|%Y|%Z|%W\" \"\$line\" | sed -e \"s:'::g\" -e \"s:\\\`::g\" -e \"s:|.$:|0:\"; done" "$COLLECTOR_OUTPUT_DIR/body_file.txt"
                 else
                     run_command "ufind \"$MOUNT_POINT\" \"$BODY_FILE_MAX_DEPTH\" \"$COLLECTOR_OUTPUT_DIR/.exclude.tmp\" | while read line; do \"$PERL_TOOL\" \"$CWD/tools/stat/stat.pl\" \"\$line\"; done" "$COLLECTOR_OUTPUT_DIR/body_file.txt"
                 fi
@@ -61,7 +61,7 @@ if [ ! -z "$STAT_TOOL" ] || [ ! -z "$PERL_TOOL" ]; then
             run_command "ufind \"$MOUNT_POINT\" \"$BODY_FILE_MAX_DEPTH\" \"$COLLECTOR_OUTPUT_DIR/.exclude.tmp\" | while read line; do \"$STAT_TOOL\" -f \"0|%N%SY|%i|%Sp|%u|%g|%z|%a|%m|%c|%B\" \"\$line\"; done" "$COLLECTOR_OUTPUT_DIR/body_file.txt"
             ;;
         "solaris")
-            if [ ! -z "$STAT_TOOL" ]; then
+            if [ -n "$STAT_TOOL" ]; then
                 run_command "ufind \"$MOUNT_POINT\" \"$BODY_FILE_MAX_DEPTH\" \"$COLLECTOR_OUTPUT_DIR/.exclude.tmp\" | while read line; do \"$STAT_TOOL\" -c \"0|%N|%i|%A|%u|%g|%s|%X|%Y|%Z|%W\" \"\$line\" | sed \"s:'::g\"; done" "$COLLECTOR_OUTPUT_DIR/body_file.txt"
             else
                 run_command "ufind \"$MOUNT_POINT\" \"$BODY_FILE_MAX_DEPTH\" \"$COLLECTOR_OUTPUT_DIR/.exclude.tmp\" | while read line; do \"$PERL_TOOL\" \"$CWD/tools/stat/stat.pl\" \"\$line\"; done" "$COLLECTOR_OUTPUT_DIR/body_file.txt"
