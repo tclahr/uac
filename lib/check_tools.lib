@@ -33,7 +33,7 @@ check_tools() {
         if [ $? -eq 0 ]; then
             MD5SUM_TOOL="md5"
         else
-            run_command "echo \"uac\" | digest -a md5" "/dev/null"
+            run_command "echo \"uac\" | digest -v -a md5" "/dev/null"
             if [ $? -eq 0 ]; then
                 MD5SUM_TOOL="digest -v -a md5"
             else
@@ -61,7 +61,7 @@ check_tools() {
             if [ $? -eq 0 ]; then
                 SHA1SUM_TOOL="sha1"
             else
-                run_command "echo \"uac\" | digest -a sha1" "/dev/null"
+                run_command "echo \"uac\" | digest -v -a sha1" "/dev/null"
                 if [ $? -eq 0 ]; then
                     SHA1SUM_TOOL="digest -v -a sha1"
                 else

@@ -1,6 +1,14 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.5.1 (2021-06-07)
+
+### Added
+- ```devtmpfs```, ```fuse```, ```nfs4```, ```sysfs``` and ```tmpfs``` were added to the list of file systems that will be excluded from the collection.
+
+### Fixed
+- strings were not being properly collected from running processes ([#21](https://github.com/tclahr/uac/issues/21)).
+
 ## 1.5.0 (2021-05-26)
 
 ### Added

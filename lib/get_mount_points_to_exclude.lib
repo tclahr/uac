@@ -17,31 +17,135 @@
 #   get_mount_points_to_exclude - get the list of mount points to exclude from
 #                   collection.
 # SYNOPSIS
-#   get_mount_points_to_exclude
+#   get_mount_points_to_exclude FILE_SYSTEM_LIST
 # RETURN VALUE
 #   list of mount points
 ################################################################################
 get_mount_points_to_exclude() {
-
-    case "$PROFILE" in
-        "aix")
-            run_command "mount | sed 's:  *: :g' | egrep \"( afs| autofs| cifs| davfs| nfs| rpc_pipefs| smbfs)\" | cut -d\" \" -f 3 | sort | uniq"
-        ;;
-        "bsd")
-            # FreeBSD / NetScaler
-            run_command "mount | sed 's:  *: :g' | egrep \"(\(afs|\(autofs|\(cifs|\(davfs|\(nfs|\(rpc_pipefs|\(smbfs)\" | awk -F\"on \" '{print \$2}' | cut -d\"(\" -f 1 | sort | uniq"
-            # NetBSD / OpenBSD
-            run_command "mount | sed 's:  *: :g' | egrep \"( afs| autofs| cifs| davfs| nfs| rpc_pipefs| smbfs)\" | awk -F\"on \" '{print \$2}' | awk -F\"type\" '{print \$1}' | sort | uniq"
-        ;;
-        "linux")
-            run_command "mount | sed 's:  *: :g' | egrep \"( afs| autofs| cifs| davfs| nfs| rpc_pipefs| smbfs)\" | awk -F\"on \" '{print \$2}' | awk -F\"type\" '{print \$1}' | sort | uniq"
-        ;;
-        "macos")
-            run_command "mount | sed 's:  *: :g' | egrep \"(\(afs|\(autofs|\(cifs|\(davfs|\(nfs|\(rpc_pipefs|\(smbfs)\" | awk -F\"on \" '{print \$2}' | cut -d\"(\" -f 1 | sort | uniq"
-        ;;
-        "solaris")
-            run_command "mount | sed 's:  *: :g' | egrep \"remote/\" | awk -F\"on \" '{print \$1}' | sort | uniq"
-        ;;
-    esac
+  gm_file_system_list='"afs", "autofs", "cifs", "davfs", "devtmpfs", "fuse", "nfs", "nfs4", "rpc_pipefs", "smbfs", "sysfs", "tmpfs"'
+  
+  # list mounted points
+  # dedup
+  # remove white spaces from gm_file_system_list
+  # remove double quotes from gm_file_system_list
+  # split into an array and record values into a awk dict
+  # print if file system is in gm_file_system_dict
+  # remove last comma from output
+  case "${PROFILE}" in
+    "aix")
+      mount \
+        | awk '!x[$2]++' \
+        | awk -v gm_file_system_list="${gm_file_system_list}" \
+          'BEGIN {
+            gsub(/[ ]+/, "", gm_file_system_list);
+            gsub("\"", "", gm_file_system_list);
+            split(gm_file_system_list, gm_file_system_array, ",");
+            for (i in gm_file_system_array) {
+              gm_file_system_dict[gm_file_system_array[i]]="";
+            }
+          }
+          {
+            if ($3 in gm_file_system_dict) {
+              printf "%s\n", $2;
+            }
+          }'
+      ;;
+    "bsd")
+      # freebsd and netscaler
+      mount \
+        | sed -e 's:(::g' -e 's:,: :g' -e 's:)::g' \
+        | awk 'BEGIN { FS=" on "; } { print $2; }' \
+        | awk '!x[$1]++' \
+        | awk -v gm_file_system_list="${gm_file_system_list}" \
+          'BEGIN {
+            gsub(/[ ]+/, "", gm_file_system_list);
+            gsub("\"", "", gm_file_system_list);
+            split(gm_file_system_list, gm_file_system_array, ",");
+            for (i in gm_file_system_array) {
+              gm_file_system_dict[gm_file_system_array[i]]="";
+            }
+          }
+          {
+            if ($2 in gm_file_system_dict) {
+              printf "%s\n", $1;
+            }
+          }'
+      # netbsd and openbsd
+      mount \
+        | awk 'BEGIN { FS=" on "; } { print $2; }' \
+        | awk '!x[$1]++' \
+        | awk -v gm_file_system_list="${gm_file_system_list}" \
+          'BEGIN {
+            gsub(/[ ]+/, "", gm_file_system_list);
+            gsub("\"", "", gm_file_system_list);
+            split(gm_file_system_list, gm_file_system_array, ",");
+            for (i in gm_file_system_array) {
+              gm_file_system_dict[gm_file_system_array[i]]="";
+            }
+          }
+          {
+            if ($3 in gm_file_system_dict) {
+              printf "%s\n", $1;
+            }
+          }'
+      ;;
+    "linux")
+      mount \
+        | awk 'BEGIN { FS=" on "; } { print $2; }' \
+        | awk '!x[$1]++' \
+        | awk -v gm_file_system_list="${gm_file_system_list}" \
+          'BEGIN {
+            gsub(/[ ]+/, "", gm_file_system_list);
+            gsub("\"", "", gm_file_system_list);
+            split(gm_file_system_list, gm_file_system_array, ",");
+            for (i in gm_file_system_array) {
+              gm_file_system_dict[gm_file_system_array[i]]="";
+            }
+          }
+          {
+            if ($3 in gm_file_system_dict) {
+              printf "%s\n", $1;
+            }
+          }'
+      ;;
+    "macos")
+      mount \
+        | sed -e 's:(::g' -e 's:,: :g' -e 's:)::g' \
+        | awk 'BEGIN { FS=" on "; } { print $2; }' \
+        | awk '!x[$1]++' \
+        | awk -v gm_file_system_list="${gm_file_system_list}" \
+          'BEGIN {
+            gsub(/[ ]+/, "", gm_file_system_list);
+            gsub("\"", "", gm_file_system_list);
+            split(gm_file_system_list, gm_file_system_array, ",");
+            for (i in gm_file_system_array) {
+              gm_file_system_dict[gm_file_system_array[i]]="";
+            }
+          }
+          {
+            if ($2 in gm_file_system_dict) {
+              printf "%s\n", $1;
+            }
+          }'
+      ;;
+    "solaris")
+      df -n \
+        | awk '!x[$1]++' \
+        | awk -v gm_file_system_list="${gm_file_system_list}" \
+          'BEGIN {
+            gsub(/[ ]+/, "", gm_file_system_list);
+            gsub("\"", "", gm_file_system_list);
+            split(gm_file_system_list, gm_file_system_array, ",");
+            for (i in gm_file_system_array) {
+              gm_file_system_dict[gm_file_system_array[i]]="";
+            }
+          }
+          {
+            if ($3 in gm_file_system_dict) {
+              printf "%s\n", $1;
+            }
+          }'
+      ;;
+  esac
 
 }
