@@ -23,13 +23,13 @@
 ################################################################################
 ask_question_yn() {
     while true; do
-        logging I "$1 [y/n] "
+        uprintf "$1 [y/n] "
         read ANSWER
         case $ANSWER in
-            [yY] ) return;;
-            [nN] ) break;;
-            * ) logging I "Please answer y or n\n";;
+            "Y"|"y") return 0 ;;
+            "N"|"n") return 1 ;;
+            * ) uprintf "Please answer y or n\n" ;;
         esac
     done
-    false
+    return 1
 }
