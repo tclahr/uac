@@ -1,6 +1,22 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.6.0 (2021-07-24)
+
+### Added
+- logs, system_files, user_files and suspicious_files will now be stored into a single compressed file (files.tar.gz).
+- New entries added to system_files.conf
+  - /private/var/spool
+- New docker_virtual_machine collectors
+  - podman container ls --all --size
+  - podman image ls --all
+  - podman info
+  - podman container logs <ID>
+  - podman inspect <ID>
+  - podman network inspect <ID>
+  - podman top <ID>
+  - podman version
+
 ## 1.5.1 (2021-06-07)
 
 ### Added
@@ -74,26 +90,26 @@ All notable changes to this project will be documented in this file.
 - Files and directories added to ```conf/exclude.conf``` will be skipped during collection.
 - By default, mounted remote file systems will be excluded from the collection. Please refer to ```conf/uac.conf``` for more information.
 - New docker_virtual_machine collectors
-    - docker container ls --all --size
-    - docker image ls --all
-    - docker info
-    - docker inspect <ID>
-    - docker network inspect <ID>
-    - docker top <ID>
-    - docker version
-    - docker container logs
-    - virsh list --all
-    - virsh domifaddr <NAME>
-    - virsh dominfo <NAME>
-    - virsh dommemstat <NAME>
-    - virsh snapshot-list <NAME>
-    - virsh vcpuinfo <DOMAIN>
-    - virsh net-list --all
-    - virsh net-info <NAME>
-    - virsh net-dhcp-leases <NAME>
-    - virsh nodeinfo
-    - virsh pool-list --all
-    - virt-top -n 1
+  - docker container ls --all --size
+  - docker image ls --all
+  - docker info
+  - docker container logs <ID>
+  - docker inspect <ID>
+  - docker network inspect <ID>
+  - docker top <ID>
+  - docker version
+  - virsh list --all
+  - virsh domifaddr <NAME>
+  - virsh dominfo <NAME>
+  - virsh dommemstat <NAME>
+  - virsh snapshot-list <NAME>
+  - virsh vcpuinfo <DOMAIN>
+  - virsh net-list --all
+  - virsh net-info <NAME>
+  - virsh net-dhcp-leases <NAME>
+  - virsh nodeinfo
+  - virsh pool-list --all
+  - virt-top -n 1
 - New process collectors
   - ps -eo pid,etime,args
   - ps -eo pid,lstart,args

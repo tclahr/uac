@@ -1,4 +1,4 @@
-# Copyright (C) 2019,2020 IBM Corporation
+# Copyright (C) 2020 IBM Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the “License”);
 # you may not use this file except in compliance with the License.
@@ -19,10 +19,19 @@ logging I ">> Collecting docker and virtual machines information\n"
 run_command "docker container ls --all --size" "$COLLECTOR_OUTPUT_DIR/docker-container-ls-all-size.txt"
 run_command "docker image ls --all" "$COLLECTOR_OUTPUT_DIR/docker-image-ls-all.txt"
 run_command "docker info" "$COLLECTOR_OUTPUT_DIR/docker-info.txt"
+run_command "docker container ps -all | sed 1d | cut -d\" \" -f 1 | while read line; do run_command \"docker container logs \$line\" \"$COLLECTOR_OUTPUT_DIR/docker-container-logs-\$line.txt\"; done" "/dev/null"
 run_command "docker container ps -all | sed 1d | cut -d\" \" -f 1 | while read line; do run_command \"docker inspect \$line\" \"$COLLECTOR_OUTPUT_DIR/docker-inspect-\$line.txt\"; done" "/dev/null"
 run_command "docker network ls | sed 1d | cut -d\" \" -f 1 | while read line; do run_command \"docker network inspect \$line\" \"$COLLECTOR_OUTPUT_DIR/docker-network-inspect-\$line.txt\"; done" "/dev/null"
 run_command "docker ps | sed 1d | cut -d\" \" -f 1 | while read line; do run_command \"docker top \$line\" \"$COLLECTOR_OUTPUT_DIR/docker-top-\$line.txt\"; done" "/dev/null"
 run_command "docker version" "$COLLECTOR_OUTPUT_DIR/docker-version.txt"
+run_command "podman container ls --all --size" "$COLLECTOR_OUTPUT_DIR/podman-container-ls-all-size.txt"
+run_command "podman image ls --all" "$COLLECTOR_OUTPUT_DIR/podman-image-ls-all.txt"
+run_command "podman info" "$COLLECTOR_OUTPUT_DIR/podman-info.txt"
+run_command "podman container ps -all | sed 1d | cut -d\" \" -f 1 | while read line; do run_command \"podman container logs \$line\" \"$COLLECTOR_OUTPUT_DIR/podman-container-logs-\$line.txt\"; done" "/dev/null"
+run_command "podman container ps -all | sed 1d | cut -d\" \" -f 1 | while read line; do run_command \"podman inspect \$line\" \"$COLLECTOR_OUTPUT_DIR/podman-inspect-\$line.txt\"; done" "/dev/null"
+run_command "podman network ls | sed 1d | cut -d\" \" -f 1 | while read line; do run_command \"podman network inspect \$line\" \"$COLLECTOR_OUTPUT_DIR/podman-network-inspect-\$line.txt\"; done" "/dev/null"
+run_command "podman ps | sed 1d | cut -d\" \" -f 1 | while read line; do run_command \"podman top \$line\" \"$COLLECTOR_OUTPUT_DIR/podman-top-\$line.txt\"; done" "/dev/null"
+run_command "podman version" "$COLLECTOR_OUTPUT_DIR/podman-version.txt"
 run_command "virsh list --all" "$COLLECTOR_OUTPUT_DIR/virsh-list-all.txt"
 run_command "virsh list --name | while read line; do run_command \"virsh domifaddr \$line\" \"$COLLECTOR_OUTPUT_DIR/virsh-domifaddr-\$line.txt\"; done" "/dev/null"
 run_command "virsh list --name | while read line; do run_command \"virsh dominfo \$line\" \"$COLLECTOR_OUTPUT_DIR/virsh-dominfo-\$line.txt\"; done" "/dev/null"
