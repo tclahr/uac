@@ -60,6 +60,8 @@ case "$PROFILE" in
         run_command "systemctl list-timers --all" "$COLLECTOR_OUTPUT_DIR/systemctl-list-timers-all.txt"
         run_command "systemctl list-unit-files" "$COLLECTOR_OUTPUT_DIR/systemctl-list-unit-files.txt"
         run_command "vmstat" "$COLLECTOR_OUTPUT_DIR/vmstat.txt"
+        # android
+        run_command "getprop" "$COLLECTOR_OUTPUT_DIR/getprop.txt"
         ;;
     "macos")
         run_command "kextstat" "$COLLECTOR_OUTPUT_DIR/kextstat.txt"
