@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (C) 2019,2020 IBM Corporation
+# Copyright (C) 2020 IBM Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the “License”);
 # you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ export _POSIX2_VERSION
 unalias -a
 
 # get current working dir
-cd "`dirname "$0"`" && CWD=`pwd`
+CWD=`pwd`
 export CWD
 
 # get current command
@@ -343,17 +343,10 @@ if $ANY_COLLECTOR_SELECTED || $ANY_EXTENSION_SELECTED; then
                     # run body_file collector
                     $COLLECTOR_BODY_FILE && run_collector body_file 2>> "$UAC_LOG_FILE"
 
-                    # run system_files collector
-                    $COLLECTOR_SYSTEM && run_collector system_files 2>> "$UAC_LOG_FILE"
-
-                    # run user_files collector
-                    $COLLECTOR_USER && run_collector user_files 2>> "$UAC_LOG_FILE"
-
-                    # run logs collector
-                    $COLLECTOR_LOGS && run_collector logs 2>> "$UAC_LOG_FILE"
-
-                    # run suspicious_files collector
-                    $COLLECTOR_SUSPICIOUS_FILES && run_collector suspicious_files 2>> "$UAC_LOG_FILE"
+                    # run files collector
+                    if $COLLECTOR_SYSTEM || $COLLECTOR_LOGS || $COLLECTOR_SUSPICIOUS_FILES || $COLLECTOR_USER; then
+                        run_collector files 2>> "$UAC_LOG_FILE"
+                    fi
 
                     # extensions
                     # run chkrootkit extension
