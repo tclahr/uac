@@ -57,7 +57,7 @@ case "$PROFILE" in
         fi
         
         # extract strings from running processes
-        if $EXTRACT_STRINGS_RUNNING_PROCESSES; then
+        if $EXTRACT_STRINGS_RUNNING_PROCESSES && [ -n "$STRINGS_TOOL" ]; then
             logging I ">> Extracting strings from running processes\n"
             run_command "mkdir -p \"$COLLECTOR_OUTPUT_DIR/strings\"" "/dev/null"
             run_command "find /proc/[0-9]*/object/a.out -print | while read line; do cut -d\"/\" -f 3; done | while read pid; do strings -a /proc/\$pid/object/a.out | gzip > \"$COLLECTOR_OUTPUT_DIR/strings/\$pid.txt.gz\"; done" "/dev/null"
@@ -95,7 +95,7 @@ case "$PROFILE" in
                 logging D "Cannot hash running processes. No MD5 hashing tool was found on the system.\n"
             fi
             # extract strings from running processes
-            if $EXTRACT_STRINGS_RUNNING_PROCESSES; then
+            if $EXTRACT_STRINGS_RUNNING_PROCESSES && [ -n "$STRINGS_TOOL" ]; then
                 logging I ">> Extracting strings from running processes\n"
                 run_command "mkdir -p \"$COLLECTOR_OUTPUT_DIR/strings\"" "/dev/null"
                 run_command "find /proc/[0-9]*/exe -print | while read line; do cut -d\"/\" -f 3; done | while read pid; do strings -a /proc/\$pid/exe | gzip > \"$COLLECTOR_OUTPUT_DIR/strings/\$pid.txt.gz\"; done" "/dev/null"
@@ -129,7 +129,7 @@ case "$PROFILE" in
                 logging D "Cannot hash running processes. No MD5 hashing tool was found on the system.\n"
             fi
             # extract strings from running processes
-            if $EXTRACT_STRINGS_RUNNING_PROCESSES; then
+            if $EXTRACT_STRINGS_RUNNING_PROCESSES && [ -n "$STRINGS_TOOL" ]; then
                 logging I ">> Extracting strings from running processes\n"
                 run_command "mkdir -p \"$COLLECTOR_OUTPUT_DIR/strings\"" "/dev/null"
                 run_command "find /proc/[0-9]*/file -print | while read line; do cut -d\"/\" -f 3; done | while read pid; do strings -a /proc/\$pid/exe | gzip > \"$COLLECTOR_OUTPUT_DIR/strings/\$pid.txt.gz\"; done" "/dev/null"
@@ -163,7 +163,7 @@ case "$PROFILE" in
                 logging D "Cannot hash running processes. No MD5 hashing tool was found on the system.\n"
             fi
             # extract strings from running processes
-            if $EXTRACT_STRINGS_RUNNING_PROCESSES; then
+            if $EXTRACT_STRINGS_RUNNING_PROCESSES && [ -n "$STRINGS_TOOL" ]; then
                 logging I ">> Extracting strings from running processes\n"
                 run_command "mkdir -p \"$COLLECTOR_OUTPUT_DIR/strings\"" "/dev/null"
                 run_command "cat \"$COLLECTOR_OUTPUT_DIR/running_processes_full_paths.txt\" | sort | uniq | while read line; do LOCAL_PROC_NAME=\`echo \$line | sed 's:^/::; s:/:_:g'\` && strings -a \$line | gzip > \"$COLLECTOR_OUTPUT_DIR/strings/\$LOCAL_PROC_NAME.txt.gz\"; done" "/dev/null"
@@ -187,7 +187,7 @@ case "$PROFILE" in
                 logging D "Cannot hash running processes. No MD5 hashing tool was found on the system.\n"
             fi
             # extract strings from running processes
-            if $EXTRACT_STRINGS_RUNNING_PROCESSES; then
+            if $EXTRACT_STRINGS_RUNNING_PROCESSES && [ -n "$STRINGS_TOOL" ]; then
                 logging I ">> Extracting strings from running processes\n"
                 run_command "mkdir -p \"$COLLECTOR_OUTPUT_DIR/strings\"" "/dev/null"
                 run_command "cat \"$COLLECTOR_OUTPUT_DIR/running_processes_full_paths.txt\" | sort | uniq | while read line; do LOCAL_PROC_NAME=\`echo \$line | sed 's:^/::; s:/:_:g'\` && strings -a \$line | gzip > \"$COLLECTOR_OUTPUT_DIR/strings/\$LOCAL_PROC_NAME.txt.gz\"; done" "/dev/null"
@@ -227,7 +227,7 @@ case "$PROFILE" in
             logging D "Cannot hash running processes. No MD5 hashing tool was found on the system.\n"
         fi
         # extract strings from running processes
-        if $EXTRACT_STRINGS_RUNNING_PROCESSES; then
+        if $EXTRACT_STRINGS_RUNNING_PROCESSES && [ -n "$STRINGS_TOOL" ]; then
             logging I ">> Extracting strings from running processes\n"
             run_command "mkdir -p \"$COLLECTOR_OUTPUT_DIR/strings\"" "/dev/null"
             run_command "find /proc/[0-9]*/exe -print | while read line; do cut -d\"/\" -f 3; done | while read pid; do strings -a /proc/\$pid/exe | gzip > \"$COLLECTOR_OUTPUT_DIR/strings/\$pid.txt.gz\"; done" "/dev/null"
@@ -251,7 +251,7 @@ case "$PROFILE" in
             logging D "Cannot hash running processes. No MD5 hashing tool was found on the system.\n"
         fi
         # extract strings from running processes
-        if $EXTRACT_STRINGS_RUNNING_PROCESSES; then
+        if $EXTRACT_STRINGS_RUNNING_PROCESSES && [ -n "$STRINGS_TOOL" ]; then
             logging I ">> Extracting strings from running processes\n"
             run_command "mkdir -p \"$COLLECTOR_OUTPUT_DIR/strings\"" "/dev/null"
             run_command "cat \"$COLLECTOR_OUTPUT_DIR/running_processes_full_paths.txt\" | sort | uniq | while read line; do LOCAL_PROC_NAME=\`echo \$line | sed 's:^/::; s:/:_:g'\` && strings -a \$line | gzip > \"$COLLECTOR_OUTPUT_DIR/strings/\$LOCAL_PROC_NAME.txt.gz\"; done" "/dev/null"
@@ -288,7 +288,7 @@ case "$PROFILE" in
             logging D "Cannot hash running processes. No MD5 hashing tool was found on the system.\n"
         fi
         # extract strings from running processes
-        if $EXTRACT_STRINGS_RUNNING_PROCESSES; then
+        if $EXTRACT_STRINGS_RUNNING_PROCESSES && [ -n "$STRINGS_TOOL" ]; then
             logging I ">> Extracting strings from running processes\n"
             run_command "mkdir -p \"$COLLECTOR_OUTPUT_DIR/strings\"" "/dev/null"
             run_command "find /proc/[0-9]*/path/a.out -print | while read line; do cut -d\"/\" -f 3; done | while read pid; do strings -a /proc/\$pid/path/a.out | gzip > \"$COLLECTOR_OUTPUT_DIR/strings/\$pid.txt.gz\"; done" "/dev/null"
