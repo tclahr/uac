@@ -213,4 +213,13 @@ check_tools() {
     fi
     logging D "DEBUGFS_TOOL: $DEBUGFS_TOOL\n"
 
+    # check if strings is available
+    STRINGS_TOOL=""
+    logging D "Checking if strings tool is available\n"
+    run_command "strings \"$CWD/uac\"" "/dev/null"
+    if [ $? -eq 0 ]; then
+        STRINGS_TOOL="strings"
+    fi
+    logging D "STRINGS_TOOL: $STRINGS_TOOL\n"
+
 }
