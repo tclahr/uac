@@ -28,7 +28,7 @@ run_command() {
     LOCAL_OUTPUT_DESTINATION="$2"
 
     logging D "run_command: $1\n"
-    $VERBOSE && uprintf "   $ $1\n"
+    $VERBOSE && printf %b "   $ $1\n"
     if [ ! "$LOCAL_OUTPUT_DESTINATION" ]; then
         eval "($LOCAL_COMMAND)" 2>> "$UAC_LOG_FILE"
     else

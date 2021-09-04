@@ -31,6 +31,6 @@ logging() {
         printf %b "$LOG_TIMESTAMP $1 $2" >> "$UAC_LOG_FILE" 2>> "$UAC_LOG_FILE"
     fi
     if [ "$1" = "E" ] || [ "$1" = "W" ] || [ "$1" = "I" ]; then
-        uprintf "$2"
+        printf %b "$2"
     fi
 }
