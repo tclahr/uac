@@ -1,4 +1,4 @@
-# Copyright (C) 2019,2020 IBM Corporation
+# Copyright (C) 2020 IBM Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the “License”);
 # you may not use this file except in compliance with the License.
@@ -14,19 +14,20 @@
 
 ################################################################################
 # NAME
-#   terminate - run when the script is terminated by either SIGINT or SIGTERM
+#   terminate - run when the script is terminated by SIGINT
 # SYNOPSIS
 #   terminate
 ################################################################################
 terminate() {
-    logging I "\nCaught signal! Quitting...\n"
+    logging D "\nCaught signal! Quitting...\n"
+    printf %b "\nCaught signal! Quitting...\n" >/dev/tty
     if [ -d "$DESTINATION_DIR" ] && [ -d "$DESTINATION_DIR/$TMP_DATA_DIR" ]; then
         if ask_question_yn "Do you want to remove the temporary directory $DESTINATION_DIR/$TMP_DATA_DIR ?"; then
             rm -rf "$DESTINATION_DIR/$TMP_DATA_DIR" > /dev/null
             if [ ! -d "$DESTINATION_DIR/$TMP_DATA_DIR" ]; then
-                uprintf "Temporary directory removed successfully.\n"
+                printf %b "Temporary directory removed successfully.\n" >/dev/tty
             else
-                uprintf "Cannot remove temporary directory.\n"
+                printf %b "Cannot remove temporary directory.\n" >/dev/tty
             fi
         fi
     fi

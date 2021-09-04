@@ -47,9 +47,9 @@ ufind() {
         if [ "$LOCAL_MAXDEPTH" -gt 0 ]; then
             if $FIND_MAXDEPTH_SUPPORT; then
                 LOCAL_FIND_MAXDEPTH_PARAMETER="-maxdepth $LOCAL_MAXDEPTH"
-            elif [ ! -z "$PERL_TOOL" ]; then
+            elif $PERL_TOOL_AVAILABLE; then
                 LOCAL_FIND_MAXDEPTH_PARAMETER="-maxdepth $LOCAL_MAXDEPTH"
-                LOCAL_FIND_TOOL="$PERL_TOOL \"$CWD/tools/find/find.pl\""
+                LOCAL_FIND_TOOL="perl \"$CWD/tools/find.pl/find.pl\""
             fi
         fi
     fi
@@ -58,17 +58,17 @@ ufind() {
         LOCAL_FIND_PATH_PRUNE=`cat "$LOCAL_EXCLUDE_FILE" | grep -v "^#" | grep -v "^$" | grep "^/" | head -1 | while read line; do printf %s "-path \"$line\""; done; cat "$LOCAL_EXCLUDE_FILE" | grep -v "^#" | grep -v "^$" | grep "^/" | sed 1d | while read line; do printf %s " -o -path \"$line\"" ;done`
         if [ ! -z "$LOCAL_FIND_PATH_PRUNE" ] && $FIND_PATH_SUPPORT; then
             LOCAL_FIND_PATH_PRUNE_PARAMETER="\( $LOCAL_FIND_PATH_PRUNE \) -prune -o"
-        elif [ ! -z "$LOCAL_FIND_PATH_PRUNE" ] && [ ! -z "$PERL_TOOL" ]; then
+        elif [ ! -z "$LOCAL_FIND_PATH_PRUNE" ] && $PERL_TOOL_AVAILABLE; then
             LOCAL_FIND_PATH_PRUNE_PARAMETER="\( $LOCAL_FIND_PATH_PRUNE \) -prune -o"
-            LOCAL_FIND_TOOL="$PERL_TOOL \"$CWD/tools/find/find.pl\""
+            LOCAL_FIND_TOOL="perl \"$CWD/tools/find.pl/find.pl\""
         fi
 
         LOCAL_FIND_NAME_PRUNE=`cat "$LOCAL_EXCLUDE_FILE" | grep -v "^#" | grep -v "^$" | grep -v "^/" | head -1 | while read line; do printf %s "-name \"$line\""; done; cat "$LOCAL_EXCLUDE_FILE" | grep -v "^#" | grep -v "^$" | grep -v "^/" | sed 1d | while read line; do printf %s " -o -name \"$line\"" ;done`
         if [ ! -z "$LOCAL_FIND_NAME_PRUNE" ] && $FIND_PATH_SUPPORT; then
             LOCAL_FIND_NAME_PRUNE_PARAMETER="\( $LOCAL_FIND_NAME_PRUNE \) -prune -o"
-        elif [ ! -z "$LOCAL_FIND_NAME_PRUNE" ] && [ ! -z "$PERL_TOOL" ]; then
+        elif [ ! -z "$LOCAL_FIND_NAME_PRUNE" ] && $PERL_TOOL_AVAILABLE; then
             LOCAL_FIND_NAME_PRUNE_PARAMETER="\( $LOCAL_FIND_NAME_PRUNE \) -prune -o"
-            LOCAL_FIND_TOOL="$PERL_TOOL \"$CWD/tools/find/find.pl\""
+            LOCAL_FIND_TOOL="perl \"$CWD/tools/find.pl/find.pl\""
         fi
     fi
 
@@ -80,9 +80,9 @@ ufind() {
         if [ "$LOCAL_SIZE" -gt 0 ]; then
             if $FIND_SIZE_SUPPORT; then
                 LOCAL_FIND_SIZE_PARAMETER="-size -${LOCAL_SIZE}c"
-            elif [ ! -z "$PERL_TOOL" ]; then
+            elif $PERL_TOOL_AVAILABLE; then
                 LOCAL_FIND_SIZE_PARAMETER="-size -${LOCAL_SIZE}c"
-                LOCAL_FIND_TOOL="$PERL_TOOL \"$CWD/tools/find/find.pl\""
+                LOCAL_FIND_TOOL="perl \"$CWD/tools/find.pl/find.pl\""
             fi
         fi
     fi
@@ -90,9 +90,9 @@ ufind() {
     if [ ! -z "$LOCAL_PERM" ]; then
         if $FIND_PERM_SUPPORT; then
             LOCAL_FIND_PERM_PARAMETER="-perm $LOCAL_PERM"
-        elif [ ! -z "$PERL_TOOL" ]; then
+        elif $PERL_TOOL_AVAILABLE; then
             LOCAL_FIND_PERM_PARAMETER="-perm $LOCAL_PERM"
-            LOCAL_FIND_TOOL="$PERL_TOOL \"$CWD/tools/find/find.pl\""
+            LOCAL_FIND_TOOL="perl \"$CWD/tools/find.pl/find.pl\""
         fi
     fi
 
@@ -105,25 +105,25 @@ ufind() {
         if $DATE_RANGE_ATIME; then
             if $FIND_ATIME_SUPPORT; then
                 LOCAL_FIND_ATIME_PARAMETER="-atime $LOCAL_DATE_RANGE_T1"
-            elif [ ! -z "$PERL_TOOL" ]; then
+            elif $PERL_TOOL_AVAILABLE; then
                 LOCAL_FIND_ATIME_PARAMETER="-atime $LOCAL_DATE_RANGE_T1"
-                LOCAL_FIND_TOOL="$PERL_TOOL \"$CWD/tools/find/find.pl\""
+                LOCAL_FIND_TOOL="perl \"$CWD/tools/find.pl/find.pl\""
             fi
         fi
         if $DATE_RANGE_MTIME; then
             if $FIND_MTIME_SUPPORT; then
                 LOCAL_FIND_MTIME_PARAMETER="-mtime $LOCAL_DATE_RANGE_T1"
-            elif [ ! -z "$PERL_TOOL" ]; then
+            elif $PERL_TOOL_AVAILABLE; then
                 LOCAL_FIND_MTIME_PARAMETER="-mtime $LOCAL_DATE_RANGE_T1"
-                LOCAL_FIND_TOOL="$PERL_TOOL \"$CWD/tools/find/find.pl\""
+                LOCAL_FIND_TOOL="perl \"$CWD/tools/find.pl/find.pl\""
             fi
         fi
         if $DATE_RANGE_CTIME; then
             if $FIND_CTIME_SUPPORT; then
                 LOCAL_FIND_CTIME_PARAMETER="-ctime $LOCAL_DATE_RANGE_T1"
-            elif [ ! -z "$PERL_TOOL" ]; then
+            elif $PERL_TOOL_AVAILABLE; then
                 LOCAL_FIND_CTIME_PARAMETER="-ctime $LOCAL_DATE_RANGE_T1"
-                LOCAL_FIND_TOOL="$PERL_TOOL \"$CWD/tools/find/find.pl\""
+                LOCAL_FIND_TOOL="perl \"$CWD/tools/find.pl/find.pl\""
             fi
         fi
 
@@ -132,21 +132,21 @@ ufind() {
             if $DATE_RANGE_ATIME; then
                 if $FIND_ATIME_SUPPORT; then
                     LOCAL_FIND_ATIME_PARAMETER="$LOCAL_FIND_ATIME_PARAMETER -atime $LOCAL_DATE_RANGE_T2"
-                elif [ ! -z "$PERL_TOOL" ]; then
+                elif $PERL_TOOL_AVAILABLE; then
                     LOCAL_FIND_ATIME_PARAMETER="$LOCAL_FIND_ATIME_PARAMETER -atime $LOCAL_DATE_RANGE_T2"
                 fi
             fi
             if $DATE_RANGE_MTIME; then
                 if $FIND_MTIME_SUPPORT; then
                     LOCAL_FIND_MTIME_PARAMETER="$LOCAL_FIND_MTIME_PARAMETER -mtime $LOCAL_DATE_RANGE_T2"
-                elif [ ! -z "$PERL_TOOL" ]; then
+                elif $PERL_TOOL_AVAILABLE; then
                     LOCAL_FIND_MTIME_PARAMETER="$LOCAL_FIND_MTIME_PARAMETER -mtime $LOCAL_DATE_RANGE_T2"
                 fi
             fi
             if $DATE_RANGE_CTIME; then
                 if $FIND_CTIME_SUPPORT; then
                     LOCAL_FIND_CTIME_PARAMETER="$LOCAL_FIND_CTIME_PARAMETER -ctime $LOCAL_DATE_RANGE_T2"
-                elif [ ! -z "$PERL_TOOL" ]; then
+                elif $PERL_TOOL_AVAILABLE; then
                     LOCAL_FIND_CTIME_PARAMETER="$LOCAL_FIND_CTIME_PARAMETER -ctime $LOCAL_DATE_RANGE_T2"
                 fi
             fi

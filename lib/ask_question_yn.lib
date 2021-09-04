@@ -23,12 +23,12 @@
 ################################################################################
 ask_question_yn() {
     while true; do
-        uprintf "$1 [y/n] "
+        printf %b "$1 [y/n] " >/dev/tty
         read ANSWER
         case $ANSWER in
             "Y"|"y") return 0 ;;
             "N"|"n") return 1 ;;
-            * ) uprintf "Please answer y or n\n" ;;
+            * ) printf %b "Please answer y or n\n" >/dev/tty ;;
         esac
     done
     return 1

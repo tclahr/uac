@@ -45,6 +45,14 @@ case "$PROFILE" in
         ;;
     "linux")
         run_command "chkconfig --list" "$COLLECTOR_OUTPUT_DIR/chkconfig-list.txt"
+        run_command "/opt/CrowdStrike/falconctl -g --aid" "$COLLECTOR_OUTPUT_DIR/falconctl-g-aid.txt"
+        run_command "/opt/CrowdStrike/falconctl -g --cid" "$COLLECTOR_OUTPUT_DIR/falconctl-g-cid.txt"
+        run_command "/opt/CrowdStrike/falconctl -g --feature" "$COLLECTOR_OUTPUT_DIR/falconctl-g-feature.txt"
+        run_command "/opt/CrowdStrike/falconctl -g --trace" "$COLLECTOR_OUTPUT_DIR/falconctl-g-trace.txt"
+        run_command "/opt/CrowdStrike/falconctl -g --rfm-state" "$COLLECTOR_OUTPUT_DIR/falconctl-g-rfm-state.txt"
+        run_command "/opt/CrowdStrike/falconctl -g --rfm-reason" "$COLLECTOR_OUTPUT_DIR/falconctl-g-rfm-reason.txt"
+        run_command "/opt/CrowdStrike/falconctl -g --version" "$COLLECTOR_OUTPUT_DIR/falconctl-g-version.txt"
+        run_command "/opt/CrowdStrike/falconctl stats" "$COLLECTOR_OUTPUT_DIR/falconctl-stats.txt"
         run_command "free" "$COLLECTOR_OUTPUT_DIR/free.txt"
         run_command "getenforce" "$COLLECTOR_OUTPUT_DIR/getenforce.txt"
         run_command "hwclock" "$COLLECTOR_OUTPUT_DIR/hwclock.txt"
@@ -64,6 +72,14 @@ case "$PROFILE" in
         run_command "getprop" "$COLLECTOR_OUTPUT_DIR/getprop.txt"
         ;;
     "macos")
+        run_command "/Applications/Falcon.app/Contents/Resources/falconctl -g --aid" "$COLLECTOR_OUTPUT_DIR/falconctl-g-aid.txt"
+        run_command "/Applications/Falcon.app/Contents/Resources/falconctl -g --cid" "$COLLECTOR_OUTPUT_DIR/falconctl-g-cid.txt"
+        run_command "/Applications/Falcon.app/Contents/Resources/falconctl -g --feature" "$COLLECTOR_OUTPUT_DIR/falconctl-g-feature.txt"
+        run_command "/Applications/Falcon.app/Contents/Resources/falconctl -g --trace" "$COLLECTOR_OUTPUT_DIR/falconctl-g-trace.txt"
+        run_command "/Applications/Falcon.app/Contents/Resources/falconctl -g --rfm-state" "$COLLECTOR_OUTPUT_DIR/falconctl-g-rfm-state.txt"
+        run_command "/Applications/Falcon.app/Contents/Resources/falconctl -g --rfm-reason" "$COLLECTOR_OUTPUT_DIR/falconctl-g-rfm-reason.txt"
+        run_command "/Applications/Falcon.app/Contents/Resources/falconctl -g --version" "$COLLECTOR_OUTPUT_DIR/falconctl-g-version.txt"
+        run_command "/Applications/Falcon.app/Contents/Resources/falconctl stats" "$COLLECTOR_OUTPUT_DIR/falconctl-stats.txt"
         run_command "kextstat" "$COLLECTOR_OUTPUT_DIR/kextstat.txt"
         run_command "launchctl list" "$COLLECTOR_OUTPUT_DIR/launchctl-list.txt"
         run_command "sw_vers" "$COLLECTOR_OUTPUT_DIR/sw_vers.txt"

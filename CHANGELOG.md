@@ -1,6 +1,27 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.7.0 (2021-09-04)
+
+### Added
+- If native ```stat``` tool does not collect file's birth time on linux systems, the new ```statx``` tool will be used instead during body file creation. ```statx``` tool uses the new statx() system call (kernel 4.11+) that solves the deficiencies of the existing stat() system call.
+- New system collectors
+  - linux and macos
+    - falconctl -g --aid
+    - falconctl -g --cid
+    - falconctl -g --feature
+    - falconctl -g --trace
+    - falconctl -g --rfm-state
+    - falconctl -g --rfm-reason
+    - falconctl -g --version
+    - falconctl stats
+
+### Fixed
+- Fixed issue related to /dev/tty device when running UAC via CrowdStrike RTR (Real Time Response) console ([#24](https://github.com/tclahr/uac/issues/24)).
+
+### Removed
+- Solution to collect file's birth time (ext4 only) using ```debugfs``` tool, during body file creation.
+
 ## 1.6.0 (2021-07-24)
 
 ### Added
