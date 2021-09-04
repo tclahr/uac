@@ -14,10 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# set path
-PATH=/usr/xpg4/bin:/usr/xpg6/bin:/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:/usr/ucb:/usr/ccs/bin:/opt/bin:/opt/sbin:/opt/local/bin:/netscaler
-export PATH
-
 # set locale
 LC_ALL=C
 export LC_ALL
@@ -32,6 +28,13 @@ unalias -a
 # get current working dir
 CWD=`pwd`
 export CWD
+
+# set path
+PATH="${CWD}/tools/statx/bin"
+PATH="${PATH}:/usr/xpg4/bin:/usr/xpg6/bin:/bin:/sbin:/usr/bin:/usr/sbin"
+PATH="${PATH}:/usr/local/bin:/usr/local/sbin:/usr/ucb:/usr/ccs/bin:/opt/bin"
+PATH="${PATH}:/opt/sbin:/opt/local/bin:/netscaler"
+export PATH
 
 # get current command
 CMD="$0 $@"
@@ -48,7 +51,7 @@ done
 init_vars
 
 # catch the signals
-trap terminate INT TERM
+trap terminate INT
 
 SHIFT_OPT=""
 while getopts "apnuywsdkblfe:P:R:T:VDUvh" opt; do
@@ -129,7 +132,7 @@ while getopts "apnuywsdkblfe:P:R:T:VDUvh" opt; do
                     "hash_exec")
                         EXTENSION_HASH_EXEC=true
                         ;;
-                    *)  uprintf "Invalid extension '$EXTENSION'\n"
+                    *)  printf %b "Invalid extension '$EXTENSION'\n"
                         exit 7
                         ;;
                 esac
@@ -140,7 +143,7 @@ while getopts "apnuywsdkblfe:P:R:T:VDUvh" opt; do
         # options
         P)  PROFILE="$OPTARG"
             if [ "$PROFILE" != "aix" ] && [ "$PROFILE" != "bsd" ] && [ "$PROFILE" != "linux" ] && [ "$PROFILE" != "macos" ] && [ "$PROFILE" != "solaris" ]; then
-                uprintf "Invalid profile '$PROFILE'\n"
+                printf %b "Invalid profile '$PROFILE'\n"
                 exit 8
             fi
             SHIFT_OPT="$SHIFT_OPT P $PROFILE"
@@ -158,16 +161,16 @@ while getopts "apnuywsdkblfe:P:R:T:VDUvh" opt; do
                     DATE_RANGE_T1=`get_days_between_dates "$TODAY" "$DATE_T1"`
                     DATE_RANGE_T2=`get_days_between_dates "$TODAY" "$DATE_T2"`
                 else
-                    uprintf "Invalid date range '$OPTARG'\n"
+                    printf %b "Invalid date range '$OPTARG'\n"
                     exit 10
                 fi
                 if [ "$DATE_RANGE_T1" -gt 0 ]; then
-                    uprintf "Invalid date range '$OPTARG'\n"
+                    printf %b "Invalid date range '$OPTARG'\n"
                     exit 11
                 fi
                 if [ "$DATE_RANGE_T2" ]; then                
                     if [ "$DATE_RANGE_T1" -gt "$DATE_RANGE_T2" ]; then
-                        uprintf "Invalid date range '$OPTARG'\n"
+                        printf %b "Invalid date range '$OPTARG'\n"
                         exit 12
                     fi
                     # one more day to be inclusive
@@ -185,7 +188,7 @@ while getopts "apnuywsdkblfe:P:R:T:VDUvh" opt; do
                     DATE_RANGE_T1=`expr $EXPR_DASH_DASH $DATE_RANGE_T1 - 1`
                 fi
             else
-                uprintf "Date range option is not supported by this system\n"
+                printf %b "Date range option is not supported by this system\n"
                 exit 9
             fi
             SHIFT_OPT="$SHIFT_OPT R $OPTARG"
@@ -195,7 +198,7 @@ while getopts "apnuywsdkblfe:P:R:T:VDUvh" opt; do
                 SCP_DESTINATION="$OPTARG"
                 SHIFT_OPT="$SHIFT_OPT T $OPTARG"
             else
-                uprintf "Invalid scp destination '$OPTARG'\n"
+                printf %b "Invalid scp destination '$OPTARG'\n"
                 exit 13
             fi
             ;;
@@ -208,7 +211,7 @@ while getopts "apnuywsdkblfe:P:R:T:VDUvh" opt; do
         U)  RUN_AS_NON_ROOT=true
             SHIFT_OPT="$SHIFT_OPT U"
             ;;
-        v)  uprintf "UAC (Unix-like Artifacts Collector) v$UAC_VERSION\n"
+        v)  printf %b "UAC (Unix-like Artifacts Collector) v$UAC_VERSION\n"
             exit 0
             ;;
         h)  usage
@@ -234,7 +237,7 @@ if $ANY_COLLECTOR_SELECTED || $ANY_EXTENSION_SELECTED; then
                     # get the absolute path for the destination directory
                     cd "$1" && DESTINATION_DIR=`pwd` && cd "$CWD"
                 else
-                    uprintf "Destination directory '$1' does not exist\n"
+                    printf %b "Destination directory '$1' does not exist\n"
                     exit 4
                 fi
             else
@@ -365,38 +368,38 @@ if $ANY_COLLECTOR_SELECTED || $ANY_EXTENSION_SELECTED; then
                     logging D "Collection finished: $CURRENT_DATE_TIME\n"
                     logging D "Total running time: $UAC_TOTAL_RUNNING_TIME seconds.\n"
 
-                    uprintf "Collection finished! Total running time: $UAC_TOTAL_RUNNING_TIME seconds.\n"
+                    printf %b "Collection finished! Total running time: $UAC_TOTAL_RUNNING_TIME seconds.\n"
 
                     if ${TAR_TOOL_AVAILABLE} && ${GZIP_TOOL_AVAILABLE}; then
                         # archive and compress output to file
-                        uprintf "Creating compressed output file. Please wait...\n"
+                        printf %b "Creating compressed output file. Please wait...\n"
                         OUTPUT_FILE="$TMP_DATA_DIR.tar.gz"
                         cd "$DESTINATION_DIR"
                         if archive_compress_data "$TMP_DATA_DIR" "$OUTPUT_FILE"; then
-                            uprintf "Compressed output file created at '$DESTINATION_DIR/$OUTPUT_FILE'\n"
+                            printf %b "Compressed output file created at '$DESTINATION_DIR/$OUTPUT_FILE'\n"
                             rm -rf "$TMP_DATA_DIR" > /dev/null 2> /dev/null
                             if [ -d "$TMP_DATA_DIR" ]; then
-                                uprintf "Cannot remove temporary directory '$DESTINATION_DIR/$TMP_DATA_DIR'\n"
+                                printf %b "Cannot remove temporary directory '$DESTINATION_DIR/$TMP_DATA_DIR'\n"
                             fi
                         else
-                            uprintf "Cannot create compressed output file\n"
-                            uprintf "Please check collected data in '$DESTINATION_DIR/$TMP_DATA_DIR'\n"
+                            printf %b "Cannot create compressed output file\n"
+                            printf %b "Please check collected data in '$DESTINATION_DIR/$TMP_DATA_DIR'\n"
                         fi
                         cd "$CWD"
                     elif ${TAR_TOOL_AVAILABLE}; then
                         # archive output to file
-                        uprintf "Creating output file. Please wait...\n"
+                        printf %b "Creating output file. Please wait...\n"
                         OUTPUT_FILE="$TMP_DATA_DIR.tar"
                         cd "$DESTINATION_DIR"
                         if archive_data "$TMP_DATA_DIR" "$OUTPUT_FILE"; then
-                            uprintf "Output file created at '$DESTINATION_DIR/$OUTPUT_FILE'\n"
+                            printf %b "Output file created at '$DESTINATION_DIR/$OUTPUT_FILE'\n"
                             rm -rf "$TMP_DATA_DIR" > /dev/null 2> /dev/null
                             if [ -d "$TMP_DATA_DIR" ]; then
-                                uprintf "Cannot remove temporary directory '$DESTINATION_DIR/$TMP_DATA_DIR'\n"
+                                printf %b "Cannot remove temporary directory '$DESTINATION_DIR/$TMP_DATA_DIR'\n"
                             fi
                         else
-                            uprintf "Cannot create output file\n"
-                            uprintf "Please check collected data in '$DESTINATION_DIR/$TMP_DATA_DIR'\n"
+                            printf %b "Cannot create output file\n"
+                            printf %b "Please check collected data in '$DESTINATION_DIR/$TMP_DATA_DIR'\n"
                         fi
                         cd "$CWD"
                     fi
@@ -404,64 +407,64 @@ if $ANY_COLLECTOR_SELECTED || $ANY_EXTENSION_SELECTED; then
                     # hash output file if it exists
                     if [ -f "$DESTINATION_DIR/$OUTPUT_FILE" ]; then
                         if [ -n "$MD5SUM_TOOL" ]; then
-                            uprintf "Hashing output file. Please wait...\n"
+                            printf %b "Hashing output file. Please wait...\n"
                             cd "$DESTINATION_DIR"
                             $MD5SUM_TOOL "$OUTPUT_FILE" > "$OUTPUT_FILE.md5"
                             if [ -n "$OUTPUT_FILE.md5" ]; then
-                                uprintf "MD5 hash output file created at '$DESTINATION_DIR/$OUTPUT_FILE.md5'\n"
+                                printf %b "MD5 hash output file created at '$DESTINATION_DIR/$OUTPUT_FILE.md5'\n"
                             else
-                                uprintf "Cannot compute MD5 hash for '$DESTINATION_DIR/$OUTPUT_FILE'\n"
+                                printf %b "Cannot compute MD5 hash for '$DESTINATION_DIR/$OUTPUT_FILE'\n"
                                 rm "$OUTPUT_FILE.md5"
                             fi
                             cd "$CWD"
                         fi
                     else
-                        uprintf "Please check collected data in '$DESTINATION_DIR/$TMP_DATA_DIR'\n"
+                        printf %b "Please check collected data in '$DESTINATION_DIR/$TMP_DATA_DIR'\n"
                     fi
 
                     if $SCP_TRANSFER; then
                         if [ -f "$DESTINATION_DIR/$OUTPUT_FILE" ]; then
                             # transfer output file
-                            uprintf "Transfering '$DESTINATION_DIR/$OUTPUT_FILE' to '$SCP_DESTINATION'\n"
+                            printf %b "Transfering '$DESTINATION_DIR/$OUTPUT_FILE' to '$SCP_DESTINATION'\n"
                             if scp_transfer "$DESTINATION_DIR/$OUTPUT_FILE" "$SCP_DESTINATION" "$SCP_PORT"; then
-                                uprintf "File transferred successfully\n"
+                                printf %b "File transferred successfully\n"
                             else
-                                uprintf "Could not transfer file\n"
+                                printf %b "Could not transfer file\n"
                             fi
                             if [ -f "$DESTINATION_DIR/$OUTPUT_FILE.md5" ]; then
                                 # transfer output file
-                                uprintf "Transfering '$DESTINATION_DIR/$OUTPUT_FILE.md5' to '$SCP_DESTINATION'\n"
+                                printf %b "Transfering '$DESTINATION_DIR/$OUTPUT_FILE.md5' to '$SCP_DESTINATION'\n"
                                 if scp_transfer "$DESTINATION_DIR/$OUTPUT_FILE.md5" "$SCP_DESTINATION" "$SCP_PORT"; then
-                                    uprintf "File transferred successfully\n"
+                                    printf %b "File transferred successfully\n"
                                 else
-                                    uprintf "Could not transfer file\n"
+                                    printf %b "Could not transfer file\n"
                                 fi
                             fi
                         else
                             # transfer output directory
-                            uprintf "Transfering '$DESTINATION_DIR/$TMP_DATA_DIR' to '$SCP_DESTINATION'\n"
+                            printf %b "Transfering '$DESTINATION_DIR/$TMP_DATA_DIR' to '$SCP_DESTINATION'\n"
                             if scp_transfer "$DESTINATION_DIR/$TMP_DATA_DIR" "$SCP_DESTINATION" "$SCP_PORT"; then
-                                uprintf "Directory transferred successfully\n"
+                                printf %b "Directory transferred successfully\n"
                             else
-                                uprintf "Could not transfer directory\n"
+                                printf %b "Could not transfer directory\n"
                             fi
                         fi
                     fi
 
                 else
-                    uprintf "Cannot create temporary directory '$DESTINATION_DIR/$TMP_DATA_DIR'\n"
+                    printf %b "Cannot create temporary directory '$DESTINATION_DIR/$TMP_DATA_DIR'\n"
                     exit 6
                 fi
             else
-                uprintf "Invalid mount point '$MOUNT_POINT'\n"
+                printf %b "Invalid mount point '$MOUNT_POINT'\n"
                 exit 5
             fi
         else
-            uprintf "This script requires root privileges to run properly.\n"
+            printf %b "This script requires root privileges to run properly.\n"
             exit 3
         fi
     else
-        uprintf "Unsupported profile '$PROFILE'. Please use -P to force one of the supported profiles.\n"
+        printf %b "Unsupported profile '$PROFILE'. Please use -P to force one of the supported profiles.\n"
         exit 2
     fi
 else
