@@ -94,22 +94,101 @@ check_tools() {
     logging D "GZIP_TOOL_AVAILABLE: ${GZIP_TOOL_AVAILABLE}\n"
    
     # check if perl is available
-    PERL_TOOL=""
+    PERL_TOOL_AVAILABLE=false
     logging D "Checking if perl is available\n"
-    run_command "perl \"$CWD/tools/stat/stat.pl\"" "/dev/null"
+    run_command "perl \"$CWD/tools/stat.pl/stat.pl\"" "/dev/null"
     if [ $? -eq 0 ]; then
-        PERL_TOOL="perl"
+        PERL_TOOL_AVAILABLE=true
     fi
-    logging D "PERL_TOOL: $PERL_TOOL\n"
+    logging D "PERL_TOOL_AVAILABLE: $PERL_TOOL_AVAILABLE\n"
     
     # check if stat is available
-    STAT_TOOL=""
+    STAT_TOOL_AVAILABLE=false
+    STAT_BTIME_SUPPORT=false
     logging D "Checking if stat is available\n"
-    run_command "stat \"$CWD/uac\"" "/dev/null"
-    if [ $? -eq 0 ]; then
-        STAT_TOOL="stat"
+    if run_command "stat \"$MOUNT_POINT\"" "/dev/null"; then
+        STAT_TOOL_AVAILABLE=true
+        case "$PROFILE" in
+            "bsd")
+                logging D "Checking if stat collects btime\n"
+                if run_command "stat -f \"0|%N%SY|%i|%Sp|%u|%g|%z|%a|%m|%c|%B\" \"$MOUNT_POINT\" | grep -q -E \"\|[0-9]{2,}$\""; then
+                    STAT_BTIME_SUPPORT=true
+                fi
+                ;;
+            "linux"|"solaris")
+                logging D "Checking if stat collects btime\n"
+                if run_command "stat -c \"0|%N|%i|%A|%u|%g|%s|%X|%Y|%Z|%W\" \"$MOUNT_POINT\" | grep -q -E \"\|[0-9]{2,}$\""; then
+                    STAT_BTIME_SUPPORT=true
+                fi
+                ;;
+        esac
     fi
-    logging D "STAT_TOOL: $STAT_TOOL\n"
+    logging D "STAT_TOOL_AVAILABLE: $STAT_TOOL_AVAILABLE\n"
+    logging D "STAT_BTIME_SUPPORT: $STAT_BTIME_SUPPORT\n"
+
+    STATX_TOOL_AVAILABLE=false
+    if [ "$PROFILE" = "linux" ]; then
+        logging D "Checking if statx is available\n"
+        # remove existing symlink
+        if [ -L "${CWD}/tools/statx/bin/statx" ]; then
+            rm -f "${CWD}/tools/statx/bin/statx"
+        fi
+
+        if run_command "\"${CWD}/tools/statx/bin/linux/statx_x86_64\" \"${MOUNT_POINT}\"" "/dev/null"; then
+            ln -s "${CWD}/tools/statx/bin/linux/statx_x86_64" \
+                "${CWD}/tools/statx/bin/statx"
+            STATX_TOOL_AVAILABLE=true
+        elif run_command "\"${CWD}/tools/statx/bin/linux/statx_i686\" \"${MOUNT_POINT}\"" "/dev/null"; then
+            ln -s "${CWD}/tools/statx/bin/linux/statx_i686" \
+                "${CWD}/tools/statx/bin/statx"
+            STATX_TOOL_AVAILABLE=true
+        elif run_command "\"${CWD}/tools/statx/bin/linux/statx_aarch64\" \"${MOUNT_POINT}\"" "/dev/null"; then
+            ln -s "${CWD}/tools/statx/bin/linux/statx_aarch64" \
+                "${CWD}/tools/statx/bin/statx"
+            STATX_TOOL_AVAILABLE=true
+        elif run_command "\"${CWD}/tools/statx/bin/linux/statx_arm\" \"${MOUNT_POINT}\"" "/dev/null"; then
+            ln -s "${CWD}/tools/statx/bin/linux/statx_arm" \
+                "${CWD}/tools/statx/bin/statx"
+            STATX_TOOL_AVAILABLE=true
+        elif run_command "\"${CWD}/tools/statx/bin/linux/statx_armhf\" \"${MOUNT_POINT}\"" "/dev/null"; then
+            ln -s "${CWD}/tools/statx/bin/linux/statx_armhf" \
+                "${CWD}/tools/statx/bin/statx"
+            STATX_TOOL_AVAILABLE=true
+        elif run_command "\"${CWD}/tools/statx/bin/linux/statx_mips64\" \"${MOUNT_POINT}\"" "/dev/null"; then
+            ln -s "${CWD}/tools/statx/bin/linux/statx_mips64" \
+                "${CWD}/tools/statx/bin/statx"
+            STATX_TOOL_AVAILABLE=true
+        elif run_command "\"${CWD}/tools/statx/bin/linux/statx_mips64el\" \"${MOUNT_POINT}\"" "/dev/null"; then
+            ln -s "${CWD}/tools/statx/bin/linux/statx_mips64el" \
+                "${CWD}/tools/statx/bin/statx"
+            STATX_TOOL_AVAILABLE=true
+        elif run_command "\"${CWD}/tools/statx/bin/linux/statx_mips\" \"${MOUNT_POINT}\"" "/dev/null"; then
+            ln -s "${CWD}/tools/statx/bin/linux/statx_mips" \
+                "${CWD}/tools/statx/bin/statx"
+            STATX_TOOL_AVAILABLE=true
+        elif run_command "\"${CWD}/tools/statx/bin/linux/statx_powerpc64\" \"${MOUNT_POINT}\"" "/dev/null"; then
+            ln -s "${CWD}/tools/statx/bin/linux/statx_powerpc64" \
+                "${CWD}/tools/statx/bin/statx"
+            STATX_TOOL_AVAILABLE=true
+        elif run_command "\"${CWD}/tools/statx/bin/linux/statx_powerpc64le\" \"${MOUNT_POINT}\"" "/dev/null"; then
+            ln -s "${CWD}/tools/statx/bin/linux/statx_powerpc64le" \
+                "${CWD}/tools/statx/bin/statx"
+            STATX_TOOL_AVAILABLE=true
+        elif run_command "\"${CWD}/tools/statx/bin/linux/statx_powerpc\" \"${MOUNT_POINT}\"" "/dev/null"; then
+            ln -s "${CWD}/tools/statx/bin/linux/statx_powerpc" \
+                "${CWD}/tools/statx/bin/statx"
+            STATX_TOOL_AVAILABLE=true
+        elif run_command "\"${CWD}/tools/statx/bin/linux/statx_s390x\" \"${MOUNT_POINT}\"" "/dev/null"; then
+            ln -s "${CWD}/tools/statx/bin/linux/statx_s390x" \
+                "${CWD}/tools/statx/bin/statx"
+            STATX_TOOL_AVAILABLE=true
+        elif run_command "\"${CWD}/tools/statx/bin/linux/statx_sparc64\" \"${MOUNT_POINT}\"" "/dev/null"; then
+            ln -s "${CWD}/tools/statx/bin/linux/statx_sparc64" \
+                "${CWD}/tools/statx/bin/statx"
+            STATX_TOOL_AVAILABLE=true
+        fi
+        logging D "STATX_TOOL_AVAILABLE: $STATX_TOOL_AVAILABLE\n"
+    fi
 
     # check if file is available
     FILE_TOOL=""
@@ -203,15 +282,6 @@ check_tools() {
         PROCSTAT_TOOL="procstat"
     fi
     logging D "PROCSTAT_TOOL: $PROCSTAT_TOOL\n"
-
-    # check if debugfs is available
-    DEBUGFS_TOOL=""
-    logging D "Checking if debugfs tool is available\n"
-    run_command "debugfs -R 'quit'" "/dev/null"
-    if [ $? -eq 0 ]; then
-        DEBUGFS_TOOL="debugfs"
-    fi
-    logging D "DEBUGFS_TOOL: $DEBUGFS_TOOL\n"
 
     # check if strings is available
     STRINGS_TOOL=""
