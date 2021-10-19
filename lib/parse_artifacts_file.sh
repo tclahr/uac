@@ -91,41 +91,29 @@ parse_artifacts_file()
 
         if [ -n "${pa_value}" ]; then
           # replace %uac_directory% by ${UAC_DIR} value
-          if regex_match "%uac_directory%" "${pa_value}" 2>/dev/null; then
-            pa_value=`echo "${pa_value}" \
-              | sed -e "s:%uac_directory%:${UAC_DIR}:g"`
-          fi
+          pa_value=`echo "${pa_value}" \
+            | sed -e "s:%uac_directory%:${UAC_DIR}:g"`
 
           # replace %mount_point% by ${MOUNT_POINT} value
-          if regex_match "%mount_point%" "${pa_value}" 2>/dev/null; then
-            pa_value=`echo "${pa_value}" \
-              | sed -e "s:%mount_point%:${MOUNT_POINT}:g"`
-          fi
+          pa_value=`echo "${pa_value}" \
+            | sed -e "s:%mount_point%:${MOUNT_POINT}:g"`
 
           if [ -n "${START_DATE}" ]; then
-            if regex_match "%start_date%" "${pa_value}"; then
-              # replace %start_date% by ${START_DATE} value
-              pa_value=`echo "${pa_value}" \
-                | sed -e "s:%start_date%:${START_DATE}:g"`
-            fi
-            if regex_match "%start_date_epoch%" "${pa_value}"; then
-              # replace %start_date_epoch% by ${START_DATE_EPOCH} value
-              pa_value=`echo "${pa_value}" \
-                | sed -e "s:%start_date_epoch%:${START_DATE_EPOCH}:g"`
-            fi
+            # replace %start_date% by ${START_DATE} value
+            pa_value=`echo "${pa_value}" \
+              | sed -e "s:%start_date%:${START_DATE}:g"`
+            # replace %start_date_epoch% by ${START_DATE_EPOCH} value
+            pa_value=`echo "${pa_value}" \
+              | sed -e "s:%start_date_epoch%:${START_DATE_EPOCH}:g"`
           fi
 
           if [ -n "${END_DATE}" ]; then
-            if regex_match "%end_date%" "${pa_value}"; then
-              # replace %end_date% by ${END_DATE} value
-              pa_value=`echo "${pa_value}" \
-                | sed -e "s:%end_date%:${END_DATE}:g"`
-            fi
-            if regex_match "%end_date_epoch%" "${pa_value}"; then
-              # replace %end_date_epoch% by ${END_DATE_EPOCH} value
-              pa_value=`echo "${pa_value}" \
-                | sed -e "s:%end_date_epoch%:${END_DATE_EPOCH}:g"`
-            fi
+            # replace %end_date% by ${END_DATE} value
+            pa_value=`echo "${pa_value}" \
+              | sed -e "s:%end_date%:${END_DATE}:g"`
+            # replace %end_date_epoch% by ${END_DATE_EPOCH} value
+            pa_value=`echo "${pa_value}" \
+              | sed -e "s:%end_date_epoch%:${END_DATE_EPOCH}:g"`
           fi
         fi
 
