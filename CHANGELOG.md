@@ -1,6 +1,36 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 2.0.0-rc1 (2021-10-18)
+
+### Highlights
+- Faster collection engine.
+- Artifacts collections are now based on YAML files.
+- Nine supported operating systems: android (via adb shell), aix, freebsd, linux, macos, netbsd, netscaler, openbsd and solaris.
+- New command line options.
+- New output and log file format.
+- Revamped uac.log file.
+- Collection errors will now be stored into individual .stderr files.
+
+### New Artifacts
+- New browser artifacts
+  - Chromium based (Chrome, Edge, Opera, Brave...)
+  - Firefox
+  - Safari
+- New applications artifacts
+  - macOS dock
+  - LibreOffice MRU
+  - Microsoft Office MRU
+  - WPS Office MRU
+- New system artifacts
+  - macOS MRU
+  - macOS autoruns
+  - macOS quarantine events
+  - macOS time machine information
+  - macOS wifi information
+- New docker/containers artifacts
+  - containerd config dump
+
 ## 1.7.0 (2021-09-04)
 
 ### Added
