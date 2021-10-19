@@ -1,0 +1,10 @@
+description: Run and collect mpstat command output.
+version: 1.0
+artifacts:
+  -
+    description: Collect and display performance statistics for all logical processors in the system.
+    collector: command
+    supported_os: [aix]
+    command: mpstat
+    output_file: mpstat.txt
+  

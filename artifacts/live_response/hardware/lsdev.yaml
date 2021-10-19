@@ -1,0 +1,9 @@
+description: Run and collect lsdev command output.
+version: 1.0
+artifacts:
+  -
+    description: Display devices in the system and their characteristics.
+    collector: command
+    supported_os: [aix]
+    command: lsdev -P
+    output_file: lsdev_-P.txt

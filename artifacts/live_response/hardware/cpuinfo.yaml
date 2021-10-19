@@ -1,0 +1,9 @@
+description: Run and collect cpuinfo command output.
+version: 1.0
+artifacts:
+  -
+    description: Display CPU information.
+    collector: command
+    supported_os: [android, linux, netbsd]
+    command: cat /proc/cpuinfo
+    output_file: cpuinfo.txt

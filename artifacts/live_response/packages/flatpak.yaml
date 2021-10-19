@@ -1,0 +1,10 @@
+description: Run and collect flatpak command output.
+version: 1.0
+artifacts:
+  -
+    description: Display installed FlatPak packages.
+    collector: command
+    supported_os: [linux]
+    command: flatpak list
+    output_file: flatpak_list.txt
+  

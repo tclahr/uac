@@ -1,0 +1,15 @@
+description: Collect the list of applications from /Applications and /Users/%user%/Applications directories.
+version: 1.0
+artifacts:
+  -
+    description: Display all applications located at /Applications directory.
+    collector: command
+    supported_os: [macos]
+    command: ls -l -a /Applications
+    output_file: ls_-l_-a_Applications.txt
+  -
+    description: Display all applications located at /Users/%user%/Applications directory.
+    collector: command
+    supported_os: [macos]
+    command: ls -l -a /%user_home%/Applications
+    output_file: ls_-l_-a_%user_home%_Applications.txt

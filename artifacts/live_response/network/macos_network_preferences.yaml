@@ -1,0 +1,9 @@
+description: Collect macOS network preferences.
+version: 1.0
+artifacts:
+  -
+    description: Collect network preferences.
+    collector: command
+    supported_os: [macos]
+    command: plutil -p /Library/Preferences/SystemConfiguration/preferences.plist
+    output_file: plutil_-p_library-preferences-systemconfiguration-preferences.plist.txt

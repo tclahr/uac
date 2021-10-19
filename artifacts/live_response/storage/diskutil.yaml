@@ -1,0 +1,10 @@
+description: Run and collect diskutil command output.
+version: 1.0
+artifacts:
+  -
+    description: List disks, including internal and external disks, whole disks and partitions, and various kinds of virtual or offline disks.
+    collector: command
+    supported_os: [macos]
+    command: diskutil list
+    output_file: diskutil_list.txt
+  

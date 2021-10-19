@@ -1,0 +1,40 @@
+description: Hash running processes.
+version: 1.0
+artifacts:
+  -
+    description: Hash running processes.
+    collector: hash
+    supported_os: [aix]
+    path: /proc/[0-9]*/object/a.out
+    output_file: hash_running_processes
+  -
+    description: Hash running processes.
+    collector: hash
+    supported_os: [android, linux, netbsd]
+    path: /proc/[0-9]*/exe
+    output_file: hash_running_processes
+  -
+    description: Hash running processes.
+    collector: hash
+    supported_os: [netscaler]
+    path: /proc/[0-9]*/file
+    output_file: hash_running_processes
+  -
+    description: Hash running processes.
+    collector: hash
+    supported_os: [solaris]
+    path: /proc/[0-9]*/path/a.out
+    output_file: hash_running_processes
+  -
+    description: Collect running processes executable path.
+    collector: command
+    supported_os: [freebsd, macos, openbsd]
+    command: ps -eo args | grep ^/ | awk '{print $1}' | sort -u
+    output_file: hash_running_processes_full_paths.txt
+  -
+    description: Hash running processes.
+    collector: hash
+    supported_os: [freebsd, macos, openbsd]
+    path: hash_running_processes_full_paths.txt
+    is_file_list: true
+    output_file: hash_running_processes

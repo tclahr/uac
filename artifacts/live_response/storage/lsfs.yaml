@@ -1,0 +1,9 @@
+description: Run and collect lsfs command output.
+version: 1.0
+artifacts:
+  -
+    description: Displays the characteristics of file systems.
+    collector: command
+    supported_os: [aix]
+    command: lsfs
+    output_file: lsfs.txt

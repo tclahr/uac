@@ -1,0 +1,8 @@
+description: Collect system logs.
+version: 1.0
+artifacts:
+  -
+    description: Collect /var/adm logs.
+    collector: file
+    supported_os: [aix, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris]
+    path: /var/adm/*

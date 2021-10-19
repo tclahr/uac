@@ -1,0 +1,13 @@
+description: Collect spool files.
+version: 1.0
+artifacts:
+  -
+    description: Collect spool files.
+    collector: file
+    supported_os: [all]
+    path: /var/spool/*
+  -
+    description: Collect spool files.
+    collector: file
+    supported_os: [macos]
+    path: /private/var/spool/*

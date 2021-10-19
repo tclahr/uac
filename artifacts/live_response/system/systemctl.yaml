@@ -1,0 +1,22 @@
+description: Run and collect systemctl command output.
+version: 1.0
+artifacts:
+  -
+    description: Display all systemd system units.
+    collector: command
+    supported_os: [linux]
+    command: systemctl list-units
+    output_file: systemctl_list-units.txt
+  -
+    description: Display timer units currently in memory, ordered by the time they elapse next.
+    collector: command
+    supported_os: [linux]
+    command: systemctl list-timers --all
+    output_file: systemctl_list-timers_--all.txt
+  -
+    description: Display unit files installed on the system, in combination with their enablement state (as reported by is-enabled).
+    collector: command
+    supported_os: [linux]
+    command: systemctl list-unit-files
+    output_file: systemctl_list-unit-files.txt
+  

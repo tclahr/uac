@@ -1,0 +1,10 @@
+description: Run and collect instfix command output.
+version: 1.0
+artifacts:
+  -
+    description: Displays information about each fileset associated with a fix or keyword. Also display filesets that are not installed.
+    collector: command
+    supported_os: [aix]
+    command: instfix -i -v
+    output_file: instfix_-i_-v.txt
+    

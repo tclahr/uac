@@ -1,0 +1,10 @@
+description: Collect dpkg packages status file.
+version: 1.0
+artifacts:
+  -
+    description: Collect dpkg packages status file.
+    collector: file
+    supported_os: [linux]
+    path: /var/lib/dpkg/status
+    ignore_date_range: true
+  

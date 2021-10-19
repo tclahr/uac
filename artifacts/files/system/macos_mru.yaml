@@ -1,0 +1,34 @@
+description: Collect macOS Most Recently Used.
+version: 1.0
+artifacts:
+  -
+    description: Collect macOS Most Recently Used.
+    collector: file
+    supported_os: [macos]
+    path: /%user_home%/Library/Preferences
+    name_pattern: ["*.LSSharedFileList.plist", "com.apple.finder.plist", "com.apple.recentitems.plist", "com.apple.sidebarlists.plist"]
+    ignore_date_range: true
+    exclude_nologin_users: true
+  -
+    description: Collect macOS Most Recently Used.
+    collector: file
+    supported_os: [macos]
+    path: /%user_home%/Library/Application Support/com.apple.sharedfilelist
+    ignore_date_range: true
+    exclude_nologin_users: true
+  -
+    description: Collect macOS Most Recently Used.
+    collector: file
+    supported_os: [macos]
+    path: /%user_home%/Library/Application Support/com.apple.spotlight.Shortcuts
+    ignore_date_range: true
+    exclude_nologin_users: true
+  -
+    description: Collect macOS Most Recently Used.
+    collector: file
+    supported_os: [macos]
+    path: /%user_home%/Library/Preferences
+    name_pattern: ["*.LSSharedFileList.plist", "com.apple.finder.plist", "com.apple.recentitems.plist"]
+    ignore_date_range: true
+    exclude_nologin_users: true
+  

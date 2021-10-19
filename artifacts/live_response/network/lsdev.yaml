@@ -1,0 +1,15 @@
+description: Run and collect lsdev command output.
+version: 1.0
+artifacts:
+  -
+    description: Collect information about tcpip class devices in the system and their characteristics.
+    collector: command
+    supported_os: [aix]
+    command: lsdev -C -c tcpip
+    output_file: lsdev_-C_-c_tcpip.txt
+  -
+    description: Collect information about udp class devices in the system and their characteristics.
+    collector: command
+    supported_os: [aix]
+    command: lsdev -C -c udp
+    output_file: lsdev_-C_-c_udp.txt

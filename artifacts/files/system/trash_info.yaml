@@ -1,0 +1,9 @@
+description: Collect Trash info files.
+version: 1.0
+artifacts:
+  -
+    description: Collect Trash info file.
+    collector: file
+    supported_os: [linux]
+    path: /%user_home%/.local/share/Trash/info
+    exclude_nologin_users: true

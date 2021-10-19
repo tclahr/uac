@@ -1,0 +1,9 @@
+description: Run and collect sw_vers command output.
+version: 1.0
+artifacts:
+  -
+    description: Display macOS operating system version.
+    collector: command
+    supported_os: [macos]
+    command: sw_vers
+    output_file: sw_vers.txt

@@ -1,0 +1,26 @@
+name: full
+description: Full artifacts collection.
+artifacts:
+  - live_response/process/ps.yaml
+  - live_response/process/lsof.yaml
+  - live_response/process/top.yaml
+  - live_response/process/procfs_information.yaml
+  - live_response/process/procstat.yaml
+  - live_response/process/fstat.yaml
+  - live_response/process/pstat.yaml
+  - live_response/process/pstree.yaml
+  - live_response/process/ptree.yaml
+  - live_response/process/hash_running_processes.yaml
+  - live_response/process/strings_running_processes.yaml
+  - live_response/network/*
+  - live_response/system/*
+  - live_response/hardware/*
+  - live_response/packages/*
+  - live_response/storage/*
+  - live_response/containers/*
+  - live_response/vms/*
+  - bodyfile/bodyfile.yaml
+  - chkrootkit/chkrootkit.yaml
+  - hash_executables/hash_executables.yaml
+  - files/*
+  

@@ -1,0 +1,15 @@
+description: Run and collect zpool command output.
+version: 1.0
+artifacts:
+  -
+    description: Lists all pools along with a health status and space usage.
+    collector: command
+    supported_os: [aix, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris]
+    command: zpool list
+    output_file: zpool_list.txt
+  -
+    description: Displays the detailed health status for all available pools.
+    collector: command
+    supported_os: [aix, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris]
+    command: zpool status -v
+    output_file: zpool_status_-v.txt

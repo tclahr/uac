@@ -1,0 +1,28 @@
+description: Collect Microsoft Defender Agent information.
+version: 1.0
+artifacts:
+  -
+    description: Display sensor health.
+    collector: command
+    supported_os: [linux]
+    command: mdatp health
+    output_file: mdatp_health.txt
+  -
+    description: Display all antivirus exclusions.
+    collector: command
+    supported_os: [linux]
+    command: mdatp exclusion list
+    output_file: mdatp_exclusion_list.txt
+  -
+    description: Display all quarantined files.
+    collector: command
+    supported_os: [linux]
+    command: mdatp threat quarantine list
+    output_file: mdatp_threat_quarantine_list.txt
+  -
+    description: Display the full protection history.
+    collector: command
+    supported_os: [linux]
+    command: mdatp threat list
+    output_file: mdatp_threat_list.txt
+  

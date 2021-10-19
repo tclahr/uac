@@ -1,0 +1,19 @@
+description: Collect macOS system logs.
+version: 1.0
+artifacts:
+  -
+    description: Collect fseventsd system logs.
+    collector: file
+    supported_os: [macos]
+    path: /.fseventsd
+  -
+    description: Collect system logs.
+    collector: file
+    supported_os: [macos]
+    path: /Library/Logs/*
+  -
+    description: Collect user applications logs.
+    collector: file
+    supported_os: [macos]
+    path: /%user_home%/Library/Logs/*
+  

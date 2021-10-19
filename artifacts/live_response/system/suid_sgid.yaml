@@ -1,0 +1,24 @@
+description: Search for files that have either SUID or SGID bit set.
+version: 1.0
+artifacts:
+  -
+    description: Search for files that have SUID bit set.
+    collector: find
+    supported_os: [all]
+    path: /
+    exclude_file_system: [proc, procfs]
+    file_type: f
+    max_depth: 5
+    permissions: -4000
+    output_file: suid.txt
+  -
+    description: Search for files that have SGID bit set.
+    collector: find
+    supported_os: [all]
+    path: /
+    exclude_file_system: [proc, procfs]
+    file_type: f
+    max_depth: 5
+    permissions: -2000
+    output_file: sgid.txt
+  

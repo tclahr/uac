@@ -1,0 +1,10 @@
+description: Collect TimeMachine plist file.
+version: 1.0
+artifacts:
+  -
+    description: Collect TimeMachine plist file.
+    collector: file
+    supported_os: [macos]
+    path: /Library/Preferences/com.apple.TimeMachine.plist
+    ignore_date_range: true
+  

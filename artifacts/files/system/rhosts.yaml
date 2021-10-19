@@ -1,0 +1,8 @@
+description: Collect rhosts related files.
+version: 1.0
+artifacts:
+  -
+    description: This file specifies remote users that can use a local user account on a network.
+    collector: file
+    supported_os: [all]
+    path: /%user_home%/.rhosts

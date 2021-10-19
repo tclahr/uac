@@ -1,0 +1,44 @@
+description: Hash executable files.
+version: 1.0
+artifacts:
+  -
+    description: Find files that contain at least +x flag set for other.
+    collector: find
+    supported_os: [all]
+    path: /
+    exclude_file_system: [proc, procfs]
+    file_type: f
+    max_depth: 4
+    max_file_size: 3072000
+    permissions: -001
+    output_file: list_of_executable_files.txt
+  -
+    description: Find files that contain at least +x flag set for group.
+    collector: find
+    supported_os: [all]
+    path: /
+    exclude_file_system: [proc, procfs]
+    file_type: f
+    max_depth: 4
+    max_file_size: 3072000
+    permissions: -010
+    output_file: list_of_executable_files.txt
+  -
+    description: Find files that contain at least +x flag set for owner.
+    collector: find
+    supported_os: [all]
+    path: /
+    exclude_file_system: [proc, procfs]
+    file_type: f
+    max_depth: 4
+    max_file_size: 3072000
+    permissions: -100
+    output_file: list_of_executable_files.txt
+  -
+    description: Hash files that contain at least +x flag set for owner.
+    collector: hash
+    supported_os: [all]
+    path: list_of_executable_files.txt
+    is_file_list: true
+    output_file: hash_executables
+  

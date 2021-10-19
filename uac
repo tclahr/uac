@@ -14,7 +14,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# remove all existing aliases
+unalias -a
+
 # set locale
+LANG=C
+export LANG
 LC_ALL=C
 export LC_ALL
 
@@ -22,453 +27,687 @@ export LC_ALL
 _POSIX2_VERSION=199209
 export _POSIX2_VERSION
 
-# remove all existing aliases
-unalias -a
-
 # get current working dir
-CWD=`pwd`
-export CWD
+# $PWD is not set in solaris 10
+UAC_DIR=`pwd`
 
 # set path
-PATH="${CWD}/tools/statx/bin"
-PATH="${PATH}:/usr/xpg4/bin:/usr/xpg6/bin:/bin:/sbin:/usr/bin:/usr/sbin"
+PATH="/usr/xpg4/bin:/usr/xpg6/bin:/bin:/sbin:/usr/bin:/usr/sbin"
 PATH="${PATH}:/usr/local/bin:/usr/local/sbin:/usr/ucb:/usr/ccs/bin:/opt/bin"
 PATH="${PATH}:/opt/sbin:/opt/local/bin:/netscaler"
 export PATH
 
-# get current command
-CMD="$0 $@"
-
 # load lib files
-for file in "$CWD"/lib/*.lib; do
-    . "$file" > /dev/null
-done
+. "${UAC_DIR}/lib/archive_compress_data.sh"
+. "${UAC_DIR}/lib/archive_data.sh"
+. "${UAC_DIR}/lib/array_to_list.sh"
+. "${UAC_DIR}/lib/check_available_system_tools.sh"
+. "${UAC_DIR}/lib/command_collector.sh"
+. "${UAC_DIR}/lib/file_collector.sh"
+. "${UAC_DIR}/lib/find_collector.sh"
+. "${UAC_DIR}/lib/find_wrapper.sh"
+. "${UAC_DIR}/lib/get_current_user.sh"
+. "${UAC_DIR}/lib/get_days_since_date_until_now.sh"
+. "${UAC_DIR}/lib/get_epoch_date.sh"
+. "${UAC_DIR}/lib/get_hostname.sh"
+. "${UAC_DIR}/lib/get_mount_point_by_file_system.sh"
+. "${UAC_DIR}/lib/get_operating_system.sh"
+. "${UAC_DIR}/lib/get_system_arch.sh"
+. "${UAC_DIR}/lib/get_user_home_list.sh"
+. "${UAC_DIR}/lib/hash_collector.sh"
+. "${UAC_DIR}/lib/is_element_in_list.sh"
+. "${UAC_DIR}/lib/is_integer.sh"
+. "${UAC_DIR}/lib/is_running_with_root_privileges.sh"
+. "${UAC_DIR}/lib/load_config_file.sh"
+. "${UAC_DIR}/lib/log_message.sh"
+. "${UAC_DIR}/lib/lrstrip.sh"
+. "${UAC_DIR}/lib/parse_artifacts_file.sh"
+. "${UAC_DIR}/lib/parse_collection_file.sh"
+. "${UAC_DIR}/lib/print_acquisition_log.sh"
+. "${UAC_DIR}/lib/regex_match.sh"
+. "${UAC_DIR}/lib/regex_not_match.sh"
+. "${UAC_DIR}/lib/sanitize_filename.sh"
+. "${UAC_DIR}/lib/sanitize_path.sh"
+. "${UAC_DIR}/lib/sftp_transfer.sh"
+. "${UAC_DIR}/lib/sort_uniq_file.sh"
+. "${UAC_DIR}/lib/stat_collector.sh"
+. "${UAC_DIR}/lib/terminate.sh"
+. "${UAC_DIR}/lib/usage.sh"
+. "${UAC_DIR}/lib/validate_artifacts_file.sh"
+. "${UAC_DIR}/lib/validate_collection_file.sh"
+
+# global vars
+UAC_VERSION="2.0.0-rc1"
+MOUNT_POINT="/"
+OPERATING_SYSTEM=""
+SYSTEM_ARCH=""
+START_DATE=""
+START_DATE_DAYS=""
+START_DATE_EPOCH=""
+END_DATE=""
+END_DATE_DAYS=""
+END_DATE_EPOCH=""
+
+# local vars
+ua_collection_name=""
+ua_destination_dir=""
+ua_run_as_non_root=false
+ua_temp_dir=""
+ua_case_number=""
+ua_evidence_number=""
+ua_evidence_description=""
+ua_examiner=""
+ua_notes=""
+ua_hostname=""
+ua_sftp_destination=""
+ua_sftp_port=""
+ua_sftp_identity_file=""
+ua_sftp_delete_local_on_success=false
+ua_debug_mode=false
 
 # load config file
-. "$CWD/conf/uac.conf" > /dev/null
+load_config_file "${UAC_DIR}/config/uac.conf" || exit 1
 
-# set a default value for some variables
-init_vars
+# get current command
+ua_command_line="$0 $@"
 
-# catch the signals
+# parse command line arguments
+while [ "${1:-}" != "" ]; do
+  case "${1}" in    
+    # collection arguments
+    "-m"|"--mount-point")
+      if [ -n "${2}" ]; then
+        MOUNT_POINT="${2}"
+        shift
+      else
+        printf %b "uac: option '${1}' requires an argument.\n\
+Try 'uac --help' for more information.\n" >&2
+        exit 1
+      fi
+      ;;
+    "-o"|"--operating-system")
+      if [ -n "${2}" ]; then
+        OPERATING_SYSTEM="${2}"
+        shift
+      else
+        printf %b "uac: option '${1}' requires an argument.\n\
+Try 'uac --help' for more information.\n" >&2
+        exit 1
+      fi
+      ;;
+    "-u"|"--run-as-non-root")
+      ua_run_as_non_root=true
+      ;;
+    "--temp-dir")
+      if [ -n "${2}" ]; then
+        ua_temp_dir="${2}"
+        shift
+      else
+        printf %b "uac: option '${1}' requires an argument.\n\
+Try 'uac --help' for more information.\n" >&2
+        exit 1
+      fi
+      ;;
+    # filter arguments
+    "--date-range-start")
+      if [ -n "${2}" ]; then
+        START_DATE="${2}"
+        shift
+      else
+        printf %b "uac: option '${1}' requires an argument.\n\
+Try 'uac --help' for more information.\n" >&2
+        exit 1
+      fi
+      ;;
+    "--date-range-end")
+      if [ -n "${2}" ]; then
+        END_DATE="${2}"
+        shift
+      else
+        printf %b "uac: option '${1}' requires an argument.\n\
+Try 'uac --help' for more information.\n" >&2
+        exit 1
+      fi
+      ;;
+    # informational arguments
+    "--case-number")
+      if [ -n "${2}" ]; then
+        ua_case_number="${2}"
+        shift
+      else
+        printf %b "uac: option '${1}' requires an argument.\n\
+Try 'uac --help' for more information.\n" >&2
+        exit 1
+      fi
+      ;;
+    "--description")
+      if [ -n "${2}" ]; then
+        ua_evidence_description="${2}"
+        shift
+      else
+        printf %b "uac: option '${1}' requires an argument.\n\
+Try 'uac --help' for more information.\n" >&2
+        exit 1
+      fi
+      ;;
+    "--evidence-number")
+      if [ -n "${2}" ]; then
+        ua_evidence_number="${2}"
+        shift
+      else
+        printf %b "uac: option '${1}' requires an argument.\n\
+Try 'uac --help' for more information.\n" >&2
+        exit 1
+      fi
+      ;;
+    "--examiner")
+      if [ -n "${2}" ]; then
+        ua_examiner="${2}"
+        shift
+      else
+        printf %b "uac: option '${1}' requires an argument.\n\
+Try 'uac --help' for more information.\n" >&2
+        exit 1
+      fi
+      ;;
+    "--notes")
+      if [ -n "${2}" ]; then
+        ua_notes="${2}"
+        shift
+      else
+        printf %b "uac: option '${1}' requires an argument.\n\
+Try 'uac --help' for more information.\n" >&2
+        exit 1
+      fi
+      ;;
+    "--hostname")
+      if [ -n "${2}" ]; then
+        ua_hostname="${2}"
+        shift
+      else
+        printf %b "uac: option '${1}' requires an argument.\n\
+Try 'uac --help' for more information.\n" >&2
+        exit 1
+      fi
+      ;;
+    # remote transfer arguments
+    "--sftp")
+      if [ -n "${2}" ]; then
+        ua_sftp_destination="${2}"
+        shift
+      else
+        printf %b "uac: option '${1}' requires an argument.\n\
+Try 'uac --help' for more information.\n" >&2
+        exit 1
+      fi
+      ;;
+    "--sftp-port")
+      if [ -n "${2}" ]; then
+        ua_sftp_port="${2}"
+        shift
+      else
+        printf %b "uac: option '${1}' requires an argument.\n\
+Try 'uac --help' for more information.\n" >&2
+        exit 1
+      fi
+      ;;
+    "--sftp-identity-file")
+      if [ -n "${2}" ]; then
+        ua_sftp_identity_file="${2}"
+        shift
+      else
+        printf %b "uac: option '${1}' requires an argument.\n\
+Try 'uac --help' for more information.\n" >&2
+        exit 1
+      fi
+      ;;
+    "--sftp-delete-local-on-success")
+      ua_sftp_delete_local_on_success=true
+      ;;
+    # validation arguments
+    "--validate-artifacts-file")
+      if [ -n "${2}" ]; then
+        validate_artifacts_file "${2}" || exit 1
+        printf %b "uac: artifacts file validated. No errors found.\n"
+        exit 0
+      else
+        printf %b "uac: option '${1}' requires an argument.\n\
+Try 'uac --help' for more information.\n" >&2
+        exit 1
+      fi
+      ;;
+    # optional arguments
+    "-h"|"--help")
+      usage
+      exit 1
+      ;;
+    "-V"|"--version")
+      printf %b "UAC (Unix-like Artifacts Collector) v${UAC_VERSION}\n"
+      exit 0
+      ;;
+    "--debug")
+      ua_debug_mode=true
+      ;;
+    # invalid arguments
+    -*)
+      printf %b "uac: invalid option '${1}'\n\
+Try 'uac --help' for more information.\n" >&2
+      exit 1
+      ;;
+    # positional arguments
+    *)
+      if [ -z "${ua_collection_name}" ]; then
+        ua_collection_name=`echo "${1}" | sed -e 's:/::g'`
+      elif [ -z "${ua_destination_dir}" ]; then
+        ua_destination_dir="${1}"
+      else
+        printf %b "uac: invalid option '${1}'\n\
+Try 'uac --help' for more information.\n" >&2
+        exit 1
+      fi
+      ;;
+  esac
+  shift
+done
+
+# treat unset variables as an error when substituting
+set -u
+
+# exit if neither collection nor destination directory is set
+if [ -z "${ua_collection_name}" ] || [ -z "${ua_destination_dir}" ]; then
+  usage
+  exit 1
+fi
+
+# get proper collection file based on the collection name
+ua_collection_file=""
+for ua_file in "${UAC_DIR}"/collections/*.yaml; do
+  if grep -q -E "name: +${ua_collection_name}" <"${ua_file}"; then
+    ua_collection_file="${ua_file}"
+    break
+  fi
+done
+
+# exit if collection not found
+if [ -z "${ua_collection_file}" ]; then
+  printf %b "uac: collection not found '${ua_collection_name}'\n"
+  exit 1
+fi
+
+# check if collection file is valid
+validate_collection_file "${ua_collection_file}" || exit 1
+
+# check if destination directory exists
+if [ ! -d "${ua_destination_dir}" ]; then
+  printf %b "uac: no such file or directory '${ua_destination_dir}'\n" >&2
+  exit 1
+fi
+
+# check if temp-dir exists
+if [ -n "${ua_temp_dir}" ] && [ ! -d "${ua_temp_dir}" ]; then
+  printf %b "uac: no such file or directory '${ua_temp_dir}'\n" >&2
+  exit 1
+fi
+
+# get absolute destination directory path
+cd "${ua_destination_dir}" && ua_destination_dir=`pwd` && cd "${UAC_DIR}"
+
+# get operating system if not set by --operating_system
+if [ -z "${OPERATING_SYSTEM}" ]; then
+  OPERATING_SYSTEM=`get_operating_system`
+fi
+# check if operating system is supported
+if [ "${OPERATING_SYSTEM}" != "android" ] \
+  && [ "${OPERATING_SYSTEM}" != "aix" ] \
+  && [ "${OPERATING_SYSTEM}" != "freebsd" ] \
+  && [ "${OPERATING_SYSTEM}" != "linux" ] \
+  && [ "${OPERATING_SYSTEM}" != "macos" ] \
+  && [ "${OPERATING_SYSTEM}" != "netbsd" ] \
+  && [ "${OPERATING_SYSTEM}" != "netscaler" ] \
+  && [ "${OPERATING_SYSTEM}" != "openbsd" ] \
+  && [ "${OPERATING_SYSTEM}" != "solaris" ]; then
+  printf %b "uac: invalid operating system '${OPERATING_SYSTEM}'\n\
+Try 'uac --help' for more information.\n" >&2
+  exit 1
+fi
+
+# check if start and end dates are valid
+if [ -n "${START_DATE}" ]; then
+  START_DATE_EPOCH=`get_epoch_date "${START_DATE}"` || exit 1
+  #get_days_since_date_until_now "${START_DATE}"
+  START_DATE_DAYS=`get_days_since_date_until_now "${START_DATE}"`
+fi
+if [ -n "${END_DATE}" ]; then
+  END_DATE_EPOCH=`get_epoch_date "${END_DATE}"` || exit 1
+  END_DATE_DAYS=`get_days_since_date_until_now "${END_DATE}"`
+  if [ "${START_DATE_EPOCH}" -gt "${END_DATE_EPOCH}" ]; then
+    printf %b "uac: start date cannot be greater than end date.\n" >&2
+    exit 1
+  fi
+fi
+
+# check if mount point exists
+if [ ! -d "${MOUNT_POINT}" ]; then
+  printf %b "uac: invalid mount point. \
+No such file or directory '${MOUNT_POINT}'\n" >&2
+  exit 1
+fi
+
+# cannot use not (!) as Solaris 10 does not support it
+if is_running_with_root_privileges || "${ua_run_as_non_root}"; then
+  true
+else
+  printf %b "uac: this script requires root privileges to run properly.\n" >&2
+  exit 1
+fi
+
+# get hostname if not set by --hostname
+# useful when running UAC against a mounted image file/disk
+if [ -z "${ua_hostname}" ]; then
+  ua_hostname=`get_hostname 2>/dev/null`
+fi
+
+if [ -n "${ua_temp_dir}" ]; then
+  rm "${ua_temp_dir}/.uac-symlink.tmp" 2>/dev/null
+  if ln -s "${UAC_DIR}" "${ua_temp_dir}/.uac-symlink.tmp" 2>/dev/null; then
+    rm "${ua_temp_dir}/.uac-symlink.tmp" 2>/dev/null
+    TEMP_DATA_DIR="${ua_temp_dir}/uac-data.tmp"
+  else
+    printf %b "uac: filesystem used by '${ua_temp_dir}' does not \
+support symbolic links. Please use '--temp-dir' option to specify a different \
+directory where temporary collected data will be stored in.\n" >&2
+    exit 1
+  fi
+else
+  if ln -s "${UAC_DIR}" "${ua_destination_dir}/.uac-symlink.tmp" 2>/dev/null; then
+    rm "${ua_destination_dir}/.uac-symlink.tmp" 2>/dev/null
+    TEMP_DATA_DIR="${ua_destination_dir}/uac-data.tmp"
+  elif ln -s "${UAC_DIR}" "/tmp/.uac-symlink.tmp" 2>/dev/null; then
+    rm "/tmp/.uac-symlink.tmp" 2>/dev/null
+    TEMP_DATA_DIR="/tmp/uac-data.tmp"
+  else
+    printf %b "uac: filesystem used by '${ua_destination_dir}' does not \
+support symbolic links. Please use '--temp-dir' option to specify a different \
+directory where temporary collected data will be stored in.\n" >&2
+    exit 1
+  fi
+fi
+
+# remove any existing (old) collected data
+if [ -d "${TEMP_DATA_DIR}" ]; then
+  rm -rf "${TEMP_DATA_DIR}" >/dev/null
+  if [ "$?" -gt 0 ]; then
+    printf %b "uac: cannot remove old temporary data directory from previous \
+collection '${TEMP_DATA_DIR}'.\n"
+    exit 1
+  fi
+fi
+
+# create temporary directory
+mkdir "${TEMP_DATA_DIR}" >/dev/null
+if [ "$?" -gt 0 ]; then
+  printf %b "uac: cannot create temporary data directory '${TEMP_DATA_DIR}'.\n"
+  exit 1
+fi
+
+# clean up and exit if SIGINT (ctrl-c) is sent
 trap terminate INT
 
-SHIFT_OPT=""
-while getopts "apnuywsdkblfe:P:R:T:VDUvh" opt; do
-    case $opt in
-        # collectors
-        a)  COLLECTOR_PROCESS=true
-            COLLECTOR_NETWORK=true
-            COLLECTOR_USER=true
-            COLLECTOR_SYSTEM=true
-            COLLECTOR_HARDWARE=true
-            COLLECTOR_SOFTWARE=true
-            COLLECTOR_DISK_VOLUME_FILE_SYSTEM=true
-            COLLECTOR_DOCKER_VIRTUAL_MACHINE=true
-            COLLECTOR_BODY_FILE=true
-            COLLECTOR_LOGS=true
-            COLLECTOR_SUSPICIOUS_FILES=true
-            ANY_COLLECTOR_SELECTED=true
-            SHIFT_OPT="$SHIFT_OPT A"
-            ;;
-        p)  COLLECTOR_PROCESS=true
-            ANY_COLLECTOR_SELECTED=true
-            SHIFT_OPT="$SHIFT_OPT p"
-            ;;
-        n)  COLLECTOR_NETWORK=true
-            ANY_COLLECTOR_SELECTED=true
-            SHIFT_OPT="$SHIFT_OPT n"
-            ;;
-        u)  COLLECTOR_USER=true
-            ANY_COLLECTOR_SELECTED=true
-            SHIFT_OPT="$SHIFT_OPT u"
-            ;;
-        y)  COLLECTOR_SYSTEM=true
-            ANY_COLLECTOR_SELECTED=true
-            SHIFT_OPT="$SHIFT_OPT y"
-            ;;
-        w)  COLLECTOR_HARDWARE=true
-            ANY_COLLECTOR_SELECTED=true
-            SHIFT_OPT="$SHIFT_OPT w"
-            ;;
-        s)  COLLECTOR_SOFTWARE=true
-            ANY_COLLECTOR_SELECTED=true
-            SHIFT_OPT="$SHIFT_OPT s"
-            ;;
-        d)  COLLECTOR_DISK_VOLUME_FILE_SYSTEM=true
-            ANY_COLLECTOR_SELECTED=true
-            SHIFT_OPT="$SHIFT_OPT d"
-            ;;
-        k)  COLLECTOR_DOCKER_VIRTUAL_MACHINE=true
-            ANY_COLLECTOR_SELECTED=true
-            SHIFT_OPT="$SHIFT_OPT k"
-            ;;
-        b)  COLLECTOR_BODY_FILE=true
-            ANY_COLLECTOR_SELECTED=true
-            SHIFT_OPT="$SHIFT_OPT b"
-            ;;
-        l)  COLLECTOR_LOGS=true
-            ANY_COLLECTOR_SELECTED=true
-            SHIFT_OPT="$SHIFT_OPT l"
-            ;;
-        f)  COLLECTOR_SUSPICIOUS_FILES=true
-            ANY_COLLECTOR_SELECTED=true
-            SHIFT_OPT="$SHIFT_OPT f"
-            ;;
-        # extensions
-        e)  for EXTENSION in `echo "$OPTARG" | sed 's:,: :g'`; do
-                case "$EXTENSION" in
-                    "all")
-                        EXTENSION_CHKROOTKIT=true
-                        EXTENSION_FLS=true
-                        EXTENSION_HASH_EXEC=true
-                        ;;
-                    "chkrootkit")
-                        EXTENSION_CHKROOTKIT=true
-                        ;;
-                    "fls")
-                        EXTENSION_FLS=true
-                        ;;
-                    "hash_exec")
-                        EXTENSION_HASH_EXEC=true
-                        ;;
-                    *)  printf %b "Invalid extension '$EXTENSION'\n"
-                        exit 7
-                        ;;
-                esac
-            done
-            ANY_EXTENSION_SELECTED=true
-            SHIFT_OPT="$SHIFT_OPT e $OPTARG"
-            ;;
-        # options
-        P)  PROFILE="$OPTARG"
-            if [ "$PROFILE" != "aix" ] && [ "$PROFILE" != "bsd" ] && [ "$PROFILE" != "linux" ] && [ "$PROFILE" != "macos" ] && [ "$PROFILE" != "solaris" ]; then
-                printf %b "Invalid profile '$PROFILE'\n"
-                exit 8
-            fi
-            SHIFT_OPT="$SHIFT_OPT P $PROFILE"
-            ;;
-        R)  # check if system can convert date to epoch
-            get_epoch 2020-02-04 > /dev/null 2> /dev/null
-            if [ $? -eq 0 ]; then
-                TODAY=`get_date "+%Y-%m-%d"`
-                if regex_match "^((19|20)[0-9][0-9])-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$" "$OPTARG"; then
-                    DATE_T1="$OPTARG"
-                    DATE_RANGE_T1=`get_days_between_dates "$TODAY" "$DATE_T1"`
-                elif regex_match "^((19|20)[0-9][0-9])-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])..((19|20)[0-9][0-9])-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$" "$OPTARG"; then
-                    DATE_T1=`echo "$OPTARG" | cut -d"." -f 1`
-                    DATE_T2=`echo "$OPTARG" | cut -d"." -f 3`
-                    DATE_RANGE_T1=`get_days_between_dates "$TODAY" "$DATE_T1"`
-                    DATE_RANGE_T2=`get_days_between_dates "$TODAY" "$DATE_T2"`
-                else
-                    printf %b "Invalid date range '$OPTARG'\n"
-                    exit 10
-                fi
-                if [ "$DATE_RANGE_T1" -gt 0 ]; then
-                    printf %b "Invalid date range '$OPTARG'\n"
-                    exit 11
-                fi
-                if [ "$DATE_RANGE_T2" ]; then                
-                    if [ "$DATE_RANGE_T1" -gt "$DATE_RANGE_T2" ]; then
-                        printf %b "Invalid date range '$OPTARG'\n"
-                        exit 12
-                    fi
-                    # one more day to be inclusive
-                    DATE_RANGE_T1=`expr $EXPR_DASH_DASH $DATE_RANGE_T1 - 1`
-                    DATE_RANGE_T2=`expr $EXPR_DASH_DASH $DATE_RANGE_T2 + 1`
-                    if [ "$DATE_RANGE_T2" -eq 0 ] || [ "$DATE_RANGE_T2" -gt 0 ]; then
-                        DATE_RANGE_T2=""
-                    else
-                        # to be used properly with find -atime, -mtime or -ctime, second parameter needs to be positive
-                        DATE_RANGE_T2=`expr $EXPR_DASH_DASH $DATE_RANGE_T2 \* -1`
-                        DATE_RANGE_T2="+$DATE_RANGE_T2"
-                    fi
-                else
-                    # one more day to be inclusive
-                    DATE_RANGE_T1=`expr $EXPR_DASH_DASH $DATE_RANGE_T1 - 1`
-                fi
-            else
-                printf %b "Date range option is not supported by this system\n"
-                exit 9
-            fi
-            SHIFT_OPT="$SHIFT_OPT R $OPTARG"
-            ;;
-        T)  if [ -n "$OPTARG" ]; then
-                SCP_TRANSFER=true
-                SCP_DESTINATION="$OPTARG"
-                SHIFT_OPT="$SHIFT_OPT T $OPTARG"
-            else
-                printf %b "Invalid scp destination '$OPTARG'\n"
-                exit 13
-            fi
-            ;;
-        V)  VERBOSE=true
-            SHIFT_OPT="$SHIFT_OPT V"
-            ;;
-        D)  DEBUG=true
-            SHIFT_OPT="$SHIFT_OPT D"
-            ;;
-        U)  RUN_AS_NON_ROOT=true
-            SHIFT_OPT="$SHIFT_OPT U"
-            ;;
-        v)  printf %b "UAC (Unix-like Artifacts Collector) v$UAC_VERSION\n"
-            exit 0
-            ;;
-        h)  usage
-            exit 0
-            ;;
-        ?)  exit 1
-            ;;
-    esac
-done
-for SHIFT in $SHIFT_OPT; do shift; done
+# set log files
+UAC_LOG_FILE="${TEMP_DATA_DIR}/uac.log"
+UAC_STDERR_LOG_FILE="${TEMP_DATA_DIR}/uac.log.stderr"
 
-if $ANY_COLLECTOR_SELECTED || $ANY_EXTENSION_SELECTED; then
-    if [ ! "$PROFILE" ]; then
-        PROFILE=`get_profile`
-    fi
-    if [ "$PROFILE" = "aix" ] || [ "$PROFILE" = "bsd" ] || [ "$PROFILE" = "linux" ] || [ "$PROFILE" = "macos" ] || [ "$PROFILE" = "solaris" ]; then
-        if is_running_as_root || $RUN_AS_NON_ROOT; then
+# get current user
+ua_current_user=`get_current_user 2>>"${UAC_STDERR_LOG_FILE}"`
+# get system arch
+SYSTEM_ARCH=`get_system_arch 2>>"${UAC_STDERR_LOG_FILE}"`
 
-            # the current directory will be used as the destination directory if none was provided by the user
-            if [ "$1" ]; then
-                # check if the destination directory exists
-                if [ -d "$1" ]; then
-                    # get the absolute path for the destination directory
-                    cd "$1" && DESTINATION_DIR=`pwd` && cd "$CWD"
-                else
-                    printf %b "Destination directory '$1' does not exist\n"
-                    exit 4
-                fi
-            else
-                # set the current diretory as the destination directory
-                DESTINATION_DIR="$CWD"
-            fi
+# add local 'bin' directory to path
+PATH="${UAC_DIR}/bin/${OPERATING_SYSTEM}/${SYSTEM_ARCH}:${PATH}"
+export PATH
 
-            MOUNT_POINT=`sanitize_path "$MOUNT_POINT"`
-            if [ -d "$MOUNT_POINT" ]; then
+printf %b "--------------------------------------------------------------------------------\n"
+printf %b "  __   __ _______ _______ \n"
+printf %b " |: | |  |:  _   |:  ____|\n"
+printf %b " |  |_|  |  | |  |  |____ \n"
+printf %b " |_______|__| |__|_______|\n"
+printf %b "\n"
+printf %b " Unix-like Artifacts Collector v${UAC_VERSION}\n"
+printf %b "--------------------------------------------------------------------------------\n"
+printf %b "Operating System    : ${OPERATING_SYSTEM}\n"
+printf %b "System Architecture : ${SYSTEM_ARCH}\n"
+printf %b "Hostname            : ${ua_hostname}\n"
+printf %b "Mount Point         : ${MOUNT_POINT}\n"
+printf %b "Running as          : ${ua_current_user}\n"
+printf %b "Temp Directory      : ${TEMP_DATA_DIR}\n"
+printf %b "--------------------------------------------------------------------------------\n"
 
-                CURRENT_DATE_TIME=`get_date "+%Y%m%d%H%M%S"`
+# start uac.log file
+log_message INFO "UAC (Unix-like Artifacts Collector) v${UAC_VERSION}"
+log_message INFO "Command line: ${ua_command_line}"
+log_message INFO "Collection file: ${ua_collection_file}"
+log_message INFO "Operating system: ${OPERATING_SYSTEM}"
+log_message INFO "System architecture: ${SYSTEM_ARCH}"
+log_message INFO "Hostname: ${ua_hostname}"
+log_message INFO "Mount point: ${MOUNT_POINT}"
+log_message INFO "Running as: ${ua_current_user}"
+log_message INFO "Date range start: ${START_DATE}"
+log_message INFO "Date range end: ${END_DATE}"
+log_message INFO "Case number: ${ua_case_number}"
+log_message INFO "Evidence number: ${ua_evidence_number}"
+log_message INFO "Description: ${ua_evidence_description}"
+log_message INFO "Examiner: ${ua_examiner}"
+log_message INFO "Notes: ${ua_notes}"
+log_message INFO "Temp directory: ${TEMP_DATA_DIR}"
+log_message INFO "Current PID: ${$}"
 
-                if $LIVE_COLLECTION; then
-                    HOSTNAME=`get_hostname`
-                    KERNEL_NAME=`uname -s`
-                    MACHINE_ARCH=`get_machine_arch`
-                    # create a tmp dir to store all collected data
-                    TMP_DATA_DIR="uac-$HOSTNAME-$PROFILE-$CURRENT_DATE_TIME"
-                else
-                    # create a tmp dir to store all collected data
-                    TMP_DATA_DIR="uac-mounted_image-$PROFILE-$CURRENT_DATE_TIME"
-                fi
-
-                mkdir "$DESTINATION_DIR/$TMP_DATA_DIR" > /dev/null
-                if [ -d "$DESTINATION_DIR/$TMP_DATA_DIR" ]; then
-
-                    # uac log file
-                    UAC_LOG_FILE="$DESTINATION_DIR/$TMP_DATA_DIR/uac.log"
-
-                    CURRENT_LOGGED_IN_USER=`get_current_logged_in_user`
-                    logging I "--------------------------------------------------------------------------------\n"
-                    logging I "  __   __ _______ _______ \n"
-                    logging I " |: | |  |:  _   |:  ____|\n"
-                    logging I " |  |_|  |  | |  |  |____ \n"
-                    logging I " |_______|__| |__|_______|\n"
-                    logging I "\n"
-                    logging I "Unix-like Artifacts Collector v$UAC_VERSION\n"
-                    logging I "--------------------------------------------------------------------------------\n"
-                    $VERBOSE && logging I "Command Line: $CMD\n" || logging D "Command Line: $CMD\n"
-                    logging I "Destination: $DESTINATION_DIR/$TMP_DATA_DIR\n"
-                    $LIVE_COLLECTION && logging I "Kernel Name (Arch): $KERNEL_NAME ($MACHINE_ARCH)\n"
-                    logging I "Profile: $PROFILE\n"
-                    $LIVE_COLLECTION && logging I "Hostname: $HOSTNAME\n"
-                    logging I "Mount Point: $MOUNT_POINT\n"
-                    logging I "Current User: $CURRENT_LOGGED_IN_USER\n"
-                    logging I "--------------------------------------------------------------------------------\n"
-                    logging I "Some collectors may take several minutes to finish, so please wait!\n"
-                    logging I "Press Ctrl+C any time to cancel the script.\n"
-                    logging I "--------------------------------------------------------------------------------\n"
-                    $LIVE_COLLECTION || logging I "UAC is being run against a forensic image mounted at $MOUNT_POINT\n"
-                    $LIVE_COLLECTION || logging I "Live/volatile data collectors will be disabled automatically.\n"
-                    $LIVE_COLLECTION || logging I "--------------------------------------------------------------------------------\n"
-
-                    if $LIVE_COLLECTION; then
-                        KERNEL_NAME_LOWERCASE=`to_lower $KERNEL_NAME`
-                        MACHINE_ARCH_LOWERCASE=`to_lower $MACHINE_ARCH`
-                        # add validated tools (binary files) directory to the system PATH
-                        if [ -d "$CWD/bin/$KERNEL_NAME_LOWERCASE/$MACHINE_ARCH_LOWERCASE" ]; then
-                            logging D "Validated tools directory found at $CWD/bin/$KERNEL_NAME_LOWERCASE/$MACHINE_ARCH_LOWERCASE\n"
-                            run_command "ls \"$CWD/bin/$KERNEL_NAME_LOWERCASE/$MACHINE_ARCH_LOWERCASE\"" "$UAC_LOG_FILE"
-                            PATH="$CWD/bin/$KERNEL_NAME_LOWERCASE/$MACHINE_ARCH_LOWERCASE:$PATH"
-                            export PATH
-                        fi
-                    fi
-
-                    logging D "PATH: $PATH\n"
-
-                    # get current PID
-                    logging D "Current PID: $$\n"
-
-                    # set some variables according to the available tools on the target system
-                    check_tools
-
-                    # make a backup of the configuration files used during the collection
-                    run_command "cp -r \"$CWD/conf\" \"$DESTINATION_DIR/$TMP_DATA_DIR/conf\""
-
-                    UAC_START_EPOCH=`get_epoch`
-                    CURRENT_DATE_TIME=`get_date "+%a %b %d %H:%M:%S %Y %z"`
-                    logging D "Collection started: $CURRENT_DATE_TIME\n"
-
-                    # collectors
-                    # run process collector
-                    $COLLECTOR_PROCESS && $LIVE_COLLECTION && run_collector process 2>> "$UAC_LOG_FILE"
-
-                    # run network collector
-                    $COLLECTOR_NETWORK && $LIVE_COLLECTION && run_collector network 2>> "$UAC_LOG_FILE"
-
-                    # run user collector
-                    $COLLECTOR_USER && $LIVE_COLLECTION && run_collector user 2>> "$UAC_LOG_FILE"
-
-                    # run system collector
-                    $COLLECTOR_SYSTEM && $LIVE_COLLECTION && run_collector system 2>> "$UAC_LOG_FILE"
-
-                    # run hardware collector
-                    $COLLECTOR_HARDWARE && $LIVE_COLLECTION && run_collector hardware 2>> "$UAC_LOG_FILE"
-
-                    # run software collector
-                    $COLLECTOR_SOFTWARE && $LIVE_COLLECTION && run_collector software 2>> "$UAC_LOG_FILE"
-
-                    # run disk_volume_file_system collector
-                    $COLLECTOR_DISK_VOLUME_FILE_SYSTEM && $LIVE_COLLECTION && run_collector disk_volume_file_system 2>> "$UAC_LOG_FILE"
-
-                    # run docker_virtual_machine collector
-                    $COLLECTOR_DOCKER_VIRTUAL_MACHINE && $LIVE_COLLECTION && run_collector docker_virtual_machine 2>> "$UAC_LOG_FILE"
-
-                    # run body_file collector
-                    $COLLECTOR_BODY_FILE && run_collector body_file 2>> "$UAC_LOG_FILE"
-
-                    # run files collector
-                    if $COLLECTOR_SYSTEM || $COLLECTOR_LOGS || $COLLECTOR_SUSPICIOUS_FILES || $COLLECTOR_USER; then
-                        run_collector files 2>> "$UAC_LOG_FILE"
-                    fi
-
-                    # extensions
-                    # run chkrootkit extension
-                    $EXTENSION_CHKROOTKIT && run_extension chkrootkit 2>> "$UAC_LOG_FILE"
-
-                    # run fls extension
-                    $EXTENSION_FLS && run_extension fls 2>> "$UAC_LOG_FILE"
-
-                    # run hash_exec extension
-                    $EXTENSION_HASH_EXEC && run_extension hash_exec 2>> "$UAC_LOG_FILE"
-                    
-                    logging I "--------------------------------------------------------------------------------\n"
-                    UAC_END_EPOCH=`get_epoch`
-                    UAC_TOTAL_RUNNING_TIME=`expr $EXPR_DASH_DASH $UAC_END_EPOCH - $UAC_START_EPOCH`
-                    CURRENT_DATE_TIME=`get_date "+%a %b %d %H:%M:%S %Y %z"`
-                    logging D "Collection finished: $CURRENT_DATE_TIME\n"
-                    logging D "Total running time: $UAC_TOTAL_RUNNING_TIME seconds.\n"
-
-                    printf %b "Collection finished! Total running time: $UAC_TOTAL_RUNNING_TIME seconds.\n"
-
-                    if ${TAR_TOOL_AVAILABLE} && ${GZIP_TOOL_AVAILABLE}; then
-                        # archive and compress output to file
-                        printf %b "Creating compressed output file. Please wait...\n"
-                        OUTPUT_FILE="$TMP_DATA_DIR.tar.gz"
-                        cd "$DESTINATION_DIR"
-                        if archive_compress_data "$TMP_DATA_DIR" "$OUTPUT_FILE"; then
-                            printf %b "Compressed output file created at '$DESTINATION_DIR/$OUTPUT_FILE'\n"
-                            rm -rf "$TMP_DATA_DIR" > /dev/null 2> /dev/null
-                            if [ -d "$TMP_DATA_DIR" ]; then
-                                printf %b "Cannot remove temporary directory '$DESTINATION_DIR/$TMP_DATA_DIR'\n"
-                            fi
-                        else
-                            printf %b "Cannot create compressed output file\n"
-                            printf %b "Please check collected data in '$DESTINATION_DIR/$TMP_DATA_DIR'\n"
-                        fi
-                        cd "$CWD"
-                    elif ${TAR_TOOL_AVAILABLE}; then
-                        # archive output to file
-                        printf %b "Creating output file. Please wait...\n"
-                        OUTPUT_FILE="$TMP_DATA_DIR.tar"
-                        cd "$DESTINATION_DIR"
-                        if archive_data "$TMP_DATA_DIR" "$OUTPUT_FILE"; then
-                            printf %b "Output file created at '$DESTINATION_DIR/$OUTPUT_FILE'\n"
-                            rm -rf "$TMP_DATA_DIR" > /dev/null 2> /dev/null
-                            if [ -d "$TMP_DATA_DIR" ]; then
-                                printf %b "Cannot remove temporary directory '$DESTINATION_DIR/$TMP_DATA_DIR'\n"
-                            fi
-                        else
-                            printf %b "Cannot create output file\n"
-                            printf %b "Please check collected data in '$DESTINATION_DIR/$TMP_DATA_DIR'\n"
-                        fi
-                        cd "$CWD"
-                    fi
-
-                    # hash output file if it exists
-                    if [ -f "$DESTINATION_DIR/$OUTPUT_FILE" ]; then
-                        if [ -n "$MD5SUM_TOOL" ]; then
-                            printf %b "Hashing output file. Please wait...\n"
-                            cd "$DESTINATION_DIR"
-                            $MD5SUM_TOOL "$OUTPUT_FILE" > "$OUTPUT_FILE.md5"
-                            if [ -n "$OUTPUT_FILE.md5" ]; then
-                                printf %b "MD5 hash output file created at '$DESTINATION_DIR/$OUTPUT_FILE.md5'\n"
-                            else
-                                printf %b "Cannot compute MD5 hash for '$DESTINATION_DIR/$OUTPUT_FILE'\n"
-                                rm "$OUTPUT_FILE.md5"
-                            fi
-                            cd "$CWD"
-                        fi
-                    else
-                        printf %b "Please check collected data in '$DESTINATION_DIR/$TMP_DATA_DIR'\n"
-                    fi
-
-                    if $SCP_TRANSFER; then
-                        if [ -f "$DESTINATION_DIR/$OUTPUT_FILE" ]; then
-                            # transfer output file
-                            printf %b "Transfering '$DESTINATION_DIR/$OUTPUT_FILE' to '$SCP_DESTINATION'\n"
-                            if scp_transfer "$DESTINATION_DIR/$OUTPUT_FILE" "$SCP_DESTINATION" "$SCP_PORT"; then
-                                printf %b "File transferred successfully\n"
-                            else
-                                printf %b "Could not transfer file\n"
-                            fi
-                            if [ -f "$DESTINATION_DIR/$OUTPUT_FILE.md5" ]; then
-                                # transfer output file
-                                printf %b "Transfering '$DESTINATION_DIR/$OUTPUT_FILE.md5' to '$SCP_DESTINATION'\n"
-                                if scp_transfer "$DESTINATION_DIR/$OUTPUT_FILE.md5" "$SCP_DESTINATION" "$SCP_PORT"; then
-                                    printf %b "File transferred successfully\n"
-                                else
-                                    printf %b "Could not transfer file\n"
-                                fi
-                            fi
-                        else
-                            # transfer output directory
-                            printf %b "Transfering '$DESTINATION_DIR/$TMP_DATA_DIR' to '$SCP_DESTINATION'\n"
-                            if scp_transfer "$DESTINATION_DIR/$TMP_DATA_DIR" "$SCP_DESTINATION" "$SCP_PORT"; then
-                                printf %b "Directory transferred successfully\n"
-                            else
-                                printf %b "Could not transfer directory\n"
-                            fi
-                        fi
-                    fi
-
-                else
-                    printf %b "Cannot create temporary directory '$DESTINATION_DIR/$TMP_DATA_DIR'\n"
-                    exit 6
-                fi
-            else
-                printf %b "Invalid mount point '$MOUNT_POINT'\n"
-                exit 5
-            fi
-        else
-            printf %b "This script requires root privileges to run properly.\n"
-            exit 3
-        fi
-    else
-        printf %b "Unsupported profile '$PROFILE'. Please use -P to force one of the supported profiles.\n"
-        exit 2
-    fi
-else
-    usage
-    exit 1
+# global exclusions from uac.conf
+log_message INFO "Loading uac.conf settings"
+log_message INFO "Global exclude path pattern: ${GLOBAL_EXCLUDE_PATH_PATTERN}"
+log_message INFO "Global exclude name pattern: ${GLOBAL_EXCLUDE_NAME_PATTERN}"
+log_message INFO "Global exclude file system: ${GLOBAL_EXCLUDE_FILE_SYSTEM}"
+# get mount points to globally exclude from collection
+GLOBAL_EXCLUDE_MOUNT_POINT=""
+if [ -n "${GLOBAL_EXCLUDE_FILE_SYSTEM}" ]; then
+  GLOBAL_EXCLUDE_MOUNT_POINT=`get_mount_point_by_file_system \
+    "${GLOBAL_EXCLUDE_FILE_SYSTEM}"`
 fi
+log_message INFO "Global exclude mount point: ${GLOBAL_EXCLUDE_MOUNT_POINT}"
+log_message INFO "Hash algorithm: ${HASH_ALGORITHM}"
+log_message INFO "Enable find mtime: ${ENABLE_FIND_MTIME}"
+log_message INFO "Enable find atime: ${ENABLE_FIND_ATIME}"
+log_message INFO "Enable find ctime: ${ENABLE_FIND_CTIME}"
+
+# check available system tools
+log_message INFO "Checking available system tools"
+check_available_system_tools >/dev/null 2>>"${UAC_STDERR_LOG_FILE}"
+
+log_message INFO "MD5 hashing tool: ${MD5_HASHING_TOOL}"
+log_message INFO "SHA1 hashing tool: ${SHA1_HASHING_TOOL}"
+log_message INFO "SHA256 hashing tool: ${SHA256_HASHING_TOOL}"
+log_message INFO "'tar' tool available: ${TAR_TOOL_AVAILABLE}"
+log_message INFO "'gzip' tool available: ${GZIP_TOOL_AVAILABLE}"
+log_message INFO "'stat' tool available: ${STAT_TOOL_AVAILABLE}"
+log_message INFO "'stat' btime support: ${STAT_BTIME_SUPPORT}"
+log_message INFO "'statx' tool available: ${STATX_TOOL_AVAILABLE}"
+
+log_message INFO "PATH: ${PATH}"
+
+# parse collection file
+log_message INFO "Parsing collection file"
+parse_collection_file "${ua_collection_file}" || exit 1
+
+# add UAC_DIR abd TEMP_DATA_DIR to GLOBAL_EXCLUDE_PATH_PATTERN
+if [ -n "${GLOBAL_EXCLUDE_PATH_PATTERN}" ]; then
+  GLOBAL_EXCLUDE_PATH_PATTERN="${GLOBAL_EXCLUDE_PATH_PATTERN},${UAC_DIR},${TEMP_DATA_DIR}"
+else
+  GLOBAL_EXCLUDE_PATH_PATTERN="${UAC_DIR},${TEMP_DATA_DIR}"
+fi
+
+# get all user/home list
+USER_HOME_LIST=`get_user_home_list 2>>"${UAC_STDERR_LOG_FILE}"`
+# get user/home list skipping users with non-interactive shells
+VALID_SHELL_ONLY_USER_HOME_LIST=`get_user_home_list true 2>>"${UAC_STDERR_LOG_FILE}"`
+
+# acquisition start date
+ua_acq_start_date=`date "+%a %b %d %H:%M:%S %Y %z" 2>>"${UAC_STDERR_LOG_FILE}"`
+# acquisition start epoch date
+ua_acq_start_date_epoch=`get_epoch_date 2>>"${UAC_STDERR_LOG_FILE}"`
+
+log_message INFO "Artifacts collection started"
+printf %b "Artifacts collection started...\n"
+
+ua_progress_current=0
+ua_progress_total=`wc -l "${TEMP_DATA_DIR}/.artifacts.tmp" | awk '{print $1}'`
+
+# enable debug mode if it is set to true
+${ua_debug_mode} && set -x
+
+while read ua_artifact_file || [ -n "${ua_artifact_file}" ]; do
+  log_message INFO "Parsing artifacts file '${ua_artifact_file}'"
+  ua_progress_current=`expr ${ua_progress_current} + 1`
+  printf "[%03d/%03d] %b\n" "${ua_progress_current}" \
+    "${ua_progress_total}" "${ua_artifact_file}"
+  ua_artifacts_root_output_directory=`dirname "${ua_artifact_file}"`
+  parse_artifacts_file "${UAC_DIR}/artifacts/${ua_artifact_file}" \
+    "${ua_artifacts_root_output_directory}"
+done <"${TEMP_DATA_DIR}/.artifacts.tmp" 2>>"${UAC_STDERR_LOG_FILE}"
+
+# disable debug mode
+${ua_debug_mode} && set +x
+
+# acquisition end date
+ua_acq_end_date=`date "+%a %b %d %H:%M:%S %Y %z" 2>>"${UAC_STDERR_LOG_FILE}"`
+# acquisition end epoch date
+ua_acq_end_date_epoch=`get_epoch_date 2>>"${UAC_STDERR_LOG_FILE}"`
+# get current date and time string (it will be part of the output file name)
+ua_current_date_time=`date "+%Y%m%d%H%M%S"`
+
+# calculate running time
+ua_total_running_time=`expr ${ua_acq_end_date_epoch} - ${ua_acq_start_date_epoch}`
+
+printf %b "--------------------------------------------------------------------------------\n"
+log_message INFO "Artifacts collection complete. \
+Total running time: ${ua_total_running_time} seconds"
+
+printf %b "Artifacts collection complete. \
+Total running time: ${ua_total_running_time} seconds\n"
+
+if [ -f "${TEMP_DATA_DIR}/.files.tmp" ]; then
+  # create symbolic link to mount point
+  ln -s "${MOUNT_POINT}" "${TEMP_DATA_DIR}/[root]" 2>>"${UAC_STDERR_LOG_FILE}"
+
+  # add [root] string to the beginning of each entry in .files.tmp
+  # and add them to the list of files to be archived within the output file
+  sed -e 's:^/:\[root\]/:' "${TEMP_DATA_DIR}/.files.tmp" \
+    >>"${TEMP_DATA_DIR}/.output_file.tmp"
+fi
+
+# add uac.log to the list of files to be archived within the output file
+echo "uac.log" >>"${TEMP_DATA_DIR}/.output_file.tmp"
+# add uac.log.stderr to the list of files to be archived within the output file
+echo "uac.log.stderr" >>"${TEMP_DATA_DIR}/.output_file.tmp"
+
+# sort and uniq
+sort_uniq_file "${TEMP_DATA_DIR}/.output_file.tmp" 2>>"${UAC_STDERR_LOG_FILE}"
+
+# output file name
+ua_output_file=""
+
+if ${TAR_TOOL_AVAILABLE} && ${GZIP_TOOL_AVAILABLE}; then
+  # archive and compress collected artifacts to output file
+  printf %b "Creating output file. Please wait...\n"
+  ua_output_file="uac-${ua_hostname}-${OPERATING_SYSTEM}-${ua_current_date_time}.tar.gz"
+  
+  cd "${TEMP_DATA_DIR}"
+  if archive_compress_data ".output_file.tmp" \
+    "${ua_destination_dir}/${ua_output_file}" 2>/dev/null; then
+    printf %b "Output file created '${ua_destination_dir}/${ua_output_file}'\n"
+    cd "${UAC_DIR}"
+    rm -rf "${TEMP_DATA_DIR}" >/dev/null 2>/dev/null
+    if [ -d "${TEMP_DATA_DIR}" ]; then
+        printf %b "Cannot remove temporary directory '${TEMP_DATA_DIR}'\n"
+    fi
+  else
+    printf %b "Cannot create output file\n"
+    printf %b "Please check collected artifacts in '${TEMP_DATA_DIR}'\n"
+    cd "${UAC_DIR}" && exit 1
+  fi
+
+elif ${TAR_TOOL_AVAILABLE}; then
+  # archive collected artifacts to output to file
+  printf %b "Creating output file. Please wait...\n"
+  ua_output_file="uac-${ua_hostname}-${OPERATING_SYSTEM}-${ua_current_date_time}.tar"
+
+  cd "${TEMP_DATA_DIR}"
+  if archive_data ".output_file.tmp" \
+    "${ua_destination_dir}/${ua_output_file}" 2>/dev/null; then
+    printf %b "Output file created '${ua_destination_dir}/${ua_output_file}'\n"
+    cd "${UAC_DIR}"
+    rm -rf "${TEMP_DATA_DIR}" >/dev/null 2>/dev/null
+    if [ -d "${TEMP_DATA_DIR}" ]; then
+        printf %b "Cannot remove temporary directory '${TEMP_DATA_DIR}'\n"
+    fi
+  else
+    printf %b "Cannot create output file\n"
+    printf %b "Please check collected artifacts in '${TEMP_DATA_DIR}'\n"
+    cd "${UAC_DIR}" && exit 1
+  fi
+fi
+
+ua_output_file_hash=""
+
+# hash output file
+if [ -f "${ua_destination_dir}/${ua_output_file}" ]; then
+  printf %b "Hashing output file. Please wait...\n"
+  cd "${ua_destination_dir}"
+  ua_output_file_hash=`${MD5_HASHING_TOOL} "${ua_output_file}"`
+  cd "${UAC_DIR}"
+fi
+
+# acquisition log file name
+ua_acquisition_log="uac-${ua_hostname}-${OPERATING_SYSTEM}-${ua_current_date_time}.log"
+
+# print acquisition log to file
+print_acquisition_log \
+  "${ua_case_number}" \
+  "${ua_evidence_number}" \
+  "${ua_evidence_description}" \
+  "${ua_examiner}" \
+  "${ua_notes}" \
+  "${ua_hostname}" \
+  "${ua_acq_start_date}" \
+  "${ua_acq_end_date}" \
+  "${ua_output_file_hash}" \
+    >"${ua_destination_dir}/${ua_acquisition_log}"
+
+printf %b "Acquisition log created \
+'${ua_destination_dir}/${ua_acquisition_log}'\n"
+
+# transfer output and log file to remote scp server
+if [ -n "${ua_sftp_destination}" ]; then
+  printf %b "Transferring output file to remote SFTP server. Please wait...\n"
+  if sftp_transfer "${ua_destination_dir}/${ua_output_file}" \
+    "${ua_sftp_destination}" "${ua_sftp_port}" "${ua_sftp_identity_file}"; then
+    printf %b "File transferred successfully\n"
+    # delete output file on success transfer
+    ${ua_sftp_delete_local_on_success} \
+      && rm -f "${ua_destination_dir}/${ua_output_file}" 2>/dev/null
+    printf %b "Transferring log file to remote SFTP server. Please wait...\n"
+    if sftp_transfer "${ua_destination_dir}/${ua_acquisition_log}" \
+      "${ua_sftp_destination}" "${ua_sftp_port}" "${ua_sftp_identity_file}"; then
+      printf %b "File transferred successfully\n"
+      # delete log file on success transfer
+      ${ua_sftp_delete_local_on_success} \
+        && rm -f "${ua_destination_dir}/${ua_acquisition_log}" 2>/dev/null
+    else
+      printf %b "Could not transfer log file to remote SFTP server\n"
+      exit 1
+    fi
+  else
+    printf %b "Could not transfer output file to remote SFTP server\n"
+    exit 1
+  fi
+fi
+
 exit 0

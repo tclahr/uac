@@ -1,0 +1,11 @@
+description: Collect shell sessions files.
+version: 1.0
+artifacts:
+  -
+    description: Collect shell sessions files.
+    collector: file
+    supported_os: [all]
+    path: /%user_home%
+    name_pattern: ["*.sessions", ".*_sessions"]
+    max_depth: 2
+    

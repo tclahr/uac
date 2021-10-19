@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-# Copyright (C) 2019,2020 IBM Corporation
+# Copyright (C) 2020 IBM Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the “License”);
 # you may not use this file except in compliance with the License.
@@ -84,6 +84,9 @@ OPTIONS
     -perm -MODE
         All of the permission bits mode (octal) are set for the file. Symbolic mode is not supported.
 
+    -perm /MODE
+        Any of the permission bits mode are set for the file. Symbolic mode is not supported.
+
     -prune
         Always evaluates to the value True. If the file is a directory, do not descend into it.
 
@@ -99,7 +102,6 @@ OPTIONS
         N is not prefixed with either + or -: match only values equal to N
 
 USAGE
-    exit 1;
 }
 
 sub fileglob_to_regex($) {
@@ -110,119 +112,164 @@ sub fileglob_to_regex($) {
     "^$retval\\z";
 }
 
-my $root = $ARGV[0] || usage();
-if (-e $root) {
-    shift;
-    my $wanted = "my (\$dev,\$inode,\$mode,\$nlink,\$uid,\$gid,\$rdev,\$size,\$atime,\$mtime,\$ctime,\$blksize,\$blocks); ((\$dev,\$inode,\$mode,\$nlink,\$uid,\$gid,\$rdev,\$size,\$atime,\$mtime,\$ctime,\$blksize,\$blocks) = lstat(\$File::Find::name)) && ";
-    my $depth = 0;
-    my $maxdepth = 0;
-    my $print_needed = 1;
-    while (@ARGV) {
-        my $arg_option = shift;
-        if ($arg_option eq "!") {
-            $wanted .= "!";
-            next;
-        } elsif ($arg_option eq "(") {
-            $wanted .= "(";
-            next;
-        } elsif ($arg_option eq ")") {
-            $wanted .= ")";
-        } elsif ($arg_option eq "-maxdepth") {
-            $maxdepth = shift;
-            ($maxdepth =~ /^\d+$/) || die ("Expected a positive decimal integer argument to -maxdepth, but got $maxdepth\n");
-            next;
-        } elsif ($arg_option eq "-name") {
-            $wanted .= "/" . fileglob_to_regex(shift) . "/s";
-        } elsif ($arg_option eq "-iname") {
-            $wanted .= "/" . fileglob_to_regex(shift) . "/si";
-        } elsif ($arg_option eq "-path") {
-            $wanted .= "\$File::Find::name =~ /" . fileglob_to_regex(shift) . "/s";
-        } elsif ($arg_option eq "-ipath") {
-            $wanted .= "\$File::Find::name =~ /" . fileglob_to_regex(shift) . "/si";
-        } elsif ($arg_option eq "-atime") {
-            my $atime = shift;
-            ($atime =~ /^([\+\-]?)(\d+)$/) || die ("Invalid argument to -atime: $atime\n");
-            $atime =~ s/^-/< / || $atime =~ s/^\+/> / || $atime =~ s/^/== /;
-            $wanted .= "int(-A _) $atime";
-        } elsif ($arg_option eq "-mtime") {
-            my $mtime = shift;
-            ($mtime =~ /^([\+\-]?)(\d+)$/) || die ("Invalid argument to -mtime: $mtime\n");
-            $mtime =~ s/^-/< / || $mtime =~ s/^\+/> / || $mtime =~ s/^/== /;
-            $wanted .= "int(-M _) $mtime";
-        } elsif ($arg_option eq "-ctime") {
-            my $ctime = shift;
-            ($ctime =~ /^([\+\-]?)(\d+)$/) || die ("Invalid argument to -ctime: $ctime\n");
-            $ctime =~ s/^-/< / || $ctime =~ s/^\+/> / || $ctime =~ s/^/== /;
-            $wanted .= "int(-C _) $ctime";
-        } elsif ($arg_option eq "-perm") {
-            my $perm = shift;
-            ($perm =~ /^-?[0-7]{3,4}$/) || die ("Invalid argument to -perm: $perm\n");
-            if ($perm =~ s/^-//) {
-                $perm = sprintf("0%s", $perm & 07777);
-                $wanted .= "((\$mode & $perm) == $perm)";
-            } else {
-                $perm =~ s/^0*/0/;
-                $wanted .= "((\$mode & 07777) == $perm)";
-            }
-        } elsif ($arg_option eq "-type") {
-            my $type = shift;
-            $type =~ /^[fdlpsbc]$/ || die ("Unknown argument to -type: $type\n");
-            $type =~ tr/s/S/;
-            $wanted .= "(-$type _)";
-        } elsif ($arg_option eq "-size") {
-            my $size = shift;
-            ($size =~ /^([\+\-]?)(\d+)([ckMG]?)$/) || die ("Invalid argument to -size: $size\n");
-            $size =~ s/^-/< / || $size =~ s/^\+/> / || $size =~ s/^/== /;
-            $size =~ s/c$// || $size =~ s/k$/000/ || $size =~ s/M$/000000/ || $size =~ s/G$/000000000/;
-            $wanted .= "int(-s _) $size";
-        } elsif ($arg_option eq "-prune") {
-            $wanted .= "(\$File::Find::prune = 1)";
-        } elsif ($arg_option eq "-print") {
-            $wanted .= "print(\"\$File::Find::name\\n\");";
-            $print_needed = 0;
-        } elsif ($arg_option eq "-print0") {
-            $wanted .= "print(\"\$File::Find::name\");";
-            $print_needed = 0;
-        } else {
-            die("Unrecognized option: $arg_option\n");
-        }
+my @starting_points = ();
+my $wanted = "my (\$dev,\$inode,\$mode,\$nlink,\$uid,\$gid,\$rdev,\$size,\$atime,\$mtime,\$ctime,\$blksize,\$blocks); ((\$dev,\$inode,\$mode,\$nlink,\$uid,\$gid,\$rdev,\$size,\$atime,\$mtime,\$ctime,\$blksize,\$blocks) = lstat(\$File::Find::name)) && ";
+my $depth = 0;
+my $maxdepth = 0;
+my $print_needed = 1;
 
-        if (@ARGV) {
-            if ($ARGV[0] eq "-o") {
-                $wanted .= " || ";
-                shift;
-            } else {
-                $wanted .= " && " unless $ARGV[0] eq ")";
-                shift if $ARGV[0] eq "-a";
-            }
-        }
+# print usage if no arguments are provided
+if (@ARGV < 1) {
+    usage();
+    exit 1;
+}
 
+# get starting-points only
+while (@ARGV) {
+    my $arg_option = shift;
+    if (($arg_option !~ /^-/) and ($arg_option ne "!") and ($arg_option ne "(") and ($arg_option ne ")")) {
+        push(@starting_points, $arg_option);
+    } else {
+        unshift(@ARGV, $arg_option);
+        last;
     }
-    
-    if ($print_needed) {
-        if ($wanted =~ /&&\s*$/) {
-            $wanted .= " print(\"\$File::Find::name\\n\");";
-        } else {
-            $wanted .= " && print(\"\$File::Find::name\\n\");";
-        }
-    } 
+}
 
-    find({
-        preprocess => sub {
-            $depth += 1;
-            return if ($depth > $maxdepth) and ($maxdepth > 0);
-            @_;
-        },
-        postprocess => sub {
-            $depth -= 1;
-            @_;
-        },
-        wanted => sub {
-            eval $wanted;
-        },
-        no_chdir => 0,
-        follow_skip => 1
-    }, $root);
-} else {
-    die("$root: No such file or directory\n")
+# use current directory . as the starting-point if none was provided
+if (@starting_points < 1) {
+    push(@starting_points, ".");
+}
+
+# parse remaining parameters
+while (@ARGV) {
+    my $arg_option = shift;
+    if ($arg_option eq "!") {
+        $wanted .= "!";
+        next;
+    } elsif ($arg_option eq "(") {
+        $wanted .= "(";
+        next;
+    } elsif ($arg_option eq ")") {
+        $wanted .= ")";
+    } elsif ($arg_option eq "-maxdepth") {
+        $maxdepth = shift;
+        ($maxdepth =~ /^\d+$/) || die ("find.pl: expected a positive decimal integer argument to -maxdepth, but got $maxdepth\n");
+        next;
+    } elsif ($arg_option eq "-name") {
+        $wanted .= "/" . fileglob_to_regex(shift) . "/s";
+    } elsif ($arg_option eq "-iname") {
+        $wanted .= "/" . fileglob_to_regex(shift) . "/si";
+    } elsif ($arg_option eq "-path") {
+        $wanted .= "\$File::Find::name =~ /" . fileglob_to_regex(shift) . "/s";
+    } elsif ($arg_option eq "-ipath") {
+        $wanted .= "\$File::Find::name =~ /" . fileglob_to_regex(shift) . "/si";
+    } elsif ($arg_option eq "-atime") {
+        my $atime = shift;
+        ($atime =~ /^([\+\-]?)(\d+)$/) || die ("find.pl: invalid argument to -atime: $atime\n");
+        $atime =~ s/^-/< / || $atime =~ s/^\+/> / || $atime =~ s/^/== /;
+        $wanted .= "int(-A _) $atime";
+    } elsif ($arg_option eq "-mtime") {
+        my $mtime = shift;
+        ($mtime =~ /^([\+\-]?)(\d+)$/) || die ("find.pl: invalid argument to -mtime: $mtime\n");
+        $mtime =~ s/^-/< / || $mtime =~ s/^\+/> / || $mtime =~ s/^/== /;
+        $wanted .= "int(-M _) $mtime";
+    } elsif ($arg_option eq "-ctime") {
+        my $ctime = shift;
+        ($ctime =~ /^([\+\-]?)(\d+)$/) || die ("find.pl: invalid argument to -ctime: $ctime\n");
+        $ctime =~ s/^-/< / || $ctime =~ s/^\+/> / || $ctime =~ s/^/== /;
+        $wanted .= "int(-C _) $ctime";
+    } elsif ($arg_option eq "-perm") {
+        my $perm = shift;
+        ($perm =~ /^[-\/]?[0-7]{1,4}$/) || die ("find.pl: invalid argument to -perm: $perm\n");
+        if ($perm =~ s/^-//) {
+            $perm = sprintf("0%s", $perm & 07777);
+            $wanted .= "((\$mode & $perm) == $perm)";
+        } elsif ($perm =~ s/^\///) {
+            my $o_perm = sprintf("000%s", substr($perm, -1, 1));
+            $o_perm = sprintf("0%s", $o_perm & 07777);
+            $wanted .= "( ((\$mode & $o_perm) == $o_perm)";
+            if (substr($perm, -2, 1)) {
+                my $g_perm = sprintf("00%s0", substr($perm, -2, 1));
+                $g_perm = sprintf("0%s", $g_perm & 07777);
+                $wanted .= " || ((\$mode & $g_perm) == $g_perm)";
+            }
+            if (substr($perm, -3, 1)) {
+                my $u_perm = sprintf("0%s00", substr($perm, -3, 1));
+                $u_perm = sprintf("0%s", $u_perm & 07777);
+                $wanted .= " || ((\$mode & $u_perm) == $u_perm)";
+            }
+            if (substr($perm, -4, 1)) {
+                my $s_perm = sprintf("%s000", substr($perm, -4, 1));
+                $s_perm = sprintf("0%s", $s_perm & 07777);
+                $wanted .= " || ((\$mode & $s_perm) == $s_perm)";
+            }
+            $wanted .= ")"
+        } else {
+            $perm =~ s/^0*/0/;
+            $wanted .= "((\$mode & 07777) == $perm)";
+        }
+    } elsif ($arg_option eq "-type") {
+        my $type = shift;
+        $type =~ /^[fdlpsbc]$/ || die ("find.pl: unknown argument to -type: $type\n");
+        $type =~ tr/s/S/;
+        $wanted .= "(-$type _)";
+    } elsif ($arg_option eq "-size") {
+        my $size = shift;
+        ($size =~ /^([\+\-]?)(\d+)([ckMG]?)$/) || die ("find.pl:  invalid argument to -size: $size\n");
+        $size =~ s/^-/< / || $size =~ s/^\+/> / || $size =~ s/^/== /;
+        $size =~ s/c$// || $size =~ s/k$/000/ || $size =~ s/M$/000000/ || $size =~ s/G$/000000000/;
+        $wanted .= "int(-s _) $size";
+    } elsif ($arg_option eq "-prune") {
+        $wanted .= "(\$File::Find::prune = 1)";
+    } elsif ($arg_option eq "-print") {
+        $wanted .= "print(\"\$File::Find::name\\n\");";
+        $print_needed = 0;
+    } elsif ($arg_option eq "-print0") {
+        $wanted .= "print(\"\$File::Find::name\");";
+        $print_needed = 0;
+    } else {
+        die("find.pl: unrecognized option: $arg_option\n");
+    }
+
+    if (@ARGV) {
+        if ($ARGV[0] eq "-o") {
+            $wanted .= " || ";
+            shift;
+        } else {
+            $wanted .= " && " unless $ARGV[0] eq ")";
+            shift if $ARGV[0] eq "-a";
+        }
+    }
+
+}
+
+if ($print_needed) {
+    if ($wanted =~ /&&\s*$/) {
+        $wanted .= " print(\"\$File::Find::name\\n\");";
+    } else {
+        $wanted .= " && print(\"\$File::Find::name\\n\");";
+    }
+}
+
+for my $starting_point (@starting_points) {
+    if (-e $starting_point) {
+        find({
+            preprocess => sub {
+                $depth += 1;
+                return if ($depth > $maxdepth) and ($maxdepth > 0);
+                @_;
+            },
+            postprocess => sub {
+                $depth -= 1;
+                @_;
+            },
+            wanted => sub {
+                eval $wanted;
+            },
+            no_chdir => 0,
+            follow_skip => 1
+        }, $starting_point);
+    } else {
+        print STDERR "find.pl: no such file or directory '$starting_point'\n";
+    }
 }

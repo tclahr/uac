@@ -1,0 +1,10 @@
+description: Collect all log files and directories.
+version: 1.0
+artifacts:
+  -
+    description: Collect all log files and directories.
+    collector: file
+    supported_os: [all]
+    path: /
+    name_pattern: ["*.[Ll][Oo][Gg]", "*.[Ll][Oo][Gg].*", "[Ll][Oo][Gg]", "[Ll][Oo][Gg][Ss]"]
+  

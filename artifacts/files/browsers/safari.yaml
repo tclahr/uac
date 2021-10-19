@@ -1,0 +1,19 @@
+description: Safari browser files.
+version: 1.0
+artifacts:
+  -
+    description: Collect Safari browser files.
+    collector: file
+    supported_os: [macos]
+    path: /%user_home%/Library/Safari*
+    name_pattern: ["AutoFillCorrections*", "AutomaticBookmarksBackup.html", "Bookmarks.plist", "CloudAutoFillCorrections*", "CloudTabs*", "ContentBlockerStatistics*", "Cookies.plist", "Downloads.plist", "Favicon Cache", "Form Values", "History*", "LastSession.plist", "PerSitePreferences*", "TopSites.plist"]
+    ignore_date_range: true
+    exclude_nologin_users: true
+  -
+    description: Collect Safari cookies files.
+    collector: file
+    supported_os: [macos]
+    path: /%user_home%/Library/Cookies
+    ignore_date_range: true
+    exclude_nologin_users: true
+  

@@ -1,0 +1,10 @@
+description: Run and collect free command output.
+version: 1.0
+artifacts:
+  -
+    description: Display amount of free and used memory in the system.
+    collector: command
+    supported_os: [android, linux]
+    command: free
+    output_file: free.txt
+  

@@ -1,0 +1,17 @@
+description: Run and collect pkg_info command output.
+version: 1.0
+artifacts:
+  -
+    description: Display information for all currently installed packages, including internal packages.
+    collector: command
+    supported_os: [openbsd]
+    command: pkg_info -A
+    output_file: pkg_info_-A.txt
+  -
+    description: Display information for all currently installed packages.
+    collector: command
+    supported_os: [netbsd]
+    command: pkg_info -a -d
+    output_file: pkg_info_-a_-d.txt
+  
+  

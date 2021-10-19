@@ -1,0 +1,49 @@
+description: Strings running processes.
+version: 1.0
+artifacts:
+  -
+    description: Extract strings from running processes.
+    collector: command
+    supported_os: [aix]
+    loop_command: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
+    command: strings -a /proc/%line%/object/a.out
+    output_directory: proc/%line%
+    output_file: strings.txt
+    compress_output_file: true
+  -
+    description: Extract strings from running processes.
+    collector: command
+    supported_os: [freebsd, macos, openbsd]
+    loop_command: ps -eo args | grep ^/ | awk '{print $1}' | sort -u
+    command: strings -a %line%
+    output_directory: strings
+    output_file: %line%.txt
+    compress_output_file: true
+  -
+    description: Extract strings from running processes.
+    collector: command
+    supported_os: [android, linux, netbsd]
+    loop_command: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
+    command: strings -a /proc/%line%/exe
+    output_directory: proc/%line%
+    output_file: strings.txt
+    compress_output_file: true
+  -
+    description: Extract strings from running processes.
+    collector: command
+    supported_os: [netscaler]
+    loop_command: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
+    command: strings -a /proc/%line%/file
+    output_directory: proc/%line%
+    output_file: strings.txt
+    compress_output_file: true
+  -
+    description: Extract strings from running processes.
+    collector: command
+    supported_os: [solaris]
+    loop_command: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
+    command: strings -a /proc/%line%/path/a.out
+    output_directory: proc/%line%
+    output_file: strings.txt
+    compress_output_file: true
+  

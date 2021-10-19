@@ -1,0 +1,10 @@
+description: Run and collect opkg command output.
+version: 1.0
+artifacts:
+  -
+    description: Display installed packages.
+    collector: command
+    supported_os: [linux]
+    command: opkg list-installed
+    output_file: opkg_list-installed.txt
+  

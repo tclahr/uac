@@ -1,0 +1,9 @@
+description: Run and collect smbios command output.
+version: 1.0
+artifacts:
+  -
+    description: Display the contents of the System Management BIOS image.
+    collector: command
+    supported_os: [solaris]
+    command: smbios
+    output_file: smbios.txt

@@ -1,0 +1,18 @@
+description: Collect NetScaler system logs.
+version: 1.0
+artifacts:
+  -
+    description: Collect nslog logs.
+    collector: file
+    supported_os: [netscaler]
+    path: /var/nslog/*
+  -
+    description: Collect nsproflog logs.
+    collector: file
+    supported_os: [netscaler]
+    path: /var/nsproflog/*
+  -
+    description: Collect nssynclog logs.
+    collector: file
+    supported_os: [netscaler]
+    path: /var/nssynclog/*

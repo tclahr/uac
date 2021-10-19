@@ -1,0 +1,9 @@
+description: Collect NetScaler system configuration files.
+version: 1.0
+artifacts:
+  -
+    description: Collect system configuration files.
+    collector: file
+    supported_os: [netscaler]
+    path: /flash/nsconfig/*
+    ignore_date_range: true

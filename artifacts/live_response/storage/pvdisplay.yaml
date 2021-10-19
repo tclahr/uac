@@ -1,0 +1,10 @@
+description: Run and collect pvdisplay command output.
+version: 1.0
+artifacts:
+  -
+    description: Display various attributes of physical volumes.
+    collector: command
+    supported_os: [linux]
+    command: pvdisplay
+    output_file: pvdisplay.txt
+  

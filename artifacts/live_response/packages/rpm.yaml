@@ -1,0 +1,16 @@
+description: Run and collect rpm command output.
+version: 1.0
+artifacts:
+  -
+    description: Displays all installed packages.
+    collector: command
+    supported_os: [aix, linux]
+    command: rpm -q -a
+    output_file: rpm_-q_-a.txt
+  -
+    description: Display all installed packages name, install date, version and release.
+    collector: command
+    supported_os: [aix, linux]
+    command: rpm -q -a --queryformat '%{INSTALLTIME}~%{NAME}~%{VERSION}-%{RELEASE}\\n'
+    output_file: rpm_-q_-a_--queryformat_installtime_name_version_release.txt
+  

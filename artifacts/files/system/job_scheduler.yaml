@@ -1,0 +1,28 @@
+description: Collect job scheduler related files.
+version: 1.0
+artifacts:
+  -
+    description: Collect cron files.
+    collector: file
+    supported_os: [aix, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris]
+    path: /var/cron/*
+  -
+    description: Collect cron files.
+    collector: file
+    supported_os: [aix, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris]
+    path: /var/adm/cron/*
+  -
+    description: Collect at files.
+    collector: file
+    supported_os: [aix, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris]
+    path: /var/spool/at/*
+  -
+    description: Collect at files.
+    collector: file
+    supported_os: [aix, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris]
+    path: /var/spool/cron/*
+  -
+    description: Collect at files.
+    collector: file
+    supported_os: [aix, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris]
+    path: /private/var/at/tabs/*

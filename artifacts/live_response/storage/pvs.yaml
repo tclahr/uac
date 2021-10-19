@@ -1,0 +1,10 @@
+description: Run and collect pvs command output.
+version: 1.0
+artifacts:
+  -
+    description: Display information about physical volumes.
+    collector: command
+    supported_os: [linux]
+    command: pvs
+    output_file: pvs.txt
+  

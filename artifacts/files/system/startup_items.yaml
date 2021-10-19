@@ -1,0 +1,39 @@
+description: Collect startup items files.
+version: 1.0
+artifacts:
+  -
+    description: Collect Startup Items configuration files.
+    collector: file
+    supported_os: [macos]
+    path: /Library/StartupItems/*
+    ignore_date_range: true
+  -
+    description: Collect Agents configuration files.
+    collector: file
+    supported_os: [macos]
+    path: /Library/LaunchAgents/*
+    ignore_date_range: true
+  -
+    description: Collect Agents configuration files.
+    collector: file
+    supported_os: [macos]
+    path: /System/Library/LaunchAgents/*
+    ignore_date_range: true
+  -
+    description: Collect Agents configuration files.
+    collector: file
+    supported_os: [macos]
+    path: /%user_home%/Library/LaunchAgents/*
+    ignore_date_range: true
+  -
+    description: Collect Daemons configuration files.
+    collector: file
+    supported_os: [macos]
+    path: /Library/LaunchDaemons/*
+    ignore_date_range: true
+  -
+    description: Collect Daemons configuration files.
+    collector: file
+    supported_os: [macos]
+    path: /System/Library/LaunchDaemons/*
+    ignore_date_range: true

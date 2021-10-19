@@ -1,0 +1,16 @@
+description: Collect system configuration files.
+version: 1.0
+artifacts:
+  -
+    description: Collect system configuration files.
+    collector: file
+    supported_os: [all]
+    path: /etc/*
+    exclude_name_pattern: ["shadow", "shadow-"]
+    ignore_date_range: true
+  -
+    description: Collect system configuration files.
+    collector: file
+    supported_os: [macos]
+    path: /private/etc/*
+    ignore_date_range: true

@@ -1,0 +1,22 @@
+description: Run and collect pacman command output.
+version: 1.0
+artifacts:
+  -
+    description: Display installed packages.
+    collector: command
+    supported_os: [linux]
+    command: pacman -Q -e
+    output_file: pacman_-Q_-e.txt
+  -
+    description: Restrict or filter output to packages that were not found in the sync database(s). Typically these are packages that were downloaded manually and installed with --upgrade.
+    collector: command
+    supported_os: [linux]
+    command: pacman -Q -m
+    output_file: pacman_-Q_-m.txt
+  -
+    description: Restrict or filter output to packages that are found in the sync database(s).
+    collector: command
+    supported_os: [linux]
+    command: pacman -Q -n
+    output_file: pacman_-Q_-n.txt
+  

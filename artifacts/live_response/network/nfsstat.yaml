@@ -1,0 +1,9 @@
+description: Run and collect nfsstat command output.
+version: 1.0
+artifacts:
+  -
+    description: Collect statistics kept about NFS client and server activity.
+    collector: command
+    supported_os: [aix, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris]
+    command: nfsstat
+    output_file: nfsstat.txt

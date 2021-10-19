@@ -1,0 +1,15 @@
+description: Run and collect prtconf command output.
+version: 1.0
+artifacts:
+  -
+    description: Display system configuration information.
+    collector: command
+    supported_os: [aix, solaris]
+    command: prtconf
+    output_file: prtconf.txt
+  -
+    description: Display system configuration information.
+    collector: command
+    supported_os: [aix, solaris]
+    command: prtconf -v
+    output_file: prtconf_-v.txt

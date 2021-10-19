@@ -1,0 +1,10 @@
+description: Run and collect vmstat command output.
+version: 1.0
+artifacts:
+  -
+    description: Display virtual memory statistics.
+    collector: command
+    supported_os: [android, aix, freebsd, linux, netbsd, netscaler, openbsd, solaris]
+    command: vmstat
+    output_file: vmstat.txt
+  
