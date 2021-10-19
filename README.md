@@ -10,6 +10,7 @@ UAC reads YAML files on the fly and, based on their contents, collects relevant 
 - Respects the order of volatility during artifacts collection
 - Collects information from processes running without a binary on disk
 - Extracts information from files and directories to create a bodyfile
+- Hash running processes and executable files
 
 ## Supported Operating Systems
 - Android
