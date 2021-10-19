@@ -19,6 +19,7 @@
 #   TEMP_DATA_DIR
 # Requires:
 #   log_message
+#   regex_match
 # Arguments:
 #   $1: loop command (optional)
 #   $2: command
@@ -115,10 +116,22 @@ ${cc_loop_command}\n" >&2
             echo "${cc_new_output_directory}/${cc_new_output_file}.gz" \
               >>"${TEMP_DATA_DIR}/.output_file.tmp"
           else
-            # run command and append output to existing file
-            eval "${cc_new_command}" \
-              >>"${TEMP_DATA_DIR}/${cc_new_output_directory}/${cc_new_output_file}" \
-              2>>"${TEMP_DATA_DIR}/${cc_new_output_directory}/${cc_new_output_file}.stderr"
+            if regex_match "%output_file%" "${cc_new_command}"; then
+              # replace %output_file% by ${cc_new_output_file} in command
+              cc_new_command=`echo "${cc_new_command}" \
+                | sed -e "s:%output_file%:${TEMP_DATA_DIR}/${cc_new_output_directory}/${cc_new_output_file}:g"`
+              # run command and append output to existing file
+              log_message COMMAND "${cc_new_command}"
+              eval "${cc_new_command}" \
+                2>>"${TEMP_DATA_DIR}/${cc_new_output_directory}/${cc_new_output_file}.stderr"
+            else
+              # run command and append output to existing file
+              log_message COMMAND "${cc_new_command}"
+              eval "${cc_new_command}" \
+                >>"${TEMP_DATA_DIR}/${cc_new_output_directory}/${cc_new_output_file}" \
+                2>>"${TEMP_DATA_DIR}/${cc_new_output_directory}/${cc_new_output_file}.stderr"
+            fi
+
             # add output file to the list of files to be archived within the 
             # output file if it is not empty
             if [ -s "${TEMP_DATA_DIR}/${cc_new_output_directory}/${cc_new_output_file}" ]; then
@@ -163,15 +176,29 @@ ${cc_loop_command}\n" >&2
       eval "${cc_command} | gzip - | cat -" \
         >>"${TEMP_DATA_DIR}/${cc_output_directory}/${cc_output_file}.gz" \
         2>>"${TEMP_DATA_DIR}/${cc_output_directory}/${cc_output_file}.stderr"
-      # add output file to the list of files to be archived within the output file
-      echo "${cc_output_directory}/${cc_output_file}.gz" \
-        >>"${TEMP_DATA_DIR}/.output_file.tmp"
+      # add output file to the list of files to be archived within the 
+      # output file if it is not empty
+      if [ -s "${TEMP_DATA_DIR}/${cc_output_directory}/${cc_output_file}.gz" ]; then
+        echo "${cc_output_directory}/${cc_output_file}.gz" \
+          >>"${TEMP_DATA_DIR}/.output_file.tmp"
+      fi
     else
-      # run command and append output to existing file
-      log_message COMMAND "${cc_command}"
-      eval "${cc_command}" \
-        >>"${TEMP_DATA_DIR}/${cc_output_directory}/${cc_output_file}" \
-        2>>"${TEMP_DATA_DIR}/${cc_output_directory}/${cc_output_file}.stderr"
+      if regex_match "%output_file%" "${cc_command}"; then
+        # replace %output_file% by ${cc_output_file} in command
+        cc_command=`echo "${cc_command}" \
+          | sed -e "s:%output_file%:${TEMP_DATA_DIR}/${cc_output_directory}/${cc_output_file}:g"`
+        # run command and append output to existing file
+        log_message COMMAND "${cc_command}"
+        eval "${cc_command}" \
+          2>>"${TEMP_DATA_DIR}/${cc_output_directory}/${cc_output_file}.stderr"
+      else
+        # run command and append output to existing file
+        log_message COMMAND "${cc_command}"
+        eval "${cc_command}" \
+          >>"${TEMP_DATA_DIR}/${cc_output_directory}/${cc_output_file}" \
+          2>>"${TEMP_DATA_DIR}/${cc_output_directory}/${cc_output_file}.stderr"
+      fi
+
       # add output file to the list of files to be archived within the 
       # output file if it is not empty
       if [ -s "${TEMP_DATA_DIR}/${cc_output_directory}/${cc_output_file}" ]; then
