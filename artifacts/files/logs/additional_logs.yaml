@@ -7,4 +7,5 @@ artifacts:
     supported_os: [all]
     path: /
     name_pattern: ["*.[Ll][Oo][Gg]", "*.[Ll][Oo][Gg].*", "[Ll][Oo][Gg]", "[Ll][Oo][Gg][Ss]"]
+    max_file_size: 1073741824 # 1GB
   
