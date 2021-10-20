@@ -62,7 +62,7 @@ export PATH
 . "${UAC_DIR}/lib/log_message.sh"
 . "${UAC_DIR}/lib/lrstrip.sh"
 . "${UAC_DIR}/lib/parse_artifacts_file.sh"
-. "${UAC_DIR}/lib/parse_collection_file.sh"
+. "${UAC_DIR}/lib/parse_profile_file.sh"
 . "${UAC_DIR}/lib/print_acquisition_log.sh"
 . "${UAC_DIR}/lib/regex_match.sh"
 . "${UAC_DIR}/lib/regex_not_match.sh"
@@ -74,10 +74,10 @@ export PATH
 . "${UAC_DIR}/lib/terminate.sh"
 . "${UAC_DIR}/lib/usage.sh"
 . "${UAC_DIR}/lib/validate_artifacts_file.sh"
-. "${UAC_DIR}/lib/validate_collection_file.sh"
+. "${UAC_DIR}/lib/validate_profile_file.sh"
 
 # global vars
-UAC_VERSION="2.0.0-rc1"
+UAC_VERSION="2.0.0-rc2"
 MOUNT_POINT="/"
 OPERATING_SYSTEM=""
 SYSTEM_ARCH=""
@@ -89,7 +89,7 @@ END_DATE_DAYS=""
 END_DATE_EPOCH=""
 
 # local vars
-ua_collection_name=""
+ua_profile_name=""
 ua_destination_dir=""
 ua_run_as_non_root=false
 ua_temp_dir=""
@@ -296,8 +296,8 @@ Try 'uac --help' for more information.\n" >&2
       ;;
     # positional arguments
     *)
-      if [ -z "${ua_collection_name}" ]; then
-        ua_collection_name=`echo "${1}" | sed -e 's:/::g'`
+      if [ -z "${ua_profile_name}" ]; then
+        ua_profile_name=`echo "${1}" | sed -e 's:/::g'`
       elif [ -z "${ua_destination_dir}" ]; then
         ua_destination_dir="${1}"
       else
@@ -313,29 +313,29 @@ done
 # treat unset variables as an error when substituting
 set -u
 
-# exit if neither collection nor destination directory is set
-if [ -z "${ua_collection_name}" ] || [ -z "${ua_destination_dir}" ]; then
+# exit if neither profile nor destination directory is set
+if [ -z "${ua_profile_name}" ] || [ -z "${ua_destination_dir}" ]; then
   usage
   exit 1
 fi
 
-# get proper collection file based on the collection name
-ua_collection_file=""
-for ua_file in "${UAC_DIR}"/collections/*.yaml; do
-  if grep -q -E "name: +${ua_collection_name}" <"${ua_file}"; then
-    ua_collection_file="${ua_file}"
+# get proper profile file based on the profile name
+ua_profile_file=""
+for ua_file in "${UAC_DIR}"/profiles/*.yaml; do
+  if grep -q -E "name: +${ua_profile_name} *$" <"${ua_file}"; then
+    ua_profile_file="${ua_file}"
     break
   fi
 done
 
-# exit if collection not found
-if [ -z "${ua_collection_file}" ]; then
-  printf %b "uac: collection not found '${ua_collection_name}'\n"
+# exit if profile not found
+if [ -z "${ua_profile_file}" ]; then
+  printf %b "uac: profile not found '${ua_profile_name}'\n"
   exit 1
 fi
 
-# check if collection file is valid
-validate_collection_file "${ua_collection_file}" || exit 1
+# check if profile file is valid
+validate_profile_file "${ua_profile_file}" || exit 1
 
 # check if destination directory exists
 if [ ! -d "${ua_destination_dir}" ]; then
@@ -464,6 +464,8 @@ SYSTEM_ARCH=`get_system_arch 2>>"${UAC_STDERR_LOG_FILE}"`
 
 # add local 'bin' directory to path
 PATH="${UAC_DIR}/bin/${OPERATING_SYSTEM}/${SYSTEM_ARCH}:${PATH}"
+# add 'avml' tool directory to path
+PATH="${UAC_DIR}/tools/avml/bin/${OPERATING_SYSTEM}/${SYSTEM_ARCH}:${PATH}"
 export PATH
 
 printf %b "--------------------------------------------------------------------------------\n"
@@ -485,7 +487,7 @@ printf %b "---------------------------------------------------------------------
 # start uac.log file
 log_message INFO "UAC (Unix-like Artifacts Collector) v${UAC_VERSION}"
 log_message INFO "Command line: ${ua_command_line}"
-log_message INFO "Collection file: ${ua_collection_file}"
+log_message INFO "Profile file: ${ua_profile_file}"
 log_message INFO "Operating system: ${OPERATING_SYSTEM}"
 log_message INFO "System architecture: ${SYSTEM_ARCH}"
 log_message INFO "Hostname: ${ua_hostname}"
@@ -533,9 +535,9 @@ log_message INFO "'statx' tool available: ${STATX_TOOL_AVAILABLE}"
 
 log_message INFO "PATH: ${PATH}"
 
-# parse collection file
-log_message INFO "Parsing collection file"
-parse_collection_file "${ua_collection_file}" || exit 1
+# parse profile file
+log_message INFO "Parsing profile file"
+parse_profile_file "${ua_profile_file}" || exit 1
 
 # add UAC_DIR abd TEMP_DATA_DIR to GLOBAL_EXCLUDE_PATH_PATTERN
 if [ -n "${GLOBAL_EXCLUDE_PATH_PATTERN}" ]; then
