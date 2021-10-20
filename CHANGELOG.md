@@ -10,7 +10,7 @@ All notable changes to this project will be documented in this file.
 - New command line options.
 - New output and log file format.
 - Revamped uac.log file.
-- Collection errors will now be stored into individual .stderr files.
+- Command errors will now be stored into individual .stderr files.
 - New Linux memory dump collection via avml tool.
 
 ### New Artifacts
