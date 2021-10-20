@@ -29,11 +29,11 @@
 usage()
 {
   
-  printf %b "Usage: $0 [OPTIONS] COLLECTION DESTINATION
+  printf %b "Usage: $0 [OPTIONS] PROFILE DESTINATION
    or: $0 --validate-artifacts-file FILE
 
 Positional Arguments:
-  COLLECTION        Specify the collection name.
+  PROFILE           Specify the profile name.
   DESTINATION       Specify the directory the output file will be created in.
 
 Collection Arguments:
