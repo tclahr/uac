@@ -20,7 +20,7 @@
 #   OPERATING_SYSTEM
 #   UAC_DIR
 # Requires:
-#   None
+#   regex_match
 # Arguments:
 #   None
 # Outputs:
@@ -108,16 +108,51 @@ check_available_system_tools()
     esac
   fi
 
-  # check if 'statx' is available
+  # check if 'statx' is available for the current system architecture
   if [ "${OPERATING_SYSTEM}" = "linux" ]; then
-    for ca_arch in x86_64 i686 aarch64 arm armhf mips64 mips64el mips powerpc64 powerpc64le powerpc s390x sparc64; do
-      if eval "\"${UAC_DIR}/tools/statx/bin/linux/${ca_arch}/statx\" \"${MOUNT_POINT}\""; then
-        PATH="${UAC_DIR}/tools/statx/bin/linux/${ca_arch}:${PATH}"
+    ca_arch=""
+    case "${SYSTEM_ARCH}" in
+      armv5*|armv6*|armv7*)
+        ca_arch="arm"
+        ;;
+      aarch64*|armv8*)
+        ca_arch="arm64"
+        ;;
+      "i386"|"i686")
+        ca_arch="i686"
+        ;;
+      "mips")
+        ca_arch="mips"
+        ;;
+      "mips64")
+        ca_arch="mips64"
+        ;;
+      "ppc")
+        ca_arch="ppc"
+        ;;
+      "ppc64")
+        ca_arch="ppc64"
+        ;;
+      "ppc64le")
+        ca_arch="ppc64le"
+        ;;
+      s390*)
+        ca_arch="s390"
+        ;;  
+      sparc*)
+        ca_arch="sparc"
+        ;;
+      "x86_64")
+        ca_arch="x86_64"
+        ;;   
+    esac
+    if [ -n "${ca_arch}" ] \
+      && eval "\"${UAC_DIR}/tools/statx/bin/linux/${ca_arch}/statx\" \
+      \"${MOUNT_POINT}\""; then
+      PATH="${UAC_DIR}/tools/statx/bin/linux/${ca_arch}:${PATH}"
         export PATH
         STATX_TOOL_AVAILABLE=true
-        break
-      fi
-    done
+    fi
   fi
 
   # check if 'tar' tool is available
