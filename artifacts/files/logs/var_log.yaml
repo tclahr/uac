@@ -6,8 +6,10 @@ artifacts:
     collector: file
     supported_os: [aix, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris]
     path: /var/log/*
+    max_file_size: 1073741824 # 1GB
   -
     description: Collect /private/var/log logs.
     collector: file
     supported_os: [macos]
     path: /private/var/log/*
+    max_file_size: 1073741824 # 1GB

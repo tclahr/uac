@@ -6,3 +6,4 @@ artifacts:
     collector: file
     supported_os: [aix, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris]
     path: /var/adm/*
+    max_file_size: 1073741824 # 1GB

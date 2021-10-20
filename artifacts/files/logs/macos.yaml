@@ -6,14 +6,17 @@ artifacts:
     collector: file
     supported_os: [macos]
     path: /.fseventsd
+    max_file_size: 1073741824 # 1GB
   -
     description: Collect system logs.
     collector: file
     supported_os: [macos]
     path: /Library/Logs/*
+    max_file_size: 1073741824 # 1GB
   -
     description: Collect user applications logs.
     collector: file
     supported_os: [macos]
     path: /%user_home%/Library/Logs/*
+    max_file_size: 1073741824 # 1GB
   
