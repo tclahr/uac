@@ -13,28 +13,28 @@
 # limitations under the License.
 
 ###############################################################################
-# Parse collection file.
+# Parse profile file.
 # Globals:
 #   TEMP_DATA_DIR
 #   UAC_DIR
 # Requires:
 #   None
 # Arguments:
-#   $1: collection file
+#   $1: profile file
 # Outputs:
 #   None
 # Exit Status:
 #   Exit with status 0 on success.
 #   Exit with status greater than 0 if errors occur.
 ###############################################################################
-parse_collection_file()
+parse_profile_file()
 {
-  pc_collection_file="${1:-}"
+  pp_profile_file="${1:-}"
 
-  # return if collection file does not exist
-  if [ ! -f "${pc_collection_file}" ]; then
-    printf %b "parse_collection_file: no such file or directory: \
-'${pc_collection_file}'\n" >&2
+  # return if profile file does not exist
+  if [ ! -f "${pp_profile_file}" ]; then
+    printf %b "parse_profile_file: no such file or directory: \
+'${pp_profile_file}'\n" >&2
     return 2
   fi
 
@@ -44,11 +44,11 @@ parse_collection_file()
   # grep lines starting with "  - !"
   # remove "  - !" from the beginning of the line
   # remove duplicates
-  sed -e 's/#.*$//g' -e '/^ *$/d' -e '/^$/d' <"${pc_collection_file}" 2>/dev/null \
+  sed -e 's/#.*$//g' -e '/^ *$/d' -e '/^$/d' <"${pp_profile_file}" 2>/dev/null \
     | grep -E " +- +!" \
     | sed -e 's: *- *!::g' 2>/dev/null \
-    | while read pc_line || [ -n "${pc_line}" ]; do
-        find "${UAC_DIR}"/artifacts/${pc_line} -type f -print \
+    | while read pp_line || [ -n "${pp_line}" ]; do
+        find "${UAC_DIR}"/artifacts/${pp_line} -type f -print \
           | sed -e "s:${UAC_DIR}/artifacts/::g" 2>/dev/null
       done \
       | awk '!a[$0]++' 2>/dev/null \
@@ -60,11 +60,11 @@ parse_collection_file()
   # grep lines starting with "  - "
   # remove "  - " from the beginning of the line
   # remove duplicates
-  sed -e 's/#.*$//g' -e '/^ *$/d' -e '/^$/d' <"${pc_collection_file}" 2>/dev/null \
+  sed -e 's/#.*$//g' -e '/^ *$/d' -e '/^$/d' <"${pp_profile_file}" 2>/dev/null \
     | grep -E " +- +[^!]" \
     | sed -e 's: *- *::g' 2>/dev/null \
-    | while read pc_line || [ -n "${pc_line}" ]; do
-        find "${UAC_DIR}"/artifacts/${pc_line} -type f -print \
+    | while read pp_line || [ -n "${pp_line}" ]; do
+        find "${UAC_DIR}"/artifacts/${pp_line} -type f -print \
           | sed -e "s:^${UAC_DIR}/artifacts/::g" 2>/dev/null
       done \
       | awk '!a[$0]++' 2>/dev/null \

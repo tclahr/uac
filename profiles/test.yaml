@@ -1,7 +1,0 @@
-name: test
-description: Full artifacts collection.
-artifacts:
-  - live_response/process/ps.yaml
-  - live_response/process/lsof.yaml
-  - memory_dump/avml.yaml
-  

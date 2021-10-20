@@ -1,0 +1,5 @@
+name: memory-dump-only
+description: Acquires volatile memory from Linux systems.
+artifacts:
+  - memory_dump/avml.yaml
+  
