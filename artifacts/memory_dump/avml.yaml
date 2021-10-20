@@ -1,0 +1,9 @@
+description: Acquire volatile memory for Linux.
+version: 1.0
+artifacts:
+  -
+    description: Capture a memory image.
+    collector: command
+    supported_os: [linux]
+    command: avml %output_file%
+    output_file: avml.raw
