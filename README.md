@@ -1,7 +1,7 @@
 # UAC (Unix-like Artifacts Collector)
 UAC is a Live Response collection tool for Incident Response that makes use of built-in tools to automate the collection of Unix-like systems artifacts. It was created to facilitate and speed up data collection, and depend less on remote support during incident response engagements.
 
-UAC reads YAML files on the fly and, based on their contents, collects relevant artifacts using 5 different collectors: command, find, hash, stat and file. This makes UAC very customizable and extensible.
+UAC reads YAML files on the fly and, based on their contents, collects relevant artifacts using 5 different collectors: command, find, hash, stat and file This makes UAC very customizable and extensible.
 
 ## Main Features
 - Fast and continuously tested
@@ -10,7 +10,8 @@ UAC reads YAML files on the fly and, based on their contents, collects relevant 
 - Respects the order of volatility during artifacts collection
 - Collects information from processes running without a binary on disk
 - Extracts information from files and directories to create a bodyfile
-- Hash running processes and executable files
+- Hashes running processes and executable files
+- Acquires volatile memory from Linux systems using avml tool
 
 ## Supported Operating Systems
 - Android
@@ -23,13 +24,19 @@ UAC reads YAML files on the fly and, based on their contents, collects relevant 
 - OpenBSD
 - Solaris
 
+## Artifacts
+Artifacts are basically rules files. UAC reads these rules files and uses one of its collectors (command, find, hash, stat and file) to collect the data. All available profiles can be found in the ```artifacts``` directory.
+
+## Profiles
+Profiles are files that contain a predefined list of artifacts files. All available profiles can be found in the ```profiles``` directory.
+
 ## Usage
 ```
-Usage: ./uac [OPTIONS] COLLECTION DESTINATION
+Usage: ./uac [OPTIONS] PROFILE DESTINATION
    or: ./uac --validate-artifacts-file FILE
 
 Positional Arguments:
-  COLLECTION        Specify the collection name.
+  PROFILE           Specify the profile name.
   DESTINATION       Specify the directory the output file will be created in.
 
 Collection Arguments:
@@ -38,7 +45,7 @@ Collection Arguments:
   -o, --operating-system OPERATING_SYSTEM
                     Specify the operating system.
                     Options: android, aix, freebsd, linux, macos, netbsd
-                             netscaler, openbsd and solaris
+                             netscaler, openbsd, solaris
   -u, --run-as-non-root
                     Disable root user check.
                     Note that data collection may be limited.
@@ -89,10 +96,17 @@ Optional Arguments:
 ```
 
 ## Examples
-
-Run ```full```collection and create the output file in ```/tmp```:
+Run artifacts collection using ```full``` profile, and create the output file in ```/tmp```:
 ```
 ./uac full /tmp
+```
+Run artifacts collection using ```full-with-memory-dump``` profile, and create the output file in the current directory:
+```
+./uac full-with-memory-dump .
+```
+Validade a custom artifacts file:
+```
+./uac --validate-artifacts-file ./artifacts/files/my_custom_artifact.yaml
 ```
 
 ## License
