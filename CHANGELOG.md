@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 2.0.0-rc1 (2021-10-18)
+## 2.0.0-rc2 (2021-10-20)
 
 ### Highlights
 - Faster collection engine.
@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 - New output and log file format.
 - Revamped uac.log file.
 - Collection errors will now be stored into individual .stderr files.
+- New Linux memory dump collection via avml tool.
 
 ### New Artifacts
 - New browser artifacts
