@@ -9,15 +9,17 @@ UAC reads YAML files on the fly and, based on their contents, collects relevant 
 - Customizable and extensible collections and artifacts
 - Respects the order of volatility during artifacts collection
 - Collects information from processes running without a binary on disk
-- Extracts information from files and directories to create a bodyfile
+- Extracts information from files and directories to create a bodyfile (including enhanced file attributes for ext4)
 - Hashes running processes and executable files
 - Acquires volatile memory from Linux systems using avml tool
 
 ## Supported Operating Systems
+UAC runs on any Unix-like system (regardless the processor architecture). All UAC needs is shell.
+
 - Android
 - AIX
 - FreeBSD
-- Linux
+- Linux *(e.g. Debian, Red Hat, SuSE, Arch, OpenWRT, QNAP QTS, Synology DSM, Linux running on top of Windows (WSL)...)*
 - macOS
 - NetBSD
 - NetScaler
@@ -36,7 +38,7 @@ Usage: ./uac [OPTIONS] PROFILE DESTINATION
    or: ./uac --validate-artifacts-file FILE
 
 Positional Arguments:
-  PROFILE           Specify the profile name.
+  PROFILE           Specify the collection profile name.
   DESTINATION       Specify the directory the output file will be created in.
 
 Collection Arguments:
