@@ -19,7 +19,7 @@ UAC runs on any Unix-like system (regardless the processor architecture). All UA
 - Android
 - AIX
 - FreeBSD
-- Linux *(e.g. Debian, Red Hat, SuSE, Arch, OpenWRT, QNAP QTS, Synology DSM, Linux running on top of Windows (WSL)...)*
+- Linux
 - macOS
 - NetBSD
 - NetScaler
