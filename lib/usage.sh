@@ -33,7 +33,7 @@ usage()
    or: $0 --validate-artifacts-file FILE
 
 Positional Arguments:
-  PROFILE           Specify the profile name.
+  PROFILE           Specify the collection profile name.
   DESTINATION       Specify the directory the output file will be created in.
 
 Collection Arguments:
