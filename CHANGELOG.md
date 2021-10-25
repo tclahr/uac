@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 2.0.0-rc2 (2021-10-20)
+## 2.0.0-rc3 (2021-10-25)
 
 ### Highlights
 - Faster collection engine.
@@ -31,6 +31,14 @@ All notable changes to this project will be documented in this file.
   - macOS wifi information
 - New docker/containers artifacts
   - containerd config dump
+- New process artifacts
+  - proctree -a
+  - ps auxwwwf
+- New network artifacts
+  - ss -tap
+  - ss -tanp
+  - ss -tlp
+  - ss -tlnp
 
 ## 1.7.0 (2021-09-04)
 
