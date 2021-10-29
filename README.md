@@ -1,7 +1,7 @@
 # UAC (Unix-like Artifacts Collector)
 UAC is a Live Response collection tool for Incident Response that makes use of built-in tools to automate the collection of Unix-like systems artifacts. It was created to facilitate and speed up data collection, and depend less on remote support during incident response engagements.
 
-UAC reads YAML files on the fly and, based on their contents, collects relevant artifacts using 5 different collectors: command, find, hash, stat and file This makes UAC very customizable and extensible.
+UAC reads YAML files on the fly and, based on their contents, collects relevant artifacts using 5 different collectors: command, find, hash, stat and file. This makes UAC very customizable and extensible.
 
 ## Main Features
 - Fast and continuously tested
@@ -16,8 +16,8 @@ UAC reads YAML files on the fly and, based on their contents, collects relevant 
 ## Supported Operating Systems
 UAC runs on any Unix-like system (regardless the processor architecture). All UAC needs is shell.
 
-- Android
 - AIX
+- Android
 - FreeBSD
 - Linux
 - macOS
@@ -46,7 +46,7 @@ Collection Arguments:
                     Specify the mount point (default: /).
   -o, --operating-system OPERATING_SYSTEM
                     Specify the operating system.
-                    Options: android, aix, freebsd, linux, macos, netbsd
+                    Options: aix, android, freebsd, linux, macos, netbsd
                              netscaler, openbsd, solaris
   -u, --run-as-non-root
                     Disable root user check.
