@@ -153,7 +153,7 @@ while (@ARGV) {
         $wanted .= ")";
     } elsif ($arg_option eq "-maxdepth") {
         $maxdepth = shift;
-        ($maxdepth =~ /^\d+$/) || die ("find.pl: expected a positive decimal integer argument to -maxdepth, but got $maxdepth\n");
+        ($maxdepth =~ /^\d+$/) || die ("find.pl: expected a non-negative integer argument to -maxdepth, but got $maxdepth\n");
         next;
     } elsif ($arg_option eq "-name") {
         $wanted .= "/" . fileglob_to_regex(shift) . "/s";
@@ -256,7 +256,7 @@ for my $starting_point (@starting_points) {
         find({
             preprocess => sub {
                 $depth += 1;
-                return if ($depth > $maxdepth) and ($maxdepth > 0);
+                return if ($depth > $maxdepth);
                 @_;
             },
             postprocess => sub {
