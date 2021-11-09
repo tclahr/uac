@@ -115,7 +115,7 @@ sub fileglob_to_regex($) {
 my @starting_points = ();
 my $wanted = "my (\$dev,\$inode,\$mode,\$nlink,\$uid,\$gid,\$rdev,\$size,\$atime,\$mtime,\$ctime,\$blksize,\$blocks); ((\$dev,\$inode,\$mode,\$nlink,\$uid,\$gid,\$rdev,\$size,\$atime,\$mtime,\$ctime,\$blksize,\$blocks) = lstat(\$File::Find::name)) && ";
 my $depth = 0;
-my $maxdepth = 0;
+my $maxdepth = -1;
 my $print_needed = 1;
 
 # print usage if no arguments are provided
@@ -256,7 +256,7 @@ for my $starting_point (@starting_points) {
         find({
             preprocess => sub {
                 $depth += 1;
-                return if ($depth > $maxdepth);
+                return if ($depth > $maxdepth) and ($maxdepth >= 0);
                 @_;
             },
             postprocess => sub {
