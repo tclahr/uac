@@ -1,5 +1,5 @@
 name: full-with-memory-dump
-description: Full artifacts collection including memory dump.
+description: Full artifacts collection including memory dump (Linux only).
 artifacts:
   - live_response/process/ps.yaml
   - live_response/process/lsof.yaml
