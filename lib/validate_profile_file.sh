@@ -100,9 +100,8 @@ entry.\n" >&2
             fi
             vp_artifacts_file_prop=true
 
-            find "${UAC_DIR}"/artifacts/${vp_artifact_file} -type f -print \
-              >/dev/null \
-              2>/dev/null
+            find "${UAC_DIR}"/artifacts/${vp_artifact_file} -name "*.yaml" \
+              -type f -print >/dev/null 2>/dev/null
             if [ "$?" -gt 0 ]; then
               printf %b "uac: profile file: no such \
 file or directory: '"${UAC_DIR}"/artifacts/${vp_artifact_file}'\n" >&2
