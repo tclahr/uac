@@ -597,6 +597,8 @@ log_message INFO "PATH: ${PATH}"
 # create a temporary profile file based on the artifacts provided via command
 # line
 if [ -n "${ua_artifacts}" ]; then
+  printf %b "name: temp-profile\n" >"${TEMP_DATA_DIR}/.profile.yaml"
+  printf %b "description: temp-profile\n" >>"${TEMP_DATA_DIR}/.profile.yaml"
   printf %b "artifacts:\n" >>"${TEMP_DATA_DIR}/.profile.yaml"
   OIFS="${IFS}"
   IFS=","
