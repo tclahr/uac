@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 2.0.0-rc3 (2021-10-25)
+## 2.0.0-rc4 (2021-11-22)
 
 ### Highlights
 - Faster collection engine.
