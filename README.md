@@ -26,19 +26,38 @@ UAC runs on any Unix-like system (regardless the processor architecture). All UA
 - OpenBSD
 - Solaris
 
-## Artifacts
-Artifacts are basically rules files. UAC reads these rules files and uses one of its collectors (command, find, hash, stat and file) to collect the data. All available profiles can be found in the ```artifacts``` directory.
-
-## Profiles
-Profiles are files that contain a predefined list of artifacts files. All available profiles can be found in the ```profiles``` directory.
-
 ## Usage
 ```
-Usage: ./uac [OPTIONS] PROFILE DESTINATION
+Usage: ./uac [-h] [-V] [--debug] {-p PROFILE | -a ARTIFACTS} DESTINATION 
+             [-m MOUNT_POINT] [-o OPERATING_SYSTEM] [-u] [--temp_dir PATH]
+             [--date-range-start YYYY-MM-DD] [--date-range-start YYYY-MM-DD]
+             [--case-number CASE_NUMBER] [--description DESCRIPTION]
+             [--evidence-number EVIDENCE_NUMBER] [--examiner EXAMINER]
+             [--notes NOTES] [--hostname HOSTNAME] [--stfp SERVER] 
+             [--sftp-port PORT] [--sftp-identity-file FILE]
+             [--sftp-delete-local-on-success] [--debug]
    or: ./uac --validate-artifacts-file FILE
 
+Optional Arguments:
+  -h, --help        Display this help and exit.
+  -V, --version     Output version information and exit.
+      --debug       Enable debug mode.
+
+Profiling Arguments:
+  -p, --profile PROFILE
+                    Specify the collection profile name. Use '--profile list'
+                    to list available profiles.
+  -a, --artifacts ARTIFACTS
+                    Specify the artifacts to be collected during the collection.
+                    The expression is a comma separated string where each element
+                    is an artifact file. Each element can be prepended with an 
+                    exclamation mark to exclude the artifact.
+                    Special characters such as ! and * must be escaped with a
+                    backslash.
+                    Examples: --artifacts files/logs/\*,\!files/logs/var_log.yaml
+                    Use '--artifacts list' to list available artifacts.
+
 Positional Arguments:
-  PROFILE           Specify the collection profile name.
   DESTINATION       Specify the directory the output file will be created in.
 
 Collection Arguments:
@@ -51,7 +70,8 @@ Collection Arguments:
   -u, --run-as-non-root
                     Disable root user check.
                     Note that data collection may be limited.
-      --temp-dir    Write all temporary data to this directory.
+      --temp-dir PATH   
+                    Write all temporary data to this directory.
 
 Filter Arguments:
       --date-range-start YYYY-MM-DD
@@ -90,21 +110,20 @@ Remote Transfer Arguments:
 Validation Arguments:
       --validate-artifacts-file FILE
                     Validate artifacts file.
-
-Optional Arguments:
-  -h, --help        Display this help and exit.
-  -V, --version     Output version information and exit.
-      --debug       Enable debug mode.
 ```
 
 ## Examples
 Run artifacts collection using ```full``` profile, and create the output file in ```/tmp```:
 ```
-./uac full /tmp
+./uac -p full /tmp
 ```
 Run artifacts collection using ```full-with-memory-dump``` profile, and create the output file in the current directory:
 ```
-./uac full-with-memory-dump .
+./uac -p full-with-memory-dump .
+```
+Collect ```live_response``` and ```bodyfile``` artifacts only, and create the output file in ```/tmp```:
+```
+./uac -a live_response/\*,bodyfile/bodyfile.yaml /tmp
 ```
 Validade a custom artifacts file:
 ```
