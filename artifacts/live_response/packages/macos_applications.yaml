@@ -1,4 +1,3 @@
-description: Collect the list of applications from /Applications and /Users/%user%/Applications directories.
 version: 1.0
 artifacts:
   -

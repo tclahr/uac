@@ -1,4 +1,3 @@
-description: Run and collect pkg_info command output.
 version: 1.0
 artifacts:
   -

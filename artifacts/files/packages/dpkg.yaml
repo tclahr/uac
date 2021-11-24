@@ -1,4 +1,3 @@
-description: Collect dpkg packages status file.
 version: 1.0
 artifacts:
   -

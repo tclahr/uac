@@ -1,4 +1,3 @@
-description: Collect all log files and directories.
 version: 1.0
 artifacts:
   -

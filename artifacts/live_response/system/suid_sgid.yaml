@@ -1,4 +1,3 @@
-description: Search for files that have either SUID or SGID bit set.
 version: 1.0
 artifacts:
   -

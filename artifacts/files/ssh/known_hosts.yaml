@@ -1,4 +1,3 @@
-description: Collect SSH known_hosts files.
 version: 1.0
 artifacts:
   -

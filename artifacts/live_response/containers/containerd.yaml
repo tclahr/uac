@@ -1,4 +1,3 @@
-description: Collect docker/containers information.
 version: 1.0
 artifacts:
   -

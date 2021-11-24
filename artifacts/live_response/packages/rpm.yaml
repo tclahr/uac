@@ -1,4 +1,3 @@
-description: Run and collect rpm command output.
 version: 1.0
 artifacts:
   -
