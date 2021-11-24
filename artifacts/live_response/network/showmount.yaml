@@ -3,7 +3,7 @@ version: 1.0
 artifacts:
   -
     description: Collect both the client hostname or IP address and mounted directory in host:dir format.
-    collector: command
     supported_os: [aix, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris]
+    collector: command
     command: showmount -a
     output_file: showmount_-a.txt

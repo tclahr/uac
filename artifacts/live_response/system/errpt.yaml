@@ -3,8 +3,8 @@ version: 1.0
 artifacts:
   -
     description: Display a report of logged errors.
-    collector: command
     supported_os: [aix]
+    collector: command
     command: errpt -a
     output_file: errpt_-a.txt
   

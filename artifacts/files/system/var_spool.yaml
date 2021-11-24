@@ -3,11 +3,11 @@ version: 1.0
 artifacts:
   -
     description: Collect spool files.
-    collector: file
     supported_os: [all]
+    collector: file
     path: /var/spool/*
   -
     description: Collect spool files.
-    collector: file
     supported_os: [macos]
+    collector: file
     path: /private/var/spool/*

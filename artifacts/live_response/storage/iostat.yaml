@@ -3,20 +3,20 @@ version: 1.0
 artifacts:
   -
     description: Reports I/O statistics.
-    collector: command
     supported_os: [freebsd, solaris]
+    collector: command
     command: iostat
     output_file: iostat.txt
   -
     description: Reports I/O statistics.
-    collector: command
     supported_os: [aix]
+    collector: command
     command: iostat -l
     output_file: iostat_-l.txt
   -
     description: Reports I/O statistics.
-    collector: command
     supported_os: [solaris]
+    collector: command
     command: iostat -E -n
     output_file: iostat_-E_-n.txt
   

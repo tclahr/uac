@@ -3,8 +3,8 @@ version: 1.0
 artifacts:
   -
     description: Collect Firefox browser files.
-    collector: file
     supported_os: [linux, macos]
+    collector: file
     path: /%user_home%
     name_pattern: ["addons.sqlite*", "bookmarks.sqlite*", "cookies.sqlite*", "firefox_cookies.sqlite*", "downloads.sqlite*", "extensions.json", "favicons.sqlite*", "formhistory.sqlite*", "permissions.sqlite*", "places.sqlite*", "protections.sqlite*", "search.sqlite*", "signons.sqlite*", "storage-sync.sqlite*", "webappstore.sqlite*", "key*.db", "signon*", "logins.json", "prefs.json", "sessionstore*"]
     ignore_date_range: true

@@ -3,8 +3,8 @@ version: 1.0
 artifacts:
   -
     description: Verifies that all software products installed on the / (root) file system are also installed on the /usr file system and, conversely, all the software products installed in the /usr file system are also installed on the / (root) file system. 
-    collector: command
     supported_os: [aix]
+    collector: command
     command: lppchk -v
     output_file: lppchk_-v.txt
     

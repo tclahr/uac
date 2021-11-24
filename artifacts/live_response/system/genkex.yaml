@@ -3,8 +3,8 @@ version: 1.0
 artifacts:
   -
     description: Display the list of kernel extensions currently loaded onto the system and displays the address, size, and path name for each kernel extension in the list.
-    collector: command
     supported_os: [aix]
+    collector: command
     command: genkex
     output_file: genkex.txt
   

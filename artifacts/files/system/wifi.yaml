@@ -3,8 +3,8 @@ version: 1.0
 artifacts:
   -
     description: Collect wifi plist file.
-    collector: file
     supported_os: [macos]
+    collector: file
     path: /Library/Preferences/SystemConfiguration/com.apple.airport.preferences.plist
     ignore_date_range: true
   

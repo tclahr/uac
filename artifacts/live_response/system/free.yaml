@@ -3,8 +3,8 @@ version: 1.0
 artifacts:
   -
     description: Display amount of free and used memory in the system.
-    collector: command
     supported_os: [android, linux]
+    collector: command
     command: free
     output_file: free.txt
   

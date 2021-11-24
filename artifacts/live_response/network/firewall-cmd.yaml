@@ -3,31 +3,31 @@ version: 1.0
 artifacts:
   -
     description: Collect currently active zones altogether with interfaces and sources used in these zones.
-    collector: command
     supported_os: [linux]
+    collector: command
     command: firewall-cmd --get-active-zones
     output_file: firewall-cmd_--get-active-zones.txt
   -
     description: Collect default zone for connections and interfaces.
-    collector: command
     supported_os: [linux]
+    collector: command
     command: firewall-cmd --get-default-zone
     output_file: firewall-cmd_--get-default-zone.txt
   -
     description: Collect the list of all supported services.
-    collector: command
     supported_os: [linux]
+    collector: command
     command: firewall-cmd --get-services
     output_file: firewall-cmd_--get-services.txt
   -
     description: Collect everything added or enabled.
-    collector: command
     supported_os: [linux]
+    collector: command
     command: firewall-cmd --list-all
     output_file: firewall-cmd_--list-all.txt
   -
     description: Collect everything added for or enabled in all zones.
-    collector: command
     supported_os: [linux]
+    collector: command
     command: firewall-cmd --list-all-zones
     output_file: firewall-cmd_--list-all-zones.txt

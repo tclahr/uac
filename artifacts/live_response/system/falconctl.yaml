@@ -3,92 +3,92 @@ version: 1.0
 artifacts:
   -
     description: Display the AgentId
-    collector: command
     supported_os: [linux]
+    collector: command
     command: /opt/CrowdStrike/falconctl -g --aid
     output_file: falconctl_-g_--aid.txt
   -
     description: Display the CustomerId
-    collector: command
     supported_os: [linux]
+    collector: command
     command: /opt/CrowdStrike/falconctl -g --cid
     output_file: falconctl_-g_--cid.txt
   -
     description: Display configured sensor feature flags.
-    collector: command
     supported_os: [linux]
+    collector: command
     command: /opt/CrowdStrike/falconctl -g --feature
     output_file: falconctl_-g_--feature.txt
   -
     description: Display configured trace level.
-    collector: command
     supported_os: [linux]
+    collector: command
     command: /opt/CrowdStrike/falconctl -g --trace
     output_file: falconctl_-g_--trace.txt
   -
     description: Display if sensor is in Reduced Functionality Mode.
-    collector: command
     supported_os: [linux]
+    collector: command
     command: /opt/CrowdStrike/falconctl -g --rfm-state
     output_file: falconctl_-g_--rfm-state.txt
   -
     description: Display the reason for sensor running in Reduced Functionality Mode.
-    collector: command
     supported_os: [linux]
+    collector: command
     command: /opt/CrowdStrike/falconctl -g --rfm-reason
     output_file: falconctl_-g_--rfm-reason.txt
   -
     description: Display the currently running sensor version.
-    collector: command
     supported_os: [linux]
+    collector: command
     command: /opt/CrowdStrike/falconctl -g --version
     output_file: falconctl_-g_--version.txt
   -
     description: Display sensor health information.
-    collector: command
     supported_os: [linux]
+    collector: command
     command: /opt/CrowdStrike/falconctl stats
     output_file: falconctl_stats.txt
   -
     description: Display the AgentId
-    collector: command
     supported_os: [macos]
+    collector: command
     command: /Applications/Falcon.app/Contents/Resources/falconctl -g --aid
     output_file: falconctl_-g_--aid.txt
   -
     description: Display the CustomerId
-    collector: command
     supported_os: [macos]
+    collector: command
     command: /Applications/Falcon.app/Contents/Resources/falconctl -g --cid
     output_file: falconctl_-g_--cid.txt
   -
     description: Display configured sensor feature flags.
-    collector: command
     supported_os: [macos]
+    collector: command
     command: /Applications/Falcon.app/Contents/Resources/falconctl -g --feature
     output_file: falconctl_-g_--feature.txt
   -
     description: Display configured trace level.
-    collector: command
     supported_os: [macos]
+    collector: command
     command: /Applications/Falcon.app/Contents/Resources/falconctl -g --trace
     output_file: falconctl_-g_--trace.txt
   -
     description: Display if sensor is in Reduced Functionality Mode.
-    collector: command
     supported_os: [macos]
+    collector: command
     command: /Applications/Falcon.app/Contents/Resources/falconctl -g --rfm-state
     output_file: falconctl_-g_--rfm-state.txt
   -
     description: Display the reason for sensor running in Reduced Functionality Mode.
-    collector: command
     supported_os: [macos]
+    collector: command
     command: /Applications/Falcon.app/Contents/Resources/falconctl -g --rfm-reason
     output_file: falconctl_-g_--rfm-reason.txt
   -
     description: Display sensor health information.
-    collector: command
     supported_os: [macos]
+    collector: command
     command: /Applications/Falcon.app/Contents/Resources/falconctl stats
     output_file: falconctl_stats.txt
   

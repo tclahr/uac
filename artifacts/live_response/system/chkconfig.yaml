@@ -3,8 +3,8 @@ version: 1.0
 artifacts:
   -
     description: Display a list of all services and their current configuration.
-    collector: command
     supported_os: [linux]
+    collector: command
     command: chkconfig --list
     output_file: chkconfig_--list.txt
   

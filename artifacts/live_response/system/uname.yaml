@@ -3,13 +3,13 @@ version: 1.0
 artifacts:
   -
     description: Display system information.
-    collector: command
     supported_os: [all]
+    collector: command
     command: uname -a
     output_file: uname_-a.txt
   -
     description: Display LPAR number and LPAR name.
-    collector: command
     supported_os: [aix]
+    collector: command
     command: uname -L
     output_file: uname_-L.txt

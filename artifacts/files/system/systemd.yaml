@@ -3,13 +3,13 @@ version: 1.0
 artifacts:
   -
     description: Collect systemd configuration files.
-    collector: file
     supported_os: [linux]
+    collector: file
     path: /lib/systemd/system/*
     ignore_date_range: true
   -
     description: Collect systemd configuration files.
-    collector: file
     supported_os: [linux]
+    collector: file
     path: /usr/lib/systemd/system/*
     ignore_date_range: true

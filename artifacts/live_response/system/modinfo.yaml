@@ -3,8 +3,8 @@ version: 1.0
 artifacts:
   -
     description: Display information about loaded kernel modules.
-    collector: command
     supported_os: [solaris]
+    collector: command
     command: modinfo
     output_file: modinfo.txt
   

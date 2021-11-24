@@ -3,7 +3,7 @@ version: 1.0
 artifacts:
   -
     description: Display I/O Kit registry.
-    collector: command
     supported_os: [macos]
+    collector: command
     command: ioreg -l
     output_file: ioreg_-l.txt

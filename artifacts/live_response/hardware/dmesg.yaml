@@ -3,7 +3,7 @@ version: 1.0
 artifacts:
   -
     description: Display the system/kernel message buffer.
-    collector: command
     supported_os: [android, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris]
+    collector: command
     command: dmesg
     output_file: dmesg.txt

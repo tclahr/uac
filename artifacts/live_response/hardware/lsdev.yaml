@@ -3,7 +3,7 @@ version: 1.0
 artifacts:
   -
     description: Display devices in the system and their characteristics.
-    collector: command
     supported_os: [aix]
+    collector: command
     command: lsdev -P
     output_file: lsdev_-P.txt

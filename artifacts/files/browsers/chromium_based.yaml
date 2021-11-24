@@ -3,8 +3,8 @@ version: 1.0
 artifacts:
   -
     description: Collect Chromium based browsers files.
-    collector: file
     supported_os: [linux, macos]
+    collector: file
     path: /%user_home%
     name_pattern: ["Bookmarks*", "Cookies*", "Current Session", "Current Tabs", "Download Metadata", "Extensions", "Extension Cookies", "Favicons*", "History*", "Last Session", "Last Tabs", "Sessions", "Login Data", "Media History*", "Network Action Predictor", "Network Persistent State", "Preferences", "QuotaManager", "Reporting and NEL", "Shortcuts*", "Top Sites*", "Trust Tokens*", "SyncData.sqlite3", "Visited Links", "Web Data*"]
     ignore_date_range: true

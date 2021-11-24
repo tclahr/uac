@@ -3,14 +3,14 @@ version: 1.0
 artifacts:
   -
     description: Display information for fully installed packages only.
-    collector: command
     supported_os: [solaris]
+    collector: command
     command: pkginfo -i
     output_file: pkginfo_-i.txt
   -
     description: Display information for fully installed packages only in a long format which includes all available information about the designated package(s).
-    collector: command
     supported_os: [solaris]
+    collector: command
     command: pkginfo -l
     output_file: pkginfo_-l.txt
   

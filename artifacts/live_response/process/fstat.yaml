@@ -3,7 +3,7 @@ version: 1.0
 artifacts:
   -
     description: Collect status of open files.
-    collector: command
     supported_os: [freebsd, netbsd, netscaler, openbsd]
+    collector: command
     command: fstat
     output_file: fstat.txt

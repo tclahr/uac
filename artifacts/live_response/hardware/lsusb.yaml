@@ -3,14 +3,14 @@ version: 1.0
 artifacts:
   -
     description: Display information about USB devices.
-    collector: command
     supported_os: [android, linux]
+    collector: command
     command: lsusb
     output_file: lsusb.txt
   -
     description: Display information about USB devices.
-    collector: command
     supported_os: [linux]
+    collector: command
     command: lsusb -vv
     output_file: lsusb_-vv.txt
   

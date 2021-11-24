@@ -3,7 +3,7 @@ version: 1.0
 artifacts:
   -
     description: Collect all packet filter information.
-    collector: command
     supported_os: [freebsd, netbsd, openbsd]
+    collector: command
     command: pfctl -s all
     output_file: pfctl_-s_all.txt

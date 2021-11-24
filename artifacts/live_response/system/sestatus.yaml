@@ -3,8 +3,8 @@ version: 1.0
 artifacts:
   -
     description: Display the contexts of files and processes listed in the /etc/sestatus.conf file.
-    collector: command
     supported_os: [linux]
+    collector: command
     command: sestatus -v
     output_file: sestatus_-v.txt
   

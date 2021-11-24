@@ -3,7 +3,7 @@ version: 1.0
 artifacts:
   -
     description: Collect the list of open sockets.
-    collector: command
     supported_os: [freebsd]
+    collector: command
     command: sockstat -w
     output_file: sockstat_-w.txt

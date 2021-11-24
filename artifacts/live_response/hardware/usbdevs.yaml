@@ -3,8 +3,8 @@ version: 1.0
 artifacts:
   -
     description: Display USB devices connected to the system.
-    collector: command
     supported_os: [netbsd, openbsd]
+    collector: command
     command: usbdevs -v
     output_file: usbdevs_-v.txt
   

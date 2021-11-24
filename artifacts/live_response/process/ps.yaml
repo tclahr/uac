@@ -3,49 +3,49 @@ version: 1.0
 artifacts:
   -
     description: Report a snapshot of the current processes.
-    collector: command
     supported_os: [all]
+    collector: command
     command: ps
     output_file: ps.txt
   -
     description: Report a snapshot of the current processes.
-    collector: command
     supported_os: [aix, freebsd, linux, macos, netbsd, openbsd, solaris]
+    collector: command
     command: ps auxwww
     output_file: ps_auxwww.txt
   -
     description: Report a snapshot of the current processes.
-    collector: command
     supported_os: [linux]
+    collector: command
     command: ps auxwwwf
     output_file: ps_auxwwwf.txt
   -
     description: Report a snapshot of the current processes.
-    collector: command
     supported_os: [aix, android, freebsd, linux, macos, netscaler, solaris]
+    collector: command
     command: ps -deaf
     output_file: ps_-deaf.txt
   -
     description: Report a snapshot of the current processes.
-    collector: command
     supported_os: [aix, android, freebsd, linux, macos, netscaler, solaris]
+    collector: command
     command: ps -ef
     output_file: ps_-ef.txt
   -
     description: Report a snapshot of the current processes.
-    collector: command
     supported_os: [aix, android, freebsd, linux, macos, netscaler, solaris]
+    collector: command
     command: ps -efl
     output_file: ps_-efl.txt
   -
     description: Report a snapshot of the current processes including elapsed time since the process was started.
-    collector: command
     supported_os: [aix, android, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris]
+    collector: command
     command: ps -eo pid,user,etime,args
     output_file: ps_-eo_pid_user_etime_args.txt
   -
     description: Report a snapshot of the current processes including time the command started.
-    collector: command
     supported_os: [freebsd, linux, macos, netbsd, netscaler, openbsd]
+    collector: command
     command: ps -eo pid,user,lstart,args
     output_file: ps_-eo_pid_user_lstart_args.txt

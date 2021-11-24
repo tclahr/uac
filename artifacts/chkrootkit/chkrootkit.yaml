@@ -3,14 +3,14 @@ version: 1.0
 artifacts:
   -
     description: Locally checks for signs of a rootkit.
-    collector: command
     supported_os: [freebsd, linux, macos, netbsd, openbsd, solaris]
+    collector: command
     command: chkrootkit -n -r "%mount_point%"
     output_file: chkrootkit_-n_-r.txt
   -
     description: Locally (extended) checks for signs of a rootkit.
-    collector: command
     supported_os: [freebsd, linux, macos, netbsd, openbsd, solaris]
+    collector: command
     command: chkrootkit -n -x -r "%mount_point%"
     output_file: chkrootkit_-n_-r_-x.txt
   

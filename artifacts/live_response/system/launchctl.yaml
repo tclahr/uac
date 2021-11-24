@@ -3,7 +3,7 @@ version: 1.0
 artifacts:
   -
     description: Display all loaded and unloaded jobs into launchd.
-    collector: command
     supported_os: [macos]
+    collector: command
     command: launchctl list
     output_file: launchctl_list.txt

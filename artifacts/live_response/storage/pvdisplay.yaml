@@ -3,8 +3,8 @@ version: 1.0
 artifacts:
   -
     description: Display various attributes of physical volumes.
-    collector: command
     supported_os: [linux]
+    collector: command
     command: pvdisplay
     output_file: pvdisplay.txt
   

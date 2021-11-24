@@ -3,8 +3,8 @@ version: 1.0
 artifacts:
   -
     description: Display status of dynamic kernel linker.
-    collector: command
     supported_os: [freebsd]
+    collector: command
     command: kldstat -v
     output_file: kldstat_-v.txt
   

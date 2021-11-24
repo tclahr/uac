@@ -3,7 +3,7 @@ version: 1.0
 artifacts:
   -
     description: Collect the the current, reboot (when used in conjunction with -r) or permanent (when used in conjunction with -p) value for all tunable parameters, one per line in pairs Tunable = Value.
-    collector: command
     supported_os: [aix]
+    collector: command
     command: nfso -a
     output_file: nfso_-a.txt

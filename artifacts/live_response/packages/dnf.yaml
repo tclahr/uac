@@ -3,19 +3,19 @@ version: 1.0
 artifacts:
   -
     description: Display installed packages.
-    collector: command
     supported_os: [linux]
+    collector: command
     command: dnf list installed
     output_file: dnf_list_installed.txt
   -
     description: Display what has happened in past transactions.
-    collector: command
     supported_os: [linux]
+    collector: command
     command: dnf history list
     output_file: dnf_history_list.txt
   -
     description: Display all installonly packages, packages installed outside of DNF and packages not installed as dependency.
-    collector: command
     supported_os: [linux]
+    collector: command
     command: dnf history userinstalled
     output_file: dnf_history_userinstalled.txt

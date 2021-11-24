@@ -3,26 +3,26 @@ version: 1.0
 artifacts:
   -
     description: Display entries in the process table.
-    collector: command
     supported_os: [aix]
+    collector: command
     command: pstat -a
     output_file: pstat_-a.txt
   -
     description: Display all entries in the kernel thread table.
-    collector: command
     supported_os: [aix]
+    collector: command
     command: pstat -A
     output_file: pstat_-A.txt
   -
     description: Display the file table.
-    collector: command
     supported_os: [aix]
+    collector: command
     command: pstat -f
     output_file: pstat_-f.txt
   -
     description: Display the process table.
-    collector: command
     supported_os: [aix]
+    collector: command
     command: pstat -p
     output_file: pstat_-p.txt
     

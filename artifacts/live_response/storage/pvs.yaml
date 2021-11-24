@@ -3,8 +3,8 @@ version: 1.0
 artifacts:
   -
     description: Display information about physical volumes.
-    collector: command
     supported_os: [linux]
+    collector: command
     command: pvs
     output_file: pvs.txt
   

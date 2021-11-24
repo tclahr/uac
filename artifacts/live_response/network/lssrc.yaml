@@ -3,14 +3,14 @@ version: 1.0
 artifacts:
   -
     description: Display status of the subsystem, group of subsystems, or subserver.
-    collector: command
     supported_os: [aix]
+    collector: command
     command: lssrc -a
     output_file: lssrc_-a.txt
   -
     description: Display inetd information.
-    collector: command
     supported_os: [aix]
+    collector: command
     command: lssrc -l -s inetd
     output_file: lssrc_-l_-s_inetd.txt
   

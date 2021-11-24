@@ -3,7 +3,7 @@ version: 1.0
 artifacts:
   -
     description: Print all of the firmware variables.
-    collector: command
     supported_os: [macos]
+    collector: command
     command: nvram -p
     output_file: nvram_-p.txt

@@ -3,7 +3,7 @@ version: 1.0
 artifacts:
   -
     description: Displays information about a physical volume within a volume group.
-    collector: command
     supported_os: [aix]
+    collector: command
     command: lspv
     output_file: lspv.txt

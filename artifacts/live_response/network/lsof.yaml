@@ -3,7 +3,7 @@ version: 1.0
 artifacts:
   -
     description: Collect the listing of all Internet network files.
-    collector: command
     supported_os: [aix, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris]
+    collector: command
     command: lsof -nPli
     output_file: lsof_-nPli.txt

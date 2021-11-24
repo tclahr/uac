@@ -3,7 +3,7 @@ version: 1.0
 artifacts:
   -
     description: Display a selection of statistics about system power usage.
-    collector: command
     supported_os: [macos]
+    collector: command
     command: systemstats
     output_file: systemstats.txt

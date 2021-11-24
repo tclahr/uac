@@ -3,8 +3,8 @@ version: 1.0
 artifacts:
   -
     description: Display SCSI devices (or hosts) and their attributes.
-    collector: command
     supported_os: [linux]
+    collector: command
     command: lsscsi
     output_file: lsscsi.txt
   

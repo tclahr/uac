@@ -3,8 +3,8 @@ version: 1.0
 artifacts:
   -
     description: Collect file stat information to create a bodyfile.
-    collector: stat
     supported_os: [all]
+    collector: stat
     path: /
     exclude_file_system: [proc, procfs]
     max_depth: 5

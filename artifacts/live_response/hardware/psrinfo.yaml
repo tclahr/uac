@@ -3,7 +3,7 @@ version: 1.0
 artifacts:
   -
     description: Display information about processors.
-    collector: command
     supported_os: [solaris]
+    collector: command
     command: psrinfo -v
     output_file: psrinfo_-v.txt

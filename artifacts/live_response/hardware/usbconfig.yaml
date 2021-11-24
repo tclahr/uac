@@ -3,8 +3,8 @@ version: 1.0
 artifacts:
   -
     description: Display all connected USB devices and their attached interface drivers.
-    collector: command
     supported_os: [freebsd]
+    collector: command
     command: usbconfig show_ifdrv
     output_file: usbconfig_show_ifdrv.txt
   

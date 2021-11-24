@@ -3,8 +3,8 @@ version: 1.0
 artifacts:
   -
     description: Display previous and current SysV runlevel.
-    collector: command
     supported_os: [linux]
+    collector: command
     command: runlevel
     output_file: runlevel.txt
   

@@ -3,25 +3,25 @@ version: 1.0
 artifacts:
   -
     description: Collect the system's host name.
-    collector: command
     supported_os: [all]
+    collector: command
     command: hostname
     output_file: hostname.txt
   -
     description: Collect the system's host name.
-    collector: command
     supported_os: [linux, macos]
+    collector: command
     command: hostname -f
     output_file: hostname_-f.txt
   -
     description: Collect the system's host name information.
-    collector: command
     supported_os: [linux]
+    collector: command
     command: hostnamectl
     output_file: hostnamectl.txt
   -
     description: Collect the system's host name.
-    collector: command
     supported_os: [all]
+    collector: command
     command: uname -n
     output_file: uname_-n.txt

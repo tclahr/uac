@@ -3,8 +3,8 @@ version: 1.0
 artifacts:
   -
     description: Collect InstallHistory.plist file.
-    collector: file
     supported_os: [macos]
+    collector: file
     path: /Library/Receipts/InstallHistory.plist
     ignore_date_range: true
   

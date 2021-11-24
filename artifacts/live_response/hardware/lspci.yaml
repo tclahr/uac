@@ -3,19 +3,19 @@ version: 1.0
 artifacts:
   -
     description: List all PCI devices.
-    collector: command
     supported_os: [android, linux]
+    collector: command
     command: lspci
     output_file: lspci.txt
   -
     description: List all PCI devices.
-    collector: command
     supported_os: [linux]
+    collector: command
     command: lspci -vv
     output_file: lspci_-vv.txt
   -
     description: List all PCI devices including the kernel driver.
-    collector: command
     supported_os: [android]
+    collector: command
     command: lspci -e -k
     output_file: lspci_-e_-k.txt

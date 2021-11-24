@@ -3,7 +3,7 @@ version: 1.0
 artifacts:
   -
     description: Collect information about inetd services.
-    collector: command
     supported_os: [solaris]
+    collector: command
     command: inetadm
     output_file: inetadm.txt
