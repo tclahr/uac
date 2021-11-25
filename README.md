@@ -1,9 +1,15 @@
 # UAC (Unix-like Artifacts Collector)
+
 UAC is a Live Response collection tool for Incident Response that makes use of built-in tools to automate the collection of Unix-like systems artifacts. It was created to facilitate and speed up data collection, and depend less on remote support during incident response engagements.
 
-UAC reads YAML files on the fly and, based on their contents, collects relevant artifacts using 5 different collectors: command, find, hash, stat and file. This makes UAC very customizable and extensible.
+UAC reads artifacts files on the fly and, based on their contents, collects relevant artifacts using one of the 5 available collectors. This makes UAC very customizable and extensible.
+
+## Documentation
+
+Project documentation page: [https://tclahr.github.io/uac-docs](https://tclahr.github.io/uac-docs)
 
 ## Main Features
+
 - Fast and continuously tested
 - Runs everywhere with no dependencies (no installation required)
 - Customizable and extensible collections and artifacts
@@ -14,6 +20,7 @@ UAC reads YAML files on the fly and, based on their contents, collects relevant 
 - Acquires volatile memory from Linux systems using avml tool
 
 ## Supported Operating Systems
+
 UAC runs on any Unix-like system (regardless the processor architecture). All UAC needs is shell.
 
 - AIX
@@ -26,109 +33,6 @@ UAC runs on any Unix-like system (regardless the processor architecture). All UA
 - OpenBSD
 - Solaris
 
-## Usage
-```
-Usage: ./uac [-h] [-V] [--debug] {-p PROFILE | -a ARTIFACTS} DESTINATION 
-             [-m MOUNT_POINT] [-o OPERATING_SYSTEM] [-u] [--temp_dir PATH]
-             [--date-range-start YYYY-MM-DD] [--date-range-start YYYY-MM-DD]
-             [--case-number CASE_NUMBER] [--description DESCRIPTION]
-             [--evidence-number EVIDENCE_NUMBER] [--examiner EXAMINER]
-             [--notes NOTES] [--hostname HOSTNAME] [--stfp SERVER] 
-             [--sftp-port PORT] [--sftp-identity-file FILE]
-             [--sftp-delete-local-on-success] [--debug]
-   or: ./uac --validate-artifacts-file FILE
-
-Optional Arguments:
-  -h, --help        Display this help and exit.
-  -V, --version     Output version information and exit.
-      --debug       Enable debug mode.
-
-Profiling Arguments:
-  -p, --profile PROFILE
-                    Specify the collection profile name. Use '--profile list'
-                    to list available profiles.
-  -a, --artifacts ARTIFACTS
-                    Specify the artifacts to be collected during the collection.
-                    The expression is a comma separated string where each element
-                    is an artifact file. Each element can be prepended with an 
-                    exclamation mark to exclude the artifact.
-                    Special characters such as ! and * must be escaped with a
-                    backslash.
-                    Examples: --artifacts files/logs/\*,\!files/logs/var_log.yaml
-                    Use '--artifacts list' to list available artifacts.
-
-Positional Arguments:
-  DESTINATION       Specify the directory the output file will be created in.
-
-Collection Arguments:
-  -m, --mount-point MOUNT_POINT
-                    Specify the mount point (default: /).
-  -o, --operating-system OPERATING_SYSTEM
-                    Specify the operating system.
-                    Options: aix, android, freebsd, linux, macos, netbsd
-                             netscaler, openbsd, solaris
-  -u, --run-as-non-root
-                    Disable root user check.
-                    Note that data collection may be limited.
-      --temp-dir PATH   
-                    Write all temporary data to this directory.
-
-Filter Arguments:
-      --date-range-start YYYY-MM-DD
-                    Only collects files that were last modified/accessed/changed
-                    after given date.
-      --date-range-end YYYY-MM-DD
-                    Only collects files that were last modified/accessed/changed
-                    before given date.
-
-Informational Arguments:
-      --case-number CASE_NUMBER
-                    Specify the case number.
-      --description DESCRIPTION
-                    Specify the description.
-      --evidence-number EVIDENCE_NUMBER
-                    Specify the evidence number.
-      --examiner EXAMINER
-                    Specify the examiner name.
-      --notes NOTES
-                    Specify the notes.
-      --hostname HOSTNAME
-                    Specify the target system hostname.
-
-Remote Transfer Arguments:
-      --sftp SERVER
-                    Transfer output file to remote SFTP server.
-                    SERVER must be specified in the form [user@]host:[path]
-      --sftp-port PORT
-                    Remote SFTP server port (default: 22).
-      --sftp-identity-file FILE
-                    File from which the identity (private key) for public key
-                    authentication is read.
-      --sftp-delete-local-on-success
-                    Delete local output file on successful transfer.
-
-Validation Arguments:
-      --validate-artifacts-file FILE
-                    Validate artifacts file.
-```
-
-## Examples
-Run artifacts collection using ```full``` profile, and create the output file in ```/tmp```:
-```
-./uac -p full /tmp
-```
-Run artifacts collection using ```full-with-memory-dump``` profile, and create the output file in the current directory:
-```
-./uac -p full-with-memory-dump .
-```
-Collect ```live_response``` and ```bodyfile``` artifacts only, and create the output file in ```/tmp```:
-```
-./uac -a live_response/\*,bodyfile/bodyfile.yaml /tmp
-```
-Validade a custom artifacts file:
-```
-./uac --validate-artifacts-file ./artifacts/files/my_custom_artifact.yaml
-```
-
 ## License
+
 The UAC project uses the [Apache License Version 2.0](LICENSE) software license.
