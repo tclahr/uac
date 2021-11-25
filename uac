@@ -79,7 +79,7 @@ export PATH
 . "${UAC_DIR}/lib/validate_profile_file.sh"
 
 # global vars
-UAC_VERSION="2.0.0-rc4"
+UAC_VERSION="2.0.0"
 MOUNT_POINT="/"
 OPERATING_SYSTEM=""
 SYSTEM_ARCH=""
