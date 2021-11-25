@@ -1,0 +1,8 @@
+version: 1.0
+artifacts:
+  -
+    description: Lists the property information for the given datasets in tabular form.
+    supported_os: [aix, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris]
+    collector: command
+    command: zfs list -o name,avail,used,usedsnap,usedds,usedrefreserv,usedchild,sharenfs,mountpoint
+    output_file: zfs_list.txt

@@ -1,0 +1,8 @@
+version: 1.0
+artifacts:
+  -
+    description: Display the list of boot devices available to the system.
+    supported_os: [aix]
+    collector: command
+    command: bootlist -o -m normal
+    output_file: bootlist_-o_-m_normal.txt

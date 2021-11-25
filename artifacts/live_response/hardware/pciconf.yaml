@@ -1,0 +1,14 @@
+version: 1.0
+artifacts:
+  -
+    description: Display PCI devices information.
+    supported_os: [freebsd, netscaler]
+    collector: command
+    command: pciconf -l
+    output_file: pciconf_-l.txt
+  -
+    description: Display PCI devices with vendor, device, class and subclass information.
+    supported_os: [freebsd, netscaler]
+    collector: command
+    command: pciconf -l -v
+    output_file: pciconf_-l_-v.txt

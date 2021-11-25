@@ -1,0 +1,9 @@
+version: 1.0
+artifacts:
+  -
+    description: Display system diagnostic information.
+    supported_os: [solaris]
+    collector: command
+    command: prtdiag -v
+    output_file: prtdiag_-v.txt
+  

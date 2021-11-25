@@ -1,0 +1,7 @@
+version: 1.0
+artifacts:
+  -
+    description: This file specifies remote users that can use a local user account on a network.
+    supported_os: [all]
+    collector: file
+    path: /%user_home%/.rhosts

@@ -1,0 +1,9 @@
+version: 1.0
+artifacts:
+  -
+    description: Print the process tree containing the specified process IDs or users.
+    supported_os: [aix]
+    collector: command
+    command: proctree -a
+    output_file: proctree_-a.txt
+  

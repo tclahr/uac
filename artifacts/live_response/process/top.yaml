@@ -1,0 +1,20 @@
+version: 1.0
+artifacts:
+  -
+    description: Display current running processes.
+    supported_os: [freebsd, netbsd, netscaler, openbsd, solaris]
+    collector: command
+    command: top -b
+    output_file: top_-b.txt
+  -
+    description: Display current running processes.
+    supported_os: [android, linux]
+    collector: command
+    command: top -b -n1
+    output_file: top_-b_-n1.txt
+  -
+    description: Display current running processes.
+    supported_os: [macos]
+    collector: command
+    command: top -l1
+    output_file: top_l1.txt

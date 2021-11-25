@@ -1,0 +1,26 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect addresses assigned to all network interfaces.
+    supported_os: [android, linux]
+    collector: command
+    command: ip addr show
+    output_file: ip_addr_show.txt
+  -
+    description: Collect information about network devices.
+    supported_os: [android, linux]
+    collector: command
+    command: ip link show
+    output_file: ip_link_show.txt
+  -
+    description: Collect neightbour entries.
+    supported_os: [android, linux]
+    collector: command
+    command: ip neighbor show
+    output_file: ip_neighbor_show.txt
+  -
+    description: Collect the kernel routing tables.
+    supported_os: [android, linux]
+    collector: command
+    command: ip route show
+    output_file: ip_route_show.txt

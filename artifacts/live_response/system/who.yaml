@@ -1,0 +1,9 @@
+version: 1.0
+artifacts:
+  -
+    description: Display the current run-level of the process.
+    supported_os: [aix]
+    collector: command
+    command: who -r
+    output_file: who_-r.txt
+  

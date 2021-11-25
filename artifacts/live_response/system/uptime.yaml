@@ -1,0 +1,15 @@
+version: 1.0
+artifacts:
+  -
+    description: Display how long system has been running.
+    supported_os: [all]
+    collector: command
+    command: uptime
+    output_file: uptime.txt
+  -
+    description: Display how long system has been running in yyyy-mm-dd HH:MM:SS format.
+    supported_os: [all]
+    collector: command
+    command: uptime -s
+    output_file: uptime_-s.txt
+  

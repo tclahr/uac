@@ -1,0 +1,8 @@
+version: 1.0
+artifacts:
+  -
+    description: Displays the characteristics of file systems.
+    supported_os: [aix]
+    collector: command
+    command: lsfs
+    output_file: lsfs.txt

@@ -1,0 +1,8 @@
+version: 1.0
+artifacts:
+  -
+    description: Display a tree of processes.
+    supported_os: [solaris]
+    collector: command
+    command: ptree
+    output_file: ptree.txt

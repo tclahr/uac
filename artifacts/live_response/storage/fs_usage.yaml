@@ -1,0 +1,9 @@
+version: 1.0
+artifacts:
+  -
+    description: Report system calls and page faults related to filesystem activity in real-time.
+    supported_os: [macos]
+    collector: command
+    command: fs_usage -e -w -t 60
+    output_file: fs_usage_-e_-w_-t_60.txt
+  

@@ -1,0 +1,8 @@
+version: 1.0
+artifacts:
+  -
+    description: List all of the running applications.
+    supported_os: [macos]
+    collector: command
+    command: lsappinfo list
+    output_file: lsappinfo_list.txt

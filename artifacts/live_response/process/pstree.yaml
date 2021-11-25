@@ -1,0 +1,8 @@
+version: 1.0
+artifacts:
+  -
+    description: Display a tree of processes.
+    supported_os: [android, linux]
+    collector: command
+    command: pstree
+    output_file: pstree.txt

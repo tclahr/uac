@@ -1,0 +1,17 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect Microsoft Office Most Recently Used.
+    supported_os: [macos]
+    collector: file
+    path: /%user_home%/Library/Preferences/com.microsoft.office.plist
+    ignore_date_range: true
+    exclude_nologin_users: true
+  -
+    description: Collect Microsoft Office Most Recently Used.
+    supported_os: [macos]
+    collector: file
+    path: /%user_home%/Library/Containers/com.microsoft.*/Data/Library/Preferences
+    name_pattern: ["com.microsoft.*.securebookmarks.plist"]
+    ignore_date_range: true
+    exclude_nologin_users: true

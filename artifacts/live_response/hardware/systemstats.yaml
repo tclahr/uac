@@ -1,0 +1,8 @@
+version: 1.0
+artifacts:
+  -
+    description: Display a selection of statistics about system power usage.
+    supported_os: [macos]
+    collector: command
+    command: systemstats
+    output_file: systemstats.txt

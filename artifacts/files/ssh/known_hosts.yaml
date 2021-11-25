@@ -1,0 +1,7 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect known_hosts files.
+    supported_os: [all]
+    collector: file
+    path: /%user_home%/.ssh/known_hosts*

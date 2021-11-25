@@ -1,0 +1,15 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect the list open files.
+    supported_os: [android]
+    collector: command
+    command: lsof -l
+    output_file: lsof_-l.txt
+  -
+    description: Collect the list open files.
+    supported_os: [aix, freebsd, linux, macos, netscaler, openbsd, solaris]
+    collector: command
+    command: lsof -nPl
+    output_file: lsof_-nPl.txt
+  

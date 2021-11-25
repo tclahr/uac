@@ -1,0 +1,9 @@
+version: 1.0
+artifacts:
+  -
+    description: Display system data structures.
+    supported_os: [freebsd, netscaler]
+    collector: command
+    command: swapinfo
+    output_file: swapinfo.txt
+  

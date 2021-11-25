@@ -1,0 +1,8 @@
+version: 1.0
+artifacts:
+  -
+    description: Print boot log.
+    supported_os: [aix]
+    collector: command
+    command: alog -o -t boot
+    output_file: alog_-o_-t_boot.txt

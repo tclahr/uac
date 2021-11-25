@@ -1,0 +1,9 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect Quarantine Events database file.
+    supported_os: [macos]
+    collector: file
+    path: /%user_home%/Library/Preferences/com.apple.LaunchServices.QuarantineEventsV2
+    ignore_date_range: true
+  

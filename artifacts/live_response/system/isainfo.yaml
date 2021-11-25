@@ -1,0 +1,9 @@
+version: 1.0
+artifacts:
+  -
+    description: Display the name of the instruction set(s) used by the operating system kernel components such as device drivers and STREAMS modules.
+    supported_os: [solaris]
+    collector: command
+    command: isainfo -v -k
+    output_file: isainfo_-v_-k.txt
+  

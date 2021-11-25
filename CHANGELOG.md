@@ -1,9 +1,52 @@
 # Changelog
+
 All notable changes to this project will be documented in this file.
+
+## 2.0.0 (2021-11-24)
+
+### Highlights
+
+- Faster collection engine.
+- Artifacts collections are now based on YAML files.
+- Nine supported operating systems: android (via adb shell), aix, freebsd, linux, macos, netbsd, netscaler, openbsd and solaris.
+- New command line options.
+- New output and log file format.
+- Revamped uac.log file.
+- Command errors will now be stored into individual .stderr files.
+- New Linux memory dump collection via avml tool.
+
+### New Artifacts
+
+- New browser artifacts
+  - Chromium based (Chrome, Edge, Opera, Brave...)
+  - Firefox
+  - Safari
+- New applications artifacts
+  - macOS dock
+  - LibreOffice MRU
+  - Microsoft Office MRU
+  - WPS Office MRU
+- New system artifacts
+  - macOS MRU
+  - macOS autoruns
+  - macOS quarantine events
+  - macOS time machine information
+  - macOS wifi information
+- New docker/containers artifacts
+  - containerd config dump
+- New process artifacts
+  - proctree -a
+  - ps auxwwwf
+- New network artifacts
+  - ss -tap
+  - ss -tanp
+  - ss -tlp
+  - ss -tlnp
 
 ## 1.7.0 (2021-09-04)
 
 ### Added
+
 - If native ```stat``` tool does not collect file's birth time on linux systems, the new ```statx``` tool will be used instead during body file creation. ```statx``` tool uses the new statx() system call (kernel 4.11+) that solves the deficiencies of the existing stat() system call.
 - New system collectors
   - linux and macos
@@ -17,14 +60,17 @@ All notable changes to this project will be documented in this file.
     - falconctl stats
 
 ### Fixed
+
 - Fixed issue related to /dev/tty device when running UAC via CrowdStrike RTR (Real Time Response) console ([#24](https://github.com/tclahr/uac/issues/24)).
 
 ### Removed
+
 - Solution to collect file's birth time (ext4 only) using ```debugfs``` tool, during body file creation.
 
 ## 1.6.0 (2021-07-24)
 
 ### Added
+
 - logs, system_files, user_files and suspicious_files will now be stored into a single compressed file (files.tar.gz).
 - New entries added to system_files.conf
   - /private/var/spool
@@ -41,14 +87,17 @@ All notable changes to this project will be documented in this file.
 ## 1.5.1 (2021-06-07)
 
 ### Added
+
 - ```devtmpfs```, ```fuse```, ```nfs4```, ```sysfs``` and ```tmpfs``` were added to the list of file systems that will be excluded from the collection.
 
 ### Fixed
+
 - strings were not being properly collected from running processes ([#21](https://github.com/tclahr/uac/issues/21)).
 
 ## 1.5.0 (2021-05-26)
 
 ### Added
+
 - New hardware collectors
   - cat /proc/cpuinfo
 - New network collectors
@@ -64,11 +113,13 @@ All notable changes to this project will be documented in this file.
   - /usr/lib/systemd/system
 
 ### Fixed
+
 - File's crtime on ext4 file system was not being collected by bodyfile collector on systems using old 'stat' tool ([#19](https://github.com/tclahr/uac/issues/19)).
 
 ## 1.4.0 (2021-02-22)
 
 ### Added
+
 - Output file can be automatically transferred (scp) to a remote server using -T option.
 - ```afs``` and ```rpc_pipefs``` mounted file systems will also be excluded from the collection if EXCLUDE_MOUNTED_REMOTE_FILE_SYSTEMS option is set to true.
 - New entries added to exclude.conf
@@ -89,11 +140,13 @@ All notable changes to this project will be documented in this file.
 ## 1.3.1 (2020-12-10)
 
 ### Fixed
+
 - UAC was creating an empty output file if tar was not available in the target system ([#15](https://github.com/tclahr/uac/issues/15)).
 
 ## 1.3.0 (2020-10-18)
 
 ### Added
+
 - File creation time (Linux and ext4 file systems only) will now be collected by the bodyfile collector if debugfs tool is available on the target system. This will extremely increase the collection time, so it can be disabled by editing ```conf/uac.conf``` and setting BODY_FILE_CRTIME to false.
 - SHA-1 hashes will also be calculated by default. It can be disabled by editing ```conf/uac.conf``` and setting CALCULATE_SHA1 to false.
 - New disk_volume_file_system collectors
@@ -105,6 +158,7 @@ All notable changes to this project will be documented in this file.
 ## 1.2.0 (2020-07-26)
 
 ### Added
+
 - UAC will collect even more information about running processes.
 - Strings will now be extracted from running processes by the process collector.
 - New docker and virtual machines information collector (-k).
@@ -172,26 +226,31 @@ All notable changes to this project will be documented in this file.
   - /.xsession-errors
 
 ### Changed
+
 - Hash running processes will now be executed by the process collector (-p).
 - conf/uac.conf
   - BODY_FILE_MAX_DEPTH default value changed from 4 to 5.
 - misc files was renamed to suspicious files collector.
 
 ### Removed
+
 - hash running processes collector (-r).
 
 ### Fixed
+
 - Data range option not adding the "+" prefix for the second -atime, -mtime and -ctime parameters ([#10](https://github.com/tclahr/uac/issues/10)).
 
 ## 1.1.1 (2020-06-16)
 
 ### Fixed
+
 - Operating system error message being sent to terminal if an invalid directory is used as destination ([#5](https://github.com/tclahr/uac/issues/5)).
 - hash_running_processes collector and hash_exec extension not working on AIX 6 ([#6](https://github.com/tclahr/uac/issues/6)).
 
 ## 1.1.0 (2020-05-27)
 
 ### Added
+
 - Now you can use your own validated tools (binary files) during artifacts collection. Please refer to ```bin/README.txt``` for more information.
 - Date Range (-R) option can be used to limit the amount of data collected by logs (-l), misc_files (-f) and user_accounts (-u) collectors.
 - New Sleuthkit fls tool extension.
@@ -245,6 +304,7 @@ All notable changes to this project will be documented in this file.
   - /var/spool
 
 ### Changed
+
 - Files and directories added to ```conf/system_files.conf``` will be collected by the system (-y) collector.
 - aix collectors
   - iostat moved from system to disk_volume_file_system collector
@@ -270,10 +330,12 @@ All notable changes to this project will be documented in this file.
   - .*_profile
 
 ### Removed
+
 - Entries removed from system_files.conf
   - /var/spool/cron
 
 ### Fixed
+
 - ```compress_data``` function not working properly on Linux systems that use an old busybox (tar) version.
 - body_file collector will only run if either ```stat``` or ```perl``` is available on the system.
 - hash_exec extension will only run if ```file``` tool is available on the system.
@@ -281,7 +343,9 @@ All notable changes to this project will be documented in this file.
 ## 1.0.1 (2020-03-26)
 
 ### Fixed
+
 - running UAC and quickly terminating the process was making it to propose the user to delete the root folder "/" ([#1](https://github.com/tclahr/uac/issues/1)).
 
 ## 1.0.0 (2020-02-04)
+
 - Initial Release

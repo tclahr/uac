@@ -1,0 +1,7 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect authorized_keys files.
+    supported_os: [all]
+    collector: file
+    path: /%user_home%/.ssh/authorized_keys*

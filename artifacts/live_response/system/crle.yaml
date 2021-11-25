@@ -1,0 +1,9 @@
+version: 1.0
+artifacts:
+  -
+    description: Displays configuration information.
+    supported_os: [solaris]
+    collector: command
+    command: crle
+    output_file: crle.txt
+  

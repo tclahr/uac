@@ -1,0 +1,8 @@
+version: 1.0
+artifacts:
+  -
+    description: Display kernel version description, processor configuration data, available physical memory, and various scheduling statistics.
+    supported_os: [macos]
+    collector: command
+    command: hostinfo
+    output_file: hostinfo.txt

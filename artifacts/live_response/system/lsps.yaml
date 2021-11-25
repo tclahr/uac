@@ -1,0 +1,9 @@
+version: 1.0
+artifacts:
+  -
+    description: Displays the characteristics of a paging space.
+    supported_os: [aix]
+    collector: command
+    command: lsps -a
+    output_file: lsps_-a.txt
+  

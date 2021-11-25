@@ -1,0 +1,9 @@
+version: 1.0
+artifacts:
+  -
+    description: Display all hardware devices, as well as pseudo devices, system devices, loadable modules, and the values of selected kernel tunable parameters.
+    supported_os: [solaris]
+    collector: command
+    command: sysdef -D
+    output_file: sysdef_-D.txt
+  

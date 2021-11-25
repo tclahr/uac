@@ -1,0 +1,9 @@
+version: 1.0
+artifacts:
+  -
+    description: Display logical partition (LPAR) related information and statistics.
+    supported_os: [aix]
+    collector: command
+    command: lparstat -i
+    output_file: lparstat_-i.txt
+  

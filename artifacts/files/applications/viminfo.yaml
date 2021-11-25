@@ -1,0 +1,9 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect vim info file. This file is used to store command line, search string, input-line, marks, substitute patterns history and more.
+    supported_os: [aix, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris]
+    collector: file
+    path: /%user_home%/.viminfo
+    exclude_nologin_users: true
+    

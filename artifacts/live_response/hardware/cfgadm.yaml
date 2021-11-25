@@ -1,0 +1,8 @@
+version: 1.0
+artifacts:
+  -
+    description: Display configuration administration status information.
+    supported_os: [solaris]
+    collector: command
+    command: cfgadm -l
+    output_file: cfgadm_-l.txt

@@ -1,0 +1,14 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect packet filter statistics and filter list.
+    supported_os: [solaris]
+    collector: command
+    command: ipfstat
+    output_file: ipfstat.txt
+  -
+    description: Collect the filter list used for the input and output side of the kernel IP processing.
+    supported_os: [solaris]
+    collector: command
+    command: ipfstat -io
+    output_file: ipfstat_-io.txt

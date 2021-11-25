@@ -1,0 +1,9 @@
+version: 1.0
+artifacts:
+  -
+    description: Display PCI device data.
+    supported_os: [openbsd]
+    collector: command
+    command: pcidump -v
+    output_file: pcidump_-v.txt
+  

@@ -1,0 +1,8 @@
+version: 1.0
+artifacts:
+  -
+    description: List all firewall entries.
+    supported_os: [freebsd]
+    collector: command
+    command: ipfw list
+    output_file: ipfw_list.txt

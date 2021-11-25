@@ -1,0 +1,15 @@
+version: 1.0
+artifacts:
+  -
+    description: Display information about service instances as recorded in the service configuration repository.
+    supported_os: [solaris]
+    collector: command
+    command: svcs -a
+    output_file: svcs_-a.txt
+  -
+    description: Display explanations for service states.
+    supported_os: [solaris]
+    collector: command
+    command: svcs -x -v
+    output_file: svcs_-x_-v.txt
+  

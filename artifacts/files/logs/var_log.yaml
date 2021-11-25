@@ -1,0 +1,14 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect /var/log logs.
+    supported_os: [aix, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris]
+    collector: file
+    path: /var/log/*
+    max_file_size: 1073741824 # 1GB
+  -
+    description: Collect /private/var/log logs.
+    supported_os: [macos]
+    collector: file
+    path: /private/var/log/*
+    max_file_size: 1073741824 # 1GB

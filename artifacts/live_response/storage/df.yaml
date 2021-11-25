@@ -1,0 +1,20 @@
+version: 1.0
+artifacts:
+  -
+    description: Report file system disk space usage.
+    supported_os: [all]
+    collector: command
+    command: df
+    output_file: df.txt
+  -
+    description: Report file system disk space usage.
+    supported_os: [android, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris]
+    collector: command
+    command: df -h
+    output_file: df_-h.txt
+  -
+    description: List information about the file system name, the total space allocated in the file system, the amount of space allocated to existing files, the total amount of space available for the creation of new files by unprivileged users, and the percentage of normally available space that is currently allocated to all files on the file system.
+    supported_os: [solaris]
+    collector: command
+    command: df -n
+    output_file: df_-n.txt

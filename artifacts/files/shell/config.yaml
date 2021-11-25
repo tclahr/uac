@@ -1,0 +1,9 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect shell config files.
+    supported_os: [all]
+    collector: file
+    path: /%user_home%
+    name_pattern: [".*_login", ".*_logout", ".*_profile", ".*rc", ".cshdirs", ".ksh", ".login", ".logout", ".profile", ".tcsh", ".zlogin", ".zlogout", ".zprofile", ".zshenv"]
+    max_depth: 2

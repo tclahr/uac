@@ -1,0 +1,10 @@
+version: 1.0
+artifacts:
+  -
+    description: List available disks.
+    supported_os: [solaris]
+    collector: command
+    command: echo | format
+    output_file: format.txt
+  
+  

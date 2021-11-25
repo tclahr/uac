@@ -1,0 +1,8 @@
+version: 1.0
+artifacts:
+  -
+    description: Display information about system device configuration.
+    supported_os: [freebsd, netscaler]
+    collector: command
+    command: devinfo -r
+    output_file: devinfo_-r.txt

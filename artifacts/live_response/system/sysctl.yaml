@@ -1,0 +1,9 @@
+version: 1.0
+artifacts:
+  -
+    description: Display kernel parameters.
+    supported_os: [android, freebsd, linux, macos, netbsd, netscaler, openbsd]
+    collector: command
+    command: sysctl -a
+    output_file: sysctl_-a.txt
+  

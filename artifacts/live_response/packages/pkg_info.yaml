@@ -1,0 +1,16 @@
+version: 1.0
+artifacts:
+  -
+    description: Display information for all currently installed packages, including internal packages.
+    supported_os: [openbsd]
+    collector: command
+    command: pkg_info -A
+    output_file: pkg_info_-A.txt
+  -
+    description: Display information for all currently installed packages.
+    supported_os: [netbsd]
+    collector: command
+    command: pkg_info -a -d
+    output_file: pkg_info_-a_-d.txt
+  
+  

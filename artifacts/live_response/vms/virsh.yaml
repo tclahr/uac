@@ -1,0 +1,75 @@
+version: 1.0
+artifacts:
+  -
+    description: List active and inactive domains.
+    supported_os: [linux]
+    collector: command
+    command: virsh list --all
+    output_file: virsh_list_--all.txt
+  -
+    description: Get a list of interfaces of a running domain along with their IP and MAC addresses.
+    supported_os: [linux]
+    collector: command
+    loop_command: virsh list --all --name
+    command: virsh domifaddr %line%
+    output_file: virsh_domifaddr_%line%.txt
+  -
+    description: Returns basic information about the domain.
+    supported_os: [linux]
+    collector: command
+    loop_command: virsh list --all --name
+    command: virsh dominfo %line%
+    output_file: virsh_dominfo_%line%.txt
+  -
+    description: Get memory stats for a running domain.
+    supported_os: [linux]
+    collector: command
+    loop_command: virsh list --all --name
+    command: virsh dommemstat %line%
+    output_file: virsh_dommemstat_%line%.txt
+  -
+    description: List all of the available snapshots for the given domain, defaulting to show columns for the snapshot name, creation time, and domain state.
+    supported_os: [linux]
+    collector: command
+    loop_command: virsh list --all --name
+    command: virsh snapshot-list %line%
+    output_file: virsh_snapshot-list_%line%.txt
+  -
+    description: Returns basic information about the domain virtual CPUs, like the number of vCPUs, the running time, the affinity to physical processors.
+    supported_os: [linux]
+    collector: command
+    loop_command: virsh list --all --name
+    command: virsh vcpuinfo %line%
+    output_file: virsh_vcpuinfo_%line%.txt
+  -
+    description: Returns the list of active and inactive networks.
+    supported_os: [linux]
+    collector: command
+    command: virsh net-list --all
+    output_file: virsh_net_list_--all.txt
+  -
+    description: Returns basic information about the network object.
+    supported_os: [linux]
+    collector: command
+    loop_command: virsh net-list --all --name
+    command: virsh net-info %line%
+    output_file: virsh_net-info_%line%.txt
+  -
+    description: Get a list of dhcp leases for all network interfaces connected to the given virtual network or limited output just for one interface if mac is specified.
+    supported_os: [linux]
+    collector: command
+    loop_command: virsh net-list --all --name
+    command: virsh net-dhcp-leases %line%
+    output_file: virsh_net-dhcp-leases_%line%.txt
+  -
+    description: Returns basic information about the node, like number and type of CPU, and size of the physical memory.
+    supported_os: [linux]
+    collector: command
+    command: virsh nodeinfo
+    output_file: virsh_nodeinfo.txt
+  -
+    description: List active and inactive pool objects known to libvirt.
+    supported_os: [linux]
+    collector: command
+    command: virsh pool-list --all
+    output_file: virsh_pool-list_--all.txt

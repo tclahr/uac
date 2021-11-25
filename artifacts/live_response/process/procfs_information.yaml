@@ -1,0 +1,118 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect current running processes information.
+    supported_os: [aix, android, linux, netbsd, netscaler]
+    collector: command
+    command: ls -la /proc/[0-9]*
+    output_file: ls_-la_proc.txt
+  -
+    description: Collect running processes executable path.
+    supported_os: [freebsd, macos, openbsd]
+    collector: command
+    command: ps -eo args | grep ^/ | awk '{print $1}' | sort -u
+    output_file: running_processes_full_paths.txt
+  -
+    description: Collect running processes executable path.
+    supported_os: [android, linux, netbsd]
+    collector: command
+    command: ls -l /proc/[0-9]*/exe
+    output_file: running_processes_full_paths.txt
+  -
+    description: Collect running processes executable path.
+    supported_os: [netscaler]
+    collector: command
+    command: ls -l /proc/[0-9]*/file
+    output_file: running_processes_full_paths.txt
+  -
+    description: Collect running processes executable path.
+    supported_os: [aix]
+    collector: command
+    command: ls -l /proc/[0-9]*/object/a.out
+    output_file: running_processes_full_paths.txt
+  -
+    description: Collect running processes executable path.
+    supported_os: [solaris]
+    collector: command
+    command: ls -l /proc/[0-9]*/path/a.out
+    output_file: running_processes_full_paths.txt
+  -
+    description: Collect the command name associated with a process.
+    supported_os: [android, linux]
+    collector: command
+    loop_command: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
+    command: cat /proc/%line%/comm
+    output_directory: proc/%line%
+    output_file: comm.txt
+  -
+    description: Collect command line arguments for a process.
+    supported_os: [android, linux, netbsd, netscaler, solaris]
+    collector: command
+    loop_command: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
+    command: strings /proc/%line%/cmdline
+    output_directory: proc/%line%
+    output_file: cmdline.txt
+  -
+    description: Collect mapped memory regions and their access permissions.
+    supported_os: [netbsd, netscaler]
+    collector: command
+    loop_command: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
+    command: cat /proc/%line%/map
+    output_directory: proc/%line%
+    output_file: map.txt
+  -
+    description: Collect mapped memory regions and their access permissions.
+    supported_os: [android, linux, netbsd]
+    collector: command
+    loop_command: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
+    command: cat /proc/%line%/maps
+    output_directory: proc/%line%
+    output_file: maps.txt
+  -
+    description: Collect initial environment that was set when the process was started.
+    supported_os: [android, linux, solaris]
+    collector: command
+    loop_command: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
+    command: strings /proc/%line%/environ
+    output_directory: proc/%line%
+    output_file: environ.txt
+  -
+    description: Collect the list of child tasks of a process.
+    supported_os: [android, linux]
+    collector: command
+    loop_command: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
+    command: cat /proc/%line%/task/%line%/children
+    output_directory: proc/%line%
+    output_file: children.txt
+  -
+    description: Collect the list of files which the process has open.
+    supported_os: [android, linux]
+    collector: command
+    loop_command: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
+    command: ls -la /proc/%line%/fd
+    output_directory: proc/%line%
+    output_file: fd.txt
+  -
+    description: Collect running process information.
+    supported_os: [aix, solaris]
+    collector: command
+    loop_command: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
+    command: strings /proc/%line%/psinfo
+    output_directory: proc/%line%
+    output_file: psinfo.txt
+  -
+    description: Collect the list of files which the process has open.
+    supported_os: [solaris]
+    collector: command
+    loop_command: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
+    command: pfiles -F %line%
+    output_directory: proc/%line%
+    output_file: pfiles.txt
+  -
+    description: Collect information about all file descriptors opened by a process.
+    supported_os: [aix]
+    collector: command
+    loop_command: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
+    command: procfiles -n -c %line%
+    output_directory: proc/%line%
+    output_file: procfiles.txt

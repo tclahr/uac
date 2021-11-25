@@ -1,0 +1,9 @@
+version: 1.0
+artifacts:
+  -
+    description: Display the status of modules in the Linux Kernel.
+    supported_os: [android, linux]
+    collector: command
+    command: lsmod
+    output_file: lsmod.txt
+  

@@ -1,0 +1,9 @@
+version: 1.0
+artifacts:
+  -
+    description: List the devices making up	system swap.
+    supported_os: [freebsd, netbsd, netscaler, openbsd]
+    collector: command
+    command: swapctl -l
+    output_file: swapctl_-l.txt
+  

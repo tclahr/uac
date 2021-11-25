@@ -1,0 +1,5 @@
+name: memory-dump-only
+description: Collects memory dump from Linux systems.
+artifacts:
+  - memory_dump/avml.yaml
+  

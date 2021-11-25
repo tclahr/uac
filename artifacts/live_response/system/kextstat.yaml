@@ -1,0 +1,8 @@
+version: 1.0
+artifacts:
+  -
+    description: Display status of loaded kernel extensions (kexts).
+    supported_os: [macos]
+    collector: command
+    command: kextstat
+    output_file: kextstat.txt

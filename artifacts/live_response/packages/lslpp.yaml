@@ -1,0 +1,21 @@
+version: 1.0
+artifacts:
+  -
+    description: Displays the installation and update history information for the specified fileset.
+    supported_os: [aix]
+    collector: command
+    command: lslpp -a -h -c
+    output_file: lslpp_-a_-h_-c.txt
+  -
+    description: Displays the name, most recent level, state, type, and a description of the specified fileset.
+    supported_os: [aix]
+    collector: command
+    command: lslpp -L
+    output_file: lslpp_-L.txt
+  -
+    description: Displays the name, most recent level, state, type, and a description of the specified fileset.
+    supported_os: [aix]
+    collector: command
+    command: lslpp -L -c
+    output_file: lslpp_-L_-c.txt
+    

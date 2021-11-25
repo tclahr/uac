@@ -1,0 +1,8 @@
+version: 1.0
+artifacts:
+  -
+    description: Display the contents of the System Management BIOS image.
+    supported_os: [solaris]
+    collector: command
+    command: smbios
+    output_file: smbios.txt

@@ -1,0 +1,14 @@
+version: 1.0
+artifacts:
+  -
+    description: Displays information about volume groups.
+    supported_os: [aix]
+    collector: command
+    command: lsvg
+    output_file: lsvg.txt
+  -
+    description: Displays information about volume groups.
+    supported_os: [aix]
+    collector: command
+    command: lsvg -o | lsvg -il
+    output_file: lsvg_-o_lsvg_-il.txt

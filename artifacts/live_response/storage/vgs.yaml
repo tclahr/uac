@@ -1,0 +1,9 @@
+version: 1.0
+artifacts:
+  -
+    description: Display information about volume groups.
+    supported_os: [linux]
+    collector: command
+    command: vgs
+    output_file: vgs.txt
+  

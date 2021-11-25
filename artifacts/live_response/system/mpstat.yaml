@@ -1,0 +1,9 @@
+version: 1.0
+artifacts:
+  -
+    description: Display processor statistics in tabular form.
+    supported_os: [solaris]
+    collector: command
+    command: mpstat
+    output_file: mpstat.txt
+  

@@ -1,0 +1,34 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect WPS Office Most Recently Used.
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.config
+    name_pattern: ["Office.conf", "recently-used.xbel", "workarea.cfg"]
+    ignore_date_range: true
+    exclude_nologin_users: true
+  -
+    description: Collect WPS Office Most Recently Used (Flatpak version).
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.var/app
+    name_pattern: ["Office.conf", "recently-used.xbel", "workarea.cfg"]
+    ignore_date_range: true
+    exclude_nologin_users: true
+  -
+    description: Collect WPS Office Most Recently Used (Snap version).
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/snap
+    name_pattern: ["Office.conf", "recently-used.xbel", "workarea.cfg"]
+    ignore_date_range: true
+    exclude_nologin_users: true
+  -
+    description: Collect WPS Office Most Recently Used.
+    supported_os: [macos]
+    collector: file
+    path: /%user_home%/Library/Group Containers/*.wpsoffice
+    name_pattern: ["recentlocalfile.xml"]
+    ignore_date_range: true
+    exclude_nologin_users: true

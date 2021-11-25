@@ -1,0 +1,8 @@
+version: 1.0
+artifacts:
+  -
+    description: Reports system hardware and software configuration.
+    supported_os: [macos]
+    collector: command
+    command: system_profiler
+    output_file: system_profiler.txt

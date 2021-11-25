@@ -1,0 +1,9 @@
+version: 1.0
+artifacts:
+  -
+    description: Display the Hardware Clock time.
+    supported_os: [android, linux]
+    collector: command
+    command: hwclock
+    output_file: hwclock.txt
+  

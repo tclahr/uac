@@ -1,0 +1,21 @@
+version: 1.0
+artifacts:
+  -
+    description: Display all systemd system units.
+    supported_os: [linux]
+    collector: command
+    command: systemctl list-units
+    output_file: systemctl_list-units.txt
+  -
+    description: Display timer units currently in memory, ordered by the time they elapse next.
+    supported_os: [linux]
+    collector: command
+    command: systemctl list-timers --all
+    output_file: systemctl_list-timers_--all.txt
+  -
+    description: Display unit files installed on the system, in combination with their enablement state (as reported by is-enabled).
+    supported_os: [linux]
+    collector: command
+    command: systemctl list-unit-files
+    output_file: systemctl_list-unit-files.txt
+  

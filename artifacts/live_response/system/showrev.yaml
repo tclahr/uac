@@ -1,0 +1,15 @@
+version: 1.0
+artifacts:
+  -
+    description: Display machine and software revision information.
+    supported_os: [solaris]
+    collector: command
+    command: showrev
+    output_file: showrev.txt
+  -
+    description: Display machine and software revision information.
+    supported_os: [solaris]
+    collector: command
+    command: showrev -p
+    output_file: showrev_-p.txt
+  

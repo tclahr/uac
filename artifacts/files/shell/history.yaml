@@ -1,0 +1,10 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect shell history files.
+    supported_os: [all]
+    collector: file
+    path: /%user_home%
+    # lesshst: less command history file
+    name_pattern: [".*_history", ".*history", ".lesshst", ".zhistory"]
+    max_depth: 2

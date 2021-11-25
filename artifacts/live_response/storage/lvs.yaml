@@ -1,0 +1,9 @@
+version: 1.0
+artifacts:
+  -
+    description: Display information about logical volumes.
+    supported_os: [linux]
+    collector: command
+    command: lvs
+    output_file: lvs.txt
+  

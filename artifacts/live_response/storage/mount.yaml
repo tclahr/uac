@@ -1,0 +1,8 @@
+version: 1.0
+artifacts:
+  -
+    description: Lists all mounted filesystems.
+    supported_os: [all]
+    collector: command
+    command: mount
+    output_file: mount.txt

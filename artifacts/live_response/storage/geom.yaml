@@ -1,0 +1,14 @@
+version: 1.0
+artifacts:
+  -
+    description: Print the list of all providers from the DISK class.
+    supported_os: [freebsd]
+    collector: command
+    command: geom disk list
+    output_file: geom_disk_list.txt
+  -
+    description: Display geoms hierarchy as	a tree.
+    supported_os: [freebsd]
+    collector: command
+    command: geom -t
+    output_file: geom_-t.txt

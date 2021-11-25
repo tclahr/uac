@@ -1,0 +1,9 @@
+version: 1.0
+artifacts:
+  -
+    description: Display virtual memory statistics.
+    supported_os: [macos]
+    collector: command
+    command: vm_stat
+    output_file: vm_stat.txt
+  

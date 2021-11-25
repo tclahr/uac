@@ -1,0 +1,55 @@
+version: 1.0
+artifacts:
+  -
+    description: List all containers.
+    supported_os: [linux]
+    collector: command
+    command: docker container ls --all --size
+    output_file: docker_container_ls_--all_--size.txt
+  -
+    description: List all images.
+    supported_os: [linux]
+    collector: command
+    command: docker image ls --all
+    output_file: docker_image_ls_--all.txt
+  -
+    description: Display system-wide information.
+    supported_os: [linux]
+    collector: command
+    command: docker info
+    output_file: docker_info.txt
+  -
+    description: Show the Docker version information.
+    supported_os: [linux]
+    collector: command
+    command: docker version
+    output_file: docker_version.txt
+  -
+    description: Fetch the logs of all containers.
+    supported_os: [linux]
+    collector: command
+    loop_command: docker container ps -all | sed 1d | awk '{print $1}'
+    command: docker container logs %line%
+    output_file: docker_container_logs_%line%.txt
+  -
+    description: Return low-level information on Docker objects.
+    supported_os: [linux]
+    collector: command
+    loop_command: docker container ps -all | sed 1d | awk '{print $1}'
+    command: docker inspect %line%
+    output_file: docker_inspect_%line%.txt
+  -
+    description: Display detailed information on one or more networks.
+    supported_os: [linux]
+    collector: command
+    loop_command: docker container ps -all | sed 1d | awk '{print $1}'
+    command: docker network inspect %line%
+    output_file: docker_network_inspect_%line%.txt
+  -
+    description: Display the running processes of all containers.
+    supported_os: [linux]
+    collector: command
+    loop_command: docker ps | sed 1d | awk '{print $1}'
+    command: docker top %line%
+    output_file: docker_top_%line%.txt
+    

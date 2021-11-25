@@ -1,0 +1,9 @@
+version: 1.0
+artifacts:
+  -
+    description: Display the current mode of SELinux.
+    supported_os: [android, linux]
+    collector: command
+    command: getenforce
+    output_file: getenforce.txt
+  

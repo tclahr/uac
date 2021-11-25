@@ -1,0 +1,15 @@
+version: 1.0
+artifacts:
+  -
+    description: List block devices.
+    supported_os: [linux]
+    collector: command
+    command: lsblk
+    output_file: lsblk.txt
+  -
+    description: List block devices.
+    supported_os: [linux]
+    collector: command
+    command: lsblk -l
+    output_file: lsblk_-l.txt
+    

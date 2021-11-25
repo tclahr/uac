@@ -1,0 +1,15 @@
+version: 1.0
+artifacts:
+  -
+    description: Display System V services status information.
+    supported_os: [linux]
+    collector: command
+    command: service --status-all
+    output_file: service_--status-all.txt
+  -
+    description: Display service names and their package names.
+    supported_os: [android]
+    collector: command
+    command: service list
+    output_file: service_list.txt
+  

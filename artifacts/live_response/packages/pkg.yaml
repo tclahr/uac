@@ -1,0 +1,10 @@
+version: 1.0
+artifacts:
+  -
+    description: Displays information about installed packages.
+    supported_os: [freebsd]
+    collector: command
+    command: pkg info
+    output_file: pkg_info.txt
+  
+  

@@ -1,0 +1,9 @@
+version: 1.0
+artifacts:
+  -
+    description: List partition tables for all available drives.
+    supported_os: [macos]
+    collector: command
+    command: pdisk -l
+    output_file: pdisk_-l.txt
+  
