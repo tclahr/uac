@@ -10,14 +10,14 @@ Project documentation page: [https://tclahr.github.io/uac-docs](https://tclahr.g
 
 ## Main Features
 
-- Fast and continuously tested
-- Runs everywhere with no dependencies (no installation required)
-- Customizable and extensible collections and artifacts
-- Respects the order of volatility during artifacts collection
-- Collects information from processes running without a binary on disk
-- Extracts information from files and directories to create a bodyfile (including enhanced file attributes for ext4)
-- Hashes running processes and executable files
-- Acquires volatile memory from Linux systems using avml tool
+- Fast and continuously tested.
+- Runs everywhere with no dependencies (no installation required).
+- Customizable and extensible collections and artifacts.
+- Respects the order of volatility during artifacts collection.
+- Collects information from processes running without a binary on disk.
+- Extracts information from files and directories to create a bodyfile (including enhanced file attributes for ext4).
+- Hashes running processes and executable files.
+- Acquires volatile memory from Linux systems using Microsoft's [avml](https://github.com/microsoft/avml) tool.
 
 ## Supported Operating Systems
 
