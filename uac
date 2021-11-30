@@ -43,6 +43,7 @@ export PATH
 . "${UAC_DIR}/lib/array_to_list.sh"
 . "${UAC_DIR}/lib/check_available_system_tools.sh"
 . "${UAC_DIR}/lib/command_collector.sh"
+. "${UAC_DIR}/lib/copy_data.sh"
 . "${UAC_DIR}/lib/file_collector.sh"
 . "${UAC_DIR}/lib/find_collector.sh"
 . "${UAC_DIR}/lib/find_wrapper.sh"
@@ -107,6 +108,7 @@ ua_sftp_port=""
 ua_sftp_identity_file=""
 ua_sftp_delete_local_on_success=false
 ua_debug_mode=false
+ua_temp_data_dir_symlink_support=false
 
 # load config file
 load_config_file "${UAC_DIR}/config/uac.conf" || exit 1
@@ -471,26 +473,15 @@ if [ -n "${ua_temp_dir}" ]; then
   rm "${ua_temp_dir}/.uac-symlink.tmp" 2>/dev/null
   if ln -s "${UAC_DIR}" "${ua_temp_dir}/.uac-symlink.tmp" 2>/dev/null; then
     rm "${ua_temp_dir}/.uac-symlink.tmp" 2>/dev/null
-    TEMP_DATA_DIR="${ua_temp_dir}/uac-data.tmp"
-  else
-    printf %b "uac: filesystem used by '${ua_temp_dir}' does not \
-support symbolic links. Please use '--temp-dir' option to specify a different \
-directory where temporary collected data will be stored in.\n" >&2
-    exit 1
+    ua_temp_data_dir_symlink_support=true
   fi
+  TEMP_DATA_DIR="${ua_temp_dir}/uac-data.tmp"
 else
   if ln -s "${UAC_DIR}" "${ua_destination_dir}/.uac-symlink.tmp" 2>/dev/null; then
     rm "${ua_destination_dir}/.uac-symlink.tmp" 2>/dev/null
-    TEMP_DATA_DIR="${ua_destination_dir}/uac-data.tmp"
-  elif ln -s "${UAC_DIR}" "/tmp/.uac-symlink.tmp" 2>/dev/null; then
-    rm "/tmp/.uac-symlink.tmp" 2>/dev/null
-    TEMP_DATA_DIR="/tmp/uac-data.tmp"
-  else
-    printf %b "uac: filesystem used by '${ua_destination_dir}' does not \
-support symbolic links. Please use '--temp-dir' option to specify a different \
-directory where temporary collected data will be stored in.\n" >&2
-    exit 1
+    ua_temp_data_dir_symlink_support=true
   fi
+  TEMP_DATA_DIR="${ua_destination_dir}/uac-data.tmp"
 fi
 
 # remove any existing (old) collected data
@@ -670,8 +661,15 @@ printf %b "Artifacts collection complete. \
 Total running time: ${ua_total_running_time} seconds\n"
 
 if [ -f "${TEMP_DATA_DIR}/.files.tmp" ]; then
-  # create symbolic link to mount point
-  ln -s "${MOUNT_POINT}" "${TEMP_DATA_DIR}/[root]" 2>>"${UAC_STDERR_LOG_FILE}"
+  if ${ua_temp_data_dir_symlink_support}; then
+    # create symbolic link to mount point
+    ln -s "${MOUNT_POINT}" "${TEMP_DATA_DIR}/[root]" 2>>"${UAC_STDERR_LOG_FILE}"
+  else
+    # copy files to uac-data.tmp/[root]
+    printf %b "Copying files to ${TEMP_DATA_DIR}/[root]. Please wait...\n"
+    copy_data "${TEMP_DATA_DIR}/.files.tmp" "${TEMP_DATA_DIR}/[root]" \
+      2>>"${UAC_STDERR_LOG_FILE}"
+  fi
 
   # add [root] string to the beginning of each entry in .files.tmp
   # and add them to the list of files to be archived within the output file
