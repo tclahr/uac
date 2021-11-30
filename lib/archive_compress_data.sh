@@ -36,7 +36,7 @@ archive_compress_data()
 
   # exit if source file does not exist
   if [ ! -f "${ac_source_file}" ]; then
-    printf %b "archive compress data: No such file or directory: \
+    printf %b "archive compress data: no such file or directory: \
 '${ac_source_file}'\n" >&2
     return 2
   fi

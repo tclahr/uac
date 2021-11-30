@@ -32,7 +32,7 @@ validate_profile_file()
 
   # return if profile file does not exist
   if [ ! -f "${vp_profile_file}" ]; then
-    printf %b "uac: profile file: No such file or \
+    printf %b "uac: profile file: no such file or \
 directory: '${vp_profile_file}'\n" >&2
     return 2
   fi
