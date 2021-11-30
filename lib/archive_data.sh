@@ -36,7 +36,7 @@ archive_data()
 
   # exit if source file does not exist
   if [ ! -f "${ad_source_file}" ]; then
-    printf %b "archive data: No such file or directory: \
+    printf %b "archive data: no such file or directory: \
 '${ad_source_file}'\n" >&2
     return 2
   fi
