@@ -10,6 +10,7 @@ artifacts:
   - live_response/process/pstat.yaml
   - live_response/process/pstree.yaml
   - live_response/process/ptree.yaml
+  - live_response/process/proctree.yaml
   - live_response/process/hash_running_processes.yaml
   - live_response/process/strings_running_processes.yaml
   - live_response/network/*
