@@ -13,6 +13,7 @@ artifacts:
   - live_response/process/proctree.yaml
   - live_response/process/hash_running_processes.yaml
   - live_response/process/strings_running_processes.yaml
+  - live_response/process/*
   - live_response/network/*
   - live_response/system/*
   - live_response/hardware/*
