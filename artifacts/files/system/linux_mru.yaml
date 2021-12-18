@@ -1,0 +1,10 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect Linux Most Recently Used.
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%
+    name_pattern: ["recently-used.xbel"]
+    ignore_date_range: true
+    exclude_nologin_users: true
