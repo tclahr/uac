@@ -1,4 +1,4 @@
-name: ir
+name: ir-with-memory-dump
 description: Collect incident response related artifacts only.
 artifacts:
   - live_response/process/ps.yaml
