@@ -80,7 +80,7 @@ export PATH
 . "${UAC_DIR}/lib/validate_profile_file.sh"
 
 # global vars
-UAC_VERSION="2.0.0"
+UAC_VERSION="2.1.0-dev"
 MOUNT_POINT="/"
 OPERATING_SYSTEM=""
 SYSTEM_ARCH=""
@@ -349,13 +349,6 @@ if [ -n "${ua_artifacts}" ] && [ "${ua_artifacts}" = "list" ]; then
   exit 1
 fi
 
-# exit if a profile name and artifacts have been provided
-if [ -n "${ua_profile}" ] && [ -n "${ua_artifacts}" ]; then
-  printf %b "uac: invalid option '--artifacts'. \
-A collection profile has already been provided.\n"
-  exit 1
-fi
-
 # exit if profile and artifacts, or destination dir is empty
 if { [ -z "${ua_profile}" ] && [ -z "${ua_artifacts}" ]; } \
   || [ -z "${ua_destination_dir}" ] ; then
@@ -382,8 +375,10 @@ if [ -n "${ua_profile}" ]; then
 
   # check if profile file is valid
   validate_profile_file "${ua_profile_file}" || exit 1
-else
-  # artifacts list provided
+fi
+
+# artifacts list provided
+if [ -n "${ua_artifacts}" ]; then
   OIFS="${IFS}"
   IFS=","
   for ua_artifact_file in ${ua_artifacts}; do
@@ -469,6 +464,7 @@ if [ -z "${ua_hostname}" ]; then
   ua_hostname=`get_hostname 2>/dev/null`
 fi
 
+# check if destination directory's file system supports symlink creation
 if [ -n "${ua_temp_dir}" ]; then
   rm "${ua_temp_dir}/.uac-symlink.tmp" 2>/dev/null
   if ln -s "${UAC_DIR}" "${ua_temp_dir}/.uac-symlink.tmp" 2>/dev/null; then
@@ -585,24 +581,24 @@ log_message INFO "'statx' tool available: ${STATX_TOOL_AVAILABLE}"
 
 log_message INFO "PATH: ${PATH}"
 
-# create a temporary profile file based on the artifacts provided via command
-# line
+# if profile defined, copy it to a temporary profile file
+if [ -n "${ua_profile}" ]; then
+  cp "${ua_profile_file}" "${TEMP_DATA_DIR}/.temp-profile.yaml" \
+    >/dev/null 2>/dev/null
+fi
+
+# if artifacts defined, add them to the temporary profile file
 if [ -n "${ua_artifacts}" ]; then
-  printf %b "name: temp-profile\n" >"${TEMP_DATA_DIR}/.profile.yaml"
-  printf %b "description: temp-profile\n" >>"${TEMP_DATA_DIR}/.profile.yaml"
-  printf %b "artifacts:\n" >>"${TEMP_DATA_DIR}/.profile.yaml"
   OIFS="${IFS}"
   IFS=","
   for ua_artifact_file in ${ua_artifacts}; do
-    printf %b "  - ${ua_artifact_file}\n" >>"${TEMP_DATA_DIR}/.profile.yaml"
+    printf %b "  - ${ua_artifact_file}\n" >>"${TEMP_DATA_DIR}/.temp-profile.yaml"
   done
   IFS="${OIFS}"
-  ua_profile_file="${TEMP_DATA_DIR}/.profile.yaml"
 fi
 
-# parse profile file
-log_message INFO "Parsing profile file '${ua_profile_file}'"
-parse_profile_file "${ua_profile_file}" || exit 1
+# parse temporary profile file
+parse_profile_file "${TEMP_DATA_DIR}/.temp-profile.yaml" || exit 1
 
 # add UAC_DIR abd TEMP_DATA_DIR to GLOBAL_EXCLUDE_PATH_PATTERN
 if [ -n "${GLOBAL_EXCLUDE_PATH_PATTERN}" ]; then
