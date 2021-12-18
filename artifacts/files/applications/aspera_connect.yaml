@@ -1,0 +1,20 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect Aspera Client file lists.
+    supported_os: [linux, macos]
+    collector: file
+    path: /%user_home%/.aspera/connect/filelists/*
+    exclude_nologin_users: true
+  -
+    description: Collect Aspera Client logs.
+    supported_os: [linux, macos]
+    collector: file
+    path: /%user_home%/.aspera/connect/var/log/*
+    exclude_nologin_users: true
+  -
+    description: Collect Aspera Client sqlite database.
+    supported_os: [linux, macos]
+    collector: file
+    path: /%user_home%/.aspera/connect/var/asperaconnect.data
+    exclude_nologin_users: true
