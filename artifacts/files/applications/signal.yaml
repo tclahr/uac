@@ -1,0 +1,135 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect Signal cache files.
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.config/Signal/Cache/*
+    exclude_nologin_users: true
+  -
+    description: Collect Signal attachments cache files.
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.config/Signal/attachments.noindex/*
+    exclude_nologin_users: true
+  -
+    description: Collect Signal log files.
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.config/Signal/logs/*
+    exclude_nologin_users: true
+  -
+    description: Collect Signal config.json file.
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.config/Signal/config.json
+    exclude_nologin_users: true
+  -
+    description: Collect Signal database files.
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.config/Signal/sql/db.sqlite*
+    exclude_nologin_users: true
+  -
+    description: Collect Signal cache files (Flatpak version).
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.var/app/org.signal.Signal
+    path_pattern: ["*/Cache/*"]
+    exclude_nologin_users: true
+  -
+    description: Collect Signal attachments cache files (Flatpak version).
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.var/app/org.signal.Signal
+    path_pattern: ["*/attachments.noindex/*"]
+    exclude_nologin_users: true
+  -
+    description: Collect Signal log files (Flatpak version).
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.var/app/org.signal.Signal
+    path_pattern: ["*/logs/*"]
+    exclude_nologin_users: true
+  -
+    description: Collect Signal config.json file (Flatpak version).
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.var/app/org.signal.Signal
+    name_pattern: ["config.json"]
+    exclude_nologin_users: true
+  -
+    description: Collect Signal database files (Flatpak version).
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.var/app/org.signal.Signal
+    name_pattern: ["db.sqlite*"]
+    exclude_nologin_users: true
+  -
+    description: Collect Signal cache files (Snap version).
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/snap/signal-desktop
+    path_pattern: ["*/Cache/*"]
+    exclude_nologin_users: true
+  -
+    description: Collect Signal attachments cache files (Snap version).
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/snap/signal-desktop
+    path_pattern: ["*/attachments.noindex/*"]
+    exclude_nologin_users: true
+  -
+    description: Collect Signal log files (Snap version).
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/snap/signal-desktop
+    path_pattern: ["*/logs/*"]
+    exclude_nologin_users: true
+  -
+    description: Collect Signal config.json file (Snap version).
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/snap/signal-desktop
+    name_pattern: ["config.json"]
+    exclude_nologin_users: true
+  -
+    description: Collect Signal database files (Snap version).
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/snap/signal-desktop
+    name_pattern: ["db.sqlite*"]
+    exclude_nologin_users: true
+  -
+    description: Collect Signal cache files.
+    supported_os: [macos]
+    collector: file
+    path: /%user_home%/Library/"Application Support"/Signal/Cache/*
+    exclude_nologin_users: true
+  -
+    description: Collect Signal attachments cache files.
+    supported_os: [macos]
+    collector: file
+    path: /%user_home%/Library/"Application Support"/Signal/attachments.noindex/*
+    exclude_nologin_users: true
+  -
+    description: Collect Signal log files.
+    supported_os: [macos]
+    collector: file
+    path: /%user_home%/Library/"Application Support"/Signal/logs/*
+    exclude_nologin_users: true
+  -
+    description: Collect Signal config.json file.
+    supported_os: [macos]
+    collector: file
+    path: /%user_home%/Library/"Application Support"/Signal/config.json
+    exclude_nologin_users: true
+  -
+    description: Collect Signal database files.
+    supported_os: [macos]
+    collector: file
+    path: /%user_home%/Library/"Application Support"/Signal/sql/db.sqlite*
+    exclude_nologin_users: true
+
+# References:
+# https://www.champlain.edu/Documents/LCDI/ApplicationAnalysis_S17.pdf
