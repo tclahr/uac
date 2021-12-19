@@ -1,0 +1,165 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect Microsoft Teams cache files.
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.config/Microsoft/"Microsoft Teams"/Cache/*
+    exclude_nologin_users: true
+  -
+    description: Collect Microsoft Teams chat log files.
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.config/Microsoft/"Microsoft Teams"/IndexedDB
+    name_pattern: ["*.log"]
+    exclude_nologin_users: true
+  -
+    description: Collect Microsoft Teams leveldb files.
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.config/Microsoft/"Microsoft Teams"/"Local Storage"/leveldb/*
+    exclude_nologin_users: true
+  -
+    description: Collect Microsoft Teams config file.
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.config/Microsoft/"Microsoft Teams"/desktop-config.json
+    exclude_nologin_users: true
+  -
+    description: Collect Microsoft Teams logs directory.
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.config/Microsoft/"Microsoft Teams"/logs/*
+    exclude_nologin_users: true
+  -
+    description: Collect Microsoft Teams log file.
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.config/Microsoft/"Microsoft Teams"/logs.txt
+    exclude_nologin_users: true  
+  -
+    description: Collect Microsoft Teams cache files (Flatpak version).
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.var/app/com.microsoft.Teams
+    path_pattern: ["*/Cache/*"]
+    exclude_nologin_users: true
+  -
+    description: Collect Microsoft Teams chat log files (Flatpak version).
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.var/app/com.microsoft.Teams
+    path_pattern: ["*/IndexedDB/*"]
+    name_pattern: ["*.log"]
+    exclude_nologin_users: true
+  -
+    description: Collect Microsoft Teams leveldb files (Flatpak version).
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.var/app/com.microsoft.Teams
+    path_pattern: ["*/Local Storage/leveldb/*"]
+    exclude_nologin_users: true
+  -
+    description: Collect Microsoft Teams config file (Flatpak version).
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.var/app/com.microsoft.Teams
+    name_pattern: ["desktop-config.json"]
+    exclude_nologin_users: true
+  -
+    description: Collect Microsoft Teams logs directory (Flatpak version).
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.var/app/com.microsoft.Teams
+    path_pattern: ["*/logs/*"]
+    exclude_nologin_users: true
+  -
+    description: Collect Microsoft Teams log file (Flatpak version).
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.var/app/com.microsoft.Teams
+    name_pattern: ["logs.txt"]
+    exclude_nologin_users: true
+  -
+    description: Collect Microsoft Teams cache files (Snap version).
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/snap/teams
+    path_pattern: ["*/Cache/*"]
+    exclude_nologin_users: true
+  -
+    description: Collect Microsoft Teams chat log files (Snap version).
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/snap/teams
+    path_pattern: ["*/IndexedDB/*"]
+    name_pattern: ["*.log"]
+    exclude_nologin_users: true
+  -
+    description: Collect Microsoft Teams leveldb files (Snap version).
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/snap/teams
+    path_pattern: ["*/Local Storage/leveldb/*"]
+    exclude_nologin_users: true
+  -
+    description: Collect Microsoft Teams config file (Snap version).
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/snap/teams
+    name_pattern: ["desktop-config.json"]
+    exclude_nologin_users: true
+  -
+    description: Collect Microsoft Teams logs directory (Snap version).
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/snap/teams
+    path_pattern: ["*/logs/*"]
+    exclude_nologin_users: true
+  -
+    description: Collect Microsoft Teams log file (Snap version).
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/snap/teams
+    name_pattern: ["logs.txt"]
+    exclude_nologin_users: true
+  -
+    description: Collect Microsoft Teams cache files.
+    supported_os: [macos]
+    collector: file
+    path: /%user_home%/Library/"Application Support"/Microsoft/Teams/Cache/*
+    exclude_nologin_users: true
+  -
+    description: Collect Microsoft Teams chat log files.
+    supported_os: [macos]
+    collector: file
+    path: /%user_home%/Library/"Application Support"/Microsoft/Teams/IndexedDB
+    name_pattern: ["*.log"]
+    exclude_nologin_users: true
+  -
+    description: Collect Microsoft Teams leveldb files.
+    supported_os: [macos]
+    collector: file
+    path: /%user_home%/Library/"Application Support"/Microsoft/Teams/"Local Storage"/leveldb/*
+    exclude_nologin_users: true
+  -
+    description: Collect Microsoft Teams config file.
+    supported_os: [macos]
+    collector: file
+    path: /%user_home%/Library/"Application Support"/Microsoft/Teams/desktop-config.json
+    exclude_nologin_users: true
+  -
+    description: Collect Microsoft Teams logs directory.
+    supported_os: [macos]
+    collector: file
+    path: /%user_home%/Library/"Application Support"/Microsoft/Teams/logs/*
+    exclude_nologin_users: true
+  -
+    description: Collect Microsoft Teams log file.
+    supported_os: [macos]
+    collector: file
+    path: /%user_home%/Library/"Application Support"/Microsoft/Teams/logs.txt
+    exclude_nologin_users: true
+
+# References:
+# https://www.champlain.edu/Documents/LCDI/ApplicationAnalysis_S17.pdf
