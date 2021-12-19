@@ -131,5 +131,7 @@ artifacts:
     path: /%user_home%/Library/"Application Support"/Signal/sql/db.sqlite*
     exclude_nologin_users: true
 
+# Signal is a cloud-based application. All chats are in the cloud.
+#
 # References:
 # https://www.champlain.edu/Documents/LCDI/ApplicationAnalysis_S17.pdf
