@@ -11,12 +11,15 @@ All notable changes to this project will be documented in this file.
 
 ### New Artifacts
 
+- New artifact to collect Discord artifact files (files/applications/discord.yaml).
+- New artifact to collect Facebook Messenger artifact files (files/applications/facebook_messenger.yaml).
+- New artifact to collect iMessage artifact files (files/applications/imessage.yaml).
+- New artifact to collect Microsoft Teams artifact files (files/applications/microsoft_teams.yaml).
+- New artifact to collect Slack artifact files (files/applications/slack.yaml).
 - New artifact to collect Aspera Connect file transfer log files (files/applications/aspera_connect.yaml).
-- New artifact to collect Discord cache and leveldb files (files/applications/discord.yaml).
 - New artifact to collect Dropbox Cloud Storage Metadata files (files/applications/dropbox.yaml).
 - New artifact to collect FileZilla XML and sqlite files (files/applications/filezilla.yaml).
 - New artifact to collect iCloud databases that contain information about files that have been imported from the local computer or synced remotely from the iCloud (files/applications/icloud_drive.yaml).
-- New artifact to collect iMessage chat database and attachments (files/applications/imessage.yaml).
 - New artifact to collect iTunes Backup directory (files/application/itunes_backup.yaml).
 - New artifact to collect VLC recently opened files (files/applications/vlc.yaml).
 - New artifact to collect information about the permissions that a user is prompted to accept or decline while using macOS applications (files/system/tcc.yaml).
