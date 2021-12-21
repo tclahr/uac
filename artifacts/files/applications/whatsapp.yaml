@@ -1,0 +1,19 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect WhatsApp cache files.
+    supported_os: [macos]
+    collector: file
+    path: /%user_home%/Library/"Application Support"/WhatsApp/Cache/*
+    exclude_nologin_users: true
+  -
+    description: Collect WhatsApp leveldb files.
+    supported_os: [macos]
+    collector: file
+    path: /%user_home%/Library/"Application Support"/WhatsApp/"Local Storage"/leveldb/*
+    exclude_nologin_users: true
+
+# WhatsApp is a cloud-based application. All chats are in the cloud. In part, chats can be found on mobile devices.
+#
+# References:
+# https://www.champlain.edu/Documents/LCDI/ApplicationAnalysis_S17.pdf
