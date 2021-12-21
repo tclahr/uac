@@ -1,0 +1,14 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect Apple Notes database file.
+    supported_os: [macos]
+    collector: file
+    path: /%user_home%/Library/"Group Containers"/group.com.apple.notes/NoteStore.sqlite*
+    exclude_nologin_users: true
+  -
+    description: Collect Apple Notes Voice Memos database file.
+    supported_os: [macos]
+    collector: file
+    path: /%user_home%/Library/"Application Support"/com.apple.voicememos/Recordings/CloudRecordings.db*
+    exclude_nologin_users: true
