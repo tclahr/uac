@@ -1,0 +1,8 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect information about the applications that are set to reopen after macOS computer restarts or resumes from sleep.
+    supported_os: [macos]
+    collector: file
+    path: /%user_home%/Library/Preferences/ByHost/com.apple.loginwindow.*
+    exclude_nologin_users: true
