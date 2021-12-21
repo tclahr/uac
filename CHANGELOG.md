@@ -7,25 +7,44 @@ All notable changes to this project will be documented in this file.
 ## Added
 
 - Now you can use PROFILE (-p) and ARTIFACTS (-a) options together to create even more customizable collections.
-- '9p' file system, used by Microsoft's WSL to mount local drives, was added to the global file system exclusion list in 'conf/uac.conf'. This avoids UAC to recursively search artifacts into mounted local drives (like C:).
+- '9p' file system, used by Microsoft's WSL to mount local drives, was added to the global file system exclusion list in 'config/uac.conf'. This avoids UAC to recursively search artifacts through mounted local drives (like C:).
 
 ### New Artifacts
 
-- New artifact to collect Discord artifact files (files/applications/discord.yaml).
-- New artifact to collect Facebook Messenger artifact files (files/applications/facebook_messenger.yaml).
-- New artifact to collect iMessage artifact files (files/applications/imessage.yaml).
-- New artifact to collect Microsoft Teams artifact files (files/applications/microsoft_teams.yaml).
-- New artifact to collect Slack artifact files (files/applications/slack.yaml).
+#### Applications
+
+- New artifact to collect Discord artifacts (files/applications/discord.yaml).
+- New artifact to collect Facebook Messenger artifacts (files/applications/facebook_messenger.yaml).
+- New artifact to collect iMessage artifacts (files/applications/imessage.yaml).
+- New artifact to collect Microsoft Teams artifacts (files/applications/microsoft_teams.yaml).
+- New artifact to collect Signal artifacts (files/applications/signal.yaml).
+- New artifact to collect Slack artifacts (files/applications/slack.yaml).
+- New artifact to collect Skype artifacts (files/applications/skype.yaml).
+- New artifact to collect Telegram Desktop artifacts (files/applications/telegram.yaml).
+- New artifact to collect Viber Desktop artifacts (files/applications/viber.yaml).
+- New artifact to collect WhatsApp Desktop artifacts (files/applications/whatsapp.yaml).
+- New artifact to collect AddressBook database, metadata and image files (files/applications/addressbook.yaml).
+- New artifact to collect Apple Notes app database file (files/applications/apple_notes.yaml).
 - New artifact to collect Aspera Connect file transfer log files (files/applications/aspera_connect.yaml).
 - New artifact to collect Dropbox Cloud Storage Metadata files (files/applications/dropbox.yaml).
 - New artifact to collect FileZilla XML and sqlite files (files/applications/filezilla.yaml).
 - New artifact to collect iCloud databases that contain information about files that have been imported from the local computer or synced remotely from the iCloud (files/applications/icloud_drive.yaml).
 - New artifact to collect iTunes Backup directory (files/application/itunes_backup.yaml).
 - New artifact to collect VLC recently opened files (files/applications/vlc.yaml).
+
+#### System
+
+- New artifact to collect Apple Accounts database file (files/system/apple_accounts.yaml).
 - New artifact to collect information about the permissions that a user is prompted to accept or decline while using macOS applications (files/system/tcc.yaml).
 - New artifact to collect Linux Most Recent Used files information (files/system/linux_mru.yaml).
 - New artifact to collect macOS knowledgeC.db file (files/system/knowledgec.yaml).
+- New artifact to collect macOS system and user's preferences and configuration plist files (files/system/library_preferences.yaml).
+- New artifact to collect information about the applications that are set to reopen after macOS computer restarts or resumes from sleep (files/system/resumed_applications.yaml).
 - New artifact to collect temporary files located in the '/tmp' directory (files/system/tmp.yaml).
+
+#### Live Response
+
+- New artifact to collect information about installed bundles on Clear Linux (live_response/packages/swupd.yaml).
 - New artifact to collect information about installed applications on macOS (live_response/packages/pkgutil.yaml).
 - New artifact to collect VirtualBox VMs information (live_response/vms/virtualbox.yaml).
 
