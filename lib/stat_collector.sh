@@ -13,7 +13,7 @@
 # limitations under the License.
 
 ###############################################################################
-# Collector that searches and hashes files.
+# Collector that searches and stat files.
 # Globals:
 #   GLOBAL_EXCLUDE_MOUNT_POINT
 #   GLOBAL_EXCLUDE_NAME_PATTERN
@@ -73,7 +73,7 @@ stat_collector()
   shift
   sc_max_depth="${1:-}"
   shift
-  sc_file_type="${1:-f}"
+  sc_file_type="${1:-}"
   shift
   sc_min_file_size="${1:-}"
   shift
@@ -106,7 +106,7 @@ stat_collector()
     shift
     _sc_max_depth="${1:-}"
     shift
-    _sc_file_type="${1:-f}"
+    _sc_file_type="${1:-}"
     shift
     _sc_min_file_size="${1:-}"
     shift
@@ -279,7 +279,7 @@ stat_collector()
     shift
     _sc_max_depth="${1:-}"
     shift
-    _sc_file_type="${1:-f}"
+    _sc_file_type="${1:-}"
     shift
     _sc_min_file_size="${1:-}"
     shift
@@ -373,7 +373,7 @@ stat_collector()
     shift
     _sc_max_depth="${1:-}"
     shift
-    _sc_file_type="${1:-f}"
+    _sc_file_type="${1:-}"
     shift
     _sc_min_file_size="${1:-}"
     shift
