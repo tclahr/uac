@@ -1,0 +1,9 @@
+version: 1.0
+artifacts:
+  -
+    description: List installed packages. zypper is a command-line interface to ZYpp system management library (libzypp).
+    supported_os: [linux]
+    collector: command
+    command: zypper search -i
+    output_file: zypper_search_-i.txt
+  
