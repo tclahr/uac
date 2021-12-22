@@ -46,6 +46,7 @@ All notable changes to this project will be documented in this file.
 #### Live Response
 
 - New artifact to collect information about installed bundles on Clear Linux (live_response/packages/swupd.yaml).
+- New artifact to collect information about installed packages using zypper tool (live_response/packages/zypper.yaml).
 - New artifact to collect information about installed applications on macOS (live_response/packages/pkgutil.yaml).
 - New artifact to collect VirtualBox VMs information (live_response/vms/virtualbox.yaml).
 
@@ -62,6 +63,7 @@ All notable changes to this project will be documented in this file.
 ## Fixed
 
 - 'live_response/process/proctree.yaml' artifact file was missing on both 'full' and 'full-with-memory-dump' profiles ([#28](https://github.com/tclahr/uac/issues/28)).
+- Issue that was preventing ```stat``` to collect information from directories and symbolic links.
 
 ## 2.0.0 (2021-11-24)
 
