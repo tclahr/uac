@@ -13,6 +13,7 @@ artifacts:
     collector: file
     path: /%user_home%/.ViberPC
     path_pattern: ["*/Avatars/*"]
+    ignore_date_range: true
     exclude_nologin_users: true
   -
     description: Collect Viber thumbnails files.
@@ -20,6 +21,7 @@ artifacts:
     collector: file
     path: /%user_home%/.ViberPC
     path_pattern: ["*/Thumbnails/*"]
+    ignore_date_range: true
     exclude_nologin_users: true
   -
     description: Collect Viber database files (Flatpak version).
@@ -34,6 +36,7 @@ artifacts:
     collector: file
     path: /%user_home%/.var/app/com.viber.Viber
     path_pattern: ["*/Avatars/*"]
+    ignore_date_range: true
     exclude_nologin_users: true
   -
     description: Collect Viber thumbnails files (Flatpak version).
@@ -41,6 +44,7 @@ artifacts:
     collector: file
     path: /%user_home%/.var/app/com.viber.Viber
     path_pattern: ["*/Thumbnails/*"]
+    ignore_date_range: true
     exclude_nologin_users: true
   -
     description: Collect Viber database files (Snap unofficial version).
@@ -55,6 +59,7 @@ artifacts:
     collector: file
     path: /%user_home%/snap/viber-unofficial
     path_pattern: ["*/Avatars/*"]
+    ignore_date_range: true
     exclude_nologin_users: true
   -
     description: Collect Viber thumbnails files (Snap unofficial version).
@@ -62,6 +67,7 @@ artifacts:
     collector: file
     path: /%user_home%/snap/viber-unofficial
     path_pattern: ["*/Thumbnails/*"]
+    ignore_date_range: true
     exclude_nologin_users: true
   -
     description: Collect Viber database files.
@@ -76,6 +82,7 @@ artifacts:
     collector: file
     path: /%user_home%/Library/"Application Support"/ViberPC
     path_pattern: ["*/Avatars/*"]
+    ignore_date_range: true
     exclude_nologin_users: true
   -
     description: Collect Viber thumbnails files.
@@ -83,6 +90,7 @@ artifacts:
     collector: file
     path: /%user_home%/Library/"Application Support"/ViberPC
     path_pattern: ["*/Thumbnails/*"]
+    ignore_date_range: true
     exclude_nologin_users: true
 
 # References:

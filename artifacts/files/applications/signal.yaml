@@ -23,6 +23,7 @@ artifacts:
     supported_os: [linux]
     collector: file
     path: /%user_home%/.config/Signal/config.json
+    ignore_date_range: true
     exclude_nologin_users: true
   -
     description: Collect Signal database files.
@@ -57,6 +58,7 @@ artifacts:
     collector: file
     path: /%user_home%/.var/app/org.signal.Signal
     name_pattern: ["config.json"]
+    ignore_date_range: true
     exclude_nologin_users: true
   -
     description: Collect Signal database files (Flatpak version).
@@ -92,6 +94,7 @@ artifacts:
     collector: file
     path: /%user_home%/snap/signal-desktop
     name_pattern: ["config.json"]
+    ignore_date_range: true
     exclude_nologin_users: true
   -
     description: Collect Signal database files (Snap version).
@@ -123,6 +126,7 @@ artifacts:
     supported_os: [macos]
     collector: file
     path: /%user_home%/Library/"Application Support"/Signal/config.json
+    ignore_date_range: true
     exclude_nologin_users: true
   -
     description: Collect Signal database files.
