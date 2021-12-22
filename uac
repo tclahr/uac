@@ -383,11 +383,16 @@ if [ -n "${ua_artifacts}" ]; then
   IFS=","
   for ua_artifact_file in ${ua_artifacts}; do
     ua_artifact_file=`echo "${ua_artifact_file}" | sed -e 's:^!::g' -e 's:\.\.::g'`
-    find "${UAC_DIR}"/artifacts/${ua_artifact_file} -name "*.yaml" \
-      -type f -print >/dev/null 2>/dev/null
-    if [ "$?" -gt 0 ]; then
-      printf %b "uac: artifact file not found \
-'"${UAC_DIR}"/artifacts/${ua_artifact_file}'\n" >&2
+    if [ -n "${ua_artifact_file}" ]; then
+      find "${UAC_DIR}"/artifacts/${ua_artifact_file} -name "*.yaml" \
+        -type f -print >/dev/null 2>/dev/null
+      if [ "$?" -gt 0 ]; then
+        printf %b "uac: artifact file not found \
+  '"${UAC_DIR}"/artifacts/${ua_artifact_file}'\n" >&2
+        exit 1
+      fi
+    else
+      printf %b "uac: artifact not found '${ua_artifact_file}'\n" >&2
       exit 1
     fi
   done
