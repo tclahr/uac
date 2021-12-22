@@ -31,6 +31,7 @@ All notable changes to this project will be documented in this file.
 - New artifact to collect iCloud databases that contain information about files that have been imported from the local computer or synced remotely from the iCloud (files/applications/icloud_drive.yaml).
 - New artifact to collect iTunes Backup directory (files/application/itunes_backup.yaml).
 - New artifact to collect VLC recently opened files (files/applications/vlc.yaml).
+- New artifact to collect Thunderbird artifacts (files/applications/thunderbird.yaml).
 
 #### System
 
