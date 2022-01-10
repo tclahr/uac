@@ -341,7 +341,7 @@ ${fw_find_type_param} \
 ${fw_find_min_file_size_param} \
 ${fw_find_max_file_size_param} \
 ${fw_find_perm_param} \
-${fw_find_date_range_param} -print"
+${fw_find_date_range_param} -printf '\"%p\"\\\n'"
       eval "${fw_find_tool} \
 ${fw_path} \
 ${fw_find_max_depth_param} \
@@ -353,7 +353,7 @@ ${fw_find_type_param} \
 ${fw_find_min_file_size_param} \
 ${fw_find_max_file_size_param} \
 ${fw_find_perm_param} \
-${fw_find_date_range_param} -print"
+${fw_find_date_range_param} -printf '\"%p\"\\\n'"
     else
       # if operators are not supported, 'find' will be run for each -name value
       echo "${fw_name_pattern}" \
@@ -374,7 +374,7 @@ ${fw_find_path_param} \
 ${fw_find_min_file_size_param} \
 ${fw_find_max_file_size_param} \
 ${fw_find_perm_param} \
-${fw_find_date_range_param} -print"
+${fw_find_date_range_param} -printf '\"%p\"\\\n'"
             eval "${fw_find_tool} \
 ${fw_path} \
 ${fw_find_max_depth_param} \
@@ -383,7 +383,7 @@ ${fw_find_path_param} \
 ${fw_find_min_file_size_param} \
 ${fw_find_max_file_size_param} \
 ${fw_find_perm_param} \
-${fw_find_date_range_param} -print"
+${fw_find_date_range_param} -printf '\"%p\"\\\n'"
           done
     fi
   else
@@ -397,7 +397,7 @@ ${fw_find_type_param} \
 ${fw_find_min_file_size_param} \
 ${fw_find_max_file_size_param} \
 ${fw_find_perm_param} \
-${fw_find_date_range_param} -print"
+${fw_find_date_range_param} -printf '\"%p\"\\\n'"
     eval "${fw_find_tool} \
 ${fw_path} \
 ${fw_find_max_depth_param} \
