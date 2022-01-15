@@ -28,6 +28,7 @@
 #   XARGS_REPLACE_STRING_SUPPORT
 # Requires:
 #   find_wrapper
+#   get_mount_point_by_file_system
 #   sanitize_filename
 #   sanitize_path
 #   sort_uniq_file
@@ -127,8 +128,9 @@ stat_collector()
       case "${OPERATING_SYSTEM}" in
         "freebsd"|"macos"|"netbsd"|"netscaler"|"openbsd")
           if ${_sc_is_file_list}; then
-            log_message COMMAND "sort -u \"${_sc_path}\" | xargs -I{} stat -f \"0|%N%SY|%i|%Sp|%u|%g|%z|%a|%m|%c|%B\" \"{}\""
+            log_message COMMAND "sort -u \"${_sc_path}\" | sed -e \"s:':\\\':g\" -e 's:\":\\\\\":g' | xargs -I{} stat -f \"0|%N%SY|%i|%Sp|%u|%g|%z|%a|%m|%c|%B\" \"{}\""
             sort -u "${_sc_path}" \
+              | sed -e "s:':\\\':g" -e 's:":\\\":g' \
               | xargs -I{} stat -f "0|%N%SY|%i|%Sp|%u|%g|%z|%a|%m|%c|%B" "{}" \
                 >>"${TEMP_DATA_DIR}/${_sc_output_directory}/${_sc_output_file}"
           else
@@ -146,23 +148,32 @@ stat_collector()
               "${_sc_date_range_start_days}" \
               "${_sc_date_range_end_days}" \
               | sort -u \
+              | sed -e "s:':\\\':g" -e 's:":\\\":g' \
               | xargs -I{} stat -f "0|%N%SY|%i|%Sp|%u|%g|%z|%a|%m|%c|%B" "{}" \
                 >>"${TEMP_DATA_DIR}/${_sc_output_directory}/${_sc_output_file}"
-            log_message COMMAND "| sort -u | xargs -I{} stat -f \"0|%N%SY|%i|%Sp|%u|%g|%z|%a|%m|%c|%B\" \"{}\""
+            log_message COMMAND "| sort -u | sed -e \"s:':\\\':g\" -e 's:\":\\\\\":g' | xargs -I{} stat -f \"0|%N%SY|%i|%Sp|%u|%g|%z|%a|%m|%c|%B\" \"{}\""
           fi
           ;;
         "android"|"linux"|"solaris")
-          # %N returns quoted file names, so single quotes and back 
+          # %N returns quoted file names, so single and double quotes, and back
           # apostrophe needs to be removed using 'sed'
 
-          # also, some old 'stat' versions return the question mark '?' 
+          # also, some old 'stat' versions return the question mark '?'
           # character if %W was not able to proper get the btime. In this case,
           # the question mark will be replaced by a zero character
           if ${_sc_is_file_list}; then
-            log_message COMMAND "sort -u \"${_sc_path}\" | xargs -I{} stat -c \"0|%N|%i|%A|%u|%g|%s|%X|%Y|%Z|%W\" \"{}\""
+            log_message COMMAND "sort -u \"${_sc_path}\" | sed -e \"s:':\\\':g\" -e 's:\":\\\\\":g' | xargs -I{} stat -c \"0|%N|%i|%A|%u|%g|%s|%X|%Y|%Z|%W\" \"{}\""
             sort -u "${_sc_path}" \
+              | sed -e "s:':\\\':g" -e 's:":\\\":g' \
               | xargs -I{} stat -c "0|%N|%i|%A|%u|%g|%s|%X|%Y|%Z|%W" "{}" \
-              | sed -e "s:'::g" -e "s:\`::g" -e "s:|.$:|0:" \
+              | sed -e "s:|':|:g" \
+                    -e "s:'|:|:g" \
+                    -e "s:' -> ': -> :" \
+                    -e 's:|":|:g' \
+                    -e 's:"|:|:g' \
+                    -e 's:" -> ": -> :' \
+                    -e "s:\`::g" \
+                    -e "s:|.$:|0:" \
                 >>"${TEMP_DATA_DIR}/${_sc_output_directory}/${_sc_output_file}"
           else
             find_wrapper \
@@ -179,10 +190,18 @@ stat_collector()
               "${_sc_date_range_start_days}" \
               "${_sc_date_range_end_days}" \
               | sort -u \
+              | sed -e "s:':\\\':g" -e 's:":\\\":g' \
               | xargs -I{} stat -c "0|%N|%i|%A|%u|%g|%s|%X|%Y|%Z|%W" "{}" \
-              | sed -e "s:'::g" -e "s:\`::g" -e "s:|.$:|0:" \
+              | sed -e "s:|':|:g" \
+                    -e "s:'|:|:g" \
+                    -e "s:' -> ': -> :" \
+                    -e 's:|":|:g' \
+                    -e 's:"|:|:g' \
+                    -e 's:" -> ": -> :' \
+                    -e "s:\`::g" \
+                    -e "s:|.$:|0:" \
                 >>"${TEMP_DATA_DIR}/${_sc_output_directory}/${_sc_output_file}"
-            log_message COMMAND "| sort -u | xargs -I{} stat -c \"0|%N|%i|%A|%u|%g|%s|%X|%Y|%Z|%W\" \"{}\""
+            log_message COMMAND "| sort -u | sed -e \"s:':\\\':g\" -e 's:\":\\\\\":g' | xargs -I{} stat -c \"0|%N|%i|%A|%u|%g|%s|%X|%Y|%Z|%W\" \"{}\""
           fi
           ;;
       esac
@@ -221,7 +240,7 @@ stat_collector()
           fi
           ;;
         "android"|"linux"|"solaris")
-          # %N returns quoted file names, so single quotes and back 
+          # %N returns quoted file names, so single and double quotes, and back 
           # apostrophe needs to be removed using 'sed'
 
           # also, some old 'stat' versions return the question mark '?' 
@@ -232,7 +251,14 @@ stat_collector()
             sort -u "${_sc_path}" \
               | while read _sc_line || [ -n "${_sc_line}" ]; do
                   stat -c "0|%N|%i|%A|%u|%g|%s|%X|%Y|%Z|%W" "${_sc_line}" \
-                    | sed -e "s:'::g" -e "s:\`::g" -e "s:|.$:|0:"
+                    | sed -e "s:|':|:g" \
+                          -e "s:'|:|:g" \
+                          -e "s:' -> ': -> :" \
+                          -e 's:|":|:g' \
+                          -e 's:"|:|:g' \
+                          -e 's:" -> ": -> :' \
+                          -e "s:\`::g" \
+                          -e "s:|.$:|0:"
                 done \
                   >>"${TEMP_DATA_DIR}/${_sc_output_directory}/${_sc_output_file}"
           else
@@ -252,7 +278,14 @@ stat_collector()
               | sort -u \
               | while read _sc_line || [ -n "${_sc_line}" ]; do
                   stat -c "0|%N|%i|%A|%u|%g|%s|%X|%Y|%Z|%W" "${_sc_line}" \
-                    | sed -e "s:'::g" -e "s:\`::g" -e "s:|.$:|0:"
+                    | sed -e "s:|':|:g" \
+                          -e "s:'|:|:g" \
+                          -e "s:' -> ': -> :" \
+                          -e 's:|":|:g' \
+                          -e 's:"|:|:g' \
+                          -e 's:" -> ": -> :' \
+                          -e "s:\`::g" \
+                          -e "s:|.$:|0:"
                 done \
                   >>"${TEMP_DATA_DIR}/${_sc_output_directory}/${_sc_output_file}"
             log_message COMMAND "| sort -u | while read %line%; do stat -c \"0|%N|%i|%A|%u|%g|%s|%X|%Y|%Z|%W\" \"%line%\"; done"
@@ -298,8 +331,9 @@ stat_collector()
     # 'xargs' performance is much better than 'while' loop
     if ${XARGS_REPLACE_STRING_SUPPORT}; then
       if ${_sc_is_file_list}; then
-        log_message COMMAND "sort -u \"${_sc_path}\" | xargs -I{} statx \"{}\""
+        log_message COMMAND "sort -u \"${_sc_path}\" | sed -e \"s:':\\\':g\" -e 's:\":\\\\\":g' | xargs -I{} statx \"{}\""
         sort -u "${_sc_path}" \
+          | sed -e "s:':\\\':g" -e 's:":\\\":g' \
           | xargs -I{} statx "{}" \
             >>"${TEMP_DATA_DIR}/${_sc_output_directory}/${_sc_output_file}"
       else
@@ -317,9 +351,10 @@ stat_collector()
           "${_sc_date_range_start_days}" \
           "${_sc_date_range_end_days}" \
           | sort -u \
+          | sed -e "s:':\\\':g" -e 's:":\\\":g' \
           | xargs -I{} statx "{}" \
             >>"${TEMP_DATA_DIR}/${_sc_output_directory}/${_sc_output_file}"
-        log_message COMMAND "| sort -u | xargs -I{} statx \"{}\""
+        log_message COMMAND "| sort -u | sed -e \"s:':\\\':g\" -e 's:\":\\\\\":g' | xargs -I{} statx \"{}\""
       fi
 
     # no 'xargs -I{}'
@@ -392,8 +427,9 @@ stat_collector()
     # 'xargs' performance is much better than 'while' loop
     if ${XARGS_REPLACE_STRING_SUPPORT}; then
       if ${_sc_is_file_list}; then
-        log_message COMMAND "sort -u \"${_sc_path}\" | xargs -I{} perl \"${UAC_DIR}/tools/stat.pl/stat.pl\" \"{}\""
+        log_message COMMAND "sort -u \"${_sc_path}\" | sed -e \"s:':\\\':g\" -e 's:\":\\\\\":g' | xargs -I{} perl \"${UAC_DIR}/tools/stat.pl/stat.pl\" \"{}\""
         sort -u "${_sc_path}" \
+          | sed -e "s:':\\\':g" -e 's:":\\\":g' \
           | xargs -I{} perl "${UAC_DIR}/tools/stat.pl/stat.pl" "{}" \
             >>"${TEMP_DATA_DIR}/${_sc_output_directory}/${_sc_output_file}"
       else
@@ -411,9 +447,10 @@ stat_collector()
           "${_sc_date_range_start_days}" \
           "${_sc_date_range_end_days}" \
           | sort -u \
+          | sed -e "s:':\\\':g" -e 's:":\\\":g' \
           | xargs -I{} perl "${UAC_DIR}/tools/stat.pl/stat.pl" "{}" \
             >>"${TEMP_DATA_DIR}/${_sc_output_directory}/${_sc_output_file}"
-        log_message COMMAND "| sort -u | xargs -I{} perl \"${UAC_DIR}/tools/stat.pl/stat.pl\" \"{}\""
+        log_message COMMAND "| sort -u | sed -e \"s:':\\\':g\" -e 's:\":\\\\\":g' | xargs -I{} perl \"${UAC_DIR}/tools/stat.pl/stat.pl\" \"{}\""
       fi
 
     # no 'xargs -I{}'
