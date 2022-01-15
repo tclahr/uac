@@ -64,6 +64,7 @@ All notable changes to this project will be documented in this file.
 
 - 'live_response/process/proctree.yaml' artifact file was missing on both 'full' and 'full-with-memory-dump' profiles ([#28](https://github.com/tclahr/uac/issues/28)).
 - Issue that was preventing ```stat``` to collect information from directories and symbolic links.
+- Issue that was preventing file names with single and double quotes to be hashed and stated properly.
 
 ## 2.0.0 (2021-11-24)
 
