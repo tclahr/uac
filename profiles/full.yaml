@@ -16,12 +16,12 @@ artifacts:
   - live_response/process/*
   - live_response/network/*
   - live_response/system/*
+  - bodyfile/bodyfile.yaml
   - live_response/hardware/*
   - live_response/packages/*
   - live_response/storage/*
   - live_response/containers/*
   - live_response/vms/*
-  - bodyfile/bodyfile.yaml
   - chkrootkit/chkrootkit.yaml
   - hash_executables/hash_executables.yaml
   - files/*
