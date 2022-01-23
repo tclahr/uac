@@ -6,8 +6,12 @@ All notable changes to this project will be documented in this file.
 
 ## Added
 
-- Now you can use PROFILE (-p) and ARTIFACTS (-a) options together to create even more customizable collections.
+- Now you can use PROFILE (-p) and ARTIFACTS (-a) options together to create even more customizable collections. Please check the docs for more info. 
 - '9p' file system, used by Microsoft's WSL to mount local drives, was added to the global file system exclusion list in 'config/uac.conf'. This avoids UAC to recursively search artifacts through mounted local drives (like C:).
+
+### Updated
+
+- 'full' and 'full-with-memory-dump' profiles were updated so 'bodyfile/bodyfile.yaml' will now be collected sooner. 
 
 ### New Artifacts
 
@@ -52,19 +56,26 @@ All notable changes to this project will be documented in this file.
 
 ## Updated Artifacts
 
+- A new command was added to the rpm artifact to compare information about the installed files in the rpm packages with information about the files taken from the package metadata stored in the rpm database (live_response/packages/rpm.yaml).
 - 'files/browsers/chromium_based.yaml' artifact was split and replaced by 'files/browsers/brave.yaml', 'files/browsers/chrome.yaml', 'files/browsers/chromium.yaml', 'files/browsers/edge.yaml' and 'files/browsers/opera.yaml'.
 - Firefox browser artifacts updated to include Flatpak and Snap versions (files/browsers/firefox.yaml).
 - Safari artifact updated to collect Safari Recently Closed Tabs plist file (files/browsers/safari.yaml).
 
 ## New Profiles
 
-- Two new profiles ('ir' and 'ir-with-memory-dump') are now available. These profiles are more focused on collecting incident response artifacts only.
+- New 'ir' profile is now available. This profile is more focused on collecting incident response artifacts only.
+
+## Deprecated Profiles
+
+- 'full-with-memory-dump' profile will be removed in the next release since '--profile full --artifacts memory_dump/avml.yaml' can be used instead. 
+- 'memory-dump-only' profile will be removed in the next release since '--artifacts memory_dump/avml.yaml' can be used instead.
 
 ## Fixed
 
 - 'live_response/process/proctree.yaml' artifact file was missing on both 'full' and 'full-with-memory-dump' profiles ([#28](https://github.com/tclahr/uac/issues/28)).
 - Issue that was preventing ```stat``` to collect information from directories and symbolic links.
 - Issue that was preventing file names with single and double quotes to be hashed and stated properly.
+- Issue that was preventing UAC to run on VMWare ESXi systems.
 
 ## 2.0.0 (2021-11-24)
 
