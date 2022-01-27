@@ -1,0 +1,9 @@
+version: 1.0
+artifacts:
+  -
+    description: Print statistics about GEOM disks.
+    supported_os: [freebsd]
+    collector: command
+    command: gstat -b
+    output_file: gstat_-b.txt
+  
