@@ -1,5 +1,5 @@
-name: ir
-description: Collect incident response related artifacts only.
+name: ir_triage
+description: Incident response triage collection.
 artifacts:
   - live_response/process/ps.yaml
   - live_response/process/lsof.yaml
