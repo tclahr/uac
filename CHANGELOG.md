@@ -48,6 +48,7 @@ All notable changes to this project will be documented in this file.
 - New artifact to collect information about installed bundles on Clear Linux (live_response/packages/swupd.yaml).
 - New artifact to collect information about installed packages using zypper tool (live_response/packages/zypper.yaml).
 - New artifact to collect information about installed applications on macOS (live_response/packages/pkgutil.yaml).
+- New artifact to collect statistics about GEOM disks on FreeBSD (live_response/storage/gstat.yaml)
 - New artifact to collect VirtualBox VMs information (live_response/vms/virtualbox.yaml).
 
 ### Updated Artifacts
