@@ -22,8 +22,8 @@
 #   get_current_user
 #   sanitize_path
 # Arguments:
-#   $1: passwd file path (default: /etc/passwd)
-#   $2: skip users with non-interactive shells (default: false)
+#   $1: skip users with non-interactive shells (default: false)
+#   $2: passwd file path (default: /etc/passwd)
 # Outputs:
 #   Write user:home list to stdout.
 # Exit Status:
@@ -32,14 +32,14 @@
 ###############################################################################
 get_user_home_list()
 {
-  gu_passwd_file_path="${1:-/etc/passwd}"
-  gu_skip_nologin_users="${2:-false}"
-
+  gu_skip_nologin_users="${1:-false}"
+  gu_passwd_file_path="${2:-/etc/passwd}"
+  
   # skip users with non-interactive shells
   gu_non_interactive_shells_grep="false$|halt$|nologin$|shutdown$|sync$|:$"
 
   if [ -f "${TEMP_DATA_DIR}/.user_home_list.tmp" ]; then
-    rm -f "${TEMP_DATA_DIR}/.user_home_list.tmp"
+    rm -f "${TEMP_DATA_DIR}/.user_home_list.tmp" >/dev/null
   fi
 
   # extract user:home from passwd file
@@ -60,16 +60,17 @@ get_user_home_list()
   fi
 
   # extract user:home from /home | /Users | /export/home
-  gu_user_home_dir=`sanitize_path "${MOUNT_POINT}/home"`
+  gu_user_home_dir="/home"
   if [ "${OPERATING_SYSTEM}" = "macos" ]; then
-    gu_user_home_dir=`sanitize_path "${MOUNT_POINT}/Users"`
+    gu_user_home_dir="/Users"
   elif [ "${OPERATING_SYSTEM}" = "solaris" ]; then
-    gu_user_home_dir=`sanitize_path "${MOUNT_POINT}/export/home"`
+    gu_user_home_dir="/export/home"
   fi
 
-  if [ -d "${gu_user_home_dir}" ]; then
-    for gu_home_dir in "${gu_user_home_dir}"/*; do
+  if [ -d "${MOUNT_POINT}/${gu_user_home_dir}" ]; then
+    for gu_home_dir in "${MOUNT_POINT}/${gu_user_home_dir}"/*; do
       echo "${gu_home_dir}" \
+        | sed -e "s:${MOUNT_POINT}::" -e 's://*:/:g' \
         | awk '{
             split($1, parts, "/");
             size = 0;
@@ -80,15 +81,18 @@ get_user_home_list()
   fi
 
   # ChomeOS has '/home/.shadow' directory
-  gu_user_home_dir=`sanitize_path "${MOUNT_POINT}/home/.shadow"`
-  if [ -d "${gu_user_home_dir}" ]; then
+  #gu_user_home_dir=`sanitize_path "${MOUNT_POINT}/home/.shadow"`
+  gu_user_home_dir="/home/.shadow"
+  if [ -d "${MOUNT_POINT}/${gu_user_home_dir}" ]; then
     echo "shadow:${gu_user_home_dir}" >>"${TEMP_DATA_DIR}/.user_home_list.tmp"
   fi
 
-  # extract user:home for current user
+  # extract user:home for current user only if running on a live system
   # useful for systems which do not have a /etc/passwd file
-  gu_current_user=`get_current_user`
-  echo "${gu_current_user}:${HOME}" >>"${TEMP_DATA_DIR}/.user_home_list.tmp"
+  if [ "${MOUNT_POINT}" = "/" ]; then
+    gu_current_user=`get_current_user`
+    echo "${gu_current_user}:${HOME}" >>"${TEMP_DATA_DIR}/.user_home_list.tmp"
+  fi
 
   # remove empty user or home
   grep -v -E "^:|:$" "${TEMP_DATA_DIR}/.user_home_list.tmp" \

@@ -449,6 +449,7 @@ if [ -n "${END_DATE}" ]; then
 fi
 
 # check if mount point exists
+MOUNT_POINT=`sanitize_path "${MOUNT_POINT}"`
 if [ ! -d "${MOUNT_POINT}" ]; then
   printf %b "uac: invalid mount point. \
 No such file or directory '${MOUNT_POINT}'\n" >&2
@@ -663,8 +664,8 @@ Total running time: ${ua_total_running_time} seconds\n"
 
 if [ -f "${TEMP_DATA_DIR}/.files.tmp" ]; then
   if ${ua_temp_data_dir_symlink_support}; then
-    # create symbolic link to mount point
-    ln -s "${MOUNT_POINT}" "${TEMP_DATA_DIR}/[root]" 2>>"${UAC_STDERR_LOG_FILE}"
+    # create symbolic link to /
+    ln -s "/" "${TEMP_DATA_DIR}/[root]" 2>>"${UAC_STDERR_LOG_FILE}"
   else
     # copy files to uac-data.tmp/[root]
     printf %b "Copying files to ${TEMP_DATA_DIR}/[root]. Please wait...\n"
