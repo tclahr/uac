@@ -564,7 +564,7 @@ log_message INFO "Global exclude file system: ${GLOBAL_EXCLUDE_FILE_SYSTEM}"
 GLOBAL_EXCLUDE_MOUNT_POINT=""
 if [ -n "${GLOBAL_EXCLUDE_FILE_SYSTEM}" ]; then
   GLOBAL_EXCLUDE_MOUNT_POINT=`get_mount_point_by_file_system \
-    "${GLOBAL_EXCLUDE_FILE_SYSTEM}"`
+    "${GLOBAL_EXCLUDE_FILE_SYSTEM}" 2>>"${UAC_STDERR_LOG_FILE}"`
 fi
 log_message INFO "Global exclude mount point: ${GLOBAL_EXCLUDE_MOUNT_POINT}"
 log_message INFO "Hash algorithm: ${HASH_ALGORITHM}"
