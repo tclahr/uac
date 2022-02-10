@@ -80,7 +80,7 @@ export PATH
 . "${UAC_DIR}/lib/validate_profile_file.sh"
 
 # global vars
-UAC_VERSION="2.1.0-dev"
+UAC_VERSION="DEVELOPMENT VERSION"
 MOUNT_POINT="/"
 OPERATING_SYSTEM=""
 SYSTEM_ARCH=""
@@ -125,7 +125,7 @@ while [ "${1:-}" != "" ]; do
       exit 1
       ;;
     "-V"|"--version")
-      printf %b "UAC (Unix-like Artifacts Collector) v${UAC_VERSION}\n"
+      printf %b "UAC (Unix-like Artifacts Collector) ${UAC_VERSION}\n"
       exit 0
       ;;
     "--debug")
@@ -163,9 +163,21 @@ Try 'uac --help' for more information.\n" >&2
         exit 1
       fi
       ;;
-    "-o"|"--operating-system")
+    "-s"|"--operating-system")
       if [ -n "${2}" ]; then
         OPERATING_SYSTEM="${2}"
+        shift
+      else
+        printf %b "uac: option '${1}' requires an argument.\n\
+Try 'uac --help' for more information.\n" >&2
+        exit 1
+      fi
+      ;;
+    "-o")
+      if [ -n "${2}" ]; then
+        OPERATING_SYSTEM="${2}"
+        printf %b "WARNING: '-o' has been replaced by '-s' option, and will be \
+removed in future releases. Check 'uac --help' for more information.\n" >&2
         shift
       else
         printf %b "uac: option '${1}' requires an argument.\n\
@@ -527,7 +539,7 @@ printf %b " |: | |  |:  _   |:  ____|\n"
 printf %b " |  |_|  |  | |  |  |____ \n"
 printf %b " |_______|__| |__|_______|\n"
 printf %b "\n"
-printf %b " Unix-like Artifacts Collector v${UAC_VERSION}\n"
+printf %b " Unix-like Artifacts Collector ${UAC_VERSION}\n"
 printf %b "--------------------------------------------------------------------------------\n"
 printf %b "Operating System    : ${OPERATING_SYSTEM}\n"
 printf %b "System Architecture : ${SYSTEM_ARCH}\n"
@@ -538,7 +550,7 @@ printf %b "Temp Directory      : ${TEMP_DATA_DIR}\n"
 printf %b "--------------------------------------------------------------------------------\n"
 
 # start uac.log file
-log_message INFO "UAC (Unix-like Artifacts Collector) v${UAC_VERSION}"
+log_message INFO "UAC (Unix-like Artifacts Collector) ${UAC_VERSION}"
 log_message INFO "Command line: ${ua_command_line}"
 log_message INFO "Operating system: ${OPERATING_SYSTEM}"
 log_message INFO "System architecture: ${SYSTEM_ARCH}"
