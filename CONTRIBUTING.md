@@ -1,60 +1,181 @@
-## Welcome
+# Welcome
+
 We welcome contributions to the UAC project in many forms, and there's always plenty to do!
 
 First things first, please review the project's [Code of Conduct](CODE_OF_CONDUCT.md) before participating. It is important that we keep things civil.
 
-### Reporting bugs
+Here are a couple of things we are looking for help with:
+
+## New artifacts
+
+Have you identified a new artifact that is still not collected by UAC? Please create a new artifact file and submit it via a new Pull Request.
+
+Please see [Artifacts file definition](https://tclahr.github.io/uac-docs/latest/artifacts_file/) docs for more information.
+
+## New features
+
+You can request a new feature by submitting an issue to our GitHub Repository. If you would like to implement a new feature, please submit an issue with a proposal for your work first, to be sure that we can use it. This will also allow us to better coordinate our efforts, prevent duplication of work, and help you to craft the change so that it is successfully accepted into the project.
+
+## Found a bug?
+
 If you are a user and you find a bug, please submit an [issue](https://github.com/tclahr/uac/issues). Please try to provide sufficient information for someone else to reproduce the issue. One of the project's [maintainers](MAINTAINERS.md) should respond to your issue soon.
 
-### Fixing issues and working stories
-Review the [issues list](https://github.com/tclahr/uac/issues) and find something that interests you. It is wise to start with something relatively straight forward and achievable. Usually there will be a comment in the issue that indicates whether someone has already self-assigned the issue. If no one has already taken it, then add a comment assigning the issue to yourself, eg.: ```I'll work on this issue.```. Please be considerate and rescind the offer in comments if you cannot finish in a reasonable time, or add a comment saying that you are still actively working the issue if you need a little more time.
+Please search within our [already reported bugs](https://github.com/tclahr/uac/issues) before raising a new one to make sure you're not raising a duplicate.
 
-We are using the [GitHub flow](https://guides.github.com/introduction/flow/) process to manage code contributions. If you are unfamiliar, please review that link before proceeding.
+## Tutorials
 
-To work on something, whether a new feature or a bugfix:
-  1. Create a [fork](https://help.github.com/articles/fork-a-repo/) (if you haven't already)
+Share your experience with the community about how UAC is helping you by writing an article about it. Or write a How-To or Tutorial on how to use UAC for specific cases and let us know. We'd love to share your work with the rest of the community by including it in our docs.
 
-  2. Clone it locally
-  ```
-  git clone https://github.com/tclahr/uac.git
-  ```
-  3. Add the upstream repository as a remote
-  ```
-  git remote add upstream https://github.com/tclahr/uac.git
-  ```
-  4. Create a branch
+## Submission guidelines
 
-  Create a descriptively-named branch off of your cloned fork ([more detail here](https://help.github.com/articles/syncing-a-fork/))
-  ```
-  git checkout -b issue-nnnn
-  ```
-  5. Commit your code
+### Submitting an issue
 
-  Commit to that branch locally, and regularly push your work to the same branch on the server.
+Before you submit an issue, please search the issue tracker, maybe an issue for your problem already exists and the discussion might inform you of workarounds readily available.
 
-  6. Commit messages
+We want to fix all the issues as soon as possible, but before fixing a bug we need to reproduce and confirm it. In order to reproduce bugs we will systematically ask you to provide sufficient information for someone else to reproduce the issue.
 
-  Commit messages must have a short description no longer than 50 characters followed by a blank line and a longer, more descriptive message that includes reference to issue(s) being addressed so that they will be automatically closed on a merge e.g. ```Closes #1234``` or ```Fixes #1234```.
+Unfortunately, we are not able to investigate / fix bugs without a minimal reproduction, so if we don't hear back from you we are going to close an issue that doesn't have enough info to be reproduced.
 
-  7. Pull Request (PR)
+### Submitting a Pull Request (PR)
 
-  When you need feedback or help, or you think the branch is ready for merging, open a pull request (make sure you have first successfully tested your changes on all supported Operating Systems).
+Before you submit your Pull Request (PR) consider the following guidelines. We are using the [GitHub flow](https://guides.github.com/introduction/flow/) process to manage code contributions. If you are unfamiliar, please review that link before proceeding.
 
-   _Note: if your PR does not merge cleanly, use ```git rebase master``` in your feature branch to update your pull request rather than using ```git merge master```_.
+The repo holds two main branches:
 
-  8. Any code changes that affect documentation should be accompanied by corresponding changes (or additions) to the documentation and tests. This will ensure that if the merged PR is reversed, all traces of the change will be reversed as well.
+**main**: Where the source code of HEAD always reflects a production-ready state.
 
-After your Pull Request (PR) has been reviewed and signed off, a maintainer will merge it into the master branch.
+**dev**: Where the source code of HEAD always reflects a state with the latest delivered development changes for the next release. When the source code in the dev branch reaches a stable point and is ready to be released, all of the changes will be merged back into main and then tagged with a release number.
 
-### Legal stuff
-We have tried to make it as easy as possible to make contributions. This applies to how we handle the legal aspects of contribution. We use the same approach&mdash;the [Developer's Certificate of Origin 1.1 (DCO)](DCO-1.1.txt)&mdash;that the Linux&reg; Kernel [community](http://elinux.org/Developer_Certificate_Of_Origin) uses to manage code contributions.
-We simply ask that when submitting a pull request, the developer must include a sign-off statement in the pull request description.
+All Pull Requests must be submitted to the **dev** branch.
 
-Here is an example Signed-off-by line, which indicates that the submitter accepts the DCO:
+1. Search [GitHub](https://github.com/tclahr/uac/pulls) for an open or closed PR that relates to your submission. You don't want to duplicate effort.
 
-```
-Signed-off-by: John Doe <john.doe@hisdomain.com>
+1. Create a [fork](https://help.github.com/articles/fork-a-repo) (if you haven't already).
+
+1. Clone the dev branch locally.
+
+```shell
+git clone -b dev --single-branch git@github.com:YOUR_GITHUB_USERNAME/uac.git
 ```
 
-## Getting help
-Please feel free to contact me via [tclahr@gmail.com](mailto:tclahr@gmail.com) or [tclahr@br.ibm.com](mailto:tclahr@br.ibm.com).
+1. Add the upstream repository as a remote.
+
+```shell
+git remote add upstream https://github.com/tclahr/uac.git
+```
+
+1. Make your changes in a new git branch. A short, descriptive branch name enables your collaborators to see ongoing work at a glance.
+
+```shell
+git checkout -b my-descriptively-named-branch dev
+```
+
+1. Create your code following our [Coding Rules](#coding-rules).
+
+1. Test your code against as many system as you can. For instance, your code can fully work on a Linux but not on a FreeBSD system.
+
+1. Commit your changes using a descriptive commit message that follows our [commit message guidelines](#commit-message-guidelines). *Don’t commit code as an unrecognized author. Having commits with unrecognized authors makes it more difficult to track who wrote which part of the code. Ensure your Git client is configured with the correct email address and linked to your GitHub user.*
+
+  ```shell
+  git commit -s
+  ```
+
+1. Push your branch to GitHub.
+
+  ```shell
+  git push origin my-descriptively-named-branch
+  ```
+
+1. In GitHub, open a Pull Request and select the dev branch as base. Never send a Pull Request to main.
+
+- If we suggest changes then:
+  - Make the required updates.
+  - Re-run the tests.
+  - Rebase your branch and force push to your GitHub repository (this will update your Pull Request).
+
+  ```shell
+  git rebase dev -i
+  git push
+  ```
+
+That's it! Thank you for your collaboration!
+
+#### After your Pull Request is merged
+
+After your pull request is merged, you can safely delete your branch and pull the changes from the main (upstream) repository:
+
+- Delete the remote branch on GitHub either through the GitHub web UI or your local shell as follows:
+
+```shell
+git push origin --delete my-descriptively-named-branch
+```
+
+- Check out the dev branch:
+
+```shell
+git checkout dev -f
+```
+
+- Delete the local branch:
+
+```shell
+git branch -D my-descriptively-named-branch
+```
+
+- Update your dev with the latest upstream version:
+
+```shell
+git pull --ff upstream dev
+```
+
+## Coding rules
+
+To ensure consistency throughout the source code, keep these rules in mind as you are working:
+
+- You can use the [Shell Style Guide](https://google.github.io/styleguide/shellguide.html) as a reference. Keep in mind that UAC is meant to run on any bourne shell, so some features like arrays, command substitution ```$(command)``` and tests ```[[ ... ]]``` are not fully supported by most of them.
+- Use [ShellCheck](https://www.shellcheck.net) to identify common bugs and warnings on your code.
+
+## Commit message guidelines
+
+We have very precise rules over how our git commit messages can be formatted. This leads to more readable messages that are easy to follow when looking through the project history.
+
+Each commit message consists of a **header**, a **blank line** and a **body**. The header has a special format that includes a **type** and a **subject**. 
+
+```
+<type>: <subject>
+<BLANK LINE>
+<body>
+```
+
+Any line of the commit message cannot be longer than 100 characters! This allows the message to be easier to read on GitHub as well as in various git tools.
+
+Samples:
+
+```
+docs: update changelog to v2.0.0
+fix: fixed issue #15
+```
+
+### Type
+
+Must be one of the following:
+
+- **docs**: Documentation only changes.
+- **feat**: A new feature.
+- **artf**: A new artifact or changes to an existing one.
+- **fix**: A bug fix.
+- **perf**: A code change that improves performance.
+- **refactor**: A code change that neither fixes a bug nor adds a feature.
+- **style**: Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc).
+
+### Subject
+
+The subject contains succinct description of the change:
+
+- use the imperative, present tense: "change" not "changed" nor "changes"
+- don't capitalize first letter
+- no dot (.) at the end
+
+### Body
+
+Just as in the **subject**, use the imperative, present tense: "change" not "changed" nor "changes". The body should include the motivation for the change and contrast this with previous behavior. It also needs to include any references to issue(s) being addressed (e.g. Closes #15, Fixes #21).
