@@ -51,7 +51,7 @@ UAC runs on any Unix-like system (regardless the processor architecture). All UA
 
 ## Contributing
 
-Please read our [Contributing Guide](CONTRIBUTING) before submitting a Pull Request to the project.
+Please read our [Contributing Guide](CONTRIBUTING.md) before submitting a Pull Request to the project.
 
 ## Community Support
 
