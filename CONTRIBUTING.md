@@ -42,9 +42,9 @@ Before you submit your Pull Request (PR) consider the following guidelines. We a
 
 The repo holds two main branches:
 
-**main**: Where the source code of HEAD always reflects a production-ready state.
+**master**: Where the source code of HEAD always reflects a production-ready state.
 
-**dev**: Where the source code of HEAD always reflects a state with the latest delivered development changes for the next release. When the source code in the dev branch reaches a stable point and is ready to be released, all of the changes will be merged back into main and then tagged with a release number.
+**dev**: Where the source code of HEAD always reflects a state with the latest delivered development changes for the next release. When the source code in the dev branch reaches a stable point and is ready to be released, all of the changes will be merged back into master and then tagged with a release number.
 
 All Pull Requests must be submitted to the **dev** branch.
 
@@ -55,7 +55,7 @@ All Pull Requests must be submitted to the **dev** branch.
 1. Clone the dev branch locally.
 
 ```shell
-git clone -b dev --single-branch git@github.com:YOUR_GITHUB_USERNAME/uac.git
+git clone -b dev git@github.com:YOUR_GITHUB_USERNAME/uac.git
 ```
 
 1. Add the upstream repository as a remote.
@@ -86,34 +86,29 @@ git checkout -b my-descriptively-named-branch dev
   git push origin my-descriptively-named-branch
   ```
 
-1. In GitHub, open a Pull Request and select the dev branch as base. Never send a Pull Request to main.
+1. In GitHub, open a Pull Request and select the **dev** branch as base. Never send a Pull Request to master.
 
 - If we suggest changes then:
   - Make the required updates.
   - Re-run the tests.
   - Rebase your branch and force push to your GitHub repository (this will update your Pull Request).
 
-  ```shell
-  git rebase dev -i
-  git push
-  ```
-
 That's it! Thank you for your collaboration!
 
 #### After your Pull Request is merged
 
-After your pull request is merged, you can safely delete your branch and pull the changes from the main (upstream) repository:
-
-- Delete the remote branch on GitHub either through the GitHub web UI or your local shell as follows:
-
-```shell
-git push origin --delete my-descriptively-named-branch
-```
+After your pull request is merged, you can safely delete your branch and pull the changes from the master (upstream) repository:
 
 - Check out the dev branch:
 
 ```shell
 git checkout dev -f
+```
+
+- Delete the remote branch on GitHub either through the GitHub web UI or your local shell as follows:
+
+```shell
+git push origin --delete my-descriptively-named-branch
 ```
 
 - Delete the local branch:
