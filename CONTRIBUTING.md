@@ -44,30 +44,42 @@ The repo holds two main branches:
 
 **master**: Where the source code of HEAD always reflects a production-ready state.
 
-**dev**: Where the source code of HEAD always reflects a state with the latest delivered development changes for the next release. When the source code in the dev branch reaches a stable point and is ready to be released, all of the changes will be merged back into master and then tagged with a release number.
+**develop**: Where the source code of HEAD always reflects a state with the latest delivered development changes for the next release. When the source code in the develop branch reaches a stable point and is ready to be released, all of the changes will be merged back into master and then tagged with a release number.
 
-All Pull Requests must be submitted to the **dev** branch.
+All Pull Requests must be submitted to the **develop** branch.
 
 1. Search [GitHub](https://github.com/tclahr/uac/pulls) for an open or closed PR that relates to your submission. You don't want to duplicate effort.
 
 1. Create a [fork](https://help.github.com/articles/fork-a-repo) (if you haven't already).
 
-1. Clone the dev branch locally.
+1. Clone it locally.
 
 ```shell
-git clone -b dev git@github.com:YOUR_GITHUB_USERNAME/uac.git
+git clone git@github.com:YOUR_GITHUB_USERNAME/uac.git
 ```
 
 1. Add the upstream repository as a remote.
 
 ```shell
-git remote add upstream https://github.com/tclahr/uac.git
+git remote add upstream git@github.com:tclahr/uac.git
 ```
 
-1. Make your changes in a new git branch. A short, descriptive branch name enables your collaborators to see ongoing work at a glance.
+1. Create a new develop branch.
 
 ```shell
-git checkout -b my-descriptively-named-branch dev
+git checkout -b develop
+```
+
+1. Make sure your local develop branch is up to date with respect to the upstream one.
+
+```shell
+git pull upstream develop
+```
+
+1. Make your changes in a new branch.
+
+```shell
+git checkout -b my-feature-branch develop
 ```
 
 1. Create your code following our [Coding Rules](#coding-rules).
@@ -83,44 +95,44 @@ git checkout -b my-descriptively-named-branch dev
 1. Push your branch to GitHub.
 
   ```shell
-  git push origin my-descriptively-named-branch
+  git push origin my-feature-branch
   ```
 
-1. In GitHub, open a Pull Request and select the **dev** branch as base. Never send a Pull Request to master.
+1. In GitHub, open a Pull Request and select the **develop** branch as base. Never send a Pull Request to master.
 
 - If we suggest changes then:
-  - Make the required updates.
+  - Make the required updates using the same branch.
   - Re-run the tests.
-  - Rebase your branch and force push to your GitHub repository (this will update your Pull Request).
+  - Push to your GitHub repository (this will update your Pull Request).
 
 That's it! Thank you for your collaboration!
 
 #### After your Pull Request is merged
 
-After your pull request is merged, you can safely delete your branch and pull the changes from the master (upstream) repository:
+After your pull request is merged, you can safely delete your branch and pull the changes from the develop (upstream) repository:
 
-- Check out the dev branch:
+- Check out the develop branch:
 
 ```shell
-git checkout dev -f
+git checkout -f develop
 ```
 
 - Delete the remote branch on GitHub either through the GitHub web UI or your local shell as follows:
 
 ```shell
-git push origin --delete my-descriptively-named-branch
+git push origin --delete my-feature-branch
 ```
 
 - Delete the local branch:
 
 ```shell
-git branch -D my-descriptively-named-branch
+git branch -D my-feature-branch
 ```
 
-- Update your dev with the latest upstream version:
+- Update your develop branch with the latest upstream version:
 
 ```shell
-git pull --ff upstream dev
+git pull --ff upstream develop
 ```
 
 ## Coding rules
