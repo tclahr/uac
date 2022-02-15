@@ -24,7 +24,6 @@
 #   USER_HOME_LIST
 # Requires:
 #   array_to_list
-#   get_user_home_list
 #   lrstrip
 #   regex_match
 #   sanitize_path
@@ -247,10 +246,6 @@ sequence of mappings\n" >&2
                     pa_new_loop_command=`echo "${pa_loop_command}" \
                       | sed -e "s:%user%:${pa_user}:g" \
                       | sed -e "s:%user_home%:${pa_home}:g"`
-
-                    # add MOUNT_POINT as prefix
-                    pa_new_path=`sanitize_path \
-                      "${MOUNT_POINT}/${pa_new_path}"`
 
                     pa_new_max_depth="${pa_max_depth}"
                     # if home directory is / (root in some systems),

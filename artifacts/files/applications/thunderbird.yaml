@@ -1,0 +1,91 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect Thunderbird configuration and preference files.
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.thunderbird
+    name_pattern: ["*.ini", "InstallTime*", "logins.json", "prefs.js"]
+    ignore_date_range: true
+    exclude_nologin_users: true
+  -
+    description: Collect Thunderbird sqlite database files.
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.thunderbird
+    name_pattern: ["abook.sqlite*", "global-messages-db.sqlite*", "places.sqlite*"]
+    exclude_nologin_users: true
+  -
+    description: Collect Thunderbird Attachments, ImapMail, and Mail files.
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.thunderbird
+    path_pattern: ["*/Attachments/*", "*/ImapMail/*", "*/Mail/*"]
+    exclude_nologin_users: true
+  -
+    description: Collect Thunderbird configuration and preference files (Flatpak version).
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.var/app/org.mozilla.Thunderbird
+    name_pattern: ["*.ini", "InstallTime*", "logins.json", "prefs.js"]
+    ignore_date_range: true
+    exclude_nologin_users: true
+  -
+    description: Collect Thunderbird sqlite database files (Flatpak version).
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.var/app/org.mozilla.Thunderbird
+    name_pattern: ["abook.sqlite*", "global-messages-db.sqlite*", "places.sqlite*"]
+    exclude_nologin_users: true
+  -
+    description: Collect Thunderbird Attachments, ImapMail, and Mail files (Flatpak version).
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.var/app/org.mozilla.Thunderbird
+    path_pattern: ["*/Attachments/*", "*/ImapMail/*", "*/Mail/*"]
+    exclude_nologin_users: true
+  -
+    description: Collect Thunderbird configuration and preference files (Snap version).
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/snap/thunderbird
+    name_pattern: ["*.ini", "InstallTime*", "logins.json", "prefs.js"]
+    ignore_date_range: true
+    exclude_nologin_users: true
+  -
+    description: Collect Thunderbird sqlite database files (Snap version).
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/snap/thunderbird
+    name_pattern: ["abook.sqlite*", "global-messages-db.sqlite*", "places.sqlite*"]
+    exclude_nologin_users: true
+  -
+    description: Collect Thunderbird Attachments, ImapMail, and Mail files (Snap version).
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/snap/thunderbird
+    path_pattern: ["*/Attachments/*", "*/ImapMail/*", "*/Mail/*"]
+    exclude_nologin_users: true
+  -
+    description: Collect Thunderbird configuration and preference files.
+    supported_os: [macos]
+    collector: file
+    path: /%user_home%/Library/Thunderbird
+    name_pattern: ["*.ini", "InstallTime*", "logins.json", "prefs.js"]
+    ignore_date_range: true
+    exclude_nologin_users: true
+  -
+    description: Collect Thunderbird sqlite database files.
+    supported_os: [macos]
+    collector: file
+    path: /%user_home%/Library/Thunderbird
+    name_pattern: ["abook.sqlite*", "global-messages-db.sqlite*", "places.sqlite*"]
+    exclude_nologin_users: true
+  -
+    description: Collect Thunderbird Attachments, ImapMail, and Mail files.
+    supported_os: [macos]
+    collector: file
+    path: /%user_home%/Library/Thunderbird
+    path_pattern: ["*/Attachments/*", "*/ImapMail/*", "*/Mail/*"]
+    exclude_nologin_users: true
+  

@@ -1,0 +1,21 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect Chrome browser files.
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.config/google-chrome
+    name_pattern: ["Bookmarks*", "Cookies*", "DownloadMetadata", "Extension Cookies*", "Extensions", "Favicons*", "File System", "History*", "Login Data*", "Media History*", "Network Action Predictor*", "Network Persistent State", "Preferences", "QuotaManager*", "Reporting and NEL*", "SecurePreferences", "Sessions", "Shortcuts*", "SyncData.sqlite3", "Top Sites*", "Trust Tokens*", "Visited Links", "Web Data*"]
+    ignore_date_range: true
+    exclude_nologin_users: true
+  -
+    description: Collect Chrome browser files.
+    supported_os: [macos]
+    collector: file
+    path: /%user_home%/Library/"Application Support"/Google/Chrome
+    name_pattern: ["Bookmarks*", "Cookies*", "DownloadMetadata", "Extension Cookies*", "Extensions", "Favicons*", "File System", "History*", "Login Data*", "Media History*", "Network Action Predictor*", "Network Persistent State", "Preferences", "QuotaManager*", "Reporting and NEL*", "SecurePreferences", "Sessions", "Shortcuts*", "SyncData.sqlite3", "Top Sites*", "Trust Tokens*", "Visited Links", "Web Data*"]
+    ignore_date_range: true
+    exclude_nologin_users: true
+  
+# References:
+# https://www.sans.org/posters/windows-third-party-apps-forensics-poster/

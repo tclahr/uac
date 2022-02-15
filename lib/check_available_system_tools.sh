@@ -162,7 +162,10 @@ check_available_system_tools()
 
   # check if 'xargs' supports -I{} parameter
   if eval "echo \"uac\" | xargs -I{}"; then
-    XARGS_REPLACE_STRING_SUPPORT=true
+    # check if 'xargs' removes the backslash character from escaped quotes
+    if eval "echo \"uac\'uac\" | xargs -I{} echo \"{}\" | grep \"uac'uac\""; then
+      XARGS_REPLACE_STRING_SUPPORT=true
+    fi
   fi
 
   # check which options are supported by the find tool

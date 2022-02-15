@@ -1,0 +1,40 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect Discord cache and leveldb files.
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.config/discord
+    path_pattern: ["*/Cache/*", "*/Local Storage/leveldb/*"]
+    exclude_nologin_users: true
+  -
+    description: Collect Discord cache and leveldb files (Flatpak version).
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.var/app/com.discordapp.Discord
+    path_pattern: ["*/Cache/*", "*/Local Storage/leveldb/*"]
+    exclude_nologin_users: true
+  -
+    description: Collect Discord cache and leveldb files (Snap version).
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/snap/discord
+    path_pattern: ["*/Cache/*", "*/Local Storage/leveldb/*"]
+    exclude_nologin_users: true
+  -
+    description: Collect Discord cache files.
+    supported_os: [macos]
+    collector: file
+    path: /%user_home%/Library/"Application Support"/discord/Cache/*
+    exclude_nologin_users: true
+  -
+    description: Collect Discord leveldb files.
+    supported_os: [macos]
+    collector: file
+    path: /%user_home%/Library/"Application Support"/discord/"Local Storage"/leveldb/*
+    exclude_nologin_users: true
+
+# Discord is a cloud-based application. All chats are in the cloud.
+#
+# References:
+# https://www.champlain.edu/Documents/LCDI/ApplicationAnalysis_S17.pdf

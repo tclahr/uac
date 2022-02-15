@@ -16,6 +16,7 @@
 # Get the current system hostname.
 # Globals:
 #   HOSTNAME
+#   MOUNT_POINT
 # Requires:
 #   None
 # Arguments:
@@ -29,18 +30,26 @@
 ###############################################################################
 get_hostname()
 {
-  
-  # some systems do not have hostname tool installed
-  if eval "hostname" 2>/dev/null; then
-    true
-  elif eval "uname -n"; then
-    true
-  elif [ -n "${HOSTNAME}" ]; then
-    printf %b "${HOSTNAME}"
-  elif [ -r "/etc/hostname" ]; then
-    head -1 "/etc/hostname"
+
+  if [ "${MOUNT_POINT}" = "/" ]; then
+    # some systems do not have hostname tool installed
+    if eval "hostname" 2>/dev/null; then
+      true
+    elif eval "uname -n"; then
+      true
+    elif [ -n "${HOSTNAME}" ]; then
+      printf %b "${HOSTNAME}"
+    elif [ -r "/etc/hostname" ]; then
+      head -1 "/etc/hostname"
+    else
+      printf %b "unknown"
+    fi
   else
-    printf %b "unknown"
+    if [ -r "${MOUNT_POINT}/etc/hostname" ]; then
+      head -1 "${MOUNT_POINT}/etc/hostname"
+    else
+      printf %b "unknown"
+    fi
   fi
 
 }

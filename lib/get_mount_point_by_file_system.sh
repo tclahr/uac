@@ -62,6 +62,24 @@ get_mount_point_by_file_system()
           }' \
         | sed -e 's:,$::' 2>/dev/null
       ;;
+    "esxi")
+      df -u \
+        | awk -v gm_file_system_list="${gm_file_system_list}" \
+          'BEGIN {
+            gsub(/[ ]+/, "", gm_file_system_list);
+            gsub("\"", "", gm_file_system_list);
+            split(gm_file_system_list, gm_file_system_array, ",");
+            for (i in gm_file_system_array) {
+              gm_file_system_dict[gm_file_system_array[i]]="";
+            }
+          }
+          {
+            if (tolower($1) in gm_file_system_dict) {
+              printf "%s,", $6;
+            }
+          }' \
+        | sed -e 's:,$::' 2>/dev/null
+      ;;
     "freebsd"|"macos"|"netscaler")
       mount \
         | sed -e 's:(::g' -e 's:,: :g' -e 's:)::g' \

@@ -1,5 +1,5 @@
-name: full-with-memory-dump
-description: Full artifacts collection including memory dump (Linux only).
+name: ir_triage
+description: Incident response triage collection.
 artifacts:
   - live_response/process/ps.yaml
   - live_response/process/lsof.yaml
@@ -22,8 +22,11 @@ artifacts:
   - live_response/storage/*
   - live_response/containers/*
   - live_response/vms/*
-  - memory_dump/avml.yaml
   - chkrootkit/chkrootkit.yaml
   - hash_executables/hash_executables.yaml
-  - files/*
+  - files/logs/*
+  - files/packages/*
+  - files/shell/*
+  - files/ssh/*
+  - files/system/*
   

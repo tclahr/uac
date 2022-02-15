@@ -22,12 +22,11 @@
 #   START_DATE_DAYS
 #   END_DATE_DAYS
 #   TEMP_DATA_DIR
-#   XARGS_REPLACE_STRING_SUPPORT
 # Requires:
 #   find_wrapper
+#   get_mount_point_by_file_system
 #   sanitize_filename
 #   sanitize_path
-#   sort_uniq_file
 # Arguments:
 #   $1: path
 #   $2: is file list (optional) (default: false)

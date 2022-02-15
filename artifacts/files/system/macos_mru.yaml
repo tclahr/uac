@@ -1,4 +1,4 @@
-version: 1.0
+version: 1.1
 artifacts:
   -
     description: Collect macOS Most Recently Used.
@@ -12,14 +12,14 @@ artifacts:
     description: Collect macOS Most Recently Used.
     supported_os: [macos]
     collector: file
-    path: /%user_home%/Library/Application Support/com.apple.sharedfilelist
+    path: /%user_home%/Library/"Application Support"/com.apple.sharedfilelist/*
     ignore_date_range: true
     exclude_nologin_users: true
   -
     description: Collect macOS Most Recently Used.
     supported_os: [macos]
     collector: file
-    path: /%user_home%/Library/Application Support/com.apple.spotlight.Shortcuts
+    path: /%user_home%/Library/"Application Support"/com.apple.spotlight.Shortcuts/*
     ignore_date_range: true
     exclude_nologin_users: true
   -

@@ -2,6 +2,83 @@
 
 All notable changes to this project will be documented in this file.
 
+## 2.1.0 (2021-02-15)
+
+### Added
+
+- Now you can use PROFILE (-p) and ARTIFACTS (-a) options together to create even more customizable collections. Please check the docs for more info. 
+- '9p' file system, used by Microsoft's WSL to mount local drives, was added to the global file system exclusion list in 'config/uac.conf'. This avoids UAC to recursively search artifacts through mounted local drives (like C:).
+
+### New Artifacts
+
+#### Applications
+
+- New artifact to collect Discord artifacts (files/applications/discord.yaml).
+- New artifact to collect Facebook Messenger artifacts (files/applications/facebook_messenger.yaml).
+- New artifact to collect iMessage artifacts (files/applications/imessage.yaml).
+- New artifact to collect Microsoft Teams artifacts (files/applications/microsoft_teams.yaml).
+- New artifact to collect Signal artifacts (files/applications/signal.yaml).
+- New artifact to collect Slack artifacts (files/applications/slack.yaml).
+- New artifact to collect Skype artifacts (files/applications/skype.yaml).
+- New artifact to collect Telegram Desktop artifacts (files/applications/telegram.yaml).
+- New artifact to collect Viber Desktop artifacts (files/applications/viber.yaml).
+- New artifact to collect WhatsApp Desktop artifacts (files/applications/whatsapp.yaml).
+- New artifact to collect AddressBook database, metadata and image files (files/applications/addressbook.yaml).
+- New artifact to collect Apple Notes app database file (files/applications/apple_notes.yaml).
+- New artifact to collect Aspera Connect file transfer log files (files/applications/aspera_connect.yaml).
+- New artifact to collect Dropbox Cloud Storage Metadata files (files/applications/dropbox.yaml).
+- New artifact to collect FileZilla XML and sqlite files (files/applications/filezilla.yaml).
+- New artifact to collect iCloud databases that contain information about files that have been imported from the local computer or synced remotely from the iCloud (files/applications/icloud_drive.yaml).
+- New artifact to collect iTunes Backup directory (files/application/itunes_backup.yaml).
+- New artifact to collect VLC recently opened files (files/applications/vlc.yaml).
+- New artifact to collect Thunderbird artifacts (files/applications/thunderbird.yaml).
+
+#### System
+
+- New artifact to collect Apple Accounts database file (files/system/apple_accounts.yaml).
+- New artifact to collect information about the permissions that a user is prompted to accept or decline while using macOS applications (files/system/tcc.yaml).
+- New artifact to collect Linux Most Recent Used files information (files/system/linux_mru.yaml).
+- New artifact to collect macOS knowledgeC.db file (files/system/knowledgec.yaml).
+- New artifact to collect macOS system and user's preferences and configuration plist files (files/system/library_preferences.yaml).
+- New artifact to collect information about the applications that are set to reopen after macOS computer restarts or resumes from sleep (files/system/resumed_applications.yaml).
+- New artifact to collect temporary files located in the '/tmp' directory (files/system/tmp.yaml).
+
+#### Live Response
+
+- New artifact to collect information about installed bundles on Clear Linux (live_response/packages/swupd.yaml).
+- New artifact to collect information about installed packages using zypper tool (live_response/packages/zypper.yaml).
+- New artifact to collect information about installed applications on macOS (live_response/packages/pkgutil.yaml).
+- New artifact to collect statistics about GEOM disks on FreeBSD (live_response/storage/gstat.yaml)
+- New artifact to collect VirtualBox VMs information (live_response/vms/virtualbox.yaml).
+
+### Updated Artifacts
+
+- A new command was added to the rpm artifact to compare information about the installed files in the rpm packages with information about the files taken from the package metadata stored in the rpm database (live_response/packages/rpm.yaml).
+- 'files/browsers/chromium_based.yaml' artifact was split and replaced by 'files/browsers/brave.yaml', 'files/browsers/chrome.yaml', 'files/browsers/chromium.yaml', 'files/browsers/edge.yaml' and 'files/browsers/opera.yaml'.
+- Firefox browser artifacts updated to include Flatpak and Snap versions (files/browsers/firefox.yaml).
+- Safari artifact updated to collect Safari Recently Closed Tabs plist file (files/browsers/safari.yaml).
+
+### New Profile
+
+- New 'ir_triage' profile is now available. This profile is more focused on collecting incident response triage artifacts only.
+
+### Updated Profiles
+
+- 'full' and 'full-with-memory-dump' profiles were updated so 'bodyfile/bodyfile.yaml' will now be collected sooner. 
+
+### Deprecated Profiles
+
+- 'full-with-memory-dump' profile will be removed in the future because '--profile full --artifacts memory_dump/avml.yaml' can be used instead. 
+- 'memory-dump-only' profile will be removed in the future because '--artifacts memory_dump/avml.yaml' can be used instead.
+
+### Fixed
+
+- 'live_response/process/proctree.yaml' artifact file was missing on both 'full' and 'full-with-memory-dump' profiles ([#28](https://github.com/tclahr/uac/issues/28)).
+- Issue that was preventing ```stat``` to collect some information from directories and symbolic links.
+- Issue that was preventing file names with single and double quotes to be hashed and stated properly.
+- Issue that was preventing UAC to run as root on VMWare ESXi systems.
+- Issue that was preventing UAC to properly collect files from mounted disk images.
+
 ## 2.0.0 (2021-11-24)
 
 ### Highlights

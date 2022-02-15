@@ -1,0 +1,9 @@
+version: 1.0
+artifacts:
+  -
+    description: Display all installed packages and receipts.
+    supported_os: [macos]
+    collector: command
+    command: pkgutil --packages
+    output_file: pkgutil_--packages.txt
+  

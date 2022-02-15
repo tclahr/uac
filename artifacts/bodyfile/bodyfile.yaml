@@ -1,4 +1,4 @@
-version: 1.0
+version: 2.0
 artifacts:
   -
     description: Collect file stat information to create a bodyfile.
@@ -6,5 +6,5 @@ artifacts:
     collector: stat
     path: /
     exclude_file_system: [proc, procfs]
-    max_depth: 5
+    max_depth: 6
     output_file: bodyfile.txt

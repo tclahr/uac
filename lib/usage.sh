@@ -30,7 +30,7 @@ usage()
 {
   
   printf %b "Usage: $0 [-h] [-V] [--debug] {-p PROFILE | -a ARTIFACTS} DESTINATION 
-             [-m MOUNT_POINT] [-o OPERATING_SYSTEM] [-u] [--temp_dir PATH]
+             [-m MOUNT_POINT] [-s OPERATING_SYSTEM] [-u] [--temp_dir PATH]
              [--date-range-start YYYY-MM-DD] [--date-range-start YYYY-MM-DD]
              [--case-number CASE_NUMBER] [--description DESCRIPTION]
              [--evidence-number EVIDENCE_NUMBER] [--examiner EXAMINER]
@@ -64,7 +64,7 @@ Positional Arguments:
 Collection Arguments:
   -m, --mount-point MOUNT_POINT
                     Specify the mount point (default: /).
-  -o, --operating-system OPERATING_SYSTEM
+  -s, --operating-system OPERATING_SYSTEM
                     Specify the operating system.
                     Options: aix, android, freebsd, linux, macos, netbsd
                              netscaler, openbsd, solaris

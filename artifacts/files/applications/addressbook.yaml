@@ -1,0 +1,21 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect AddressBook databases.
+    supported_os: [macos]
+    collector: file
+    path: /%user_home%/Library/"Application Support"/AddressBook/AddressBook*.abcddb*
+    exclude_nologin_users: true
+  -
+    description: Collect AddressBook Metadata files.
+    supported_os: [macos]
+    collector: file
+    path: /%user_home%/Library/"Application Support"/AddressBook/Metadata/*
+    exclude_nologin_users: true
+  -
+    description: Collect AddressBook Image files.
+    supported_os: [macos]
+    collector: file
+    path: /%user_home%/Library/"Application Support"/AddressBook/Images/*
+    exclude_nologin_users: true
+    

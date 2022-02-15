@@ -1,0 +1,33 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect Telegram log file.
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.local/share/TelegramDesktop/log.txt
+    exclude_nologin_users: true
+  -
+    description: Collect Telegram log file (Flatpak version).
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.var/app/org.telegram.desktop
+    name_pattern: ["log.txt"]
+    exclude_nologin_users: true
+  -
+    description: Collect Telegram log file (Snap version).
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/snap/telegram-desktop
+    name_pattern: ["log.txt"]
+    exclude_nologin_users: true
+  -
+    description: Collect Telegram log file.
+    supported_os: [macos]
+    collector: file
+    path: /%user_home%/Library/"Application Support"/"Telegram Desktop"/log.txt
+    exclude_nologin_users: true
+
+# Telegram is a cloud-based application. All chats are in the cloud. In part, chats can be found on mobile devices.
+#
+# References:
+# https://www.champlain.edu/Documents/LCDI/ApplicationAnalysis_S17.pdf

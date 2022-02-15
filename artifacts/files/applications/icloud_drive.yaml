@@ -1,0 +1,10 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect iCloud local databases that contain information about files that have been imported from the local computer or synced remotely from the iCloud.
+    supported_os: [macos]
+    collector: file
+    path: /%user_home%/Library/"Application Support"/CloudDocs/session/db
+    name_pattern: ["client.db*", "server.db*"]
+    exclude_nologin_users: true
+  

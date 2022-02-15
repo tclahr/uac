@@ -1,0 +1,16 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect knowledgeC database file.
+    supported_os: [macos]
+    collector: file
+    path: /private/var/db/CoreDuet/Knowledge/knowledgeC.db
+    ignore_date_range: true
+  -
+    description: Collect knowledgeC database file.
+    supported_os: [macos]
+    collector: file
+    path: /%user_home%/Library/"Application Support"/Knowledge/knowledgeC.db
+    ignore_date_range: true
+    exclude_nologin_users: true
+  

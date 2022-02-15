@@ -1,0 +1,61 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect Skype database files.
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.config/skypeforlinux
+    name_pattern: ["*.db*"]
+    exclude_nologin_users: true
+  -
+    description: Collect Skype cache and leveldb files.
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.config/skypeforlinux
+    path_pattern: ["*/Cache/*", "*/Local Storage/leveldb/*"]
+    exclude_nologin_users: true
+  -
+    description: Collect Skype database files (Flatpak version).
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.var/app/com.skype.Client
+    name_pattern: ["*.db*"]
+    exclude_nologin_users: true
+  -
+    description: Collect Skype cache and leveldb files (Flatpak version).
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.var/app/com.skype.Client
+    path_pattern: ["*/Cache/*", "*/Local Storage/leveldb/*"]
+    exclude_nologin_users: true
+  -
+    description: Collect Skype database files (Snap version).
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/snap/skype
+    name_pattern: ["*.db*"]
+    exclude_nologin_users: true
+  -
+    description: Collect Skype cache and leveldb files (Snap version).
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/snap/skype
+    path_pattern: ["*/Cache/*", "*/Local Storage/leveldb/*"]
+    exclude_nologin_users: true
+  -
+    description: Collect Skype database files.
+    supported_os: [macos]
+    collector: file
+    path: /%user_home%/Library/"Application Support"/Microsoft/"Skype for Desktop"
+    name_pattern: ["*.db*"]
+    exclude_nologin_users: true
+  -
+    description: Collect Skype cache and leveldb files.
+    supported_os: [macos]
+    collector: file
+    path: /%user_home%/Library/"Application Support"/Microsoft/"Skype for Desktop"
+    path_pattern: ["*/Cache/*", "*/Local Storage/leveldb/*"]
+    exclude_nologin_users: true  
+
+# References:
+# https://www.champlain.edu/Documents/LCDI/ApplicationAnalysis_S17.pdf

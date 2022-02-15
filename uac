@@ -80,7 +80,7 @@ export PATH
 . "${UAC_DIR}/lib/validate_profile_file.sh"
 
 # global vars
-UAC_VERSION="2.0.0"
+UAC_VERSION="v2.1.0"
 MOUNT_POINT="/"
 OPERATING_SYSTEM=""
 SYSTEM_ARCH=""
@@ -125,7 +125,7 @@ while [ "${1:-}" != "" ]; do
       exit 1
       ;;
     "-V"|"--version")
-      printf %b "UAC (Unix-like Artifacts Collector) v${UAC_VERSION}\n"
+      printf %b "UAC (Unix-like Artifacts Collector) ${UAC_VERSION}\n"
       exit 0
       ;;
     "--debug")
@@ -163,9 +163,21 @@ Try 'uac --help' for more information.\n" >&2
         exit 1
       fi
       ;;
-    "-o"|"--operating-system")
+    "-s"|"--operating-system")
       if [ -n "${2}" ]; then
         OPERATING_SYSTEM="${2}"
+        shift
+      else
+        printf %b "uac: option '${1}' requires an argument.\n\
+Try 'uac --help' for more information.\n" >&2
+        exit 1
+      fi
+      ;;
+    "-o")
+      if [ -n "${2}" ]; then
+        OPERATING_SYSTEM="${2}"
+        printf %b "WARNING: '-o' has been replaced by '-s' option, and will be \
+removed in future releases. Check 'uac --help' for more information.\n" >&2
         shift
       else
         printf %b "uac: option '${1}' requires an argument.\n\
@@ -349,13 +361,6 @@ if [ -n "${ua_artifacts}" ] && [ "${ua_artifacts}" = "list" ]; then
   exit 1
 fi
 
-# exit if a profile name and artifacts have been provided
-if [ -n "${ua_profile}" ] && [ -n "${ua_artifacts}" ]; then
-  printf %b "uac: invalid option '--artifacts'. \
-A collection profile has already been provided.\n"
-  exit 1
-fi
-
 # exit if profile and artifacts, or destination dir is empty
 if { [ -z "${ua_profile}" ] && [ -z "${ua_artifacts}" ]; } \
   || [ -z "${ua_destination_dir}" ] ; then
@@ -382,17 +387,24 @@ if [ -n "${ua_profile}" ]; then
 
   # check if profile file is valid
   validate_profile_file "${ua_profile_file}" || exit 1
-else
-  # artifacts list provided
+fi
+
+# artifacts list provided
+if [ -n "${ua_artifacts}" ]; then
   OIFS="${IFS}"
   IFS=","
   for ua_artifact_file in ${ua_artifacts}; do
     ua_artifact_file=`echo "${ua_artifact_file}" | sed -e 's:^!::g' -e 's:\.\.::g'`
-    find "${UAC_DIR}"/artifacts/${ua_artifact_file} -name "*.yaml" \
-      -type f -print >/dev/null 2>/dev/null
-    if [ "$?" -gt 0 ]; then
-      printf %b "uac: artifact file not found \
-'"${UAC_DIR}"/artifacts/${ua_artifact_file}'\n" >&2
+    if [ -n "${ua_artifact_file}" ]; then
+      find "${UAC_DIR}"/artifacts/${ua_artifact_file} -name "*.yaml" \
+        -type f -print >/dev/null 2>/dev/null
+      if [ "$?" -gt 0 ]; then
+        printf %b "uac: artifact file not found \
+  '"${UAC_DIR}"/artifacts/${ua_artifact_file}'\n" >&2
+        exit 1
+      fi
+    else
+      printf %b "uac: artifact not found '${ua_artifact_file}'\n" >&2
       exit 1
     fi
   done
@@ -449,6 +461,7 @@ if [ -n "${END_DATE}" ]; then
 fi
 
 # check if mount point exists
+MOUNT_POINT=`sanitize_path "${MOUNT_POINT}"`
 if [ ! -d "${MOUNT_POINT}" ]; then
   printf %b "uac: invalid mount point. \
 No such file or directory '${MOUNT_POINT}'\n" >&2
@@ -469,6 +482,7 @@ if [ -z "${ua_hostname}" ]; then
   ua_hostname=`get_hostname 2>/dev/null`
 fi
 
+# check if destination directory's file system supports symlink creation
 if [ -n "${ua_temp_dir}" ]; then
   rm "${ua_temp_dir}/.uac-symlink.tmp" 2>/dev/null
   if ln -s "${UAC_DIR}" "${ua_temp_dir}/.uac-symlink.tmp" 2>/dev/null; then
@@ -525,7 +539,7 @@ printf %b " |: | |  |:  _   |:  ____|\n"
 printf %b " |  |_|  |  | |  |  |____ \n"
 printf %b " |_______|__| |__|_______|\n"
 printf %b "\n"
-printf %b " Unix-like Artifacts Collector v${UAC_VERSION}\n"
+printf %b " Unix-like Artifacts Collector ${UAC_VERSION}\n"
 printf %b "--------------------------------------------------------------------------------\n"
 printf %b "Operating System    : ${OPERATING_SYSTEM}\n"
 printf %b "System Architecture : ${SYSTEM_ARCH}\n"
@@ -536,7 +550,7 @@ printf %b "Temp Directory      : ${TEMP_DATA_DIR}\n"
 printf %b "--------------------------------------------------------------------------------\n"
 
 # start uac.log file
-log_message INFO "UAC (Unix-like Artifacts Collector) v${UAC_VERSION}"
+log_message INFO "UAC (Unix-like Artifacts Collector) ${UAC_VERSION}"
 log_message INFO "Command line: ${ua_command_line}"
 log_message INFO "Operating system: ${OPERATING_SYSTEM}"
 log_message INFO "System architecture: ${SYSTEM_ARCH}"
@@ -562,7 +576,7 @@ log_message INFO "Global exclude file system: ${GLOBAL_EXCLUDE_FILE_SYSTEM}"
 GLOBAL_EXCLUDE_MOUNT_POINT=""
 if [ -n "${GLOBAL_EXCLUDE_FILE_SYSTEM}" ]; then
   GLOBAL_EXCLUDE_MOUNT_POINT=`get_mount_point_by_file_system \
-    "${GLOBAL_EXCLUDE_FILE_SYSTEM}"`
+    "${GLOBAL_EXCLUDE_FILE_SYSTEM}" 2>>"${UAC_STDERR_LOG_FILE}"`
 fi
 log_message INFO "Global exclude mount point: ${GLOBAL_EXCLUDE_MOUNT_POINT}"
 log_message INFO "Hash algorithm: ${HASH_ALGORITHM}"
@@ -585,24 +599,24 @@ log_message INFO "'statx' tool available: ${STATX_TOOL_AVAILABLE}"
 
 log_message INFO "PATH: ${PATH}"
 
-# create a temporary profile file based on the artifacts provided via command
-# line
+# if profile defined, copy it to a temporary profile file
+if [ -n "${ua_profile}" ]; then
+  cp "${ua_profile_file}" "${TEMP_DATA_DIR}/.temp-profile.yaml" \
+    >/dev/null 2>/dev/null
+fi
+
+# if artifacts defined, add them to the temporary profile file
 if [ -n "${ua_artifacts}" ]; then
-  printf %b "name: temp-profile\n" >"${TEMP_DATA_DIR}/.profile.yaml"
-  printf %b "description: temp-profile\n" >>"${TEMP_DATA_DIR}/.profile.yaml"
-  printf %b "artifacts:\n" >>"${TEMP_DATA_DIR}/.profile.yaml"
   OIFS="${IFS}"
   IFS=","
   for ua_artifact_file in ${ua_artifacts}; do
-    printf %b "  - ${ua_artifact_file}\n" >>"${TEMP_DATA_DIR}/.profile.yaml"
+    printf %b "  - ${ua_artifact_file}\n" >>"${TEMP_DATA_DIR}/.temp-profile.yaml"
   done
   IFS="${OIFS}"
-  ua_profile_file="${TEMP_DATA_DIR}/.profile.yaml"
 fi
 
-# parse profile file
-log_message INFO "Parsing profile file '${ua_profile_file}'"
-parse_profile_file "${ua_profile_file}" || exit 1
+# parse temporary profile file
+parse_profile_file "${TEMP_DATA_DIR}/.temp-profile.yaml" || exit 1
 
 # add UAC_DIR abd TEMP_DATA_DIR to GLOBAL_EXCLUDE_PATH_PATTERN
 if [ -n "${GLOBAL_EXCLUDE_PATH_PATTERN}" ]; then
@@ -662,8 +676,8 @@ Total running time: ${ua_total_running_time} seconds\n"
 
 if [ -f "${TEMP_DATA_DIR}/.files.tmp" ]; then
   if ${ua_temp_data_dir_symlink_support}; then
-    # create symbolic link to mount point
-    ln -s "${MOUNT_POINT}" "${TEMP_DATA_DIR}/[root]" 2>>"${UAC_STDERR_LOG_FILE}"
+    # create symbolic link to /
+    ln -s "/" "${TEMP_DATA_DIR}/[root]" 2>>"${UAC_STDERR_LOG_FILE}"
   else
     # copy files to uac-data.tmp/[root]
     printf %b "Copying files to ${TEMP_DATA_DIR}/[root]. Please wait...\n"

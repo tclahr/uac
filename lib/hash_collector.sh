@@ -172,12 +172,18 @@ ${GLOBAL_EXCLUDE_NAME_PATTERN}"
     && [ -n "${MD5_HASHING_TOOL}" ]; then
     if ${XARGS_REPLACE_STRING_SUPPORT}; then
       if ${hc_is_file_list}; then
-        log_message COMMAND "sort -u \"${hc_path}\" | xargs -I{} ${MD5_HASHING_TOOL} \"{}\""
+        log_message COMMAND "sort -u \"${hc_path}\" | sed -e \"s:':\\\':g\" -e 's:\":\\\\\":g' | xargs -I{} ${MD5_HASHING_TOOL} \"{}\""
+        # sort and uniq
+        # escape single and double quotes
         sort -u "${hc_path}" \
+          | sed -e "s:':\\\':g" -e 's:":\\\":g' \
           | xargs -I{} ${MD5_HASHING_TOOL} "{}" \
             >>"${TEMP_DATA_DIR}/${hc_output_directory}/${hc_output_file}.md5" \
             2>>"${TEMP_DATA_DIR}/${hc_output_directory}/${hc_output_file}.md5.stderr"
       else
+        # find
+        # sort and uniq
+        # escape single and double quotes
         find_wrapper \
           "${hc_path}" \
           "${hc_path_pattern}" \
@@ -193,10 +199,11 @@ ${GLOBAL_EXCLUDE_NAME_PATTERN}"
           "${hc_date_range_end_days}" \
             2>>"${TEMP_DATA_DIR}/${hc_output_directory}/${hc_output_file}.md5.stderr" \
           | sort -u \
+          | sed -e "s:':\\\':g" -e 's:":\\\":g' \
           | xargs -I{} ${MD5_HASHING_TOOL} "{}" \
             >>"${TEMP_DATA_DIR}/${hc_output_directory}/${hc_output_file}.md5" \
             2>>"${TEMP_DATA_DIR}/${hc_output_directory}/${hc_output_file}.md5.stderr"
-        log_message COMMAND "| sort -u | xargs -I{} ${MD5_HASHING_TOOL} \"{}\""
+        log_message COMMAND "| sort -u | sed -e \"s:':\\\':g\" -e 's:\":\\\\\":g' | xargs -I{} ${MD5_HASHING_TOOL} \"{}\""
         
       fi
     else
@@ -256,12 +263,18 @@ ${GLOBAL_EXCLUDE_NAME_PATTERN}"
     && [ -n "${SHA1_HASHING_TOOL}" ]; then
     if ${XARGS_REPLACE_STRING_SUPPORT}; then
       if ${hc_is_file_list}; then
-        log_message COMMAND "sort -u \"${hc_path}\" | xargs -I{} ${SHA1_HASHING_TOOL} \"{}\""
+        log_message COMMAND "sort -u \"${hc_path}\" | sed -e \"s:':\\\':g\" -e 's:\":\\\\\":g' | xargs -I{} ${SHA1_HASHING_TOOL} \"{}\""
+        # sort and uniq
+        # escape single and double quotes
         sort -u "${hc_path}" \
+          | sed -e "s:':\\\':g" -e 's:":\\\":g' \
           | xargs -I{} ${SHA1_HASHING_TOOL} "{}" \
             >>"${TEMP_DATA_DIR}/${hc_output_directory}/${hc_output_file}.sha1" \
             2>>"${TEMP_DATA_DIR}/${hc_output_directory}/${hc_output_file}.sha1.stderr"
       else
+        # find
+        # sort and uniq
+        # escape single and double quotes
         find_wrapper \
           "${hc_path}" \
           "${hc_path_pattern}" \
@@ -277,10 +290,11 @@ ${GLOBAL_EXCLUDE_NAME_PATTERN}"
           "${hc_date_range_end_days}" \
             2>>"${TEMP_DATA_DIR}/${hc_output_directory}/${hc_output_file}.sha1.stderr" \
           | sort -u \
+          | sed -e "s:':\\\':g" -e 's:":\\\":g' \
           | xargs -I{} ${SHA1_HASHING_TOOL} "{}" \
             >>"${TEMP_DATA_DIR}/${hc_output_directory}/${hc_output_file}.sha1" \
             2>>"${TEMP_DATA_DIR}/${hc_output_directory}/${hc_output_file}.sha1.stderr"
-        log_message COMMAND "| sort -u | xargs -I{} ${SHA1_HASHING_TOOL} \"{}\""
+        log_message COMMAND "| sort -u | sed -e \"s:':\\\':g\" -e 's:\":\\\\\":g' | xargs -I{} ${SHA1_HASHING_TOOL} \"{}\""
       fi
     else
       if ${hc_is_file_list}; then
@@ -339,12 +353,18 @@ ${GLOBAL_EXCLUDE_NAME_PATTERN}"
     && [ -n "${SHA256_HASHING_TOOL}" ]; then
     if ${XARGS_REPLACE_STRING_SUPPORT}; then
       if ${hc_is_file_list}; then
-        log_message COMMAND "sort -u \"${hc_path}\" | xargs -I{} ${SHA256_HASHING_TOOL} \"{}\""
+        log_message COMMAND "sort -u \"${hc_path}\" | sed -e \"s:':\\\':g\" -e 's:\":\\\\\":g' | xargs -I{} ${SHA256_HASHING_TOOL} \"{}\""
+        # sort and uniq
+        # escape single and double quotes
         sort -u "${hc_path}" \
+          | sed -e "s:':\\\':g" -e 's:":\\\":g' \
           | xargs -I{} ${SHA256_HASHING_TOOL} "{}" \
             >>"${TEMP_DATA_DIR}/${hc_output_directory}/${hc_output_file}.sha256" \
             2>>"${TEMP_DATA_DIR}/${hc_output_directory}/${hc_output_file}.sha256.stderr"
       else
+        # find
+        # sort and uniq
+        # escape single and double quotes
         find_wrapper \
           "${hc_path}" \
           "${hc_path_pattern}" \
@@ -360,10 +380,11 @@ ${GLOBAL_EXCLUDE_NAME_PATTERN}"
           "${hc_date_range_end_days}" \
             2>>"${TEMP_DATA_DIR}/${hc_output_directory}/${hc_output_file}.sha256.stderr" \
           | sort -u \
+          | sed -e "s:':\\\':g" -e 's:":\\\":g' \
           | xargs -I{} ${SHA256_HASHING_TOOL} "{}" \
             >>"${TEMP_DATA_DIR}/${hc_output_directory}/${hc_output_file}.sha256" \
             2>>"${TEMP_DATA_DIR}/${hc_output_directory}/${hc_output_file}.sha256.stderr"
-        log_message COMMAND "| sort -u | xargs -I{} ${SHA256_HASHING_TOOL} \"{}\""
+        log_message COMMAND "| sort -u | sed -e \"s:':\\\':g\" -e 's:\":\\\\\":g' | xargs -I{} ${SHA256_HASHING_TOOL} \"{}\""
       fi
     else
       if ${hc_is_file_list}; then
