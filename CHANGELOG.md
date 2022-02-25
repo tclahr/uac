@@ -4,7 +4,32 @@ All notable changes to this project will be documented in this file.
 
 ## DEVELOPMENT VERSION
 
+### Added
 
+- VMware ESXi is now fully supported as an operating system. Note that ESXi is not built upon the Linux kernel, and uses its own VMware proprietary kernel (the VMkernel) and software. So it misses most of the applications and components that are commonly found in all Linux distributions.
+
+### New Artifacts
+
+- New artifact to collect ESXi running processes information (live_response/process/esxcli.yaml).
+- New artifact to collect ESXi network connections information (live_response/network/esxcli.yaml and live_response/network/vim-cmd.yaml).
+- New artifact to collect ESXi hardware information (live_response/hardware/esxcli.yaml).
+- New artifact to collect ESXi system information (live_response/system/esxcli.yaml).
+- New artifact to collect ESXi packages information (live_response/packages/esxcli.yaml).
+- New artifact to collect ESXi storage information (live_response/storage/esxcli.yaml).
+- New artifact to collect ESXi running virtual machines information (live_response/vms/esxcli.yaml, live_response/vms/vm-support.yaml and live_response/vms/vim-cmd.yaml).
+- New artifact to collect ESXi log files located in /var/run/log directory (files/logs/var_run_log.yaml).
+
+### Updated Artifacts
+
+- ESXi support was added to the following artifacts:
+  - live_response/process/ps.yaml
+  - live_response/process/lsof.yaml
+  - live_response/process/hash_running_processes.yaml
+  - live_response/network/hostname.yaml
+  - live_response/network/ifconfig.yaml
+  - live_response/network/lsof.yaml
+  - live_response/network/netstat.yaml
+  - live_response/storage/mount.yaml
 
 ## 2.1.0 (2021-02-15)
 
