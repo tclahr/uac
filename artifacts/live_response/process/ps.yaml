@@ -48,3 +48,9 @@ artifacts:
     collector: command
     command: ps -eo pid,user,lstart,args
     output_file: ps_-eo_pid_user_lstart_args.txt
+  -
+    description: Report a snapshot of the current processes including used time, verbose, session ID and process group, state and type.
+    supported_os: [esxi]
+    collector: command
+    command: ps -P -T -c -g -s -t -J
+    output_file: ps_-P_-T_-c_-g_-s_-t_-J.txt

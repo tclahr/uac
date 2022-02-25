@@ -8,7 +8,7 @@ artifacts:
     output_file: hostname.txt
   -
     description: Collect the system's host name.
-    supported_os: [linux, macos]
+    supported_os: [esxi, linux, macos]
     collector: command
     command: hostname -f
     output_file: hostname_-f.txt

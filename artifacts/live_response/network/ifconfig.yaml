@@ -1,8 +1,8 @@
-version: 1.0
+version: 2.0
 artifacts:
   -
     description: Collect information about all interfaces which are currently available, even if down.
-    supported_os: [all]
+    supported_os: [android, aix, freebsd, linux, openbsd, netbsd, netscaler, openbsd, solaris]
     collector: command
     command: ifconfig -a
     output_file: ifconfig_-a.txt
