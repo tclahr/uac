@@ -48,7 +48,7 @@ archive_data()
     "freebsd"|"netbsd"|"netscaler"|"openbsd")
       tar -I "${ad_source_file}" -cf "${ad_destination_file}"
       ;;
-    "android"|"linux")
+    "android"|"esxi"|"linux")
       # some old tar/busybox versions do not support -T, so a different
       # solution is required to package and compress data
       # checking if tar can create package getting names from file

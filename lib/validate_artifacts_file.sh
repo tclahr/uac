@@ -134,7 +134,7 @@ be empty.\n" >&2
 array/list.\n" >&2
               return 9
             fi
-            va_so_list="all,aix,android,freebsd,linux,macos,netbsd,netscaler,openbsd,solaris"
+            va_so_list="all,aix,android,esxi,freebsd,linux,macos,netbsd,netscaler,openbsd,solaris"
             OIFS="${IFS}"
             IFS=","
             for va_os in `array_to_list "${va_supported_os}"`; do

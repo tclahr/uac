@@ -66,7 +66,7 @@ Collection Arguments:
                     Specify the mount point (default: /).
   -s, --operating-system OPERATING_SYSTEM
                     Specify the operating system.
-                    Options: aix, android, freebsd, linux, macos, netbsd
+                    Options: aix, android, esxi, freebsd, linux, macos, netbsd
                              netscaler, openbsd, solaris
   -u, --run-as-non-root
                     Disable root user check.

@@ -433,6 +433,7 @@ fi
 # check if operating system is supported
 if [ "${OPERATING_SYSTEM}" != "android" ] \
   && [ "${OPERATING_SYSTEM}" != "aix" ] \
+  && [ "${OPERATING_SYSTEM}" != "esxi" ] \
   && [ "${OPERATING_SYSTEM}" != "freebsd" ] \
   && [ "${OPERATING_SYSTEM}" != "linux" ] \
   && [ "${OPERATING_SYSTEM}" != "macos" ] \
