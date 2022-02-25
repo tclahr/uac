@@ -1,0 +1,10 @@
+version: 1.0
+artifacts:
+  -
+    description: List registered VMs.
+    supported_os: [esxi]
+    collector: command
+    command: vm-support -V
+    output_file: vm-support_-V.txt
+  
+ 

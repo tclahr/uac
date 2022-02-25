@@ -1,0 +1,21 @@
+version: 1.0
+artifacts:
+  -
+    description: Lists the installed VIB packages.
+    supported_os: [esxi]
+    collector: command
+    command: esxcli software vib list
+    output_file: esxcli_software_vib_list.txt
+  -
+    description: Gets the host acceptance level. This controls what VIBs will be allowed on a host.
+    supported_os: [esxi]
+    collector: command
+    command: esxcli software acceptance get
+    output_file: esxcli_software_acceptance_get.txt
+  -
+    description: Display the installed image profile.
+    supported_os: [esxi]
+    collector: command
+    command: esxcli software profile get
+    output_file: esxcli_software_profile_get.txt
+  

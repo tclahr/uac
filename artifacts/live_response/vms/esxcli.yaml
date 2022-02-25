@@ -1,0 +1,15 @@
+version: 1.0
+artifacts:
+  -
+    description: List networking information for the VM's that have active ports.
+    supported_os: [esxi]
+    collector: command
+    command: esxcli network vm list
+    output_file: esxcli_network_vm_list.txt
+  -
+    description: List the virtual machines on this system. This command currently will only list running VMs on the system.
+    supported_os: [esxi]
+    collector: command
+    command: esxcli vm process list
+    output_file: esxcli_vm_process_list.txt
+ 
