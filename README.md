@@ -41,6 +41,7 @@ UAC runs on any Unix-like system (regardless the processor architecture). All UA
 
 - AIX
 - Android
+- ESXi
 - FreeBSD
 - Linux
 - macOS
