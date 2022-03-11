@@ -1,0 +1,80 @@
+version: 1.0
+artifacts:
+  -
+    description: List the VMkernel modules that the system knows about.
+    supported_os: [esxi]
+    collector: command
+    command: esxcli system module list
+    output_file: esxcli_system_module_list.txt
+  -
+    description: List the enforcement level for each domain.
+    supported_os: [esxi]
+    collector: command
+    command: esxcli system secpolicy domain list
+    output_file: esxcli_system_secpolicy_domain_list.txt
+  -
+    description: Get FIPS140 mode of ssh.
+    supported_os: [esxi]
+    collector: command
+    command: esxcli system security fips140 ssh get
+    output_file: esxcli_system_security_fips140_ssh_get.txt
+  -
+    description: Get FIPS140 mode of rhttpproxy.
+    supported_os: [esxi]
+    collector: command
+    command: esxcli system security fips140 rhttpproxy get
+    output_file: esxcli_system_security_fips140_rhttpproxy_get.txt
+  -
+    description: List the advanced options available from the VMkernel.
+    supported_os: [esxi]
+    collector: command
+    command: esxcli system settings advanced list
+    output_file: esxcli_system_settings_advanced_list.txt
+  -
+    description: List VMkernel kernel settings.
+    supported_os: [esxi]
+    collector: command
+    command: esxcli system settings kernel list
+    output_file: esxcli_system_settings_kernel_list.txt
+  -
+    description: Display the date and time when this system was first installed. Value will not change on subsequent updates.
+    supported_os: [esxi]
+    collector: command
+    command: esxcli system stats installtime get
+    output_file: esxcli_system_stats_installtime_get.txt
+  -
+    description: Show the current global syslog configuration values.
+    supported_os: [esxi]
+    collector: command
+    command: esxcli system syslog config get
+    output_file: esxcli_system_syslog_config_get.txt
+  -
+    description: Display WBEM Agent configuration.
+    supported_os: [esxi]
+    collector: command
+    command: esxcli system wbem get
+    output_file: esxcli_system_wbem_get.txt
+  -
+    description: List local user accounts.
+    supported_os: [esxi]
+    collector: command
+    command: esxcli system account list
+    output_file: esxcli_system_account_list.txt
+  -
+    description: Display the current system clock parameters.
+    supported_os: [esxi]
+    collector: command
+    command: esxcli system clock get
+    output_file: esxcli_system_clock_get.txt
+  -
+    description: List permissions defined on the host.
+    supported_os: [esxi]
+    collector: command
+    command: esxcli system permission list
+    output_file: esxcli_system_permission_list.txt
+  -
+    description: Display the product name, version and build information.
+    supported_os: [esxi]
+    collector: command
+    command: esxcli system version get
+    output_file: esxcli_system_version_get.txt

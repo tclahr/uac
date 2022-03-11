@@ -33,7 +33,7 @@ get_system_arch()
     "aix"|"solaris")
       uname -p
       ;;
-    "android"|"freebsd"|"linux"|"macos"|"netbsd"|"netscaler"|"openbsd")
+    "android"|"esxi"|"freebsd"|"linux"|"macos"|"netbsd"|"netscaler"|"openbsd")
       uname -m
       ;;
   esac

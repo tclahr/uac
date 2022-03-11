@@ -61,6 +61,9 @@ get_operating_system()
     "SunOS")
       printf %b "solaris"
       ;;
+    "VMkernel")
+      printf %b "esxi"
+      ;;
     *)
       printf %b "${gs_kernel_name}"
       ;;

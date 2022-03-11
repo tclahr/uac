@@ -57,7 +57,7 @@ print_acquisition_log()
   shift
   pl_output_file_hash="${1:-}"
 
-  printf %b "Created by UAC (Unix-like Artifacts Collector) v${UAC_VERSION}\n\n"
+  printf %b "Created by UAC (Unix-like Artifacts Collector) ${UAC_VERSION}\n\n"
   
   printf %b "[Case Information]\n"
   printf %b "Case Number: ${pl_case_number}\n"

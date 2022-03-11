@@ -99,7 +99,7 @@ check_available_system_tools()
           STAT_BTIME_SUPPORT=true
         fi
       ;;
-      "android"|"linux"|"solaris")
+      "android"|"esxi"|"linux"|"solaris")
         if eval "stat -c \"0|%N|%i|%A|%u|%g|%s|%X|%Y|%Z|%W\" \"${MOUNT_POINT}\" \
              | grep -q -E \"\|[0-9]{2,}$\""; then
           STAT_BTIME_SUPPORT=true
@@ -109,7 +109,8 @@ check_available_system_tools()
   fi
 
   # check if 'statx' is available for the current system architecture
-  if [ "${OPERATING_SYSTEM}" = "linux" ]; then
+  if [ "${OPERATING_SYSTEM}" = "esxi" ] \
+    || [ "${OPERATING_SYSTEM}" = "linux" ]; then
     ca_arch=""
     case "${SYSTEM_ARCH}" in
       armv5*|armv6*|armv7*)

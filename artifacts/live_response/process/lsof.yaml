@@ -1,4 +1,4 @@
-version: 1.0
+version: 2.0
 artifacts:
   -
     description: Collect the list open files.
@@ -8,7 +8,7 @@ artifacts:
     output_file: lsof_-l.txt
   -
     description: Collect the list open files.
-    supported_os: [aix, freebsd, linux, macos, netscaler, openbsd, solaris]
+    supported_os: [aix, esxi, freebsd, linux, macos, netscaler, openbsd, solaris]
     collector: command
     command: lsof -nPl
     output_file: lsof_-nPl.txt

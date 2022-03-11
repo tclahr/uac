@@ -1,0 +1,51 @@
+version: 1.0
+artifacts:
+  -
+    description: List all of the CPUs on this host.
+    supported_os: [esxi]
+    collector: command
+    command: esxcli hardware cpu list
+    output_file: esxcli_hardware_cpu_list.txt
+  -
+    description: List usb devices and their passthrough status.
+    supported_os: [esxi]
+    collector: command
+    command: esxcli hardware usb passthrough device list
+    output_file: esxcli_hardware_usb_passthrough_device_list.txt
+  -
+    description: List the boot device order, if available, for this host.
+    supported_os: [esxi]
+    collector: command
+    command: esxcli hardware bootdevice list
+    output_file: esxcli_hardware_bootdevice_list.txt
+  -
+    description: Disply the current hardware clock time.
+    supported_os: [esxi]
+    collector: command
+    command: esxcli hardware clock get
+    output_file: esxcli_hardware_clock_get.txt
+  -
+    description: Get information about memory.
+    supported_os: [esxi]
+    collector: command
+    command: esxcli hardware memory get
+    output_file: esxcli_hardware_memory_get.txt
+  -
+    description: List all of the PCI devices on this host.
+    supported_os: [esxi]
+    collector: command
+    command: esxcli hardware pci list
+    output_file: esxcli_hardware_pci_list.txt
+  -
+    description: Get information about the platform.
+    supported_os: [esxi]
+    collector: command
+    command: esxcli hardware platform get
+    output_file: esxcli_hardware_platform_get.txt
+  -
+    description: Information about the status of trusted boot. (TPM, DRTM status).
+    supported_os: [esxi]
+    collector: command
+    command: esxcli hardware trustedboot get
+    output_file: esxcli_hardware_trustedboot_get.txt
+  

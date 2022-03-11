@@ -154,7 +154,7 @@ stat_collector()
             log_message COMMAND "| sort -u | sed -e \"s:':\\\':g\" -e 's:\":\\\\\":g' | xargs -I{} stat -f \"0|%N%SY|%i|%Sp|%u|%g|%z|%a|%m|%c|%B\" \"{}\""
           fi
           ;;
-        "android"|"linux"|"solaris")
+        "android"|"esxi"|"linux"|"solaris")
           # %N returns quoted file names, so single and double quotes, and back
           # apostrophe needs to be removed using 'sed'
 
@@ -239,7 +239,7 @@ stat_collector()
             log_message COMMAND "| sort -u | while read %line%; do stat -f \"0|%N%SY|%i|%Sp|%u|%g|%z|%a|%m|%c|%B\" \"%line%\"; done"
           fi
           ;;
-        "android"|"linux"|"solaris")
+        "android"|"esxi"|"linux"|"solaris")
           # %N returns quoted file names, so single and double quotes, and back 
           # apostrophe needs to be removed using 'sed'
 
