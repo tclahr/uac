@@ -37,6 +37,12 @@ artifacts:
     command: ls -l /proc/[0-9]*/path/a.out
     output_file: running_processes_full_paths.txt
   -
+    description: Collect the path to the current working directory of the process.
+    supported_os: [aix, android, linux, netbsd, solaris]
+    collector: command
+    command: ls -l /proc/[0-9]*/cwd
+    output_file: cwd.txt
+  -
     description: Collect the command name associated with a process.
     supported_os: [android, linux]
     collector: command
@@ -92,6 +98,22 @@ artifacts:
     command: ls -la /proc/%line%/fd
     output_directory: proc/%line%
     output_file: fd.txt
+  -
+    description: Collect the initial process' stack trace.
+    supported_os: [android, linux]
+    collector: command
+    loop_command: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
+    command: cat /proc/%line%/stack
+    output_directory: proc/%line%
+    output_file: stack.txt
+  -
+    description: Collect status information about the process.
+    supported_os: [android, linux, netbsd, netscaler]
+    collector: command
+    loop_command: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
+    command: cat /proc/%line%/status
+    output_directory: proc/%line%
+    output_file: status.txt
   -
     description: Collect running process information.
     supported_os: [aix, solaris]
