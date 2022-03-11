@@ -4,9 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## DEVELOPMENT VERSION
 
-### Added
+### New Features
 
-- VMware ESXi is now fully supported as an operating system. Note that ESXi is not built upon the Linux kernel, and uses its own VMware proprietary kernel (the VMkernel) and software. So it misses most of the applications and components that are commonly found in all Linux distributions.
+- VMware ESXi is now fully supported as an operating system. Note that ESXi is not built upon the Linux kernel, and uses its own VMware proprietary kernel (the VMkernel) and software. So it misses most of the applications and components that are commonly found in all Linux distributions ([#33](https://github.com/tclahr/uac/issues/33)).
 
 ### New Artifacts
 
