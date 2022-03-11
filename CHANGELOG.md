@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## DEVELOPMENT VERSION
 
-### Added
+### New Features
 
 - VMware ESXi is now fully supported as an operating system. Note that ESXi is not built upon the Linux kernel, and uses its own VMware proprietary kernel (the VMkernel) and software. So it misses most of the applications and components that are commonly found in all Linux distributions.
 
@@ -30,6 +30,10 @@ All notable changes to this project will be documented in this file.
   - live_response/network/lsof.yaml
   - live_response/network/netstat.yaml
   - live_response/storage/mount.yaml
+- The following new artifacts were added to 'live_response/process/procfs_information.yaml' ([#35](https://github.com/tclahr/uac/issues/35)):
+  - ls -l /proc/<PID>/cwd
+  - cat /proc/<PID>/stack
+  - cat /proc/<PID>/status
 
 ## 2.1.0 (2021-02-15)
 
