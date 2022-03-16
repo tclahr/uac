@@ -64,10 +64,16 @@ command_collector()
 
   # loop command
   if [ -n "${cc_loop_command}" ]; then
+
+    # create output directory if it does not exist
+    if [ ! -d  "${TEMP_DATA_DIR}/${cc_root_output_directory}" ]; then
+      mkdir -p "${TEMP_DATA_DIR}/${cc_root_output_directory}" >/dev/null
+    fi
+
     log_message COMMAND "${cc_loop_command}"
     eval "${cc_loop_command}" \
       >"${TEMP_DATA_DIR}/.loop_command.tmp" \
-      2>>"${TEMP_DATA_DIR}/${cc_root_output_directory}/${cc_output_file}.stderr"
+      2>>"${TEMP_DATA_DIR}/${cc_root_output_directory}/loop_command.stderr"
     
     if [ ! -s "${TEMP_DATA_DIR}/.loop_command.tmp" ]; then
       printf %b "command_collector: loop command returned zero lines: \
@@ -149,10 +155,10 @@ ${cc_loop_command}\n" >&2
 
         done
 
-    # add stderr file to the list of files to be archived within the 
-    # output file if it is not empty
-    if [ -s "${TEMP_DATA_DIR}/${cc_root_output_directory}/${cc_output_file}.stderr" ]; then
-      echo "${cc_root_output_directory}/${cc_output_file}.stderr" \
+    # add loop_command.stderr file to the list of files to be archived
+    # within the output file if it is not empty
+    if [ -s "${TEMP_DATA_DIR}/${cc_output_directory}/loop_command.stderr" ]; then
+      echo "${cc_output_directory}/loop_command.stderr" \
         >>"${TEMP_DATA_DIR}/.output_file.tmp"
     fi
  
