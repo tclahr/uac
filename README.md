@@ -50,6 +50,8 @@ UAC runs on any Unix-like system (regardless the processor architecture). All UA
 - OpenBSD
 - Solaris
 
+*Note that UAC even runs on systems like Network Attached Storage (NAS) devices, Network devices such as OpenWrt, and IoT devices.*
+
 ## Contributing
 
 Please read our [Contributing Guide](CONTRIBUTING.md) before submitting a Pull Request to the project.
