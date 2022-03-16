@@ -4,8 +4,8 @@ artifacts:
     description: Collect current running processes information.
     supported_os: [aix, android, linux, netbsd, netscaler]
     collector: command
-    command: ls -la /proc/[0-9]*
-    output_file: ls_-la_proc.txt
+    command: ls -l /proc/[0-9]*
+    output_file: ls_-l_proc.txt
   -
     description: Collect running processes executable path.
     supported_os: [freebsd, macos, openbsd]
@@ -36,6 +36,12 @@ artifacts:
     collector: command
     command: ls -l /proc/[0-9]*/path/a.out
     output_file: running_processes_full_paths.txt
+  -
+    description: Collect the path to the current working directory of the process.
+    supported_os: [aix, android, linux, netbsd, solaris]
+    collector: command
+    command: ls -l /proc/[0-9]*/cwd
+    output_file: ls_-l_proc_pid_cwd.txt
   -
     description: Collect the command name associated with a process.
     supported_os: [android, linux]
@@ -92,6 +98,22 @@ artifacts:
     command: ls -la /proc/%line%/fd
     output_directory: proc/%line%
     output_file: fd.txt
+  -
+    description: Collect the initial process' stack trace.
+    supported_os: [android, linux]
+    collector: command
+    loop_command: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
+    command: cat /proc/%line%/stack
+    output_directory: proc/%line%
+    output_file: stack.txt
+  -
+    description: Collect status information about the process.
+    supported_os: [android, linux, netbsd, netscaler]
+    collector: command
+    loop_command: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
+    command: cat /proc/%line%/status
+    output_directory: proc/%line%
+    output_file: status.txt
   -
     description: Collect running process information.
     supported_os: [aix, solaris]

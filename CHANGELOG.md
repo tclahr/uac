@@ -30,6 +30,10 @@ All notable changes to this project will be documented in this file.
   - live_response/network/lsof.yaml
   - live_response/network/netstat.yaml
   - live_response/storage/mount.yaml
+- The following new artifacts were added to 'live_response/process/procfs_information.yaml' ([#35](https://github.com/tclahr/uac/issues/35)):
+  - ls -l /proc/<PID>/cwd
+  - cat /proc/<PID>/stack
+  - cat /proc/<PID>/status
 
 ## 2.1.0 (2021-02-15)
 
