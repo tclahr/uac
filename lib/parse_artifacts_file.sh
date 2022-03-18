@@ -97,6 +97,10 @@ parse_artifacts_file()
           pa_value=`echo "${pa_value}" \
             | sed -e "s:%mount_point%:${MOUNT_POINT}:g"`
 
+          # replace %destination_directory% by ${TEMP_DATA_DIR}/${pa_root_output_directory} value
+          pa_value=`echo "${pa_value}" \
+            | sed -e "s:%destination_directory%:${TEMP_DATA_DIR}/${pa_root_output_directory}:g"`
+
           if [ -n "${START_DATE}" ]; then
             # replace %start_date% by ${START_DATE} value
             pa_value=`echo "${pa_value}" \
