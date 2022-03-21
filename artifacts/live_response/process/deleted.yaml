@@ -27,3 +27,14 @@ artifacts:
     command: dd if=/proc/%line% of=%output_file% conv=swab bs=1024 count=50000
     output_directory: proc/%line%
     output_file: recovered_file.dd.swab
+  -
+    description: Collect the binary of (malicious) processes after they have been deleted.
+    # the collection will be limited to the first 50M of data only.
+    # this is to avoid dd hitting an invalid file descriptor (such as /dev/null) and generating an endless output file
+    supported_os: [solaris]
+    collector: command
+    loop_command: ls -l /proc/[0-9]*/path/a.out | grep -E "a\.out$" | awk -F"/proc/|/path/" '{print $2}'
+    command: dd if=/proc/%line%/object/a.out of=%output_file% conv=swab bs=1024 count=50000
+    output_directory: proc/%line%
+    output_file: recovered_a.out.dd.swab
+
