@@ -13,7 +13,7 @@
 # limitations under the License.
 
 ###############################################################################
-# Print acquisition log.
+# Create the acquisition log.
 # Globals:
 #   MOUNT_POINT
 #   OPERATING_SYSTEM
@@ -31,52 +31,60 @@
 #   $7: acquisition start date
 #   $8: acquisition end date
 #   $9: output file computed hash
+#   $10: destination directory
+#   $11: output file
 # Outputs:
-#   Write acquisition log to stdout.
+#   None
 # Exit Status:
 #   Exit with status 0 on success.
 #   Exit with status greater than 0 if errors occur.
 ###############################################################################
-print_acquisition_log()
+create_acquisition_log()
 {
-  pl_case_number="${1:-}"
+  cl_case_number="${1:-}"
   shift
-  pl_evidence_number="${1:-}"
+  cl_evidence_number="${1:-}"
   shift
-  pl_description="${1:-}"
+  cl_description="${1:-}"
   shift
-  pl_examiner="${1:-}"
+  cl_examiner="${1:-}"
   shift
-  pl_notes="${1:-}"
+  cl_notes="${1:-}"
   shift
-  pl_hostname="${1:-}"
+  cl_hostname="${1:-}"
   shift
-  pl_acquisition_start_date="${1:-}"
+  cl_acquisition_start_date="${1:-}"
   shift
-  pl_acquisition_end_date="${1:-}"
+  cl_acquisition_end_date="${1:-}"
   shift
-  pl_output_file_hash="${1:-}"
+  cl_output_file_hash="${1:-}"
+  shift
+  cl_destination_directory="${1:-}"
+  shift
+  cl_output_file="${1:-}"
 
-  printf %b "Created by UAC (Unix-like Artifacts Collector) ${UAC_VERSION}\n\n"
-  
-  printf %b "[Case Information]\n"
-  printf %b "Case Number: ${pl_case_number}\n"
-  printf %b "Evidence Number: ${pl_evidence_number}\n"
-  printf %b "Description: ${pl_description}\n"
-  printf %b "Examiner: ${pl_examiner}\n"
-  printf %b "Notes: ${pl_notes}\n\n"
-  
-  printf %b "[System Information]\n"
-  printf %b "Operating System: ${OPERATING_SYSTEM}\n"
-  printf %b "System Architecture: ${SYSTEM_ARCH}\n"
-  printf %b "Hostname: ${pl_hostname}\n\n"
-  
-  printf %b "[Acquisition Information]\n"
-  printf %b "Mount Point: ${MOUNT_POINT}\n"
-  printf %b "Acquisition started at: ${pl_acquisition_start_date}\n"
-  printf %b "Acquisition finished at: ${pl_acquisition_end_date}\n\n"
+  cat >"${cl_destination_directory}/${cl_output_file}" << EOF
+Created by UAC (Unix-like Artifacts Collector) ${UAC_VERSION}
 
-  printf %b "[Output File MD5 Computed Hash]\n"
-  printf %b "${pl_output_file_hash}\n\n"
+[Case Information]
+Case Number: ${cl_case_number}
+Evidence Number: ${cl_evidence_number}
+Description: ${cl_description}
+Examiner: ${cl_examiner}
+Notes: ${cl_notes}
+
+[System Information]
+Operating System: ${OPERATING_SYSTEM}
+System Architecture: ${SYSTEM_ARCH}
+Hostname: ${cl_hostname}
+
+[Acquisition Information]
+Mount Point: ${MOUNT_POINT}
+Acquisition started at: ${cl_acquisition_start_date}
+Acquisition finished at: ${cl_acquisition_end_date}
+
+[Output File MD5 Computed Hash]
+${cl_output_file_hash}
+EOF
 
 }

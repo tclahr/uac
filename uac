@@ -44,6 +44,7 @@ export PATH
 . "${UAC_DIR}/lib/check_available_system_tools.sh"
 . "${UAC_DIR}/lib/command_collector.sh"
 . "${UAC_DIR}/lib/copy_data.sh"
+. "${UAC_DIR}/lib/create_acquisition_log.sh"
 . "${UAC_DIR}/lib/file_collector.sh"
 . "${UAC_DIR}/lib/find_collector.sh"
 . "${UAC_DIR}/lib/find_wrapper.sh"
@@ -66,7 +67,6 @@ export PATH
 . "${UAC_DIR}/lib/lrstrip.sh"
 . "${UAC_DIR}/lib/parse_artifacts_file.sh"
 . "${UAC_DIR}/lib/parse_profile_file.sh"
-. "${UAC_DIR}/lib/print_acquisition_log.sh"
 . "${UAC_DIR}/lib/regex_match.sh"
 . "${UAC_DIR}/lib/regex_not_match.sh"
 . "${UAC_DIR}/lib/sanitize_filename.sh"
@@ -757,8 +757,8 @@ fi
 # acquisition log file name
 ua_acquisition_log="uac-${ua_hostname}-${OPERATING_SYSTEM}-${ua_current_date_time}.log"
 
-# print acquisition log to file
-print_acquisition_log \
+# create the acquisition log
+if create_acquisition_log \
   "${ua_case_number}" \
   "${ua_evidence_number}" \
   "${ua_evidence_description}" \
@@ -768,10 +768,12 @@ print_acquisition_log \
   "${ua_acq_start_date}" \
   "${ua_acq_end_date}" \
   "${ua_output_file_hash}" \
-    >"${ua_destination_dir}/${ua_acquisition_log}"
-
-printf %b "Acquisition log created \
-'${ua_destination_dir}/${ua_acquisition_log}'\n"
+  "${ua_destination_dir}" \
+  "${ua_acquisition_log}" 2>/dev/null; then
+  printf %b "Acquisition log created '${ua_destination_dir}/${ua_acquisition_log}'\n"
+else
+  printf %b "Cannot create acquisition log\n"
+fi
 
 # transfer output and log file to remote scp server
 if [ -n "${ua_sftp_destination}" ]; then
