@@ -36,7 +36,7 @@ usage()
              [--evidence-number EVIDENCE_NUMBER] [--examiner EXAMINER]
              [--notes NOTES] [--hostname HOSTNAME] [--stfp SERVER] 
              [--sftp-port PORT] [--sftp-identity-file FILE]
-             [--sftp-delete-local-on-success] [--debug]
+             [--delete-on-successful-transfer] [--debug]
    or: $0 --validate-artifacts-file FILE
 
 Optional Arguments:
@@ -105,7 +105,7 @@ Remote Transfer Arguments:
       --sftp-identity-file FILE
                     File from which the identity (private key) for public key
                     authentication is read.
-      --sftp-delete-local-on-success
+      --delete-on-successful-transfer
                     Delete local output file on successful transfer.
 
 Validation Arguments:
