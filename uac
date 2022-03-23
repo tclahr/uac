@@ -106,7 +106,7 @@ ua_hostname=""
 ua_sftp_destination=""
 ua_sftp_port=""
 ua_sftp_identity_file=""
-ua_sftp_delete_local_on_success=false
+ua_delete_on_successful_transfer=false
 ua_debug_mode=false
 ua_temp_data_dir_symlink_support=false
 
@@ -311,8 +311,8 @@ Try 'uac --help' for more information.\n" >&2
         exit 1
       fi
       ;;
-    "--sftp-delete-local-on-success")
-      ua_sftp_delete_local_on_success=true
+    "--delete-on-successful-transfer")
+      ua_delete_on_successful_transfer=true
       ;;
     # validation arguments
     "--validate-artifacts-file")
@@ -782,14 +782,14 @@ if [ -n "${ua_sftp_destination}" ]; then
     "${ua_sftp_destination}" "${ua_sftp_port}" "${ua_sftp_identity_file}"; then
     printf %b "File transferred successfully\n"
     # delete output file on success transfer
-    ${ua_sftp_delete_local_on_success} \
+    ${ua_delete_on_successful_transfer} \
       && rm -f "${ua_destination_dir}/${ua_output_file}" 2>/dev/null
     printf %b "Transferring log file to remote SFTP server. Please wait...\n"
     if sftp_transfer "${ua_destination_dir}/${ua_acquisition_log}" \
       "${ua_sftp_destination}" "${ua_sftp_port}" "${ua_sftp_identity_file}"; then
       printf %b "File transferred successfully\n"
       # delete log file on success transfer
-      ${ua_sftp_delete_local_on_success} \
+      ${ua_delete_on_successful_transfer} \
         && rm -f "${ua_destination_dir}/${ua_acquisition_log}" 2>/dev/null
     else
       printf %b "Could not transfer log file to remote SFTP server\n"
