@@ -7,6 +7,9 @@ All notable changes to this project will be documented in this file.
 ### New Features
 
 - VMware ESXi is now fully supported as an operating system. Note that ESXi is not built upon the Linux kernel, and uses its own VMware proprietary kernel (the VMkernel) and software. So it misses most of the applications and components that are commonly found in all Linux distributions ([#33](https://github.com/tclahr/uac/issues/33)).
+- Added '--s3-presigned-url' switch which allows for pushing the output file to S3 presigned URLs (if curl available).
+- Added '--s3-presigned-url-log-file' switch which allows for pushing the output log file to S3 presigned URLs (if curl available).
+- Added '--delete-local-on-successful-transfer' switch which will delete both local output and log files after they are successfully transferred either via sftp or to a presigned S3 URL.
 
 ### New Artifacts
 
@@ -31,9 +34,14 @@ All notable changes to this project will be documented in this file.
   - live_response/network/netstat.yaml
   - live_response/storage/mount.yaml
 - The following new artifacts were added to 'live_response/process/procfs_information.yaml' ([#35](https://github.com/tclahr/uac/issues/35)):
-  - ls -l /proc/<PID>/cwd
-  - cat /proc/<PID>/stack
-  - cat /proc/<PID>/status
+  - ls -l /proc/[pid]/cwd
+  - cat /proc/[pid]/stack
+  - cat /proc/[pid]/status
+
+### Deprecated
+
+- '-o' command line switch was replaced by '-s', and will be removed in the next release. So don't forget to update your documentation.
+- '--sftp-delete-local-on-success' command line switch was replaced by '--delete-local-on-successful-transfer'.
 
 ## 2.1.0 (2021-02-15)
 
