@@ -13,7 +13,7 @@
 # limitations under the License.
 
 ###############################################################################
-# Secure copy the source file to a remote destination.
+# Transfer file to SFTP server.
 # Globals:
 #   None
 # Requires:
@@ -35,18 +35,6 @@ sftp_transfer()
   sr_destination="${2:-}"
   sr_port="${3:-22}"
   sr_identity_file="${4:-}"
-  
-  # return if source is empty
-  if [ -z "${sr_source}" ]; then
-    printf %b "sftp_transfer: missing required argument: 'source'\n" >&2
-    return 2
-  fi
-
-  # return if destination is empty
-  if [ -z "${sr_destination}" ]; then
-    printf %b "sftp_transfer: missing required argument: 'destination'\n" >&2
-    return 3
-  fi
 
   if [ -n "${sr_identity_file}" ]; then
     sftp -P "${sr_port}" \
