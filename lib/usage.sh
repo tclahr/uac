@@ -60,7 +60,7 @@ Profiling Arguments:
                     Use '--artifacts list' to list available artifacts.
 
 Positional Arguments:
-  DESTINATION       Specify the directory the output file will be created in.
+  DESTINATION       Specify the directory the output file should be copied to.
 
 Collection Arguments:
   -m, --mount-point MOUNT_POINT
@@ -72,6 +72,8 @@ Collection Arguments:
   -u, --run-as-non-root
                     Disable root user check.
                     Note that data collection may be limited.
+      --hostname HOSTNAME
+                    Specify the target system hostname.
       --temp-dir PATH   
                     Write all temporary data to this directory.
 
@@ -94,8 +96,6 @@ Informational Arguments:
                     Specify the examiner name.
       --notes NOTES
                     Specify the notes.
-      --hostname HOSTNAME
-                    Specify the target system hostname.
 
 Remote Transfer Arguments:
       --sftp SERVER
