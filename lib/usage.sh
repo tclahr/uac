@@ -36,7 +36,8 @@ usage()
              [--evidence-number EVIDENCE_NUMBER] [--examiner EXAMINER]
              [--notes NOTES] [--hostname HOSTNAME] [--stfp SERVER] 
              [--sftp-port PORT] [--sftp-identity-file FILE]
-             [--delete-on-successful-transfer] [--debug]
+             [--s3-presigned-url URL] [--s3-presigned-url-log-file URL]
+             [--delete-local-on-successful-transfer] [--debug]
    or: $0 --validate-artifacts-file FILE
 
 Optional Arguments:
@@ -105,8 +106,12 @@ Remote Transfer Arguments:
       --sftp-identity-file FILE
                     File from which the identity (private key) for public key
                     authentication is read.
-      --delete-on-successful-transfer
-                    Delete local output file on successful transfer.
+      --s3-presigned-url URL
+                    Transfer output file to AWS S3 using a presigned URL.
+      --s3-presigned-url-log-file URL
+                    Transfer log file to AWS S3 using a presigned URL.
+      --delete-local-on-successful-transfer
+                    Delete local output and log files on successful transfer.
 
 Validation Arguments:
       --validate-artifacts-file FILE
