@@ -13,43 +13,41 @@
 # limitations under the License.
 
 ###############################################################################
-# Transfer file to SFTP server.
+# Test the connectivity to SFTP server.
 # Globals:
 #   None
 # Requires:
 #   None
 # Arguments:
-#   $1: source file
-#   $2: remote destination
-#   $3: remote port (default: 22)
-#   $4: identity file
+#   $1: remote destination
+#   $2: remote port (default: 22)
+#   $3: identity file
 # Outputs:
 #   None.
 # Exit Status:
 #   Exit with status 0 on success.
 #   Exit with status greater than 0 if errors occur.
 ###############################################################################
-sftp_transfer()
+sftp_transfer_test()
 {
-  sr_source="${1:-}"
-  sr_destination="${2:-}"
-  sr_port="${3:-22}"
-  sr_identity_file="${4:-}"
+  sf_destination="${1:-}"
+  sf_port="${2:-22}"
+  sf_identity_file="${3:-}"
 
-  if [ -n "${sr_identity_file}" ]; then
-    sftp -P "${sr_port}" \
+  if [ -n "${sf_identity_file}" ]; then
+    sftp -P "${sf_port}" \
       -o StrictHostKeyChecking=no \
       -o UserKnownHostsFile=/dev/null \
-      -i "${sr_identity_file}" \
-      "${sr_destination}" >/dev/null << EOF
-mput "${sr_source}"
+      -i "${sf_identity_file}" \
+      "${sf_destination}" >/dev/null << EOF
+pwd
 EOF
   else
-    sftp -P "${sr_port}" \
+    sftp -P "${sf_port}" \
       -o StrictHostKeyChecking=no \
       -o UserKnownHostsFile=/dev/null \
-      "${sr_destination}" >/dev/null << EOF
-mput "${sr_source}"
+      "${sf_destination}" >/dev/null << EOF
+pwd
 EOF
   fi 
 

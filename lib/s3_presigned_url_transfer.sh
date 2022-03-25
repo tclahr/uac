@@ -13,44 +13,32 @@
 # limitations under the License.
 
 ###############################################################################
-# Transfer file to SFTP server.
+# Transfer file to S3 presigned URL.
 # Globals:
 #   None
 # Requires:
 #   None
 # Arguments:
 #   $1: source file
-#   $2: remote destination
-#   $3: remote port (default: 22)
-#   $4: identity file
+#   $2: S3 presigned URL
 # Outputs:
 #   None.
 # Exit Status:
 #   Exit with status 0 on success.
 #   Exit with status greater than 0 if errors occur.
 ###############################################################################
-sftp_transfer()
+s3_presigned_url_transfer()
 {
-  sr_source="${1:-}"
-  sr_destination="${2:-}"
-  sr_port="${3:-22}"
-  sr_identity_file="${4:-}"
+  pu_source="${1:-}"
+  pu_s3_presigned_url="${2:-}"
 
-  if [ -n "${sr_identity_file}" ]; then
-    sftp -P "${sr_port}" \
-      -o StrictHostKeyChecking=no \
-      -o UserKnownHostsFile=/dev/null \
-      -i "${sr_identity_file}" \
-      "${sr_destination}" >/dev/null << EOF
-mput "${sr_source}"
-EOF
-  else
-    sftp -P "${sr_port}" \
-      -o StrictHostKeyChecking=no \
-      -o UserKnownHostsFile=/dev/null \
-      "${sr_destination}" >/dev/null << EOF
-mput "${sr_source}"
-EOF
-  fi 
+  curl \
+    --fail \
+    --request PUT \
+    --header "Content-Type: application/text" \
+    --header "Accept: */*" \
+    --header "Expect: 100-continue" \
+    --upload-file "${pu_source}" \
+    "${pu_s3_presigned_url}"
 
 }

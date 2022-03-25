@@ -69,8 +69,11 @@ export PATH
 . "${UAC_DIR}/lib/parse_profile_file.sh"
 . "${UAC_DIR}/lib/regex_match.sh"
 . "${UAC_DIR}/lib/regex_not_match.sh"
+. "${UAC_DIR}/lib/s3_presigned_url_transfer_test.sh"
+. "${UAC_DIR}/lib/s3_presigned_url_transfer.sh"
 . "${UAC_DIR}/lib/sanitize_filename.sh"
 . "${UAC_DIR}/lib/sanitize_path.sh"
+. "${UAC_DIR}/lib/sftp_transfer_test.sh"
 . "${UAC_DIR}/lib/sftp_transfer.sh"
 . "${UAC_DIR}/lib/sort_uniq_file.sh"
 . "${UAC_DIR}/lib/stat_collector.sh"
@@ -106,7 +109,9 @@ ua_hostname=""
 ua_sftp_destination=""
 ua_sftp_port=""
 ua_sftp_identity_file=""
-ua_sftp_delete_local_on_success=false
+ua_s3_presigned_url=""
+ua_s3_presigned_url_log_file=""
+ua_delete_local_on_successful_transfer=false
 ua_debug_mode=false
 ua_temp_data_dir_symlink_support=false
 
@@ -311,8 +316,28 @@ Try 'uac --help' for more information.\n" >&2
         exit 1
       fi
       ;;
-    "--sftp-delete-local-on-success")
-      ua_sftp_delete_local_on_success=true
+    "--s3-presigned-url")
+      if [ -n "${2}" ]; then
+        ua_s3_presigned_url="${2}"
+        shift
+      else
+        printf %b "uac: option '${1}' requires an argument.\n\
+Try 'uac --help' for more information.\n" >&2
+        exit 1
+      fi
+      ;;
+    "--s3-presigned-url-log-file")
+      if [ -n "${2}" ]; then
+        ua_s3_presigned_url_log_file="${2}"
+        shift
+      else
+        printf %b "uac: option '${1}' requires an argument.\n\
+Try 'uac --help' for more information.\n" >&2
+        exit 1
+      fi
+      ;;
+    "--delete-local-on-successful-transfer")
+      ua_delete_local_on_successful_transfer=true
       ;;
     # validation arguments
     "--validate-artifacts-file")
@@ -497,6 +522,31 @@ else
     ua_temp_data_dir_symlink_support=true
   fi
   TEMP_DATA_DIR="${ua_destination_dir}/uac-data.tmp"
+fi
+
+# test the connectivity to remote sftp server
+if [ -n "${ua_sftp_destination}" ]; then
+  if sftp_transfer_test "${ua_sftp_destination}" "${ua_sftp_port}" \
+    "${ua_sftp_identity_file}" >/dev/null; then
+    true
+  else
+    exit 1
+  fi
+fi
+
+# test the connectivity to s3 presigned url
+if [ -n "${ua_s3_presigned_url}" ]; then
+  if eval "curl --version" >/dev/null 2>/dev/null; then
+    if s3_presigned_url_transfer_test "${ua_s3_presigned_url}"; then
+      true
+    else
+      exit 1
+    fi
+  else
+    printf %b "uac: cannot transfer to S3 presigned URL because 'curl' \
+tool was not found.\n"
+    exit 1
+  fi
 fi
 
 # remove any existing (old) collected data
@@ -775,21 +825,21 @@ else
   printf %b "Cannot create acquisition log\n"
 fi
 
-# transfer output and log file to remote scp server
+# transfer output and log file to remote sftp server
 if [ -n "${ua_sftp_destination}" ]; then
   printf %b "Transferring output file to remote SFTP server. Please wait...\n"
   if sftp_transfer "${ua_destination_dir}/${ua_output_file}" \
     "${ua_sftp_destination}" "${ua_sftp_port}" "${ua_sftp_identity_file}"; then
     printf %b "File transferred successfully\n"
     # delete output file on success transfer
-    ${ua_sftp_delete_local_on_success} \
+    ${ua_delete_local_on_successful_transfer} \
       && rm -f "${ua_destination_dir}/${ua_output_file}" 2>/dev/null
     printf %b "Transferring log file to remote SFTP server. Please wait...\n"
     if sftp_transfer "${ua_destination_dir}/${ua_acquisition_log}" \
       "${ua_sftp_destination}" "${ua_sftp_port}" "${ua_sftp_identity_file}"; then
       printf %b "File transferred successfully\n"
       # delete log file on success transfer
-      ${ua_sftp_delete_local_on_success} \
+      ${ua_delete_local_on_successful_transfer} \
         && rm -f "${ua_destination_dir}/${ua_acquisition_log}" 2>/dev/null
     else
       printf %b "Could not transfer log file to remote SFTP server\n"
@@ -798,6 +848,34 @@ if [ -n "${ua_sftp_destination}" ]; then
   else
     printf %b "Could not transfer output file to remote SFTP server\n"
     exit 1
+  fi
+fi
+
+# transfer output and log file to s3 presigned url
+if [ -n "${ua_s3_presigned_url}" ]; then
+  printf %b "Transferring output file to S3 presigned URL. Please wait...\n"
+  if s3_presigned_url_transfer "${ua_destination_dir}/${ua_output_file}" \
+    "${ua_s3_presigned_url}"; then
+    printf %b "File transferred successfully\n"
+    # delete output file on success transfer
+    ${ua_delete_local_on_successful_transfer} \
+      && rm -f "${ua_destination_dir}/${ua_output_file}" 2>/dev/null
+  else
+    printf %b "Could not transfer output file to S3 presigned URL\n"
+    exit 1
+  fi
+  if [ -n "${ua_s3_presigned_url_log_file}" ]; then
+    printf %b "Transferring log file to S3 presigned URL. Please wait...\n"
+    if s3_presigned_url_transfer "${ua_destination_dir}/${ua_acquisition_log}" \
+      "${ua_s3_presigned_url_log_file}"; then
+      printf %b "File transferred successfully\n"
+      # delete output file on success transfer
+      ${ua_delete_local_on_successful_transfer} \
+        && rm -f "${ua_destination_dir}/${ua_acquisition_log}" 2>/dev/null
+    else
+      printf %b "Could not transfer log file to S3 presigned URL\n"
+      exit 1
+    fi
   fi
 fi
 
