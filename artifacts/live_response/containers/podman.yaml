@@ -25,6 +25,12 @@ artifacts:
     command: podman version
     output_file: podman_version.txt
   -
+    description: Display a live stream of one or more container’s resource usage statistics.
+    supported_os: [linux]
+    collector: command
+    command: podman stats --all --no-stream
+    output_file: podman_stats_--all_--no-stream.txt
+  -
     description: Fetch the logs of all containers.
     supported_os: [linux]
     collector: command

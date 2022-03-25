@@ -169,7 +169,7 @@ Must be one of the following:
 
 - **docs**: Documentation only changes.
 - **feat**: A new feature.
-- **artf**: A new artifact or changes to an existing one.
+- **artif**: A new artifact or changes to an existing one.
 - **fix**: A bug fix.
 - **perf**: A code change that improves performance.
 - **refactor**: A code change that neither fixes a bug nor adds a feature.

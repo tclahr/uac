@@ -24,6 +24,14 @@ All notable changes to this project will be documented in this file.
 - New artifact to collect ESXi log files located in /var/run/log directory (files/logs/var_run_log.yaml).
 - New artifact to collect the binary of (malicious) processes after they have been deleted (live_response/process/deleted.yaml).
 - New artifact to collect files of (malicious) processes after they have been deleted (live_response/process/deleted.yaml).
+- New artifacts added to 'live_response/process/procfs_information.yaml' ([#35](https://github.com/tclahr/uac/issues/35)):
+  - ls -l /proc/[pid]/cwd
+  - cat /proc/[pid]/stack
+  - cat /proc/[pid]/status
+- New artifact was added to 'live_response/containers/docker.yaml':
+  - docker stats --all --no-stream --no-trunc
+- New artifact was added to 'live_response/containers/podman.yaml':
+  - podman stats --all --no-stream
 
 ### Updated Artifacts
 
@@ -36,10 +44,6 @@ All notable changes to this project will be documented in this file.
   - live_response/network/lsof.yaml
   - live_response/network/netstat.yaml
   - live_response/storage/mount.yaml
-- The following new artifacts were added to 'live_response/process/procfs_information.yaml' ([#35](https://github.com/tclahr/uac/issues/35)):
-  - ls -l /proc/[pid]/cwd
-  - cat /proc/[pid]/stack
-  - cat /proc/[pid]/status
 
 ### Deprecated
 
