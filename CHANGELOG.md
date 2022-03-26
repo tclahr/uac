@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 - Added '--s3-presigned-url' switch which allows for pushing the output file to S3 presigned URLs (if curl available).
 - Added '--s3-presigned-url-log-file' switch which allows for pushing the output log file to S3 presigned URLs (if curl available).
 - Added '--delete-local-on-successful-transfer' switch which will delete both local output and log files after they are successfully transferred either via sftp or to a presigned S3 URL.
+- AVML was updated to v0.6.0.
 
 ### New Artifacts
 
