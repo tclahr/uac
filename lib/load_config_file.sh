@@ -78,6 +78,7 @@ load_config_file() {
   fi
   
   # check if hashes are valid
+  # shellcheck disable=SC2001
   lc_hash_algorithm=`echo "${HASH_ALGORITHM}" | sed -e 's:,: :g'`
   for lc_hash in ${lc_hash_algorithm}; do
     if is_element_in_list "${lc_hash}" "md5,sha1,sha256"; then

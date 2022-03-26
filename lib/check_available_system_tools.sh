@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# shellcheck disable=SC2034
+
 ###############################################################################
 # Check tools available on the target system. Also, checks for which parameters
 # are supported by find tool.

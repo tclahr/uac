@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# shellcheck disable=SC2001
+
 ###############################################################################
 # Collector that runs commands.
 # Globals:
@@ -87,6 +89,7 @@ ${cc_loop_command}\n" >&2
       log_message COMMAND "| sort -u | while read %line%; do ${cc_command}; done"
     fi
     
+    # shellcheck disable=SC2162
     sort -u <"${TEMP_DATA_DIR}/.loop_command.tmp" \
       | while read cc_line || [ -n "${cc_line}" ]; do
           

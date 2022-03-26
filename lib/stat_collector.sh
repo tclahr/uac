@@ -212,12 +212,14 @@ stat_collector()
         "freebsd"|"macos"|"netbsd"|"netscaler"|"openbsd")
           if ${_sc_is_file_list}; then
             log_message COMMAND "sort -u \"${_sc_path}\" | while read %line%; do stat -f \"0|%N%SY|%i|%Sp|%u|%g|%z|%a|%m|%c|%B\" \"%line%\"; done"
+            # shellcheck disable=SC2162
             sort -u "${_sc_path}" \
               | while read _sc_line || [ -n "${_sc_line}" ]; do
                   stat -f "0|%N%SY|%i|%Sp|%u|%g|%z|%a|%m|%c|%B" "${_sc_line}"
                 done \
                   >>"${TEMP_DATA_DIR}/${_sc_output_directory}/${_sc_output_file}"
           else
+            # shellcheck disable=SC2162
             find_wrapper \
               "${_sc_path}" \
               "${_sc_path_pattern}" \
@@ -248,6 +250,7 @@ stat_collector()
           # the question mark will be replaced by a zero character
           if ${_sc_is_file_list}; then
             log_message COMMAND "sort -u \"${_sc_path}\" | while read %line%; do stat -c \"0|%N|%i|%A|%u|%g|%s|%X|%Y|%Z|%W\" \"%line%\"; done"
+            # shellcheck disable=SC2162
             sort -u "${_sc_path}" \
               | while read _sc_line || [ -n "${_sc_line}" ]; do
                   stat -c "0|%N|%i|%A|%u|%g|%s|%X|%Y|%Z|%W" "${_sc_line}" \
@@ -262,6 +265,7 @@ stat_collector()
                 done \
                   >>"${TEMP_DATA_DIR}/${_sc_output_directory}/${_sc_output_file}"
           else
+            # shellcheck disable=SC2162
             find_wrapper \
               "${_sc_path}" \
               "${_sc_path_pattern}" \
@@ -361,12 +365,14 @@ stat_collector()
     else
       if ${_sc_is_file_list}; then
         log_message COMMAND "sort -u \"${_sc_path}\" | while read %line%; do statx \"%line%\"; done"
+        # shellcheck disable=SC2162
         sort -u "${_sc_path}" \
           | while read _sc_line || [ -n "${_sc_line}" ]; do
               statx "${_sc_line}"
             done \
               >>"${TEMP_DATA_DIR}/${_sc_output_directory}/${_sc_output_file}"
       else
+        # shellcheck disable=SC2162
         find_wrapper \
           "${_sc_path}" \
           "${_sc_path_pattern}" \
@@ -457,12 +463,14 @@ stat_collector()
     else
       if ${_sc_is_file_list}; then
         log_message COMMAND "sort -u \"${_sc_path}\" | while read %line%; do perl \"${UAC_DIR}/tools/stat.pl/stat.pl\" \"%line%\"; done"
+        # shellcheck disable=SC2162
         sort -u "${_sc_path}" \
           | while read _sc_line || [ -n "${_sc_line}" ]; do
               perl "${UAC_DIR}/tools/stat.pl/stat.pl" "${_sc_line}"
             done \
               >>"${TEMP_DATA_DIR}/${_sc_output_directory}/${_sc_output_file}"
       else
+        # shellcheck disable=SC2162
         find_wrapper \
           "${_sc_path}" \
           "${_sc_path_pattern}" \

@@ -71,6 +71,7 @@ validate_artifacts_file()
   # remove lines starting with # (comments)
   # remove inline comments
   # remove blank lines
+  # shellcheck disable=SC2162
   printf %b "\n-" | cat "${va_artifacts_file}" - \
     | sed -e 's/#.*$//g' -e '/^ *$/d' -e '/^$/d' 2>/dev/null \
     | while IFS=":" read va_key va_value || [ -n "${va_key}" ]; do

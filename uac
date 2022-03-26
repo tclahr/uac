@@ -14,6 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# shellcheck disable=SC1091,SC2181
+
 # remove all existing aliases
 unalias -a
 
@@ -119,6 +121,7 @@ ua_temp_data_dir_symlink_support=false
 load_config_file "${UAC_DIR}/config/uac.conf" || exit 1
 
 # get current command
+# shellcheck disable=SC2124
 ua_command_line="$0 $@"
 
 # parse command line arguments
@@ -192,6 +195,16 @@ Try 'uac --help' for more information.\n" >&2
       ;;
     "-u"|"--run-as-non-root")
       ua_run_as_non_root=true
+      ;;
+    "--hostname")
+      if [ -n "${2}" ]; then
+        ua_hostname="${2}"
+        shift
+      else
+        printf %b "uac: option '${1}' requires an argument.\n\
+Try 'uac --help' for more information.\n" >&2
+        exit 1
+      fi
       ;;
     "--temp-dir")
       if [ -n "${2}" ]; then
@@ -268,16 +281,6 @@ Try 'uac --help' for more information.\n" >&2
     "--notes")
       if [ -n "${2}" ]; then
         ua_notes="${2}"
-        shift
-      else
-        printf %b "uac: option '${1}' requires an argument.\n\
-Try 'uac --help' for more information.\n" >&2
-        exit 1
-      fi
-      ;;
-    "--hostname")
-      if [ -n "${2}" ]; then
-        ua_hostname="${2}"
         shift
       else
         printf %b "uac: option '${1}' requires an argument.\n\
@@ -421,11 +424,12 @@ if [ -n "${ua_artifacts}" ]; then
   for ua_artifact_file in ${ua_artifacts}; do
     ua_artifact_file=`echo "${ua_artifact_file}" | sed -e 's:^!::g' -e 's:\.\.::g'`
     if [ -n "${ua_artifact_file}" ]; then
+      # shellcheck disable=SC2086
       find "${UAC_DIR}"/artifacts/${ua_artifact_file} -name "*.yaml" \
         -type f -print >/dev/null 2>/dev/null
       if [ "$?" -gt 0 ]; then
         printf %b "uac: artifact file not found \
-  '"${UAC_DIR}"/artifacts/${ua_artifact_file}'\n" >&2
+  '${UAC_DIR}/artifacts/${ua_artifact_file}'\n" >&2
         exit 1
       fi
     else
@@ -449,7 +453,8 @@ if [ -n "${ua_temp_dir}" ] && [ ! -d "${ua_temp_dir}" ]; then
 fi
 
 # get absolute destination directory path
-cd "${ua_destination_dir}" && ua_destination_dir=`pwd` && cd "${UAC_DIR}"
+cd "${ua_destination_dir}" && ua_destination_dir=`pwd` && cd "${UAC_DIR}" \
+  || exit 1
 
 # get operating system if not set by --operating_system
 if [ -z "${OPERATING_SYSTEM}" ]; then
@@ -474,11 +479,12 @@ fi
 # check if start and end dates are valid
 if [ -n "${START_DATE}" ]; then
   START_DATE_EPOCH=`get_epoch_date "${START_DATE}"` || exit 1
-  #get_days_since_date_until_now "${START_DATE}"
+  # shellcheck disable=SC2034
   START_DATE_DAYS=`get_days_since_date_until_now "${START_DATE}"`
 fi
 if [ -n "${END_DATE}" ]; then
   END_DATE_EPOCH=`get_epoch_date "${END_DATE}"` || exit 1
+  # shellcheck disable=SC2034
   END_DATE_DAYS=`get_days_since_date_until_now "${END_DATE}"`
   if [ "${START_DATE_EPOCH}" -gt "${END_DATE_EPOCH}" ]; then
     printf %b "uac: start date cannot be greater than end date.\n" >&2
@@ -570,6 +576,7 @@ fi
 trap terminate INT
 
 # set log files
+# shellcheck disable=SC2034
 UAC_LOG_FILE="${TEMP_DATA_DIR}/uac.log"
 UAC_STDERR_LOG_FILE="${TEMP_DATA_DIR}/uac.log.stderr"
 
@@ -677,8 +684,10 @@ else
 fi
 
 # get all user/home list
+# shellcheck disable=SC2034
 USER_HOME_LIST=`get_user_home_list 2>>"${UAC_STDERR_LOG_FILE}"`
 # get user/home list skipping users with non-interactive shells
+# shellcheck disable=SC2034
 VALID_SHELL_ONLY_USER_HOME_LIST=`get_user_home_list true 2>>"${UAC_STDERR_LOG_FILE}"`
 
 # acquisition start date
@@ -695,6 +704,7 @@ ua_progress_total=`wc -l "${TEMP_DATA_DIR}/.artifacts.tmp" | awk '{print $1}'`
 # enable debug mode if it is set to true
 ${ua_debug_mode} && set -x
 
+# shellcheck disable=SC2162
 while read ua_artifact_file || [ -n "${ua_artifact_file}" ]; do
   log_message INFO "Parsing artifacts file '${ua_artifact_file}'"
   ua_progress_current=`expr ${ua_progress_current} + 1`
@@ -716,7 +726,7 @@ ua_acq_end_date_epoch=`get_epoch_date 2>>"${UAC_STDERR_LOG_FILE}"`
 ua_current_date_time=`date "+%Y%m%d%H%M%S"`
 
 # calculate running time
-ua_total_running_time=`expr ${ua_acq_end_date_epoch} - ${ua_acq_start_date_epoch}`
+ua_total_running_time=`expr "${ua_acq_end_date_epoch}" - "${ua_acq_start_date_epoch}"`
 
 printf %b "--------------------------------------------------------------------------------\n"
 log_message INFO "Artifacts collection complete. \
@@ -758,11 +768,11 @@ if ${TAR_TOOL_AVAILABLE} && ${GZIP_TOOL_AVAILABLE}; then
   printf %b "Creating output file. Please wait...\n"
   ua_output_file="uac-${ua_hostname}-${OPERATING_SYSTEM}-${ua_current_date_time}.tar.gz"
   
-  cd "${TEMP_DATA_DIR}"
+  cd "${TEMP_DATA_DIR}" || exit 1
   if archive_compress_data ".output_file.tmp" \
     "${ua_destination_dir}/${ua_output_file}" 2>/dev/null; then
     printf %b "Output file created '${ua_destination_dir}/${ua_output_file}'\n"
-    cd "${UAC_DIR}"
+    cd "${UAC_DIR}" || exit 1
     rm -rf "${TEMP_DATA_DIR}" >/dev/null 2>/dev/null
     if [ -d "${TEMP_DATA_DIR}" ]; then
         printf %b "Cannot remove temporary directory '${TEMP_DATA_DIR}'\n"
@@ -778,11 +788,11 @@ elif ${TAR_TOOL_AVAILABLE}; then
   printf %b "Creating output file. Please wait...\n"
   ua_output_file="uac-${ua_hostname}-${OPERATING_SYSTEM}-${ua_current_date_time}.tar"
 
-  cd "${TEMP_DATA_DIR}"
+  cd "${TEMP_DATA_DIR}" || exit 1
   if archive_data ".output_file.tmp" \
     "${ua_destination_dir}/${ua_output_file}" 2>/dev/null; then
     printf %b "Output file created '${ua_destination_dir}/${ua_output_file}'\n"
-    cd "${UAC_DIR}"
+    cd "${UAC_DIR}" || exit 1
     rm -rf "${TEMP_DATA_DIR}" >/dev/null 2>/dev/null
     if [ -d "${TEMP_DATA_DIR}" ]; then
         printf %b "Cannot remove temporary directory '${TEMP_DATA_DIR}'\n"
@@ -799,9 +809,9 @@ ua_output_file_hash=""
 # hash output file
 if [ -f "${ua_destination_dir}/${ua_output_file}" ]; then
   printf %b "Hashing output file. Please wait...\n"
-  cd "${ua_destination_dir}"
+  cd "${ua_destination_dir}" || exit 1
   ua_output_file_hash=`${MD5_HASHING_TOOL} "${ua_output_file}"`
-  cd "${UAC_DIR}"
+  cd "${UAC_DIR}" || exit 1
 fi
 
 # acquisition log file name
