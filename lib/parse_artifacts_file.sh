@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# shellcheck disable=SC2001
+
 ###############################################################################
 # Parse artifacts file.
 # Globals:
@@ -81,6 +83,7 @@ parse_artifacts_file()
   # remove lines starting with # (comments)
   # remove inline comments
   # remove blank lines
+  # shellcheck disable=SC2162
   printf %b "\n-" | cat "${pa_artifacts_file}" - \
     | sed -e 's/#.*$//g' -e '/^ *$/d' -e '/^$/d' 2>/dev/null \
     | while IFS=":" read pa_key pa_value || [ -n "${pa_key}" ]; do
@@ -203,6 +206,7 @@ sequence of mappings\n" >&2
             # skip if artifact does not apply to the current operating system
             if is_element_in_list "${OPERATING_SYSTEM}" "${pa_supported_os}" \
               || is_element_in_list "all" "${pa_supported_os}"; then
+              # shellcheck disable=SC2034
               pa_do_nothing=true
             else
               _cleanup_local_vars

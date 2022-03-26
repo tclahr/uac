@@ -48,6 +48,7 @@ directory: '${vp_profile_file}'\n" >&2
   # remove lines starting with # (comments)
   # remove inline comments
   # remove blank lines
+  # shellcheck disable=SC2162
   printf %b "\n__end__" | cat "${vp_profile_file}" - \
     | sed -e 's/#.*$//g' -e '/^ *$/d' -e '/^$/d' 2>/dev/null \
     | while IFS=":" read vp_key vp_value || [ -n "${vp_key}" ]; do
@@ -86,6 +87,7 @@ mapping.\n" >&2
               return 6
             fi
             # extract file name from artifacts array
+            # shellcheck disable=SC2001
             vp_artifact_file=`echo "${vp_key}" | sed -e 's: *- *::g'`
             if [ -z "${vp_artifact_file}" ]; then
               printf %b "uac: profile file: invalid empty artifact \
@@ -94,17 +96,20 @@ entry.\n" >&2
             fi
 
             if echo "${vp_artifact_file}" | grep -q -E "^!" 2>/dev/null; then
+              # shellcheck disable=SC2001
               vp_artifact_file=`echo "${vp_artifact_file}" | sed -e 's:^!::g'`
             else
               vp_include_artifacts_file=true
             fi
             vp_artifacts_file_prop=true
 
+            # shellcheck disable=SC2086
             find "${UAC_DIR}"/artifacts/${vp_artifact_file} -name "*.yaml" \
               -type f -print >/dev/null 2>/dev/null
+            # shellcheck disable=SC2181
             if [ "$?" -gt 0 ]; then
               printf %b "uac: profile file: no such \
-file or directory: '"${UAC_DIR}"/artifacts/${vp_artifact_file}'\n" >&2
+file or directory: '${UAC_DIR}/artifacts/${vp_artifact_file}'\n" >&2
               return 8
             fi
             ;;

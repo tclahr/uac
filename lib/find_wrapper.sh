@@ -356,6 +356,7 @@ ${fw_find_perm_param} \
 ${fw_find_date_range_param} -print"
     else
       # if operators are not supported, 'find' will be run for each -name value
+      # shellcheck disable=SC2162
       echo "${fw_name_pattern}" \
         | sed -e 's:\\,:#_COMMA_#:g' -e 's: *,:,:g' -e 's:, *:,:g' \
           -e 's:, *:,:g' -e 's:^,*::' \

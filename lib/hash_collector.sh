@@ -175,6 +175,7 @@ ${GLOBAL_EXCLUDE_NAME_PATTERN}"
         log_message COMMAND "sort -u \"${hc_path}\" | sed -e \"s:':\\\':g\" -e 's:\":\\\\\":g' | xargs -I{} ${MD5_HASHING_TOOL} \"{}\""
         # sort and uniq
         # escape single and double quotes
+        # shellcheck disable=SC2086
         sort -u "${hc_path}" \
           | sed -e "s:':\\\':g" -e 's:":\\\":g' \
           | xargs -I{} ${MD5_HASHING_TOOL} "{}" \
@@ -184,6 +185,7 @@ ${GLOBAL_EXCLUDE_NAME_PATTERN}"
         # find
         # sort and uniq
         # escape single and double quotes
+        # shellcheck disable=SC2086
         find_wrapper \
           "${hc_path}" \
           "${hc_path_pattern}" \
@@ -209,6 +211,7 @@ ${GLOBAL_EXCLUDE_NAME_PATTERN}"
     else
       if ${hc_is_file_list}; then
         log_message COMMAND "sort -u \"${hc_path}\" | while read %line%; do ${MD5_HASHING_TOOL} \"%line%\""
+        # shellcheck disable=SC2162
         sort -u "${hc_path}" \
           | while read hc_line || [ -n "${hc_line}" ]; do
               ${MD5_HASHING_TOOL} "${hc_line}"
@@ -216,6 +219,7 @@ ${GLOBAL_EXCLUDE_NAME_PATTERN}"
               >>"${TEMP_DATA_DIR}/${hc_output_directory}/${hc_output_file}.md5" \
               2>>"${TEMP_DATA_DIR}/${hc_output_directory}/${hc_output_file}.md5.stderr"
       else
+        # shellcheck disable=SC2162
         find_wrapper \
           "${hc_path}" \
           "${hc_path_pattern}" \
@@ -266,6 +270,7 @@ ${GLOBAL_EXCLUDE_NAME_PATTERN}"
         log_message COMMAND "sort -u \"${hc_path}\" | sed -e \"s:':\\\':g\" -e 's:\":\\\\\":g' | xargs -I{} ${SHA1_HASHING_TOOL} \"{}\""
         # sort and uniq
         # escape single and double quotes
+        # shellcheck disable=SC2086
         sort -u "${hc_path}" \
           | sed -e "s:':\\\':g" -e 's:":\\\":g' \
           | xargs -I{} ${SHA1_HASHING_TOOL} "{}" \
@@ -275,6 +280,7 @@ ${GLOBAL_EXCLUDE_NAME_PATTERN}"
         # find
         # sort and uniq
         # escape single and double quotes
+        # shellcheck disable=SC2086
         find_wrapper \
           "${hc_path}" \
           "${hc_path_pattern}" \
@@ -299,6 +305,7 @@ ${GLOBAL_EXCLUDE_NAME_PATTERN}"
     else
       if ${hc_is_file_list}; then
         log_message COMMAND "sort -u \"${hc_path}\" | while read %line%; do ${SHA1_HASHING_TOOL} \"%line%\""
+        # shellcheck disable=SC2162
         sort -u "${hc_path}" \
           | while read hc_line || [ -n "${hc_line}" ]; do
               ${SHA1_HASHING_TOOL} "${hc_line}"
@@ -306,6 +313,7 @@ ${GLOBAL_EXCLUDE_NAME_PATTERN}"
               >>"${TEMP_DATA_DIR}/${hc_output_directory}/${hc_output_file}.sha1" \
               2>>"${TEMP_DATA_DIR}/${hc_output_directory}/${hc_output_file}.sha1.stderr"
       else
+        # shellcheck disable=SC2162
         find_wrapper \
           "${hc_path}" \
           "${hc_path_pattern}" \
@@ -356,6 +364,7 @@ ${GLOBAL_EXCLUDE_NAME_PATTERN}"
         log_message COMMAND "sort -u \"${hc_path}\" | sed -e \"s:':\\\':g\" -e 's:\":\\\\\":g' | xargs -I{} ${SHA256_HASHING_TOOL} \"{}\""
         # sort and uniq
         # escape single and double quotes
+        # shellcheck disable=SC2086
         sort -u "${hc_path}" \
           | sed -e "s:':\\\':g" -e 's:":\\\":g' \
           | xargs -I{} ${SHA256_HASHING_TOOL} "{}" \
@@ -365,6 +374,7 @@ ${GLOBAL_EXCLUDE_NAME_PATTERN}"
         # find
         # sort and uniq
         # escape single and double quotes
+        # shellcheck disable=SC2086
         find_wrapper \
           "${hc_path}" \
           "${hc_path_pattern}" \
@@ -389,6 +399,7 @@ ${GLOBAL_EXCLUDE_NAME_PATTERN}"
     else
       if ${hc_is_file_list}; then
         log_message COMMAND "sort -u \"${hc_path}\" | while read %line%; do ${SHA256_HASHING_TOOL} \"%line%\""
+        # shellcheck disable=SC2162
         sort -u "${hc_path}" \
           | while read hc_line || [ -n "${hc_line}" ]; do
               ${SHA256_HASHING_TOOL} "${hc_line}"
@@ -396,6 +407,7 @@ ${GLOBAL_EXCLUDE_NAME_PATTERN}"
               >>"${TEMP_DATA_DIR}/${hc_output_directory}/${hc_output_file}.sha256" \
               2>>"${TEMP_DATA_DIR}/${hc_output_directory}/${hc_output_file}.sha256.stderr"
       else
+        # shellcheck disable=SC2162
         find_wrapper \
           "${hc_path}" \
           "${hc_path_pattern}" \
