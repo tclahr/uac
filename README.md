@@ -7,7 +7,7 @@
 Unix-like Artifacts Collector
 </pre>
 <p align="center">
-  <a href="https://github.com/tclahr/uac/issues"><img src="https://img.shields.io/github/issues/tclahr/uac" alt="GitHub Issues" /></a>
+  <a href="https://github.com/tclahr/uac/issues"><img src="https://img.shields.io/github/issues-raw/tclahr/uac" alt="GitHub Issues" /></a>
   <a href="https://github.com/tclahr/uac/issues?q=is%3Aissue+is%3Aclosed"><img src="https://img.shields.io/github/issues-closed-raw/tclahr/uac" alt="GitHub Closed Issues" /></a>
   <a href="https://github.com/tclahr/uac/releases"><img src="https://img.shields.io/github/v/release/tclahr/uac" alt="GitHub Release" /></a>
   <a href="https://github.com/tclahr/uac/blob/main/LICENSE"><img src="https://img.shields.io/github/license/tclahr/uac" alt="License" /></a>
