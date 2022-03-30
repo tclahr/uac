@@ -31,8 +31,16 @@ All notable changes to this project will be documented in this file.
   - cat /proc/[pid]/status
 - New artifact was added to 'live_response/containers/docker.yaml':
   - docker stats --all --no-stream --no-trunc
+  - docker network ls
+  - docker network inspect [network_id]
+  - docker volume ls
+  - docker volume inspect [volume_name]
 - New artifact was added to 'live_response/containers/podman.yaml':
   - podman stats --all --no-stream
+  - podman network ls
+  - podman network inspect [network_id]
+  - podman volume ls
+  - podman volume inspect [volume_name]
 
 ### Updated Artifacts
 
