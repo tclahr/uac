@@ -16,6 +16,9 @@
 
 # shellcheck disable=SC1091,SC2181
 
+# treat unset variables as an error when substituting
+set -u
+
 # remove all existing aliases
 unalias -a
 
@@ -373,9 +376,6 @@ Try 'uac --help' for more information.\n" >&2
   esac
   shift
 done
-
-# treat unset variables as an error when substituting
-set -u
 
 # print available profiles
 if [ -n "${ua_profile}" ] && [ "${ua_profile}" = "list" ]; then
