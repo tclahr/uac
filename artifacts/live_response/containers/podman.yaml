@@ -34,28 +34,53 @@ artifacts:
     description: Fetch the logs of all containers.
     supported_os: [linux]
     collector: command
-    loop_command: podman container ps -all | sed 1d | awk '{print $1}'
+    loop_command: podman container ps --all | sed 1d | awk '{print $1}'
     command: podman container logs %line%
     output_file: podman_container_logs_%line%.txt
   -
     description: Return low-level information on Docker objects.
     supported_os: [linux]
     collector: command
-    loop_command: podman container ps -all | sed 1d | awk '{print $1}'
+    loop_command: podman container ps --all | sed 1d | awk '{print $1}'
     command: podman inspect %line%
     output_file: podman_inspect_%line%.txt
   -
     description: Display detailed information on one or more networks.
     supported_os: [linux]
     collector: command
-    loop_command: podman container ps -all | sed 1d | awk '{print $1}'
+    loop_command: podman container ps --all | sed 1d | awk '{print $1}'
     command: podman network inspect %line%
     output_file: podman_network_inspect_%line%.txt
   -
     description: Display the running processes of all containers.
     supported_os: [linux]
     collector: command
-    loop_command: podman ps | sed 1d | awk '{print $1}'
+    loop_command: podman container ps --all | sed 1d | awk '{print $1}'
     command: podman top %line%
     output_file: podman_top_%line%.txt
-    
+  -
+    description: List all networks.
+    supported_os: [linux]
+    collector: command
+    command: podman network ls
+    output_file: podman_network_ls.txt
+  -
+    description: Displays the raw CNI network configuration for all networks.
+    supported_os: [linux]
+    collector: command
+    loop_command: podman network ls | sed 1d | awk '{print $1}'
+    command: podman network inspect %line%
+    output_file: podman_network_inspect_%line%.txt
+  -
+    description: List all volumes.
+    supported_os: [linux]
+    collector: command
+    command: podman volume ls
+    output_file: podman_volume_ls.txt
+  -
+    description: Display detailed information about all volumes.
+    supported_os: [linux]
+    collector: command
+    loop_command: podman volume ls | sed 1d | awk '{print $2}'
+    command: podman volume inspect %line%
+    output_file: podman_volume_inspect_%line%.txt
