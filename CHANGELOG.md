@@ -35,12 +35,14 @@ All notable changes to this project will be documented in this file.
   - docker network inspect [network_id]
   - docker volume ls
   - docker volume inspect [volume_name]
+  - docker diff [container_id]
 - New artifact was added to 'live_response/containers/podman.yaml':
   - podman stats --all --no-stream
   - podman network ls
   - podman network inspect [network_id]
   - podman volume ls
   - podman volume inspect [volume_name]
+  - podman diff [container_id]
 
 ### Updated Artifacts
 
