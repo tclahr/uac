@@ -84,3 +84,10 @@ artifacts:
     loop_command: docker volume ls | sed 1d | awk '{print $2}'
     command: docker volume inspect %line%
     output_file: docker_volume_inspect_%line%.txt
+  -
+    description: Display changes in the container filesystem since its creation.
+    supported_os: [linux]
+    collector: command
+    loop_command: docker container ps --all | sed 1d | awk '{print $1}'
+    command: docker diff %line%
+    output_file: docker_diff_%line%.txt
