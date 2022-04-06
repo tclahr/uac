@@ -81,7 +81,6 @@ get_user_home_list()
   fi
 
   # ChomeOS has '/home/.shadow' directory
-  #gu_user_home_dir=`sanitize_path "${MOUNT_POINT}/home/.shadow"`
   gu_user_home_dir="/home/.shadow"
   if [ -d "${MOUNT_POINT}/${gu_user_home_dir}" ]; then
     echo "shadow:${gu_user_home_dir}" >>"${TEMP_DATA_DIR}/.user_home_list.tmp"
