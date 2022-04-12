@@ -6,13 +6,13 @@
 
 UAC is a Live Response collection script for Incident Response that makes use of native binaries and tools to automate the collection of AIX, Android, ESXi, FreeBSD, Linux, macOS, NetBSD, NetScaler, OpenBSD and Solaris systems artifacts. It was created to facilitate and speed up data collection, and depend less on remote support during incident response engagements.
 
-[Documentation](#📘-documentation) •
-[Main Features](#⭐️-main-features) •
-[Supported Operating Systems](#💾-supported-operating-systems) •
-[Using UAC](#🚀-using-uac) •
-[Contributing](#💙-contributing) •
-[Support](#👨‍💻-community-support) •
-[License](#📜-license)
+[Documentation](https://github.com/tclahr/uac#-documentation) •
+[Main Features](https://github.com/tclahr/uac#-main-features) •
+[Supported Operating Systems](https://github.com/tclahr/uac#-supported-operating-systems) •
+[Using UAC](https://github.com/tclahr/uac#-using-uac) •
+[Contributing](https://github.com/tclahr/uac#-contributing) •
+[Support](https://github.com/tclahr/uac#-community-support) •
+[License](https://github.com/tclahr/uac#-license)
 
 ![Imgur](https://i.imgur.com/1aEnAyA.gif)
 
