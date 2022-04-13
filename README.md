@@ -1,8 +1,8 @@
 ## Unix-like Artifacts Collector
 
-![GitHub issues](https://img.shields.io/github/issues/tclahr/uac)
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/tclahr/uac)
-![GitHub](https://img.shields.io/github/license/tclahr/uac)
+[![GitHub issues](https://img.shields.io/github/issues/tclahr/uac?style=flat-square)](https://github.com/tclahr/uac/issues)
+[![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/tclahr/uac?include_prereleases&style=flat-square)](https://github.com/tclahr/uac/releases)
+[![GitHub](https://img.shields.io/github/license/tclahr/uac?style=flat-square)](LICENSE)
 
 UAC is a Live Response collection script for Incident Response that makes use of native binaries and tools to automate the collection of AIX, Android, ESXi, FreeBSD, Linux, macOS, NetBSD, NetScaler, OpenBSD and Solaris systems artifacts. It was created to facilitate and speed up data collection, and depend less on remote support during incident response engagements.
 
@@ -42,16 +42,16 @@ Project documentation page: [https://tclahr.github.io/uac-docs](https://tclahr.g
 
 UAC runs on any Unix-like system (regardless the processor architecture). All UAC needs is shell :)
 
-![AIX](https://img.shields.io/static/v1?label=&message=AIX&color=brightgreen&style=for-the-badge)
-![Android](https://img.shields.io/static/v1?label=&message=Android&color=green&style=for-the-badge)
-![ESXi](https://img.shields.io/static/v1?label=&message=ESXi&color=blue&style=for-the-badge)
-![FreeBSD](https://img.shields.io/static/v1?label=&message=FreeBSD&color=red&style=for-the-badge)
-![Linux](https://img.shields.io/static/v1?label=&message=Linux&color=lightgray&style=for-the-badge)
-![macOS](https://img.shields.io/static/v1?label=&message=macOS&color=blueviolet&style=for-the-badge)
-![NetBSD](https://img.shields.io/static/v1?label=&message=NetBSD&color=orange&style=for-the-badge)
-![NetScaler](https://img.shields.io/static/v1?label=&message=NetScaler&color=blue&style=for-the-badge)
-![OpenBSD](https://img.shields.io/static/v1?label=&message=OpenBSD&color=yellow&style=for-the-badge)
-![Solaris](https://img.shields.io/static/v1?label=&message=Solaris&color=lightblue&style=for-the-badge)
+[![AIX](https://img.shields.io/static/v1?label=&message=AIX&color=brightgreen&style=for-the-badge)](#)
+[![Android](https://img.shields.io/static/v1?label=&message=Android&color=green&style=for-the-badge)](#)
+[![ESXi](https://img.shields.io/static/v1?label=&message=ESXi&color=blue&style=for-the-badge)](#)
+[![FreeBSD](https://img.shields.io/static/v1?label=&message=FreeBSD&color=red&style=for-the-badge)](#)
+[![Linux](https://img.shields.io/static/v1?label=&message=Linux&color=lightgray&style=for-the-badge)](#)
+[![macOS](https://img.shields.io/static/v1?label=&message=macOS&color=blueviolet&style=for-the-badge)](#)
+[![NetBSD](https://img.shields.io/static/v1?label=&message=NetBSD&color=orange&style=for-the-badge)](#)
+[![NetScaler](https://img.shields.io/static/v1?label=&message=NetScaler&color=blue&style=for-the-badge)](#)
+[![OpenBSD](https://img.shields.io/static/v1?label=&message=OpenBSD&color=yellow&style=for-the-badge)](#)
+[![Solaris](https://img.shields.io/static/v1?label=&message=Solaris&color=lightblue&style=for-the-badge)](#)
 
 *Note that UAC even runs on systems like Network Attached Storage (NAS) devices, Network devices such as OpenWrt, and IoT devices.*
 
