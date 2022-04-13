@@ -1,4 +1,4 @@
-## # Unix-like Artifacts Collector
+## Unix-like Artifacts Collector
 
 ![GitHub issues](https://img.shields.io/github/issues/tclahr/uac)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/tclahr/uac)
