@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## 2.2.0-rc1 (2022-04-12)
+## 2.2.0-rc2 (2022-04-18)
 
 ### New Features
 
@@ -20,7 +20,7 @@ All notable changes to this project will be documented in this file.
 - New artifact to collect ESXi hardware information (live_response/hardware/esxcli.yaml).
 - New artifact to collect ESXi system information (live_response/system/esxcli.yaml).
 - New artifact to collect ESXi packages information (live_response/packages/esxcli.yaml).
-- New artifact to collect ESXi storage information (live_response/storage/esxcli.yaml).
+- New artifact to collect ESXi storage information (live_response/storage/esxcli.yaml and live_response/storage/ls_vmfs_devices.yaml).
 - New artifact to collect ESXi running virtual machines information (live_response/vms/esxcli.yaml, live_response/vms/vm-support.yaml and live_response/vms/vim-cmd.yaml).
 - New artifact to collect ESXi log files located in /var/run/log directory (files/logs/var_run_log.yaml).
 - New artifact to collect the binary of (malicious) processes after they have been deleted (live_response/process/deleted.yaml).
