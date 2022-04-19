@@ -49,6 +49,12 @@ artifacts:
     command: esxcli system syslog config get
     output_file: esxcli_system_syslog_config_get.txt
   -
+    description: Show the currently configured sub-loggers.
+    supported_os: [esxi]
+    collector: command
+    command: esxcli system syslog config logger list
+    output_file: esxcli_system_syslog_config_logger_list.txt
+  -
     description: Display WBEM Agent configuration.
     supported_os: [esxi]
     collector: command
