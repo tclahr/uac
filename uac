@@ -14,10 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# shellcheck disable=SC1091,SC2181
-
-# treat unset variables as an error when substituting
-set -u
+# shellcheck disable=SC1091,SC2006,SC2181
 
 # remove all existing aliases
 unalias -a
@@ -72,8 +69,6 @@ export PATH
 . "${UAC_DIR}/lib/lrstrip.sh"
 . "${UAC_DIR}/lib/parse_artifacts_file.sh"
 . "${UAC_DIR}/lib/parse_profile_file.sh"
-. "${UAC_DIR}/lib/regex_match.sh"
-. "${UAC_DIR}/lib/regex_not_match.sh"
 . "${UAC_DIR}/lib/s3_presigned_url_transfer_test.sh"
 . "${UAC_DIR}/lib/s3_presigned_url_transfer.sh"
 . "${UAC_DIR}/lib/sanitize_filename.sh"
@@ -88,7 +83,7 @@ export PATH
 . "${UAC_DIR}/lib/validate_profile_file.sh"
 
 # global vars
-UAC_VERSION="2.2.0-rc1"
+UAC_VERSION="2.2.0-rc2"
 MOUNT_POINT="/"
 OPERATING_SYSTEM=""
 SYSTEM_ARCH=""
@@ -376,6 +371,10 @@ Try 'uac --help' for more information.\n" >&2
   esac
   shift
 done
+
+# treat unset variables as an error when substituting
+# set -u cannot be set the beginning of the file since it will fail on $@
+set -u
 
 # print available profiles
 if [ -n "${ua_profile}" ] && [ "${ua_profile}" = "list" ]; then
@@ -707,6 +706,7 @@ ${ua_debug_mode} && set -x
 # shellcheck disable=SC2162
 while read ua_artifact_file || [ -n "${ua_artifact_file}" ]; do
   log_message INFO "Parsing artifacts file '${ua_artifact_file}'"
+  # shellcheck disable=SC2003
   ua_progress_current=`expr ${ua_progress_current} + 1`
   printf "[%03d/%03d] %b\n" "${ua_progress_current}" \
     "${ua_progress_total}" "${ua_artifact_file}"
@@ -726,6 +726,7 @@ ua_acq_end_date_epoch=`get_epoch_date 2>>"${UAC_STDERR_LOG_FILE}"`
 ua_current_date_time=`date "+%Y%m%d%H%M%S"`
 
 # calculate running time
+# shellcheck disable=SC2003
 ua_total_running_time=`expr "${ua_acq_end_date_epoch}" - "${ua_acq_start_date_epoch}"`
 
 printf %b "--------------------------------------------------------------------------------\n"

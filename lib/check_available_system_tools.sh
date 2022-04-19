@@ -22,7 +22,7 @@
 #   OPERATING_SYSTEM
 #   UAC_DIR
 # Requires:
-#   regex_match
+#   None
 # Arguments:
 #   None
 # Outputs:

@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# shellcheck disable=SC2006
+
 ###############################################################################
 # Collector that searches and collects files. 
 # Globals:
@@ -93,7 +95,7 @@ file_collector()
 
   # prepend TEMP_DATA_DIR to path if it does not start with /
   # (which means local file)
-  if regex_not_match "^/" "${fl_path}"; then
+  if echo "${fl_path}" | grep -q -v -E "^/"; then
     fl_path=`sanitize_path "${TEMP_DATA_DIR}/${fl_path}"`
   fi
 

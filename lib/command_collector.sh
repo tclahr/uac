@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# shellcheck disable=SC2001
+# shellcheck disable=SC2001,SC2006
 
 ###############################################################################
 # Collector that runs commands.
@@ -21,7 +21,6 @@
 #   TEMP_DATA_DIR
 # Requires:
 #   log_message
-#   regex_match
 # Arguments:
 #   $1: loop command (optional)
 #   $2: command
@@ -125,7 +124,7 @@ ${cc_loop_command}\n" >&2
             echo "${cc_new_output_directory}/${cc_new_output_file}.gz" \
               >>"${TEMP_DATA_DIR}/.output_file.tmp"
           else
-            if regex_match "%output_file%" "${cc_new_command}"; then
+            if echo "${cc_command}" | grep -q -E "%output_file%"; then
               # replace %output_file% by ${cc_new_output_file} in command
               cc_new_command=`echo "${cc_new_command}" \
                 | sed -e "s:%output_file%:${TEMP_DATA_DIR}/${cc_new_output_directory}/${cc_new_output_file}:g"`
@@ -192,7 +191,7 @@ ${cc_loop_command}\n" >&2
           >>"${TEMP_DATA_DIR}/.output_file.tmp"
       fi
     else
-      if regex_match "%output_file%" "${cc_command}"; then
+      if echo "${cc_command}" | grep -q -E "%output_file%"; then
         # replace %output_file% by ${cc_output_file} in command
         cc_command=`echo "${cc_command}" \
           | sed -e "s:%output_file%:${TEMP_DATA_DIR}/${cc_output_directory}/${cc_output_file}:g"`

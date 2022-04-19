@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# shellcheck disable=SC2006
+
 ###############################################################################
 # Collector that searches and stat files.
 # Globals:
@@ -516,7 +518,7 @@ stat_collector()
 
   # prepend root output directory to path if it does not start with /
   # (which means local file)
-  if regex_not_match "^/" "${sc_path}"; then
+  if echo "${sc_path}" | grep -q -v -E "^/"; then
     sc_path=`sanitize_path "${TEMP_DATA_DIR}/${sc_root_output_directory}/${sc_path}"`
   fi
 

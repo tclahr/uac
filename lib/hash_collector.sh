@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# shellcheck disable=SC2006
+
 ###############################################################################
 # Collector that searches and hashes files.
 # Globals:
@@ -112,7 +114,7 @@ hash_collector()
 
   # prepend root output directory to path if it does not start with /
   # (which means local file)
-  if regex_not_match "^/" "${hc_path}"; then
+  if echo "${hc_path}" | grep -q -v -E "^/"; then
     hc_path=`sanitize_path "${TEMP_DATA_DIR}/${hc_root_output_directory}/${hc_path}"`
   fi
 

@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# shellcheck disable=SC2006
+
 ###############################################################################
 # Validate artifacts file.
 # Globals:
@@ -20,7 +22,6 @@
 #   array_to_list
 #   is_integer
 #   lrstrip
-#   regex_not_match
 # Arguments:
 #   $1: artifacts file
 # Outputs:
@@ -129,8 +130,8 @@ empty.\n" >&2
               printf %b "uac: artifacts file: 'supported_os' must not \
 be empty.\n" >&2
               return 8
-            elif regex_not_match "^\[" "${va_supported_os}" \
-              && regex_not_match "\]$" "${va_supported_os}"; then
+            elif echo "${va_supported_os}" | grep -q -v -E "^\[" \
+              && echo "${va_supported_os}" | grep -q -v -E "\]$"; then
               printf %b "uac: artifacts file: 'supported_os' must be an \
 array/list.\n" >&2
               return 9
@@ -179,8 +180,8 @@ empty.\n" >&2
               printf %b "uac: artifacts file: 'path_pattern' must not be \
 empty.\n" >&2
               return 14
-            elif regex_not_match "^\[" "${va_path_pattern}" \
-              && regex_not_match "\]$" "${va_path_pattern}"; then
+            elif echo "${va_path_pattern}" | grep -q -v -E "^\[" \
+              && echo "${va_path_pattern}" | grep -q -v -E "\]$"; then
               printf %b "uac: artifacts file: 'path_pattern' must be an \
 array/list.\n" >&2
               return 15
@@ -192,8 +193,8 @@ array/list.\n" >&2
               printf %b "uac: artifacts file: 'name_pattern' must not be \
 empty.\n" >&2
               return 16
-            elif regex_not_match "^\[" "${va_name_pattern}" \
-              && regex_not_match "\]$" "${va_name_pattern}"; then
+            elif echo "${va_name_pattern}" | grep -q -v -E "^\[" \
+              && echo "${va_name_pattern}" | grep -q -v -E "\]$"; then
               printf %b "uac: artifacts file: 'name_pattern' must be an \
 array/list.\n" >&2
               return 17
@@ -205,8 +206,8 @@ array/list.\n" >&2
               printf %b "uac: artifacts file: 'exclude_path_pattern' must \
 not be empty.\n" >&2
               return 18
-            elif regex_not_match "^\[" "${va_exclude_path_pattern}" \
-              && regex_not_match "\]$" "${va_exclude_path_pattern}"; then
+            elif echo "${va_exclude_path_pattern}" | grep -q -v -E "^\[" \
+              && echo "${va_exclude_path_pattern}" | grep -q -v -E "\]$"; then
               printf %b "uac: artifacts file: 'exclude_path_pattern' must \
 be an array/list.\n" >&2
               return 19
@@ -218,8 +219,8 @@ be an array/list.\n" >&2
               printf %b "uac: artifacts file: 'exclude_name_pattern' must \
 not be empty.\n" >&2
               return 20
-            elif regex_not_match "^\[" "${va_exclude_name_pattern}" \
-              && regex_not_match "\]$" "${va_exclude_name_pattern}"; then
+            elif echo "${va_exclude_name_pattern}" | grep -q -v -E "^\[" \
+              && echo "${va_exclude_name_pattern}" | grep -q -v -E "\]$"; then
               printf %b "uac: artifacts file: 'exclude_name_pattern' must \
 be an array/list.\n" >&2
               return 21
@@ -231,8 +232,8 @@ be an array/list.\n" >&2
               printf %b "uac: artifacts file: 'exclude_file_system' must \
 not be empty.\n" >&2
               return 47
-            elif regex_not_match "^\[" "${va_exclude_file_system}" \
-              && regex_not_match "\]$" "${va_exclude_file_system}"; then
+            elif echo "${va_exclude_file_system}" | grep -q -v -E "^\[" \
+              && echo "${va_exclude_file_system}" | grep -q -v -E "\]$"; then
               printf %b "uac: artifacts file: 'exclude_file_system' must \
 be an array/list.\n" >&2
               return 48

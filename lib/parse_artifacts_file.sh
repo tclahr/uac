@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# shellcheck disable=SC2001
+# shellcheck disable=SC2001,SC2006
 
 ###############################################################################
 # Parse artifacts file.
@@ -27,7 +27,6 @@
 # Requires:
 #   array_to_list
 #   lrstrip
-#   regex_match
 #   sanitize_path
 # Arguments:
 #   $1: artifacts file
@@ -225,12 +224,12 @@ sequence of mappings\n" >&2
 
             # path, command or loop_command contains %user% and/or %user_home%
             # the same collector needs to be run for each %user% and/or %user_home%
-            if regex_match "%user%" "${pa_path}" 2>/dev/null \
-              || regex_match "%user%" "${pa_command}" 2>/dev/null \
-              || regex_match "%user%" "${pa_loop_command}" 2>/dev/null \
-              || regex_match "%user_home%" "${pa_path}" 2>/dev/null \
-              || regex_match "%user_home%" "${pa_command}" 2>/dev/null \
-              || regex_match "%user_home%" "${pa_loop_command}" 2>/dev/null; then
+            if echo "${pa_path}" | grep -q -E "%user%" 2>/dev/null \
+              || echo "${pa_command}" | grep -q -E "%user%" 2>/dev/null \
+              || echo "${pa_loop_command}" | grep -q -E "%user%" 2>/dev/null \
+              || echo "${pa_path}" | grep -q -E "%user_home%" 2>/dev/null \
+              || echo "${pa_command}" | grep -q -E "%user_home%" 2>/dev/null \
+              || echo "${pa_loop_command}" | grep -q -E "%user_home%" 2>/dev/null; then
 
               # loop through users
               pa_user_home_list="${USER_HOME_LIST}"
