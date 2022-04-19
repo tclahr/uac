@@ -14,7 +14,7 @@ UAC is a Live Response collection script for Incident Response that makes use of
 [Support](#-community-support) •
 [License](#-license)
 
-![Imgur](https://i.imgur.com/1aEnAyA.gif)
+[![Imgur](https://i.imgur.com/1aEnAyA.gif)](#)
 
 ***
 
