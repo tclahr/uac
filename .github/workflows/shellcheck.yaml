@@ -1,0 +1,33 @@
+name: ShellCheck
+
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+    paths:
+      - 'uac'
+      - 'lib/**'
+  push:
+    branches:
+      - master
+      - develop
+    paths:
+      - 'uac'
+      - 'lib/**'
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  shellcheck:
+    name: ShellCheck
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Run ShellCheck
+      uses: ludeeus/action-shellcheck@master
+      with:
+        ignore_paths: artifacts bin config profiles
+      env:
+        SHELLCHECK_OPTS: -s sh
+      
