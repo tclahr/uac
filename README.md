@@ -1,8 +1,9 @@
 ## Unix-like Artifacts Collector
 
-[![GitHub issues](https://img.shields.io/github/issues/tclahr/uac?style=flat-square)](https://github.com/tclahr/uac/issues)
-[![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/tclahr/uac?include_prereleases&style=flat-square)](https://github.com/tclahr/uac/releases)
-[![GitHub](https://img.shields.io/github/license/tclahr/uac?style=flat-square)](LICENSE)
+[![ShellCheck](https://github.com/tclahr/uac/actions/workflows/shellcheck.yaml/badge.svg)](https://github.com/tclahr/uac/actions/workflows/shellcheck.yaml)
+[![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/5640/badge)](https://bestpractices.coreinfrastructure.org/projects/5640)
+[![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/tclahr/uac?include_prereleases&style=flat)](https://github.com/tclahr/uac/releases)
+[![GitHub](https://img.shields.io/github/license/tclahr/uac?style=flat)](LICENSE)
 
 UAC is a Live Response collection script for Incident Response that makes use of native binaries and tools to automate the collection of AIX, Android, ESXi, FreeBSD, Linux, macOS, NetBSD, NetScaler, OpenBSD and Solaris systems artifacts. It was created to facilitate and speed up data collection, and depend less on remote support during incident response engagements.
 
