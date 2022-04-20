@@ -56,7 +56,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-vagrant-${{ inputs.vagrant_box_name }}
       
-      - name: Start ${{ inputs.operating_system }} VM
+      - name: Start ${{ inputs.vagrant_box_name }} VM
         run: |
           vagrant init ${{ inputs.vagrant_box_name }}
           vagrant up
