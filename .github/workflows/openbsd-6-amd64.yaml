@@ -1,4 +1,4 @@
-name: FreeBSD 11 (amd64)
+name: OpenBSD 6 (amd64)
 
 on:
   # Allows you to run this workflow manually from the Actions tab
@@ -10,10 +10,10 @@ jobs:
     uses: ./.github/workflows/deploy-vm-and-run-tests.yaml
     with:
       runs_on: "macos-10.15"
-      unit_test_operating_system: "freebsd"
+      unit_test_operating_system: "openbsd"
       unit_test_system_arch: "amd64"
       unit_test_username: "vagrant"
-      unit_test_hostname: "freebsd11.localdomain"
+      unit_test_hostname: "openbsd6.localdomain"
       uac_destination_dir: "."
-      vagrant_box_name: "generic/freebsd11"
+      vagrant_box_name: "generic/openbsd6"
       vagrant_ssh_options: ""

@@ -1,4 +1,4 @@
-name: Deploy VM and Run Tests
+name: Run Tests
 
 on:
   workflow_call:
@@ -19,12 +19,6 @@ on:
         required: true
         type: string
       uac_destination_dir:
-        required: true
-        type: string
-      vagrant_box_name:
-        required: true
-        type: string
-      vagrant_ssh_options:
         required: true
         type: string
 
@@ -49,32 +43,19 @@ jobs:
           path: uac-unit-test
           ref: main
 
-      - uses: actions/cache@v3
-        with:
-          path: ~/.vagrant.d/boxes
-          key: ${{ runner.os }}-vagrant-${{ inputs.vagrant_box_name }}
-          restore-keys: |
-            ${{ runner.os }}-vagrant-${{ inputs.vagrant_box_name }}
-      
-      - name: Start ${{ inputs.vagrant_box_name }} VM
-        run: |
-          vagrant init ${{ inputs.vagrant_box_name }}
-          vagrant up
-
-      - name: Transfer uac to VM
-        run: vagrant upload uac uac
-
-      - name: Transfer uac-unit-test to VM
-        run: vagrant upload uac-unit-test uac-unit-test
-
       - name: Run uname -a
-        run: vagrant ssh -c "uname -a"
+        run: uname -a
 
       - name: Run id
-        run: vagrant ssh -c "id"
+        run: id
+
+      - name: Run hostname
+        run: hostname
 
       - name: Run unit test
-        run: vagrant ssh -c "cd uac-unit-test && ./run_test ../uac ${{ inputs.unit_test_operating_system }} ${{ inputs.unit_test_system_arch }} ${{ inputs.unit_test_username }} ${{ inputs.unit_test_hostname }} tests/*"
+        run: |
+          cd uac-unit-test
+          ./run_test ../uac ${{ inputs.unit_test_operating_system }} ${{ inputs.unit_test_system_arch }} ${{ inputs.unit_test_username }} ${{ inputs.unit_test_hostname }} tests/*"
 
   run-uac:
     needs: run-uac-unit-test
@@ -88,21 +69,6 @@ jobs:
         with:
           repository: tclahr/uac
           path: uac
-
-      - uses: actions/cache@v3
-        with:
-          path: ~/.vagrant.d/boxes
-          key: ${{ runner.os }}-vagrant-${{ inputs.vagrant_box_name }}
-          restore-keys: |
-            ${{ runner.os }}-vagrant-${{ inputs.vagrant_box_name }}
-      
-      - name: Start ${{ inputs.vagrant_box_name }} VM
-        run: |
-          vagrant init ${{ inputs.vagrant_box_name }}
-          vagrant up
-
-      - name: Transfer uac to VM
-        run: vagrant upload uac uac
 
       #- name: Run sudo ./uac -p ir_triage ${{ inputs.uac_destination_dir }}
       #  run: vagrant ssh -c "cd uac && sudo ./uac -p ir_triage ${{ inputs.uac_destination_dir }}" -- ${{ inputs.vagrant_ssh_options }}
@@ -132,7 +98,9 @@ jobs:
       #  run: vagrant ssh -c "cd uac && sudo ./uac -a live_response/process/ps.yaml --hostname uac-test-vm ${{ inputs.uac_destination_dir }}" -- ${{ inputs.vagrant_ssh_options }}
 
       - name: Run sudo ./uac -a live_response/process/ps.yaml --case-number 12345 --description "Case Description" --evidence-number 10 --examiner "Examiner Name" --notes "Case Notes" ${{ inputs.uac_destination_dir }}
-        run: vagrant ssh -c "cd uac && sudo ./uac -a live_response/process/ps.yaml --case-number 12345 --description \"Case Description\" --evidence-number 10 --examiner \"Examiner Name\" --notes \"Case Notes\" ${{ inputs.uac_destination_dir }}" -- ${{ inputs.vagrant_ssh_options }}
+        run: |
+          cd uac
+          sudo ./uac -a live_response/process/ps.yaml --case-number 12345 --description "Case Description" --evidence-number 10 --examiner "Examiner Name" --notes "Case Notes" ${{ inputs.uac_destination_dir }}"
 
       #- name: Run ./uac --validate-artifacts-file ./artifacts/live_response/process/ps.yaml
       #  run: vagrant ssh -c "cd uac && ./uac --validate-artifacts-file ./artifacts/live_response/process/ps.yaml" -- ${{ inputs.vagrant_ssh_options }}
