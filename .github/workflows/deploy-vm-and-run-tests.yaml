@@ -6,17 +6,17 @@ on:
       runs_on:
         required: true
         type: string
-      unit_test_username:
-        required: true
-        type: string
       unit_test_operating_system:
         required: true
         type: string
       unit_test_system_arch:
         required: true
         type: string
+      unit_test_username:
+        required: true
+        type: string
       unit_test_hostname:
-        required: string
+        required: true
         type: string
       uac_destination_dir:
         required: true
