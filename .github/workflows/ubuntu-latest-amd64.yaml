@@ -12,6 +12,5 @@ jobs:
       runs_on: "ubuntu-latest"
       unit_test_operating_system: "linux"
       unit_test_system_arch: "x86_64"
-      unit_test_username: "github"
-      unit_test_hostname: "linux"
+      unit_test_username: "runner"
       uac_destination_dir: "."

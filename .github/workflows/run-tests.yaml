@@ -15,9 +15,6 @@ on:
       unit_test_username:
         required: true
         type: string
-      unit_test_hostname:
-        required: true
-        type: string
       uac_destination_dir:
         required: true
         type: string
@@ -55,7 +52,7 @@ jobs:
       - name: Run unit test
         run: |
           cd uac-unit-test
-          ./run_test ../uac ${{ inputs.unit_test_operating_system }} ${{ inputs.unit_test_system_arch }} ${{ inputs.unit_test_username }} ${{ inputs.unit_test_hostname }} tests/*"
+          ./run_test ../uac ${{ inputs.unit_test_operating_system }} ${{ inputs.unit_test_system_arch }} ${{ inputs.unit_test_username }} `hostname` tests/*
 
   run-uac:
     needs: run-uac-unit-test
