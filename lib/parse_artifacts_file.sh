@@ -130,7 +130,7 @@ parse_artifacts_file()
             if [ "${pa_dash}" != "-" ]; then
               printf %b "validate_artifacts_file: invalid 'artifacts' \
 sequence of mappings\n" >&2
-              return 3
+              return 150
             fi
             ;;
           "collector")

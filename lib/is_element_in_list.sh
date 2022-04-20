@@ -37,13 +37,13 @@ is_element_in_list()
   # return if element is empty
   if [ -z "${ie_element}" ]; then
     printf %b "is_element_in_list: missing required argument: 'element'\n" >&2
-    return 2
+    return 22
   fi
 
   # return if list is empty
   if [ -z "${ie_list}" ]; then
     printf %b "is_element_in_list: missing required argument: 'list'\n" >&2
-    return 3
+    return 22
   fi
 
   # trim leading and trailing white space

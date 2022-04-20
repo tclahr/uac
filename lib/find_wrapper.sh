@@ -134,7 +134,7 @@ find_wrapper()
   # return if starting point is empty
   if [ -z "${fw_path}" ]; then
     printf %b "find_wrapper: missing required argument: 'path'\n" >&2
-    return 2
+    return 22
   fi
 
   fw_find_tool="find"

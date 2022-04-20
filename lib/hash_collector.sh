@@ -96,20 +96,20 @@ hash_collector()
   # return if path is empty
   if [ -z "${hc_path}" ]; then
     printf %b "hash_collector: missing required argument: 'path'\n" >&2
-    return 2
+    return 22
   fi
 
   # return if root output directory is empty
   if [ -z "${hc_root_output_directory}" ]; then
     printf %b "hash_collector: missing required argument: \
 'root_output_directory'\n" >&2
-    return 3
+    return 22
   fi
 
   # return if output file is empty
   if [ -z "${hc_output_file}" ]; then
     printf %b "hash_collector: missing required argument: 'output_file'\n" >&2
-    return 4
+    return 22
   fi
 
   # prepend root output directory to path if it does not start with /

@@ -84,13 +84,13 @@ file_collector()
   # return if path is empty
   if [ -z "${fl_path}" ]; then
     printf %b "file_collector: missing required argument: 'path'\n" >&2
-    return 2
+    return 22
   fi
 
   # return if output file is empty
   if [ -z "${fl_output_file}" ]; then
     printf %b "file_collector: missing required argument: 'output_file'\n" >&2
-    return 3
+    return 22
   fi
 
   # prepend TEMP_DATA_DIR to path if it does not start with /
@@ -102,7 +102,7 @@ file_collector()
   # return if is file list and file list does not exist
   if ${fl_is_file_list} && [ ! -f "${fl_path}" ]; then
     printf %b "file_collector: file list does not exist: '${fl_path}'\n" >&2
-    return 5
+    return 2
   fi
 
   # sanitize output file name

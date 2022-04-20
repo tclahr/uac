@@ -47,20 +47,20 @@ command_collector()
   # return if command is empty
   if [ -z "${cc_command}" ]; then
     printf %b "command_collector: missing required argument: 'command'\n" >&2
-    return 2
+    return 22
   fi
 
   # return if root output directory is empty
   if [ -z "${cc_root_output_directory}" ]; then
     printf %b "command_collector: missing required argument: \
 'root_output_directory'\n" >&2
-    return 3
+    return 22
   fi
 
   # return if output file is empty
   if [ -z "${cc_output_file}" ]; then
     printf %b "command_collector: missing required argument: 'output_file'\n" >&2
-    return 4
+    return 22
   fi
 
   # loop command
@@ -79,7 +79,7 @@ command_collector()
     if [ ! -s "${TEMP_DATA_DIR}/.loop_command.tmp" ]; then
       printf %b "command_collector: loop command returned zero lines: \
 ${cc_loop_command}\n" >&2
-      return 5
+      return 61
     fi
 
     if "${cc_compress_output_file}" && ${GZIP_TOOL_AVAILABLE}; then

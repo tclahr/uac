@@ -76,7 +76,7 @@ load_config_file() {
 
   if [ -z "${HASH_ALGORITHM}" ]; then
     printf %b "uac: config file: 'hash_algorithm' must not be empty.\n" >&2
-    return 3
+    return 22
   fi
   
   # check if hashes are valid
@@ -87,7 +87,7 @@ load_config_file() {
       continue
     else
       printf %b "uac: config file: invalid hash algorithm '${lc_hash}'\n" >&2
-      return 4
+      return 22
     fi
   done
   

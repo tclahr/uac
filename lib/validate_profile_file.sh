@@ -62,7 +62,7 @@ directory: '${vp_profile_file}'\n" >&2
             if ${vp_artifacts_prop}; then
               printf %b "uac: profile file: invalid duplicated 'artifacts' \
 mapping.\n" >&2
-              return 4
+              return 151
             fi
             vp_artifacts_prop=true
             ;;
@@ -71,7 +71,7 @@ mapping.\n" >&2
             if [ -z "${vp_description}" ]; then
               printf %b "uac: profile file: 'description' \
 must not be empty.\n" >&2
-              return 5
+              return 152
             fi
             ;;
           "name")
@@ -79,14 +79,14 @@ must not be empty.\n" >&2
             if [ -z "${vp_name}" ]; then
               printf %b "uac: profile file: 'name' \
 must not be empty.\n" >&2
-              return 11
+              return 152
             fi
             ;;
           "-"*)
             if [ ${vp_artifacts_prop} = false ]; then
               printf %b "uac: profile file: missing 'artifacts' \
 mapping.\n" >&2
-              return 6
+              return 150
             fi
             # extract file name from artifacts array
             # shellcheck disable=SC2001
@@ -94,7 +94,7 @@ mapping.\n" >&2
             if [ -z "${vp_artifact_file}" ]; then
               printf %b "uac: profile file: invalid empty artifact \
 entry.\n" >&2
-              return 7
+              return 152
             fi
 
             if echo "${vp_artifact_file}" | grep -q -E "^!" 2>/dev/null; then
@@ -112,28 +112,28 @@ entry.\n" >&2
             if [ "$?" -gt 0 ]; then
               printf %b "uac: profile file: no such \
 file or directory: '${UAC_DIR}/artifacts/${vp_artifact_file}'\n" >&2
-              return 8
+              return 2
             fi
             ;;
           "__end__")
             if [ ${vp_artifacts_file_prop} = false ]; then
               printf %b "uac: profile file: 'artifacts' must not be \
 empty.\n" >&2
-              return 9
+              return 152
             elif [ ${vp_include_artifacts_file} = false ]; then
               printf %b "uac: profile file: 'artifacts' must have at \
 least one artifacts file.\n" >&2
-              return 10
+              return 152
             fi
             if [ -z "${vp_name}" ]; then
               printf %b "uac: profile file: missing 'name' property.\n" >&2
-              return 12
+              return 153
             fi
             ;;
           *)
             printf %b "uac: profile file: invalid property \
 '${vp_key}'\n" >&2
-            return 3
+            return 153
         esac
 
       done

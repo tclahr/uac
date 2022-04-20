@@ -41,7 +41,7 @@ get_days_since_date_until_now()
     expr "${gd_difference}" / 86400 2>/dev/null
   else
     printf %b "uac: date '${gd_date}' cannot be greater than today.\n" >&2
-    return 2
+    return 22
   fi
 
 }

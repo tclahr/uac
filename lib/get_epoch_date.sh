@@ -39,7 +39,7 @@ get_epoch_date()
     && echo "${ge_date}" | grep -v -q -E "${ge_date_regex}"; then
     printf %b "uac: invalid date '${ge_date}'\n\
 Try 'uac --help' for more information.\n" >&2
-    return 2
+    return 22
   fi
 
   # get epoch timestamp for the given date

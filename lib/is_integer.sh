@@ -34,7 +34,7 @@ is_integer()
   # return if number is empty
   if [ -z "${ii_number}" ]; then
     printf %b "is_integer: missing required argument: 'number'\n" >&2
-    return 2
+    return 22
   fi
 
   if [ "${ii_number}" -eq "${ii_number}" ]; then
