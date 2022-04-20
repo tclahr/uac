@@ -69,7 +69,7 @@ jobs:
 
       - name: Create testing profile
         run: |
-          printf %b "name: test\ndescription: test\nartifacts:\n  - live_response/process/ps.yaml\n  - live_response/storage/*\n" >uac/profiles/test.yaml
+          printf %b "name: test\ndescription: test\nartifacts:\n  - live_response/process/ps.yaml\n  - live_response/storage/*\n  - !live_response/storage/diskutil.yaml" >uac/profiles/test.yaml
 
       - name: Run sudo ./uac -p test ${{ inputs.uac_destination_dir }}
         run: |
@@ -91,10 +91,10 @@ jobs:
           cd uac
           sudo ./uac -a live_response/process/ps.yaml,live_response/network/arp.yaml ${{ inputs.uac_destination_dir }}
       
-      - name: Run sudo ./uac -a live_response/process/\*,\!live_response/process/hash_running_processes.yaml,\!live_response/process/procfs_information.yaml ${{ inputs.uac_destination_dir }}
+      - name: Run sudo ./uac -a live_response/process/\*,\!live_response/process/hash_running_processes.yaml,\!live_response/process/procfs_information.yaml,\!live_response/process/strings_running_processes.yaml ${{ inputs.uac_destination_dir }}
         run: |
           cd uac
-          sudo ./uac -a live_response/process/\*,\!live_response/process/hash_running_processes.yaml,\!live_response/process/procfs_information.yaml ${{ inputs.uac_destination_dir }}
+          sudo ./uac -a live_response/process/\*,\!live_response/process/hash_running_processes.yaml,\!live_response/process/procfs_information.yaml,\!live_response/process/strings_running_processes.yaml ${{ inputs.uac_destination_dir }}
 
       - name: Run ./uac -a live_response/process/ps.yaml -u ${{ inputs.uac_destination_dir }}
         run: |
