@@ -1,4 +1,4 @@
-name: Ubuntu Latest (amd64)
+name: macOS Latest (amd64)
 
 on:
   # Allows you to run this workflow manually from the Actions tab
@@ -9,8 +9,8 @@ jobs:
   run-uac-tests:
     uses: ./.github/workflows/run-tests.yaml
     with:
-      runs_on: "ubuntu-latest"
-      unit_test_operating_system: "linux"
+      runs_on: "macos-latest"
+      unit_test_operating_system: "macos"
       unit_test_system_arch: "x86_64"
       unit_test_username: "runner"
       uac_destination_dir: "."
