@@ -76,10 +76,10 @@ jobs:
           cd uac
           sudo ./uac -p test ${{ inputs.uac_destination_dir }}
 
-      - name: Run sudo ./uac -p test -a files/applications/viminfo.yaml ${{ inputs.uac_destination_dir }}
+      - name: Run sudo ./uac -p test -a files/system/etc.yaml ${{ inputs.uac_destination_dir }}
         run: |
           cd uac
-          sudo ./uac -p test -a files/applications/viminfo.yaml ${{ inputs.uac_destination_dir }}
+          sudo ./uac -p test -a files/system/etc.yaml ${{ inputs.uac_destination_dir }}
 
       - name: Run sudo ./uac -a live_response/process/ps.yaml ${{ inputs.uac_destination_dir }}
         run: |
