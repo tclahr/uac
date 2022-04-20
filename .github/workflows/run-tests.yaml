@@ -97,7 +97,7 @@ jobs:
       - name: Run sudo ./uac -a live_response/process/ps.yaml --case-number 12345 --description "Case Description" --evidence-number 10 --examiner "Examiner Name" --notes "Case Notes" ${{ inputs.uac_destination_dir }}
         run: |
           cd uac
-          sudo ./uac -a live_response/process/ps.yaml --case-number 12345 --description "Case Description" --evidence-number 10 --examiner "Examiner Name" --notes "Case Notes" ${{ inputs.uac_destination_dir }}"
+          sudo ./uac -a live_response/process/ps.yaml --case-number 12345 --description "Case Description" --evidence-number 10 --examiner "Examiner Name" --notes "Case Notes" ${{ inputs.uac_destination_dir }}
 
       #- name: Run ./uac --validate-artifacts-file ./artifacts/live_response/process/ps.yaml
       #  run: vagrant ssh -c "cd uac && ./uac --validate-artifacts-file ./artifacts/live_response/process/ps.yaml" -- ${{ inputs.vagrant_ssh_options }}
