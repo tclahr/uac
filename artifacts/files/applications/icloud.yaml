@@ -1,5 +1,11 @@
-version: 1.0
+version: 2.0
 artifacts:
+  -
+    description: Collect iCloud accounts information files.
+    supported_os: [macos]
+    collector: file
+    path: /%user_home%/Library/"Application Support"/iCloud/Accounts/*
+    exclude_nologin_users: true
   -
     description: Collect iCloud local databases that contain information about files that have been imported from the local computer or synced remotely from the iCloud.
     supported_os: [macos]
