@@ -90,7 +90,7 @@ get_user_home_list()
 
   # extract user:home for current user only if running on a live system
   # useful for systems which do not have a /etc/passwd file
-  if [ "${MOUNT_POINT}" = "/" ]; then
+  if [ "${MOUNT_POINT}" = "/" ] && [ -n "${HOME}" ]; then
     gu_current_user=`get_current_user`
     echo "${gu_current_user}:${HOME}" >>"${TEMP_DATA_DIR}/.user_home_list.tmp"
   fi
