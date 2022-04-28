@@ -94,6 +94,11 @@ END_DATE=""
 END_DATE_DAYS=""
 END_DATE_EPOCH=""
 
+# the following variables are not always set on some systems, so they are set
+# here to avoid the script exiting with errors after set -u is used below
+HOME="${HOME}"
+HOSTNAME="${HOSTNAME}"
+
 # local vars
 ua_artifacts=""
 ua_profile=""
