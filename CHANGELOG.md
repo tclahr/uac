@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## 2.2.0-rc2 (2022-04-18)
+## 2.2.0-rc2 (2022-04-27)
 
 ### New Features
 
@@ -25,6 +25,7 @@ All notable changes to this project will be documented in this file.
 - New artifact to collect ESXi log files located in /var/run/log directory (files/logs/var_run_log.yaml).
 - New artifact to collect the binary of (malicious) processes after they have been deleted (live_response/process/deleted.yaml).
 - New artifact to collect files of (malicious) processes after they have been deleted (live_response/process/deleted.yaml).
+- New artifact to collect Linux NetworkManager files (files/system/networkmanager.yaml).
 - New artifacts added to 'live_response/process/procfs_information.yaml' ([#35](https://github.com/tclahr/uac/issues/35)):
   - ls -l /proc/[pid]/cwd
   - cat /proc/[pid]/stack
@@ -55,11 +56,17 @@ All notable changes to this project will be documented in this file.
   - live_response/network/lsof.yaml
   - live_response/network/netstat.yaml
   - live_response/storage/mount.yaml
+- 'files/applications/icloud_drive.yaml' was renamed to 'files/applications/icloud.yaml'.
+- A new artifact to collect iCloud accounts information files was added to 'files/applications/icloud.yaml'.
 
 ### Deprecated
 
 - '-o' command line switch was replaced by '-s', and will be removed in the next release. So don't forget to update your documentation.
 - '--sftp-delete-local-on-success' command line switch was replaced by '--delete-local-on-successful-transfer'.
+
+### Fixed
+
+- Issue that was preventing UAC to collect files from home directories when executing it via EDR and the system HOME variable was not set by the current shell ([#47](https://github.com/tclahr/uac/issues/47)).
 
 ## 2.1.0 (2022-02-15)
 
