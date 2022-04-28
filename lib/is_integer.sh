@@ -37,10 +37,7 @@ is_integer()
     return 22
   fi
 
-  if [ "${ii_number}" -eq "${ii_number}" ]; then
-    return 0
-  fi
-
-  return 1
+  # shellcheck disable=SC2003
+  expr 1 + "${ii_number}" >/dev/null
 
 }
