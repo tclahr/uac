@@ -21,7 +21,7 @@ on:
 
 jobs:
 
-  run-tests:
+  run-uac-unit-test:
 
     runs-on: ${{ inputs.runs_on }}
 
@@ -32,10 +32,6 @@ jobs:
         with:
           repository: tclahr/uac
           path: uac
-
-      - name: Create testing profile
-        run: |
-          printf %b "name: test\ndescription: test\nartifacts:\n  - live_response/process/ps.yaml\n  - live_response/storage/*\n  - !live_response/storage/fs_usage.yaml" >uac/profiles/test.yaml
 
       - name: Clone uac-unit-test repo
         uses: actions/checkout@v3
@@ -57,6 +53,23 @@ jobs:
         run: |
           cd uac-unit-test
           ./run_test ../uac ${{ inputs.unit_test_operating_system }} ${{ inputs.unit_test_system_arch }} ${{ inputs.unit_test_username }} `hostname` tests/*
+
+  run-uac:
+    needs: run-uac-unit-test
+
+    runs-on: ${{ inputs.runs_on }}
+
+    steps:
+
+      - name: Clone uac repo
+        uses: actions/checkout@v3
+        with:
+          repository: tclahr/uac
+          path: uac
+
+      - name: Create testing profile
+        run: |
+          printf %b "name: test\ndescription: test\nartifacts:\n  - live_response/process/ps.yaml\n  - live_response/storage/*\n  - !live_response/storage/fs_usage.yaml" >uac/profiles/test.yaml
 
       - name: Run sudo ./uac -p test ${{ inputs.uac_destination_dir }}
         run: |
