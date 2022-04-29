@@ -8,13 +8,6 @@ on:
     paths:
       - 'uac'
       - 'lib/**'
-  push:
-    branches:
-      - master
-      - develop
-    paths:
-      - 'uac'
-      - 'lib/**'
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 

@@ -17,3 +17,4 @@ jobs:
       uac_destination_dir: "."
       vagrant_box_name: "generic/openbsd6"
       vagrant_ssh_options: ""
+      vagrant_ssh_password: "vagrant"
