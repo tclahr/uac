@@ -96,7 +96,9 @@ END_DATE_EPOCH=""
 
 # the following variables are not always set on some systems, so they are set
 # here to avoid the script exiting with errors after set -u is used below
+# shellcheck disable=SC2269
 HOME="${HOME}"
+# shellcheck disable=SC2269
 HOSTNAME="${HOSTNAME}"
 
 # local vars
