@@ -27,6 +27,9 @@ on:
       vagrant_ssh_options:
         required: true
         type: string
+      vagrant_ssh_password:
+        required: true
+        type: string
 
 jobs:
 
@@ -60,10 +63,11 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-vagrant-${{ inputs.vagrant_box_name }}
       
+      - name: Create Vagrantfile
+        run: printf %b "Vagrant.configure(\"2\") do |config|\n  config.vm.box = \"${{ inputs.vagrant_box_name }}\"\n  config.ssh.password = \"${{ inputs.vagrant_ssh_password }}\"\nend" >Vagrantfile
+
       - name: Start ${{ inputs.vagrant_box_name }} VM
-        run: |
-          vagrant init ${{ inputs.vagrant_box_name }}
-          vagrant up
+        run: vagrant up
 
       - name: Transfer uac to VM
         run: vagrant upload uac uac

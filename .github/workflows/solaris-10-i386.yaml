@@ -17,3 +17,4 @@ jobs:
       uac_destination_dir: "."
       vagrant_box_name: "tnarik/solaris10-minimal"
       vagrant_ssh_options: "-oKexAlgorithms=+diffie-hellman-group1-sha1"
+      vagrant_ssh_password: "vagrant"

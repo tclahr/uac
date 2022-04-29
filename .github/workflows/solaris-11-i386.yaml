@@ -1,4 +1,4 @@
-name: OpenBSD 6 (amd64)
+name: Solaris 11 (i386)
 
 on:
   # Allows you to run this workflow manually from the Actions tab
@@ -10,11 +10,11 @@ jobs:
     uses: ./.github/workflows/deploy-vm-and-run-tests.yaml
     with:
       runs_on: "macos-10.15"
-      unit_test_operating_system: "openbsd"
-      unit_test_system_arch: "amd64"
+      unit_test_operating_system: "solaris"
+      unit_test_system_arch: "i386"
       unit_test_username: "vagrant"
-      unit_test_hostname: "openbsd6.localdomain"
+      unit_test_hostname: "solaris"
       uac_destination_dir: "."
-      vagrant_box_name: "generic/openbsd6"
+      vagrant_box_name: "plaurin/solaris-11_3"
       vagrant_ssh_options: ""
-      vagrant_ssh_password: "vagrant"
+      vagrant_ssh_password: "1vagrant"
