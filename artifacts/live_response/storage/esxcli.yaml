@@ -1,0 +1,21 @@
+version: 1.0
+artifacts:
+  -
+    description: List the NAS volumes currently known to the ESX host.
+    supported_os: [esxi]
+    collector: command
+    command: esxcli storage nfs list
+    output_file: esxcli_storage_nfs_list.txt
+  -
+    description: List the NFS v4.1 volumes currently known to the ESX host.
+    supported_os: [esxi]
+    collector: command
+    command: esxcli storage nfs41 list
+    output_file: esxcli_storage_nfs41_list.txt
+  -
+    description: List the volumes available to the host. This includes VMFS, NAS, VFAT and UFS partitions.
+    supported_os: [esxi]
+    collector: command
+    command: esxcli storage filesystem list
+    output_file: esxcli_storage_filesystem_list.txt
+  

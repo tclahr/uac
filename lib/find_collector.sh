@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# shellcheck disable=SC2006
+
 ###############################################################################
 # Collector that searches files and directories.
 # Globals:
@@ -85,20 +87,20 @@ find_collector()
   # return if path is empty
   if [ -z "${fc_path}" ]; then
     printf %b "find_collector: missing required argument: 'path'\n" >&2
-    return 2
+    return 22
   fi
 
   # return if root output directory is empty
   if [ -z "${fc_root_output_directory}" ]; then
     printf %b "find_collector: missing required argument: \
 'root_output_directory'\n" >&2
-    return 3
+    return 22
   fi
 
   # return if output file is empty
   if [ -z "${fc_output_file}" ]; then
     printf %b "find_collector: missing required argument: 'output_file'\n" >&2
-    return 4
+    return 22
   fi
 
   # sanitize output file name

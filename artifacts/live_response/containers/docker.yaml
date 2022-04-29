@@ -25,31 +25,69 @@ artifacts:
     command: docker version
     output_file: docker_version.txt
   -
+    description: Display a live stream of one or more container’s resource usage statistics
+    supported_os: [linux]
+    collector: command
+    command: docker stats --all --no-stream --no-trunc
+    output_file: docker_stats_--all_--no-stream_--no-trunc.txt
+  -
     description: Fetch the logs of all containers.
     supported_os: [linux]
     collector: command
-    loop_command: docker container ps -all | sed 1d | awk '{print $1}'
+    loop_command: docker container ps --all | sed 1d | awk '{print $1}'
     command: docker container logs %line%
     output_file: docker_container_logs_%line%.txt
   -
     description: Return low-level information on Docker objects.
     supported_os: [linux]
     collector: command
-    loop_command: docker container ps -all | sed 1d | awk '{print $1}'
+    loop_command: docker container ps --all | sed 1d | awk '{print $1}'
     command: docker inspect %line%
     output_file: docker_inspect_%line%.txt
   -
     description: Display detailed information on one or more networks.
     supported_os: [linux]
     collector: command
-    loop_command: docker container ps -all | sed 1d | awk '{print $1}'
+    loop_command: docker container ps --all | sed 1d | awk '{print $1}'
     command: docker network inspect %line%
     output_file: docker_network_inspect_%line%.txt
   -
     description: Display the running processes of all containers.
     supported_os: [linux]
     collector: command
-    loop_command: docker ps | sed 1d | awk '{print $1}'
+    loop_command: docker container ps --all | sed 1d | awk '{print $1}'
     command: docker top %line%
     output_file: docker_top_%line%.txt
-    
+  -
+    description: List all networks.
+    supported_os: [linux]
+    collector: command
+    command: docker network ls
+    output_file: docker_network_ls.txt
+  -
+    description: Displays the raw CNI network configuration for all networks.
+    supported_os: [linux]
+    collector: command
+    loop_command: docker network ls | sed 1d | awk '{print $1}'
+    command: docker network inspect %line%
+    output_file: docker_network_inspect_%line%.txt
+  -
+    description: List all volumes.
+    supported_os: [linux]
+    collector: command
+    command: docker volume ls
+    output_file: docker_volume_ls.txt
+  -
+    description: Display detailed information about all volumes.
+    supported_os: [linux]
+    collector: command
+    loop_command: docker volume ls | sed 1d | awk '{print $2}'
+    command: docker volume inspect %line%
+    output_file: docker_volume_inspect_%line%.txt
+  -
+    description: Display changes in the container filesystem since its creation.
+    supported_os: [linux]
+    collector: command
+    loop_command: docker container ps --all | sed 1d | awk '{print $1}'
+    command: docker diff %line%
+    output_file: docker_diff_%line%.txt

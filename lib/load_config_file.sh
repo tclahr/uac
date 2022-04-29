@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# shellcheck disable=SC2006
+
 ###############################################################################
 # Load config file (yaml) and set global variables values.
 # Globals:
@@ -74,17 +76,18 @@ load_config_file() {
 
   if [ -z "${HASH_ALGORITHM}" ]; then
     printf %b "uac: config file: 'hash_algorithm' must not be empty.\n" >&2
-    return 3
+    return 22
   fi
   
   # check if hashes are valid
+  # shellcheck disable=SC2001
   lc_hash_algorithm=`echo "${HASH_ALGORITHM}" | sed -e 's:,: :g'`
   for lc_hash in ${lc_hash_algorithm}; do
     if is_element_in_list "${lc_hash}" "md5,sha1,sha256"; then
       continue
     else
       printf %b "uac: config file: invalid hash algorithm '${lc_hash}'\n" >&2
-      return 4
+      return 22
     fi
   done
   

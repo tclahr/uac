@@ -14,6 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# shellcheck disable=SC1091,SC2006,SC2181
+
 # remove all existing aliases
 unalias -a
 
@@ -44,6 +46,7 @@ export PATH
 . "${UAC_DIR}/lib/check_available_system_tools.sh"
 . "${UAC_DIR}/lib/command_collector.sh"
 . "${UAC_DIR}/lib/copy_data.sh"
+. "${UAC_DIR}/lib/create_acquisition_log.sh"
 . "${UAC_DIR}/lib/file_collector.sh"
 . "${UAC_DIR}/lib/find_collector.sh"
 . "${UAC_DIR}/lib/find_wrapper.sh"
@@ -66,11 +69,11 @@ export PATH
 . "${UAC_DIR}/lib/lrstrip.sh"
 . "${UAC_DIR}/lib/parse_artifacts_file.sh"
 . "${UAC_DIR}/lib/parse_profile_file.sh"
-. "${UAC_DIR}/lib/print_acquisition_log.sh"
-. "${UAC_DIR}/lib/regex_match.sh"
-. "${UAC_DIR}/lib/regex_not_match.sh"
+. "${UAC_DIR}/lib/s3_presigned_url_transfer_test.sh"
+. "${UAC_DIR}/lib/s3_presigned_url_transfer.sh"
 . "${UAC_DIR}/lib/sanitize_filename.sh"
 . "${UAC_DIR}/lib/sanitize_path.sh"
+. "${UAC_DIR}/lib/sftp_transfer_test.sh"
 . "${UAC_DIR}/lib/sftp_transfer.sh"
 . "${UAC_DIR}/lib/sort_uniq_file.sh"
 . "${UAC_DIR}/lib/stat_collector.sh"
@@ -80,7 +83,7 @@ export PATH
 . "${UAC_DIR}/lib/validate_profile_file.sh"
 
 # global vars
-UAC_VERSION="v2.1.0"
+UAC_VERSION="2.2.0-rc2"
 MOUNT_POINT="/"
 OPERATING_SYSTEM=""
 SYSTEM_ARCH=""
@@ -90,6 +93,13 @@ START_DATE_EPOCH=""
 END_DATE=""
 END_DATE_DAYS=""
 END_DATE_EPOCH=""
+
+# the following variables are not always set on some systems, so they are set
+# here to avoid the script exiting with errors after set -u is used below
+# shellcheck disable=SC2269
+HOME="${HOME}"
+# shellcheck disable=SC2269
+HOSTNAME="${HOSTNAME}"
 
 # local vars
 ua_artifacts=""
@@ -106,7 +116,9 @@ ua_hostname=""
 ua_sftp_destination=""
 ua_sftp_port=""
 ua_sftp_identity_file=""
-ua_sftp_delete_local_on_success=false
+ua_s3_presigned_url=""
+ua_s3_presigned_url_log_file=""
+ua_delete_local_on_successful_transfer=false
 ua_debug_mode=false
 ua_temp_data_dir_symlink_support=false
 
@@ -114,6 +126,7 @@ ua_temp_data_dir_symlink_support=false
 load_config_file "${UAC_DIR}/config/uac.conf" || exit 1
 
 # get current command
+# shellcheck disable=SC2124
 ua_command_line="$0 $@"
 
 # parse command line arguments
@@ -187,6 +200,16 @@ Try 'uac --help' for more information.\n" >&2
       ;;
     "-u"|"--run-as-non-root")
       ua_run_as_non_root=true
+      ;;
+    "--hostname")
+      if [ -n "${2}" ]; then
+        ua_hostname="${2}"
+        shift
+      else
+        printf %b "uac: option '${1}' requires an argument.\n\
+Try 'uac --help' for more information.\n" >&2
+        exit 1
+      fi
       ;;
     "--temp-dir")
       if [ -n "${2}" ]; then
@@ -270,16 +293,6 @@ Try 'uac --help' for more information.\n" >&2
         exit 1
       fi
       ;;
-    "--hostname")
-      if [ -n "${2}" ]; then
-        ua_hostname="${2}"
-        shift
-      else
-        printf %b "uac: option '${1}' requires an argument.\n\
-Try 'uac --help' for more information.\n" >&2
-        exit 1
-      fi
-      ;;
     # remote transfer arguments
     "--sftp")
       if [ -n "${2}" ]; then
@@ -311,8 +324,28 @@ Try 'uac --help' for more information.\n" >&2
         exit 1
       fi
       ;;
-    "--sftp-delete-local-on-success")
-      ua_sftp_delete_local_on_success=true
+    "--s3-presigned-url")
+      if [ -n "${2}" ]; then
+        ua_s3_presigned_url="${2}"
+        shift
+      else
+        printf %b "uac: option '${1}' requires an argument.\n\
+Try 'uac --help' for more information.\n" >&2
+        exit 1
+      fi
+      ;;
+    "--s3-presigned-url-log-file")
+      if [ -n "${2}" ]; then
+        ua_s3_presigned_url_log_file="${2}"
+        shift
+      else
+        printf %b "uac: option '${1}' requires an argument.\n\
+Try 'uac --help' for more information.\n" >&2
+        exit 1
+      fi
+      ;;
+    "--delete-local-on-successful-transfer")
+      ua_delete_local_on_successful_transfer=true
       ;;
     # validation arguments
     "--validate-artifacts-file")
@@ -347,6 +380,7 @@ Try 'uac --help' for more information.\n" >&2
 done
 
 # treat unset variables as an error when substituting
+# set -u cannot be set the beginning of the file since it will fail on $@
 set -u
 
 # print available profiles
@@ -396,11 +430,12 @@ if [ -n "${ua_artifacts}" ]; then
   for ua_artifact_file in ${ua_artifacts}; do
     ua_artifact_file=`echo "${ua_artifact_file}" | sed -e 's:^!::g' -e 's:\.\.::g'`
     if [ -n "${ua_artifact_file}" ]; then
+      # shellcheck disable=SC2086
       find "${UAC_DIR}"/artifacts/${ua_artifact_file} -name "*.yaml" \
         -type f -print >/dev/null 2>/dev/null
       if [ "$?" -gt 0 ]; then
         printf %b "uac: artifact file not found \
-  '"${UAC_DIR}"/artifacts/${ua_artifact_file}'\n" >&2
+  '${UAC_DIR}/artifacts/${ua_artifact_file}'\n" >&2
         exit 1
       fi
     else
@@ -424,7 +459,8 @@ if [ -n "${ua_temp_dir}" ] && [ ! -d "${ua_temp_dir}" ]; then
 fi
 
 # get absolute destination directory path
-cd "${ua_destination_dir}" && ua_destination_dir=`pwd` && cd "${UAC_DIR}"
+cd "${ua_destination_dir}" && ua_destination_dir=`pwd` && cd "${UAC_DIR}" \
+  || exit 1
 
 # get operating system if not set by --operating_system
 if [ -z "${OPERATING_SYSTEM}" ]; then
@@ -433,6 +469,7 @@ fi
 # check if operating system is supported
 if [ "${OPERATING_SYSTEM}" != "android" ] \
   && [ "${OPERATING_SYSTEM}" != "aix" ] \
+  && [ "${OPERATING_SYSTEM}" != "esxi" ] \
   && [ "${OPERATING_SYSTEM}" != "freebsd" ] \
   && [ "${OPERATING_SYSTEM}" != "linux" ] \
   && [ "${OPERATING_SYSTEM}" != "macos" ] \
@@ -448,11 +485,12 @@ fi
 # check if start and end dates are valid
 if [ -n "${START_DATE}" ]; then
   START_DATE_EPOCH=`get_epoch_date "${START_DATE}"` || exit 1
-  #get_days_since_date_until_now "${START_DATE}"
+  # shellcheck disable=SC2034
   START_DATE_DAYS=`get_days_since_date_until_now "${START_DATE}"`
 fi
 if [ -n "${END_DATE}" ]; then
   END_DATE_EPOCH=`get_epoch_date "${END_DATE}"` || exit 1
+  # shellcheck disable=SC2034
   END_DATE_DAYS=`get_days_since_date_until_now "${END_DATE}"`
   if [ "${START_DATE_EPOCH}" -gt "${END_DATE_EPOCH}" ]; then
     printf %b "uac: start date cannot be greater than end date.\n" >&2
@@ -498,6 +536,31 @@ else
   TEMP_DATA_DIR="${ua_destination_dir}/uac-data.tmp"
 fi
 
+# test the connectivity to remote sftp server
+if [ -n "${ua_sftp_destination}" ]; then
+  if sftp_transfer_test "${ua_sftp_destination}" "${ua_sftp_port}" \
+    "${ua_sftp_identity_file}" >/dev/null; then
+    true
+  else
+    exit 1
+  fi
+fi
+
+# test the connectivity to s3 presigned url
+if [ -n "${ua_s3_presigned_url}" ]; then
+  if eval "curl --version" >/dev/null 2>/dev/null; then
+    if s3_presigned_url_transfer_test "${ua_s3_presigned_url}"; then
+      true
+    else
+      exit 1
+    fi
+  else
+    printf %b "uac: cannot transfer to S3 presigned URL because 'curl' \
+tool was not found.\n"
+    exit 1
+  fi
+fi
+
 # remove any existing (old) collected data
 if [ -d "${TEMP_DATA_DIR}" ]; then
   rm -rf "${TEMP_DATA_DIR}" >/dev/null
@@ -519,6 +582,7 @@ fi
 trap terminate INT
 
 # set log files
+# shellcheck disable=SC2034
 UAC_LOG_FILE="${TEMP_DATA_DIR}/uac.log"
 UAC_STDERR_LOG_FILE="${TEMP_DATA_DIR}/uac.log.stderr"
 
@@ -626,8 +690,10 @@ else
 fi
 
 # get all user/home list
+# shellcheck disable=SC2034
 USER_HOME_LIST=`get_user_home_list 2>>"${UAC_STDERR_LOG_FILE}"`
 # get user/home list skipping users with non-interactive shells
+# shellcheck disable=SC2034
 VALID_SHELL_ONLY_USER_HOME_LIST=`get_user_home_list true 2>>"${UAC_STDERR_LOG_FILE}"`
 
 # acquisition start date
@@ -644,8 +710,10 @@ ua_progress_total=`wc -l "${TEMP_DATA_DIR}/.artifacts.tmp" | awk '{print $1}'`
 # enable debug mode if it is set to true
 ${ua_debug_mode} && set -x
 
+# shellcheck disable=SC2162
 while read ua_artifact_file || [ -n "${ua_artifact_file}" ]; do
   log_message INFO "Parsing artifacts file '${ua_artifact_file}'"
+  # shellcheck disable=SC2003
   ua_progress_current=`expr ${ua_progress_current} + 1`
   printf "[%03d/%03d] %b\n" "${ua_progress_current}" \
     "${ua_progress_total}" "${ua_artifact_file}"
@@ -665,7 +733,8 @@ ua_acq_end_date_epoch=`get_epoch_date 2>>"${UAC_STDERR_LOG_FILE}"`
 ua_current_date_time=`date "+%Y%m%d%H%M%S"`
 
 # calculate running time
-ua_total_running_time=`expr ${ua_acq_end_date_epoch} - ${ua_acq_start_date_epoch}`
+# shellcheck disable=SC2003
+ua_total_running_time=`expr "${ua_acq_end_date_epoch}" - "${ua_acq_start_date_epoch}"`
 
 printf %b "--------------------------------------------------------------------------------\n"
 log_message INFO "Artifacts collection complete. \
@@ -707,11 +776,11 @@ if ${TAR_TOOL_AVAILABLE} && ${GZIP_TOOL_AVAILABLE}; then
   printf %b "Creating output file. Please wait...\n"
   ua_output_file="uac-${ua_hostname}-${OPERATING_SYSTEM}-${ua_current_date_time}.tar.gz"
   
-  cd "${TEMP_DATA_DIR}"
+  cd "${TEMP_DATA_DIR}" || exit 1
   if archive_compress_data ".output_file.tmp" \
     "${ua_destination_dir}/${ua_output_file}" 2>/dev/null; then
     printf %b "Output file created '${ua_destination_dir}/${ua_output_file}'\n"
-    cd "${UAC_DIR}"
+    cd "${UAC_DIR}" || exit 1
     rm -rf "${TEMP_DATA_DIR}" >/dev/null 2>/dev/null
     if [ -d "${TEMP_DATA_DIR}" ]; then
         printf %b "Cannot remove temporary directory '${TEMP_DATA_DIR}'\n"
@@ -727,11 +796,11 @@ elif ${TAR_TOOL_AVAILABLE}; then
   printf %b "Creating output file. Please wait...\n"
   ua_output_file="uac-${ua_hostname}-${OPERATING_SYSTEM}-${ua_current_date_time}.tar"
 
-  cd "${TEMP_DATA_DIR}"
+  cd "${TEMP_DATA_DIR}" || exit 1
   if archive_data ".output_file.tmp" \
     "${ua_destination_dir}/${ua_output_file}" 2>/dev/null; then
     printf %b "Output file created '${ua_destination_dir}/${ua_output_file}'\n"
-    cd "${UAC_DIR}"
+    cd "${UAC_DIR}" || exit 1
     rm -rf "${TEMP_DATA_DIR}" >/dev/null 2>/dev/null
     if [ -d "${TEMP_DATA_DIR}" ]; then
         printf %b "Cannot remove temporary directory '${TEMP_DATA_DIR}'\n"
@@ -748,16 +817,16 @@ ua_output_file_hash=""
 # hash output file
 if [ -f "${ua_destination_dir}/${ua_output_file}" ]; then
   printf %b "Hashing output file. Please wait...\n"
-  cd "${ua_destination_dir}"
+  cd "${ua_destination_dir}" || exit 1
   ua_output_file_hash=`${MD5_HASHING_TOOL} "${ua_output_file}"`
-  cd "${UAC_DIR}"
+  cd "${UAC_DIR}" || exit 1
 fi
 
 # acquisition log file name
 ua_acquisition_log="uac-${ua_hostname}-${OPERATING_SYSTEM}-${ua_current_date_time}.log"
 
-# print acquisition log to file
-print_acquisition_log \
+# create the acquisition log
+if create_acquisition_log \
   "${ua_case_number}" \
   "${ua_evidence_number}" \
   "${ua_evidence_description}" \
@@ -767,26 +836,28 @@ print_acquisition_log \
   "${ua_acq_start_date}" \
   "${ua_acq_end_date}" \
   "${ua_output_file_hash}" \
-    >"${ua_destination_dir}/${ua_acquisition_log}"
+  "${ua_destination_dir}" \
+  "${ua_acquisition_log}" 2>/dev/null; then
+  printf %b "Acquisition log created '${ua_destination_dir}/${ua_acquisition_log}'\n"
+else
+  printf %b "Cannot create acquisition log\n"
+fi
 
-printf %b "Acquisition log created \
-'${ua_destination_dir}/${ua_acquisition_log}'\n"
-
-# transfer output and log file to remote scp server
+# transfer output and log file to remote sftp server
 if [ -n "${ua_sftp_destination}" ]; then
   printf %b "Transferring output file to remote SFTP server. Please wait...\n"
   if sftp_transfer "${ua_destination_dir}/${ua_output_file}" \
     "${ua_sftp_destination}" "${ua_sftp_port}" "${ua_sftp_identity_file}"; then
     printf %b "File transferred successfully\n"
     # delete output file on success transfer
-    ${ua_sftp_delete_local_on_success} \
+    ${ua_delete_local_on_successful_transfer} \
       && rm -f "${ua_destination_dir}/${ua_output_file}" 2>/dev/null
     printf %b "Transferring log file to remote SFTP server. Please wait...\n"
     if sftp_transfer "${ua_destination_dir}/${ua_acquisition_log}" \
       "${ua_sftp_destination}" "${ua_sftp_port}" "${ua_sftp_identity_file}"; then
       printf %b "File transferred successfully\n"
       # delete log file on success transfer
-      ${ua_sftp_delete_local_on_success} \
+      ${ua_delete_local_on_successful_transfer} \
         && rm -f "${ua_destination_dir}/${ua_acquisition_log}" 2>/dev/null
     else
       printf %b "Could not transfer log file to remote SFTP server\n"
@@ -795,6 +866,34 @@ if [ -n "${ua_sftp_destination}" ]; then
   else
     printf %b "Could not transfer output file to remote SFTP server\n"
     exit 1
+  fi
+fi
+
+# transfer output and log file to s3 presigned url
+if [ -n "${ua_s3_presigned_url}" ]; then
+  printf %b "Transferring output file to S3 presigned URL. Please wait...\n"
+  if s3_presigned_url_transfer "${ua_destination_dir}/${ua_output_file}" \
+    "${ua_s3_presigned_url}"; then
+    printf %b "File transferred successfully\n"
+    # delete output file on success transfer
+    ${ua_delete_local_on_successful_transfer} \
+      && rm -f "${ua_destination_dir}/${ua_output_file}" 2>/dev/null
+  else
+    printf %b "Could not transfer output file to S3 presigned URL\n"
+    exit 1
+  fi
+  if [ -n "${ua_s3_presigned_url_log_file}" ]; then
+    printf %b "Transferring log file to S3 presigned URL. Please wait...\n"
+    if s3_presigned_url_transfer "${ua_destination_dir}/${ua_acquisition_log}" \
+      "${ua_s3_presigned_url_log_file}"; then
+      printf %b "File transferred successfully\n"
+      # delete output file on success transfer
+      ${ua_delete_local_on_successful_transfer} \
+        && rm -f "${ua_destination_dir}/${ua_acquisition_log}" 2>/dev/null
+    else
+      printf %b "Could not transfer log file to S3 presigned URL\n"
+      exit 1
+    fi
   fi
 fi
 

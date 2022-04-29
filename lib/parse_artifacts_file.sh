@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# shellcheck disable=SC2001,SC2006
+
 ###############################################################################
 # Parse artifacts file.
 # Globals:
@@ -25,7 +27,6 @@
 # Requires:
 #   array_to_list
 #   lrstrip
-#   regex_match
 #   sanitize_path
 # Arguments:
 #   $1: artifacts file
@@ -81,6 +82,7 @@ parse_artifacts_file()
   # remove lines starting with # (comments)
   # remove inline comments
   # remove blank lines
+  # shellcheck disable=SC2162
   printf %b "\n-" | cat "${pa_artifacts_file}" - \
     | sed -e 's/#.*$//g' -e '/^ *$/d' -e '/^$/d' 2>/dev/null \
     | while IFS=":" read pa_key pa_value || [ -n "${pa_key}" ]; do
@@ -96,6 +98,10 @@ parse_artifacts_file()
           # replace %mount_point% by ${MOUNT_POINT} value
           pa_value=`echo "${pa_value}" \
             | sed -e "s:%mount_point%:${MOUNT_POINT}:g"`
+
+          # replace %destination_directory% by ${TEMP_DATA_DIR}/${pa_root_output_directory} value
+          pa_value=`echo "${pa_value}" \
+            | sed -e "s:%destination_directory%:${TEMP_DATA_DIR}/${pa_root_output_directory}:g"`
 
           if [ -n "${START_DATE}" ]; then
             # replace %start_date% by ${START_DATE} value
@@ -124,7 +130,7 @@ parse_artifacts_file()
             if [ "${pa_dash}" != "-" ]; then
               printf %b "validate_artifacts_file: invalid 'artifacts' \
 sequence of mappings\n" >&2
-              return 3
+              return 150
             fi
             ;;
           "collector")
@@ -199,6 +205,7 @@ sequence of mappings\n" >&2
             # skip if artifact does not apply to the current operating system
             if is_element_in_list "${OPERATING_SYSTEM}" "${pa_supported_os}" \
               || is_element_in_list "all" "${pa_supported_os}"; then
+              # shellcheck disable=SC2034
               pa_do_nothing=true
             else
               _cleanup_local_vars
@@ -217,12 +224,12 @@ sequence of mappings\n" >&2
 
             # path, command or loop_command contains %user% and/or %user_home%
             # the same collector needs to be run for each %user% and/or %user_home%
-            if regex_match "%user%" "${pa_path}" 2>/dev/null \
-              || regex_match "%user%" "${pa_command}" 2>/dev/null \
-              || regex_match "%user%" "${pa_loop_command}" 2>/dev/null \
-              || regex_match "%user_home%" "${pa_path}" 2>/dev/null \
-              || regex_match "%user_home%" "${pa_command}" 2>/dev/null \
-              || regex_match "%user_home%" "${pa_loop_command}" 2>/dev/null; then
+            if echo "${pa_path}" | grep -q -E "%user%" 2>/dev/null \
+              || echo "${pa_command}" | grep -q -E "%user%" 2>/dev/null \
+              || echo "${pa_loop_command}" | grep -q -E "%user%" 2>/dev/null \
+              || echo "${pa_path}" | grep -q -E "%user_home%" 2>/dev/null \
+              || echo "${pa_command}" | grep -q -E "%user_home%" 2>/dev/null \
+              || echo "${pa_loop_command}" | grep -q -E "%user_home%" 2>/dev/null; then
 
               # loop through users
               pa_user_home_list="${USER_HOME_LIST}"

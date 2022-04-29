@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# shellcheck disable=SC2006
+
 ###############################################################################
 # Collector that searches and stat files.
 # Globals:
@@ -154,7 +156,7 @@ stat_collector()
             log_message COMMAND "| sort -u | sed -e \"s:':\\\':g\" -e 's:\":\\\\\":g' | xargs -I{} stat -f \"0|%N%SY|%i|%Sp|%u|%g|%z|%a|%m|%c|%B\" \"{}\""
           fi
           ;;
-        "android"|"linux"|"solaris")
+        "android"|"esxi"|"linux"|"solaris")
           # %N returns quoted file names, so single and double quotes, and back
           # apostrophe needs to be removed using 'sed'
 
@@ -212,12 +214,14 @@ stat_collector()
         "freebsd"|"macos"|"netbsd"|"netscaler"|"openbsd")
           if ${_sc_is_file_list}; then
             log_message COMMAND "sort -u \"${_sc_path}\" | while read %line%; do stat -f \"0|%N%SY|%i|%Sp|%u|%g|%z|%a|%m|%c|%B\" \"%line%\"; done"
+            # shellcheck disable=SC2162
             sort -u "${_sc_path}" \
               | while read _sc_line || [ -n "${_sc_line}" ]; do
                   stat -f "0|%N%SY|%i|%Sp|%u|%g|%z|%a|%m|%c|%B" "${_sc_line}"
                 done \
                   >>"${TEMP_DATA_DIR}/${_sc_output_directory}/${_sc_output_file}"
           else
+            # shellcheck disable=SC2162
             find_wrapper \
               "${_sc_path}" \
               "${_sc_path_pattern}" \
@@ -239,7 +243,7 @@ stat_collector()
             log_message COMMAND "| sort -u | while read %line%; do stat -f \"0|%N%SY|%i|%Sp|%u|%g|%z|%a|%m|%c|%B\" \"%line%\"; done"
           fi
           ;;
-        "android"|"linux"|"solaris")
+        "android"|"esxi"|"linux"|"solaris")
           # %N returns quoted file names, so single and double quotes, and back 
           # apostrophe needs to be removed using 'sed'
 
@@ -248,6 +252,7 @@ stat_collector()
           # the question mark will be replaced by a zero character
           if ${_sc_is_file_list}; then
             log_message COMMAND "sort -u \"${_sc_path}\" | while read %line%; do stat -c \"0|%N|%i|%A|%u|%g|%s|%X|%Y|%Z|%W\" \"%line%\"; done"
+            # shellcheck disable=SC2162
             sort -u "${_sc_path}" \
               | while read _sc_line || [ -n "${_sc_line}" ]; do
                   stat -c "0|%N|%i|%A|%u|%g|%s|%X|%Y|%Z|%W" "${_sc_line}" \
@@ -262,6 +267,7 @@ stat_collector()
                 done \
                   >>"${TEMP_DATA_DIR}/${_sc_output_directory}/${_sc_output_file}"
           else
+            # shellcheck disable=SC2162
             find_wrapper \
               "${_sc_path}" \
               "${_sc_path_pattern}" \
@@ -361,12 +367,14 @@ stat_collector()
     else
       if ${_sc_is_file_list}; then
         log_message COMMAND "sort -u \"${_sc_path}\" | while read %line%; do statx \"%line%\"; done"
+        # shellcheck disable=SC2162
         sort -u "${_sc_path}" \
           | while read _sc_line || [ -n "${_sc_line}" ]; do
               statx "${_sc_line}"
             done \
               >>"${TEMP_DATA_DIR}/${_sc_output_directory}/${_sc_output_file}"
       else
+        # shellcheck disable=SC2162
         find_wrapper \
           "${_sc_path}" \
           "${_sc_path_pattern}" \
@@ -457,12 +465,14 @@ stat_collector()
     else
       if ${_sc_is_file_list}; then
         log_message COMMAND "sort -u \"${_sc_path}\" | while read %line%; do perl \"${UAC_DIR}/tools/stat.pl/stat.pl\" \"%line%\"; done"
+        # shellcheck disable=SC2162
         sort -u "${_sc_path}" \
           | while read _sc_line || [ -n "${_sc_line}" ]; do
               perl "${UAC_DIR}/tools/stat.pl/stat.pl" "${_sc_line}"
             done \
               >>"${TEMP_DATA_DIR}/${_sc_output_directory}/${_sc_output_file}"
       else
+        # shellcheck disable=SC2162
         find_wrapper \
           "${_sc_path}" \
           "${_sc_path_pattern}" \
@@ -490,25 +500,25 @@ stat_collector()
   # return if path is empty
   if [ -z "${sc_path}" ]; then
     printf %b "stat_collector: missing required argument: 'path'\n" >&2
-    return 2
+    return 22
   fi
 
   # return if root output directory is empty
   if [ -z "${sc_root_output_directory}" ]; then
     printf %b "stat_collector: missing required argument: \
 'root_output_directory'\n" >&2
-    return 3
+    return 22
   fi
 
   # return if output file is empty
   if [ -z "${sc_output_file}" ]; then
     printf %b "stat_collector: missing required argument: 'output_file'\n" >&2
-    return 4
+    return 22
   fi
 
   # prepend root output directory to path if it does not start with /
   # (which means local file)
-  if regex_not_match "^/" "${sc_path}"; then
+  if echo "${sc_path}" | grep -q -v -E "^/"; then
     sc_path=`sanitize_path "${TEMP_DATA_DIR}/${sc_root_output_directory}/${sc_path}"`
   fi
 
@@ -647,7 +657,7 @@ ${GLOBAL_EXCLUDE_NAME_PATTERN}"
   else
     printf %b "stat_collector: target system has neither 'stat', 'statx' nor \
 'perl' tool available\n" >&2
-    return 6
+    return 127
   fi
 
   # sort and uniq output file

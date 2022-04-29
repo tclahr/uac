@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# shellcheck disable=SC2006
+
 ###############################################################################
 # Collector that searches and collects files. 
 # Globals:
@@ -82,25 +84,25 @@ file_collector()
   # return if path is empty
   if [ -z "${fl_path}" ]; then
     printf %b "file_collector: missing required argument: 'path'\n" >&2
-    return 2
+    return 22
   fi
 
   # return if output file is empty
   if [ -z "${fl_output_file}" ]; then
     printf %b "file_collector: missing required argument: 'output_file'\n" >&2
-    return 3
+    return 22
   fi
 
   # prepend TEMP_DATA_DIR to path if it does not start with /
   # (which means local file)
-  if regex_not_match "^/" "${fl_path}"; then
+  if echo "${fl_path}" | grep -q -v -E "^/"; then
     fl_path=`sanitize_path "${TEMP_DATA_DIR}/${fl_path}"`
   fi
 
   # return if is file list and file list does not exist
   if ${fl_is_file_list} && [ ! -f "${fl_path}" ]; then
     printf %b "file_collector: file list does not exist: '${fl_path}'\n" >&2
-    return 5
+    return 2
   fi
 
   # sanitize output file name

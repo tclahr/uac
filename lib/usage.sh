@@ -36,7 +36,8 @@ usage()
              [--evidence-number EVIDENCE_NUMBER] [--examiner EXAMINER]
              [--notes NOTES] [--hostname HOSTNAME] [--stfp SERVER] 
              [--sftp-port PORT] [--sftp-identity-file FILE]
-             [--sftp-delete-local-on-success] [--debug]
+             [--s3-presigned-url URL] [--s3-presigned-url-log-file URL]
+             [--delete-local-on-successful-transfer] [--debug]
    or: $0 --validate-artifacts-file FILE
 
 Optional Arguments:
@@ -59,18 +60,20 @@ Profiling Arguments:
                     Use '--artifacts list' to list available artifacts.
 
 Positional Arguments:
-  DESTINATION       Specify the directory the output file will be created in.
+  DESTINATION       Specify the directory the output file should be copied to.
 
 Collection Arguments:
   -m, --mount-point MOUNT_POINT
                     Specify the mount point (default: /).
   -s, --operating-system OPERATING_SYSTEM
                     Specify the operating system.
-                    Options: aix, android, freebsd, linux, macos, netbsd
+                    Options: aix, android, esxi, freebsd, linux, macos, netbsd
                              netscaler, openbsd, solaris
   -u, --run-as-non-root
                     Disable root user check.
                     Note that data collection may be limited.
+      --hostname HOSTNAME
+                    Specify the target system hostname.
       --temp-dir PATH   
                     Write all temporary data to this directory.
 
@@ -93,8 +96,6 @@ Informational Arguments:
                     Specify the examiner name.
       --notes NOTES
                     Specify the notes.
-      --hostname HOSTNAME
-                    Specify the target system hostname.
 
 Remote Transfer Arguments:
       --sftp SERVER
@@ -105,8 +106,12 @@ Remote Transfer Arguments:
       --sftp-identity-file FILE
                     File from which the identity (private key) for public key
                     authentication is read.
-      --sftp-delete-local-on-success
-                    Delete local output file on successful transfer.
+      --s3-presigned-url URL
+                    Transfer output file to AWS S3 using a presigned URL.
+      --s3-presigned-url-log-file URL
+                    Transfer log file to AWS S3 using a presigned URL.
+      --delete-local-on-successful-transfer
+                    Delete local output and log files on successful transfer.
 
 Validation Arguments:
       --validate-artifacts-file FILE

@@ -44,10 +44,12 @@ parse_profile_file()
   # grep lines starting with "  - !"
   # remove "  - !" from the beginning of the line
   # remove duplicates
+  # shellcheck disable=SC2162
   sed -e 's/#.*$//g' -e '/^ *$/d' -e '/^$/d' <"${pp_profile_file}" 2>/dev/null \
     | grep -E " +- +!" \
     | sed -e 's: *- *!::g' 2>/dev/null \
     | while read pp_line || [ -n "${pp_line}" ]; do
+        # shellcheck disable=SC2086
         find "${UAC_DIR}"/artifacts/${pp_line} -type f -print \
           | sed -e "s:${UAC_DIR}/artifacts/::g" 2>/dev/null
       done \
@@ -60,10 +62,12 @@ parse_profile_file()
   # grep lines starting with "  - "
   # remove "  - " from the beginning of the line
   # remove duplicates
+  # shellcheck disable=SC2162
   sed -e 's/#.*$//g' -e '/^ *$/d' -e '/^$/d' <"${pp_profile_file}" 2>/dev/null \
     | grep -E " +- +[^!]" \
     | sed -e 's: *- *::g' 2>/dev/null \
     | while read pp_line || [ -n "${pp_line}" ]; do
+        # shellcheck disable=SC2086
         find "${UAC_DIR}"/artifacts/${pp_line} -type f -print \
           | sed -e "s:^${UAC_DIR}/artifacts/::g" 2>/dev/null
       done \

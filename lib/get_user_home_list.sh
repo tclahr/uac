@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# shellcheck disable=SC2006
+
 ###############################################################################
 # Get current user list and their home directories.
 # Globals:
@@ -81,7 +83,6 @@ get_user_home_list()
   fi
 
   # ChomeOS has '/home/.shadow' directory
-  #gu_user_home_dir=`sanitize_path "${MOUNT_POINT}/home/.shadow"`
   gu_user_home_dir="/home/.shadow"
   if [ -d "${MOUNT_POINT}/${gu_user_home_dir}" ]; then
     echo "shadow:${gu_user_home_dir}" >>"${TEMP_DATA_DIR}/.user_home_list.tmp"
@@ -89,7 +90,7 @@ get_user_home_list()
 
   # extract user:home for current user only if running on a live system
   # useful for systems which do not have a /etc/passwd file
-  if [ "${MOUNT_POINT}" = "/" ]; then
+  if [ "${MOUNT_POINT}" = "/" ] && [ -n "${HOME}" ]; then
     gu_current_user=`get_current_user`
     echo "${gu_current_user}:${HOME}" >>"${TEMP_DATA_DIR}/.user_home_list.tmp"
   fi

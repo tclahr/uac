@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# shellcheck disable=SC2006
+
 ###############################################################################
 # Get current operating system.
 # Globals:
@@ -60,6 +62,9 @@ get_operating_system()
       ;;
     "SunOS")
       printf %b "solaris"
+      ;;
+    "VMkernel")
+      printf %b "esxi"
       ;;
     *)
       printf %b "${gs_kernel_name}"

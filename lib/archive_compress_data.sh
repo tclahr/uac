@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# shellcheck disable=SC2006
+
 ###############################################################################
 # Archive and compress files and directories.
 # Globals:
@@ -48,7 +50,7 @@ archive_compress_data()
     "freebsd"|"netbsd"|"netscaler"|"openbsd")
       tar -I "${ac_source_file}" -cf - | gzip >"${ac_destination_file}"
       ;;
-    "android"|"linux")
+    "android"|"esxi"|"linux")
       # some old tar/busybox versions do not support -T, so a different
       # solution is required to package and compress data
       # checking if tar can create package getting names from file

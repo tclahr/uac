@@ -13,44 +13,32 @@
 # limitations under the License.
 
 ###############################################################################
-# Return true if string does not match pattern.
+# Transfer file to S3 presigned URL.
 # Globals:
 #   None
 # Requires:
 #   None
 # Arguments:
-#   $1: pattern
-#   $2: string
-#   $3: true   ignore case
-#       false  case sensitive (default)
+#   $1: source file
+#   $2: S3 presigned URL
 # Outputs:
-#   None
+#   None.
 # Exit Status:
 #   Exit with status 0 on success.
 #   Exit with status greater than 0 if errors occur.
 ###############################################################################
-regex_not_match()
+s3_presigned_url_transfer()
 {
-  rn_pattern="${1:-}"
-  rn_string="${2:-}"
-  rn_ignore_case="${3:-false}"
+  pu_source="${1:-}"
+  pu_s3_presigned_url="${2:-}"
 
-  # return if pattern is empty
-  if [ -z "${rn_pattern}" ]; then
-    printf %b "regex_not_match: missing required argument: 'pattern'\n" >&2
-    return 2
-  fi
-
-  # return if string is empty
-  if [ -z "${rn_string}" ]; then
-    printf %b "regex_not_match: missing required argument: 'string'\n" >&2
-    return 3
-  fi
-
-  if ${rn_ignore_case}; then
-    echo "${rn_string}" | grep -v -q -E -i "${rn_pattern}"
-  else
-    echo "${rn_string}" | grep -v -q -E "${rn_pattern}"
-  fi
+  curl \
+    --fail \
+    --request PUT \
+    --header "Content-Type: application/text" \
+    --header "Accept: */*" \
+    --header "Expect: 100-continue" \
+    --upload-file "${pu_source}" \
+    "${pu_s3_presigned_url}"
 
 }

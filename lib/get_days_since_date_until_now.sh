@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# shellcheck disable=SC2006
+
 ###############################################################################
 # Count days since a specific date until now (today).
 # Globals:
@@ -33,11 +35,13 @@ get_days_since_date_until_now()
   gd_epoch_now=`get_epoch_date`
   gd_epoch_date=`get_epoch_date "${gd_date}"` || return 1
   if [ "${gd_epoch_now}" -gt "${gd_epoch_date}" ]; then
-    gd_difference=`expr ${gd_epoch_now} - ${gd_epoch_date} 2>/dev/null`
-    expr ${gd_difference} / 86400 2>/dev/null
+    # shellcheck disable=SC2003
+    gd_difference=`expr "${gd_epoch_now}" - "${gd_epoch_date}" 2>/dev/null`
+    # shellcheck disable=SC2003
+    expr "${gd_difference}" / 86400 2>/dev/null
   else
     printf %b "uac: date '${gd_date}' cannot be greater than today.\n" >&2
-    return 2
+    return 22
   fi
 
 }

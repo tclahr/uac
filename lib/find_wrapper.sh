@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# shellcheck disable=SC2006
+
 ###############################################################################
 # Use internal 'find' tool or 'find.pl' script to search for files in a 
 # directory hierarchy.
@@ -132,7 +134,7 @@ find_wrapper()
   # return if starting point is empty
   if [ -z "${fw_path}" ]; then
     printf %b "find_wrapper: missing required argument: 'path'\n" >&2
-    return 2
+    return 22
   fi
 
   fw_find_tool="find"
@@ -356,6 +358,7 @@ ${fw_find_perm_param} \
 ${fw_find_date_range_param} -print"
     else
       # if operators are not supported, 'find' will be run for each -name value
+      # shellcheck disable=SC2162
       echo "${fw_name_pattern}" \
         | sed -e 's:\\,:#_COMMA_#:g' -e 's: *,:,:g' -e 's:, *:,:g' \
           -e 's:, *:,:g' -e 's:^,*::' \

@@ -84,7 +84,7 @@ git checkout -b my-feature-branch develop
 
 1. Create your code following our [Coding Rules](#coding-rules).
 
-1. Test your code against as many system as you can. For instance, your code can fully work on a Linux but not on a FreeBSD system.
+1. Test your code against as many system as you can using the [uac-unit-test](https://github.com/tclahr/uac-unit-test). For instance, your code can fully work on a Linux but not on a FreeBSD system.
 
 1. Commit your changes using a descriptive commit message that follows our [commit message guidelines](#commit-message-guidelines). *Don’t commit code as an unrecognized author. Having commits with unrecognized authors makes it more difficult to track who wrote which part of the code. Ensure your Git client is configured with the correct email address and linked to your GitHub user.*
 
@@ -169,7 +169,7 @@ Must be one of the following:
 
 - **docs**: Documentation only changes.
 - **feat**: A new feature.
-- **artf**: A new artifact or changes to an existing one.
+- **artif**: A new artifact or changes to an existing one.
 - **fix**: A bug fix.
 - **perf**: A code change that improves performance.
 - **refactor**: A code change that neither fixes a bug nor adds a feature.

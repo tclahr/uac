@@ -13,44 +13,30 @@
 # limitations under the License.
 
 ###############################################################################
-# Return true if string matches pattern.
+# Test the connectivity to S3 presigned URL.
 # Globals:
 #   None
 # Requires:
 #   None
 # Arguments:
-#   $1: pattern
-#   $2: string
-#   $3: true   ignore case
-#       false  case sensitive (default)
+#   $1: S3 presigned URL
 # Outputs:
-#   None
+#   None.
 # Exit Status:
 #   Exit with status 0 on success.
 #   Exit with status greater than 0 if errors occur.
 ###############################################################################
-regex_match()
+s3_presigned_url_transfer_test()
 {
-  rm_pattern="${1:-}"
-  rm_string="${2:-}"
-  rm_ignore_case="${3:-false}"
+  pr_s3_presigned_url="${1:-}"
 
-  # return if pattern is empty
-  if [ -z "${rm_pattern}" ]; then
-    printf %b "regex_match: missing required argument: 'pattern'\n" >&2
-    return 2
-  fi
-
-  # return if string is empty
-  if [ -z "${rm_string}" ]; then
-    printf %b "regex_match: missing required argument: 'string'\n" >&2
-    return 3
-  fi
-
-  if ${rm_ignore_case}; then
-    echo "${rm_string}" | grep -i -q -E "${rm_pattern}"
-  else
-    echo "${rm_string}" | grep -q -E "${rm_pattern}"
-  fi
+  curl \
+    --fail \
+    --request PUT \
+    --header "Content-Type: application/text" \
+    --header "Accept: */*" \
+    --header "Expect: 100-continue" \
+    --data "Transfer test from UAC" \
+    "${pr_s3_presigned_url}"
 
 }

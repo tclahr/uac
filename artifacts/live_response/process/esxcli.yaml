@@ -1,0 +1,8 @@
+version: 1.0
+artifacts:
+  -
+    description: List the VMkernel UserWorld processes currently on the host.
+    supported_os: [esxi]
+    collector: command
+    command: esxcli system process list
+    output_file: esxcli_system_process_list.txt

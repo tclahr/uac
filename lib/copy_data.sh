@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# shellcheck disable=SC2006
+
 ###############################################################################
 # Copy files and directories.
 # Globals:
@@ -38,13 +40,13 @@ copy_data()
     return 2
   fi
 
-  cat "${cp_source_file}" \
-    | while read cp_line || [ -n "${cp_line}" ]; do
-        cp_dirname=`dirname "${cp_line}"`
-        if [ -n "${cp_dirname}" ] && [ -d "${cp_dirname}" ]; then
-          mkdir -p "${cp_destination}/${cp_dirname}"
-          cp -r "${cp_line}" "${cp_destination}/${cp_dirname}"
-        fi
-      done
+  # shellcheck disable=SC2162
+  while read cp_line || [ -n "${cp_line}" ]; do
+    cp_dirname=`dirname "${cp_line}"`
+    if [ -n "${cp_dirname}" ] && [ -d "${cp_dirname}" ]; then
+      mkdir -p "${cp_destination}/${cp_dirname}"
+      cp -r "${cp_line}" "${cp_destination}/${cp_dirname}"
+    fi
+  done <"${cp_source_file}"
 
 }

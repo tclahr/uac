@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# shellcheck disable=SC2001,SC2006
+
 ###############################################################################
 # Collector that runs commands.
 # Globals:
@@ -19,7 +21,6 @@
 #   TEMP_DATA_DIR
 # Requires:
 #   log_message
-#   regex_match
 # Arguments:
 #   $1: loop command (optional)
 #   $2: command
@@ -46,33 +47,39 @@ command_collector()
   # return if command is empty
   if [ -z "${cc_command}" ]; then
     printf %b "command_collector: missing required argument: 'command'\n" >&2
-    return 2
+    return 22
   fi
 
   # return if root output directory is empty
   if [ -z "${cc_root_output_directory}" ]; then
     printf %b "command_collector: missing required argument: \
 'root_output_directory'\n" >&2
-    return 3
+    return 22
   fi
 
   # return if output file is empty
   if [ -z "${cc_output_file}" ]; then
     printf %b "command_collector: missing required argument: 'output_file'\n" >&2
-    return 4
+    return 22
   fi
 
   # loop command
   if [ -n "${cc_loop_command}" ]; then
+
+    # create output directory if it does not exist
+    if [ ! -d  "${TEMP_DATA_DIR}/${cc_root_output_directory}" ]; then
+      mkdir -p "${TEMP_DATA_DIR}/${cc_root_output_directory}" >/dev/null
+    fi
+
     log_message COMMAND "${cc_loop_command}"
     eval "${cc_loop_command}" \
       >"${TEMP_DATA_DIR}/.loop_command.tmp" \
-      2>>"${TEMP_DATA_DIR}/${cc_root_output_directory}/${cc_output_file}.stderr"
+      2>>"${TEMP_DATA_DIR}/${cc_root_output_directory}/loop_command.stderr"
     
     if [ ! -s "${TEMP_DATA_DIR}/.loop_command.tmp" ]; then
       printf %b "command_collector: loop command returned zero lines: \
 ${cc_loop_command}\n" >&2
-      return 5
+      return 61
     fi
 
     if "${cc_compress_output_file}" && ${GZIP_TOOL_AVAILABLE}; then
@@ -81,6 +88,7 @@ ${cc_loop_command}\n" >&2
       log_message COMMAND "| sort -u | while read %line%; do ${cc_command}; done"
     fi
     
+    # shellcheck disable=SC2162
     sort -u <"${TEMP_DATA_DIR}/.loop_command.tmp" \
       | while read cc_line || [ -n "${cc_line}" ]; do
           
@@ -116,7 +124,7 @@ ${cc_loop_command}\n" >&2
             echo "${cc_new_output_directory}/${cc_new_output_file}.gz" \
               >>"${TEMP_DATA_DIR}/.output_file.tmp"
           else
-            if regex_match "%output_file%" "${cc_new_command}"; then
+            if echo "${cc_command}" | grep -q -E "%output_file%"; then
               # replace %output_file% by ${cc_new_output_file} in command
               cc_new_command=`echo "${cc_new_command}" \
                 | sed -e "s:%output_file%:${TEMP_DATA_DIR}/${cc_new_output_directory}/${cc_new_output_file}:g"`
@@ -149,10 +157,10 @@ ${cc_loop_command}\n" >&2
 
         done
 
-    # add stderr file to the list of files to be archived within the 
-    # output file if it is not empty
-    if [ -s "${TEMP_DATA_DIR}/${cc_root_output_directory}/${cc_output_file}.stderr" ]; then
-      echo "${cc_root_output_directory}/${cc_output_file}.stderr" \
+    # add loop_command.stderr file to the list of files to be archived
+    # within the output file if it is not empty
+    if [ -s "${TEMP_DATA_DIR}/${cc_output_directory}/loop_command.stderr" ]; then
+      echo "${cc_output_directory}/loop_command.stderr" \
         >>"${TEMP_DATA_DIR}/.output_file.tmp"
     fi
  
@@ -183,7 +191,7 @@ ${cc_loop_command}\n" >&2
           >>"${TEMP_DATA_DIR}/.output_file.tmp"
       fi
     else
-      if regex_match "%output_file%" "${cc_command}"; then
+      if echo "${cc_command}" | grep -q -E "%output_file%"; then
         # replace %output_file% by ${cc_output_file} in command
         cc_command=`echo "${cc_command}" \
           | sed -e "s:%output_file%:${TEMP_DATA_DIR}/${cc_output_directory}/${cc_output_file}:g"`

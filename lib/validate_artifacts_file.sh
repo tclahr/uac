@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# shellcheck disable=SC2006
+
 ###############################################################################
 # Validate artifacts file.
 # Globals:
@@ -20,7 +22,6 @@
 #   array_to_list
 #   is_integer
 #   lrstrip
-#   regex_not_match
 # Arguments:
 #   $1: artifacts file
 # Outputs:
@@ -71,6 +72,7 @@ validate_artifacts_file()
   # remove lines starting with # (comments)
   # remove inline comments
   # remove blank lines
+  # shellcheck disable=SC2162
   printf %b "\n-" | cat "${va_artifacts_file}" - \
     | sed -e 's/#.*$//g' -e '/^ *$/d' -e '/^$/d' 2>/dev/null \
     | while IFS=":" read va_key va_value || [ -n "${va_key}" ]; do
@@ -82,7 +84,7 @@ validate_artifacts_file()
             if ${va_artifacts_prop}; then
               printf %b "uac: artifacts file: invalid duplicated \
 'artifacts' mapping.\n" >&2
-              return 4
+              return 151
             fi
             va_artifacts_prop=true
             # read the next line which must be a dash (-)
@@ -91,7 +93,7 @@ validate_artifacts_file()
             if [ "${va_dash}" != "-" ]; then
               printf %b "uac: artifacts file: invalid 'artifacts' \
 sequence of mappings.\n" >&2
-              return 45
+              return 150
             fi
             ;;
           "version")
@@ -99,7 +101,7 @@ sequence of mappings.\n" >&2
             if [ -z "${va_version}" ]; then
               printf %b "uac: artifacts file: 'version' must not be \
 empty.\n" >&2
-              return 5
+              return 152
             fi
             ;;
           "description")
@@ -107,7 +109,7 @@ empty.\n" >&2
             if [ -z "${va_description}" ]; then
               printf %b "uac: artifacts file: 'description' must not be \
 empty.\n" >&2
-              return 6
+              return 152
             fi
             ;;
           "collector")
@@ -119,7 +121,7 @@ empty.\n" >&2
               && [ "${va_collector}" != "stat" ]; then
               printf %b "uac: artifacts file: invalid 'collector': \
 '${va_collector}'\n" >&2
-              return 7
+              return 152
             fi
             ;;
           "supported_os")
@@ -127,14 +129,14 @@ empty.\n" >&2
             if [ -z "${va_supported_os}" ]; then
               printf %b "uac: artifacts file: 'supported_os' must not \
 be empty.\n" >&2
-              return 8
-            elif regex_not_match "^\[" "${va_supported_os}" \
-              && regex_not_match "\]$" "${va_supported_os}"; then
+              return 152
+            elif echo "${va_supported_os}" | grep -q -v -E "^\[" \
+              && echo "${va_supported_os}" | grep -q -v -E "\]$"; then
               printf %b "uac: artifacts file: 'supported_os' must be an \
 array/list.\n" >&2
-              return 9
+              return 152
             fi
-            va_so_list="all,aix,android,freebsd,linux,macos,netbsd,netscaler,openbsd,solaris"
+            va_so_list="all,aix,android,esxi,freebsd,linux,macos,netbsd,netscaler,openbsd,solaris"
             OIFS="${IFS}"
             IFS=","
             for va_os in `array_to_list "${va_supported_os}"`; do
@@ -143,7 +145,7 @@ array/list.\n" >&2
               else
                 printf %b "uac: artifacts file: invalid supported_os \
 '${va_os}'\n" >&2
-                return 10
+                return 152
               fi
             done
             IFS="${OIFS}"
@@ -153,7 +155,7 @@ array/list.\n" >&2
             if [ -z "${va_loop_command}" ]; then
               printf %b "uac: artifacts file: 'loop_command' must not be \
 empty.\n" >&2
-              return 11
+              return 152
             fi
             ;;
           "command")
@@ -161,7 +163,7 @@ empty.\n" >&2
             if [ -z "${va_command}" ]; then
               printf %b "uac: artifacts file: 'command' must not be \
 empty.\n" >&2
-              return 12
+              return 152
             fi
             ;;
           "path")
@@ -169,7 +171,7 @@ empty.\n" >&2
             if [ -z "${va_path}" ]; then
               printf %b "uac: artifacts file: 'path' must not be \
 empty.\n" >&2
-              return 13
+              return 152
             fi
             ;;
           "path_pattern")
@@ -177,12 +179,12 @@ empty.\n" >&2
             if [ -z "${va_path_pattern}" ]; then
               printf %b "uac: artifacts file: 'path_pattern' must not be \
 empty.\n" >&2
-              return 14
-            elif regex_not_match "^\[" "${va_path_pattern}" \
-              && regex_not_match "\]$" "${va_path_pattern}"; then
+              return 152
+            elif echo "${va_path_pattern}" | grep -q -v -E "^\[" \
+              && echo "${va_path_pattern}" | grep -q -v -E "\]$"; then
               printf %b "uac: artifacts file: 'path_pattern' must be an \
 array/list.\n" >&2
-              return 15
+              return 152
             fi
             ;;
           "name_pattern")
@@ -190,12 +192,12 @@ array/list.\n" >&2
             if [ -z "${va_name_pattern}" ]; then
               printf %b "uac: artifacts file: 'name_pattern' must not be \
 empty.\n" >&2
-              return 16
-            elif regex_not_match "^\[" "${va_name_pattern}" \
-              && regex_not_match "\]$" "${va_name_pattern}"; then
+              return 152
+            elif echo "${va_name_pattern}" | grep -q -v -E "^\[" \
+              && echo "${va_name_pattern}" | grep -q -v -E "\]$"; then
               printf %b "uac: artifacts file: 'name_pattern' must be an \
 array/list.\n" >&2
-              return 17
+              return 152
             fi
             ;;
           "exclude_path_pattern")
@@ -203,12 +205,12 @@ array/list.\n" >&2
             if [ -z "${va_exclude_path_pattern}" ]; then
               printf %b "uac: artifacts file: 'exclude_path_pattern' must \
 not be empty.\n" >&2
-              return 18
-            elif regex_not_match "^\[" "${va_exclude_path_pattern}" \
-              && regex_not_match "\]$" "${va_exclude_path_pattern}"; then
+              return 152
+            elif echo "${va_exclude_path_pattern}" | grep -q -v -E "^\[" \
+              && echo "${va_exclude_path_pattern}" | grep -q -v -E "\]$"; then
               printf %b "uac: artifacts file: 'exclude_path_pattern' must \
 be an array/list.\n" >&2
-              return 19
+              return 152
             fi
             ;;
           "exclude_name_pattern")
@@ -216,12 +218,12 @@ be an array/list.\n" >&2
             if [ -z "${va_exclude_name_pattern}" ]; then
               printf %b "uac: artifacts file: 'exclude_name_pattern' must \
 not be empty.\n" >&2
-              return 20
-            elif regex_not_match "^\[" "${va_exclude_name_pattern}" \
-              && regex_not_match "\]$" "${va_exclude_name_pattern}"; then
+              return 152
+            elif echo "${va_exclude_name_pattern}" | grep -q -v -E "^\[" \
+              && echo "${va_exclude_name_pattern}" | grep -q -v -E "\]$"; then
               printf %b "uac: artifacts file: 'exclude_name_pattern' must \
 be an array/list.\n" >&2
-              return 21
+              return 152
             fi
             ;;
           "exclude_file_system")
@@ -229,12 +231,12 @@ be an array/list.\n" >&2
             if [ -z "${va_exclude_file_system}" ]; then
               printf %b "uac: artifacts file: 'exclude_file_system' must \
 not be empty.\n" >&2
-              return 47
-            elif regex_not_match "^\[" "${va_exclude_file_system}" \
-              && regex_not_match "\]$" "${va_exclude_file_system}"; then
+              return 152
+            elif echo "${va_exclude_file_system}" | grep -q -v -E "^\[" \
+              && echo "${va_exclude_file_system}" | grep -q -v -E "\]$"; then
               printf %b "uac: artifacts file: 'exclude_file_system' must \
 be an array/list.\n" >&2
-              return 48
+              return 152
             fi
             ;;
           "max_depth")
@@ -245,7 +247,7 @@ be an array/list.\n" >&2
             else
               printf %b "uac: artifacts file: 'max_depth' must be a \
 positive integer, but got a '${va_max_depth}'\n" >&2
-              return 22
+              return 152
             fi
             ;;
           "file_type")
@@ -259,7 +261,7 @@ positive integer, but got a '${va_max_depth}'\n" >&2
               && [ "${va_file_type}" != "s" ]; then
               printf %b "uac: artifacts file: invalid file_type \
 '${va_file_type}'\n" >&2
-              return 23
+              return 152
             fi
             ;;
           "min_file_size")
@@ -270,7 +272,7 @@ positive integer, but got a '${va_max_depth}'\n" >&2
             else
               printf %b "uac: artifacts file: 'min_file_size' must be a \
 positive integer, but got a '${va_min_file_size}'\n" >&2
-              return 24
+              return 152
             fi
             ;;
           "max_file_size")
@@ -281,7 +283,7 @@ positive integer, but got a '${va_min_file_size}'\n" >&2
             else
               printf %b "uac: artifacts file: 'max_file_size' must be a \
 positive integer, but got a '${va_max_file_size}'\n" >&2
-              return 25
+              return 152
             fi
             ;;
           "permissions")
@@ -293,7 +295,7 @@ positive integer, but got a '${va_max_file_size}'\n" >&2
             else
               printf %b "uac: artifacts file: 'permissions' must be a \
 positive integer between 1 and 7777, but got a '${va_permissions}'\n" >&2
-              return 26
+              return 152
             fi
             ;;
           "ignore_date_range")
@@ -302,7 +304,7 @@ positive integer between 1 and 7777, but got a '${va_permissions}'\n" >&2
               && [ "${va_ignore_date_range}" != false ]; then
               printf %b "uac: artifacts file: 'ignore_date_range' must be \
 'true' or 'false', but got a '${va_ignore_date_range}'\n" >&2
-              return 27
+              return 152
             fi
             ;;
           "output_directory")
@@ -310,7 +312,7 @@ positive integer between 1 and 7777, but got a '${va_permissions}'\n" >&2
             if [ -z "${va_output_directory}" ]; then
               printf %b "uac: artifacts file: 'output_directory' must not \
 be empty.\n" >&2
-              return 28
+              return 152
             fi
             ;;
           "output_file")
@@ -318,7 +320,7 @@ be empty.\n" >&2
             if [ -z "${va_output_file}" ]; then
               printf %b "uac: artifacts file: 'output_file' must not be \
 empty.\n" >&2
-              return 29
+              return 152
             fi
             ;;
           "is_file_list")
@@ -327,7 +329,7 @@ empty.\n" >&2
               && [ "${va_is_file_list}" != false ]; then
               printf %b "uac: artifacts file: 'is_file_list' must be \
 'true' or 'false', but got a '${va_is_file_list}'\n" >&2
-              return 30
+              return 152
             fi
             ;;
           "compress_output_file")
@@ -336,7 +338,7 @@ empty.\n" >&2
               && [ "${va_compress_output_file}" != false ]; then
               printf %b "uac: artifacts file: 'compress_output_file' must \
 be 'true' or 'false', but got a '${va_compress_output_file}'\n" >&2
-              return 31
+              return 152
             fi
             ;;
           "exclude_nologin_users")
@@ -345,40 +347,40 @@ be 'true' or 'false', but got a '${va_compress_output_file}'\n" >&2
               && [ "${va_exclude_nologin_users}" != false ]; then
               printf %b "uac: artifacts file: 'exclude_nologin_users' must \
 be 'true' or 'false', but got a '${va_exclude_nologin_users}'\n" >&2
-              return 46
+              return 152
             fi
             ;;
           "-")
             if [ ${va_artifacts_prop} = false ]; then
               printf %b "uac: artifacts file: missing 'artifacts' \
 mapping.\n" >&2
-              return 32
+              return 150
             fi
             if [ -z "${va_description}" ]; then
               printf %b "uac: artifacts file: missing 'description' \
 property.\n" >&2
-              return 33
+              return 153
             fi
             if [ -z "${va_collector}" ]; then
               printf %b "uac: artifacts file: missing 'collector' \
 property.\n" >&2
-              return 34
+              return 153
             fi
             if [ -z "${va_supported_os}" ]; then
               printf %b "uac: artifacts file: missing 'supported_os' \
 property.\n" >&2
-              return 35
+              return 153
             fi
 
             if [ "${va_collector}" = "command" ]; then
               if [ -z "${va_command}" ]; then
                 printf %b "uac: artifacts file: missing 'command' property \
 for 'command' collector.\n" >&2
-                return 36
+                return 153
               elif [ -z "${va_output_file}" ]; then
                 printf %b "uac: artifacts file: missing 'output_file' \
 property for 'command' collector.\n" >&2
-                return 37
+                return 153
               fi
             fi
 
@@ -386,11 +388,11 @@ property for 'command' collector.\n" >&2
               if [ -z "${va_path}" ]; then
                 printf %b "uac: artifacts file: missing 'path' property \
 for 'find' collector.\n" >&2
-                return 38
+                return 153
               elif [ -z "${va_output_file}" ]; then
                 printf %b "uac: artifacts file: missing 'output_file' \
 property for 'find' collector.\n" >&2
-                return 39
+                return 153
               fi
             fi
 
@@ -398,11 +400,11 @@ property for 'find' collector.\n" >&2
               if [ -z "${va_path}" ]; then
                 printf %b "uac: artifacts file: missing 'path' property \
 for 'hash' collector.\n" >&2
-                return 40
+                return 153
               elif [ -z "${va_output_file}" ]; then
                 printf %b "uac: artifacts file: missing 'output_file' \
 property for 'hash' collector.\n" >&2
-                return 41
+                return 153
               fi
             fi
 
@@ -410,11 +412,11 @@ property for 'hash' collector.\n" >&2
               if [ -z "${va_path}" ]; then
                 printf %b "uac: artifacts file: missing 'path' property \
 for 'stat' collector.\n" >&2
-                return 42
+                return 153
               elif [ -z "${va_output_file}" ]; then
                 printf %b "uac: artifacts file: missing 'output_file' \
 property for 'stat' collector.\n" >&2
-                return 43
+                return 153
               fi
             fi
 
@@ -422,7 +424,7 @@ property for 'stat' collector.\n" >&2
               if [ -z "${va_path}" ]; then
                 printf %b "uac: artifacts file: missing 'path' property \
 for 'file' collector.\n" >&2
-                return 44
+                return 153
               fi
             fi
 
@@ -431,7 +433,7 @@ for 'file' collector.\n" >&2
           *)
             printf %b "uac: artifacts file: invalid property \
 '${va_key}'\n" >&2
-            return 3
+            return 153
         esac
 
       done

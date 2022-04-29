@@ -1,0 +1,33 @@
+version: 1.0
+artifacts:
+  -
+    description: Get the network configuration.
+    supported_os: [esxi]
+    collector: command
+    command: vim-cmd hostsvc/net/config
+    output_file: vim-cmd_hostsvc_net_config.txt
+  -
+    description: Get the DNS configuration.
+    supported_os: [esxi]
+    collector: command
+    command: vim-cmd hostsvc/net/dns_info
+    output_file: vim-cmd_hostsvc_net_dns_info.txt
+  -
+    description: Get the IP forwarding table.
+    supported_os: [esxi]
+    collector: command
+    command: vim-cmd hostsvc/net/route_info
+    output_file: vim-cmd_hostsvc_net_route_info.txt
+  -
+    description: Gets information about virtual NICs.
+    supported_os: [esxi]
+    collector: command
+    command: vim-cmd hostsvc/net/vnic_info
+    output_file: vim-cmd_hostsvc_net_vnic_info.txt
+  -
+    description: Displays information about virtual switches.
+    supported_os: [esxi]
+    collector: command
+    command: vim-cmd hostsvc/net/vswitch_info
+    output_file: vim-cmd_hostsvc_net_vswitch_info.txt
+ 

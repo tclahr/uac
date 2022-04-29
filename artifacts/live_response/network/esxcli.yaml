@@ -1,0 +1,68 @@
+version: 1.0
+artifacts:
+  -
+    description: List active TCP/IP connections.
+    supported_os: [esxi]
+    collector: command
+    command: esxcli network ip connection list
+    output_file: esxcli_network_ip_connection_list.txt
+  -
+    description: List configured IPv4 routes.
+    supported_os: [esxi]
+    collector: command
+    command: esxcli network ip route ipv4 list
+    output_file: esxcli_network_ip_route_ipv4_list.txt
+  -
+    description: List configured IPv6 routes.
+    supported_os: [esxi]
+    collector: command
+    command: esxcli network ip route ipv6 list
+    output_file: esxcli_network_ip_route_ipv6_list.txt
+  -
+    description: List ARP table entries.
+    supported_os: [esxi]
+    collector: command
+    command: esxcli network ip neighbor list
+    output_file: esxcli_network_ip_neighbor_list.txt
+  -
+    description: This command will list the VMkernel network interfaces currently known to the system.
+    supported_os: [esxi]
+    collector: command
+    command: esxcli network ip interface list
+    output_file: esxcli_network_ip_interface_list.txt
+  -
+    description: List configured Security Associations.
+    supported_os: [esxi]
+    collector: command
+    command: esxcli network ip ipsec sa list
+    output_file: esxcli_network_ip_ipsec_sa_list.txt
+  -
+    description: List configured Security Policys.
+    supported_os: [esxi]
+    collector: command
+    command: esxcli network ip ipsec sp list
+    output_file: esxcli_network_ip_ipsec_sp_list.txt
+  -
+    description: Print a list of the DNS server currently configured on the system in the order in which they will be used.
+    supported_os: [esxi]
+    collector: command
+    command: esxcli network ip dns server list
+    output_file: esxcli_network_ip_dns_server_list.txt
+  -
+    description: List the rulesets in firewall.
+    supported_os: [esxi]
+    collector: command
+    command: esxcli network firewall ruleset list
+    output_file: esxcli_network_firewall_ruleset_list.txt
+  -
+    description: This command will list the Physical NICs currently installed and loaded on the system.
+    supported_os: [esxi]
+    collector: command
+    command: esxcli network nic list
+    output_file: esxcli_network_nic_list.txt
+  -
+    description: List the virtual switches current on the ESXi host.
+    supported_os: [esxi]
+    collector: command
+    command: esxcli network vswitch standard list
+    output_file: esxcli_network_vswitch_standard_list.txt
