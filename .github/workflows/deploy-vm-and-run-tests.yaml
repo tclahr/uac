@@ -108,7 +108,7 @@ jobs:
         run: vagrant ssh -c "cd uac && sudo ./uac -a live_response/process/ps.yaml --hostname uac-test-vm ${{ inputs.uac_destination_dir }}" -- ${{ inputs.vagrant_ssh_options }}
 
       - name: Run sudo ./uac -a live_response/process/ps.yaml --case-number 12345 --description "Case Description" --evidence-number 10 --examiner "Examiner Name" --notes "Case Notes" ${{ inputs.uac_destination_dir }}
-        run: vagrant ssh -c "cd uac && sudo ./uac -a live_response/process/ps.yaml --case-number 12345 --description "Case Description" --evidence-number 10 --examiner "Examiner Name" --notes "Case Notes" ${{ inputs.uac_destination_dir }}" -- ${{ inputs.vagrant_ssh_options }}
+        run: vagrant ssh -c "cd uac && sudo ./uac -a live_response/process/ps.yaml --case-number 12345 --description \"Case Description\" --evidence-number 10 --examiner \"Examiner Name\" --notes \"Case Notes\" ${{ inputs.uac_destination_dir }}" -- ${{ inputs.vagrant_ssh_options }}
 
       - name: run ./uac -a live_response/process/ps.yaml --run-as-non-root ${{ inputs.uac_destination_dir }}
         run: vagrant ssh -c "cd uac && ./uac -a live_response/process/ps.yaml --run-as-non-root ${{ inputs.uac_destination_dir }}" -- ${{ inputs.vagrant_ssh_options }}
