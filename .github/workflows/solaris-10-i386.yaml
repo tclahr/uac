@@ -1,0 +1,19 @@
+name: Solaris 10 (i386)
+
+on:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+
+  run-uac-tests:
+    uses: ./.github/workflows/deploy-vm-and-run-tests.yaml
+    with:
+      runs_on: "macos-10.15"
+      unit_test_operating_system: "solaris"
+      unit_test_system_arch: "i386"
+      unit_test_username: "vagrant"
+      unit_test_hostname: "vagrant-solaris10.dev"
+      uac_destination_dir: "."
+      vagrant_box_name: "tnarik/solaris10-minimal"
+      vagrant_ssh_options: "-oKexAlgorithms=+diffie-hellman-group1-sha1"
