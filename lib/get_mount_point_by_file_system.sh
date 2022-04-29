@@ -60,7 +60,7 @@ get_mount_point_by_file_system()
               printf "%s,", $2;
             }
           }' \
-        | sed -e 's:,$::' 2>/dev/null
+        | awk '{gsub(/,$/, ""); print}' 2>/dev/null
       ;;
     "esxi")
       df -u \
@@ -78,7 +78,7 @@ get_mount_point_by_file_system()
               printf "%s,", $6;
             }
           }' \
-        | sed -e 's:,$::' 2>/dev/null
+        | awk '{gsub(/,$/, ""); print}' 2>/dev/null
       ;;
     "freebsd"|"macos"|"netscaler")
       mount \
@@ -98,7 +98,7 @@ get_mount_point_by_file_system()
               printf "%s,", $1;
             }
           }' \
-        | sed -e 's:,$::' 2>/dev/null
+        | awk '{gsub(/,$/, ""); print}' 2>/dev/null
       ;;
     "android"|"linux"|"netbsd"|"openbsd")
       mount \
@@ -117,7 +117,7 @@ get_mount_point_by_file_system()
               printf "%s,", $1;
             }
           }' \
-        | sed -e 's:,$::' 2>/dev/null
+        | awk '{gsub(/,$/, ""); print}' 2>/dev/null
       ;;
     "solaris")
       df -n \
@@ -135,7 +135,7 @@ get_mount_point_by_file_system()
               printf "%s,", $1;
             }
           }' \
-        | sed -e 's:,$::' 2>/dev/null
+        | awk '{gsub(/,$/, ""); print}' 2>/dev/null
       ;;
   esac
 
