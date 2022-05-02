@@ -12,9 +12,6 @@ on:
       unit_test_system_arch:
         required: true
         type: string
-      unit_test_username:
-        required: true
-        type: string
       unit_test_hostname:
         required: true
         type: string
@@ -85,7 +82,7 @@ jobs:
         run: vagrant ssh -c "id"
 
       - name: Run unit test
-        run: vagrant ssh -c "cd uac-unit-test && ./run_test ../uac ${{ inputs.unit_test_operating_system }} ${{ inputs.unit_test_system_arch }} ${{ inputs.unit_test_username }} ${{ inputs.unit_test_hostname }} tests/*"
+        run: vagrant ssh -c "cd uac-unit-test && ./run_test ../uac ${{ inputs.unit_test_operating_system }} ${{ inputs.unit_test_system_arch }} ${{ inputs.vagrant_ssh_username }} ${{ inputs.unit_test_hostname }} tests/*"
 
       - name: Run ./uac -p test --run-as-non-root ${{ inputs.uac_destination_dir }}
         run: vagrant ssh -c "cd uac && ./uac -p test --run-as-non-root ${{ inputs.uac_destination_dir }}" -- ${{ inputs.vagrant_ssh_options }}

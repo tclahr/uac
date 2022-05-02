@@ -12,7 +12,6 @@ jobs:
       runs_on: "macos-10.15"
       unit_test_operating_system: "openbsd"
       unit_test_system_arch: "amd64"
-      unit_test_username: "vagrant"
       unit_test_hostname: "openbsd6.localdomain"
       uac_destination_dir: "."
       vagrant_box_name: "generic/openbsd6"
