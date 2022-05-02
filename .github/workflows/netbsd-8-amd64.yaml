@@ -16,5 +16,6 @@ jobs:
       unit_test_hostname: "netbsd8.localdomain"
       uac_destination_dir: "."
       vagrant_box_name: "generic/netbsd8"
-      vagrant_ssh_options: ""
+      vagrant_ssh_username: "vagrant"
       vagrant_ssh_password: "vagrant"
+      vagrant_ssh_options: ""

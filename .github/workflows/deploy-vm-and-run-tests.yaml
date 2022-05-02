@@ -24,10 +24,13 @@ on:
       vagrant_box_name:
         required: true
         type: string
-      vagrant_ssh_options:
+      vagrant_ssh_username:
         required: true
         type: string
       vagrant_ssh_password:
+        required: true
+        type: string
+      vagrant_ssh_options:
         required: true
         type: string
 
@@ -64,7 +67,7 @@ jobs:
             ${{ runner.os }}-vagrant-${{ inputs.vagrant_box_name }}
       
       - name: Create Vagrantfile
-        run: printf %b "Vagrant.configure(\"2\") do |config|\n  config.vm.box = \"${{ inputs.vagrant_box_name }}\"\n  config.ssh.password = \"${{ inputs.vagrant_ssh_password }}\"\nend" >Vagrantfile
+        run: printf %b "Vagrant.configure(\"2\") do |config|\n  config.vm.box = \"${{ inputs.vagrant_box_name }}\"\n  config.ssh.username = \"${{ inputs.vagrant_ssh_username }}\"\n  config.ssh.password = \"${{ inputs.vagrant_ssh_password }}\"\nend" >Vagrantfile
 
       - name: Start ${{ inputs.vagrant_box_name }} VM
         run: vagrant up
@@ -84,35 +87,35 @@ jobs:
       - name: Run unit test
         run: vagrant ssh -c "cd uac-unit-test && ./run_test ../uac ${{ inputs.unit_test_operating_system }} ${{ inputs.unit_test_system_arch }} ${{ inputs.unit_test_username }} ${{ inputs.unit_test_hostname }} tests/*"
 
-      - name: Run sudo ./uac -p test ${{ inputs.uac_destination_dir }}
-        run: vagrant ssh -c "cd uac && sudo ./uac -p test ${{ inputs.uac_destination_dir }}" -- ${{ inputs.vagrant_ssh_options }}
+      - name: Run ./uac -p test --run-as-non-root ${{ inputs.uac_destination_dir }}
+        run: vagrant ssh -c "cd uac && ./uac -p test --run-as-non-root ${{ inputs.uac_destination_dir }}" -- ${{ inputs.vagrant_ssh_options }}
 
-      - name: Run sudo ./uac -p test -a files/system/etc.yaml ${{ inputs.uac_destination_dir }}
-        run: vagrant ssh -c "cd uac && sudo ./uac -p test -a files/system/etc.yaml ${{ inputs.uac_destination_dir }}" -- ${{ inputs.vagrant_ssh_options }}
+      - name: Run ./uac -p test -a files/system/etc.yaml --run-as-non-root ${{ inputs.uac_destination_dir }}
+        run: vagrant ssh -c "cd uac && ./uac -p test -a files/system/etc.yaml --run-as-non-root ${{ inputs.uac_destination_dir }}" -- ${{ inputs.vagrant_ssh_options }}
 
-      - name: Run sudo ./uac -a live_response/process/ps.yaml ${{ inputs.uac_destination_dir }}
-        run: vagrant ssh -c "cd uac && sudo ./uac -a live_response/process/ps.yaml ${{ inputs.uac_destination_dir }}" -- ${{ inputs.vagrant_ssh_options }}
+      - name: Run ./uac -a live_response/process/ps.yaml --run-as-non-root ${{ inputs.uac_destination_dir }}
+        run: vagrant ssh -c "cd uac && ./uac -a live_response/process/ps.yaml --run-as-non-root ${{ inputs.uac_destination_dir }}" -- ${{ inputs.vagrant_ssh_options }}
       
-      - name: Run sudo ./uac -a live_response/process/ps.yaml,live_response/network/arp.yaml ${{ inputs.uac_destination_dir }}
-        run: vagrant ssh -c "cd uac && sudo ./uac -a live_response/process/ps.yaml,live_response/network/arp.yaml ${{ inputs.uac_destination_dir }}" -- ${{ inputs.vagrant_ssh_options }}
+      - name: Run ./uac -a live_response/process/ps.yaml,live_response/network/arp.yaml --run-as-non-root ${{ inputs.uac_destination_dir }}
+        run: vagrant ssh -c "cd uac && ./uac -a live_response/process/ps.yaml,live_response/network/arp.yaml --run-as-non-root ${{ inputs.uac_destination_dir }}" -- ${{ inputs.vagrant_ssh_options }}
       
-      - name: Run sudo ./uac -a live_response/process/\*,\!live_response/process/hash_running_processes.yaml,\!live_response/process/procfs_information.yaml,\!live_response/process/strings_running_processes.yaml ${{ inputs.uac_destination_dir }}
-        run: vagrant ssh -c "cd uac && sudo ./uac -a live_response/process/\*,\!live_response/process/hash_running_processes.yaml,\!live_response/process/procfs_information.yaml,\!live_response/process/strings_running_processes.yaml ${{ inputs.uac_destination_dir }}" -- ${{ inputs.vagrant_ssh_options }}
+      - name: Run ./uac -a live_response/process/\*,\!live_response/process/hash_running_processes.yaml,\!live_response/process/procfs_information.yaml,\!live_response/process/strings_running_processes.yaml --run-as-non-root ${{ inputs.uac_destination_dir }}
+        run: vagrant ssh -c "cd uac && ./uac -a live_response/process/\*,\!live_response/process/hash_running_processes.yaml,\!live_response/process/procfs_information.yaml,\!live_response/process/strings_running_processes.yaml --run-as-non-root ${{ inputs.uac_destination_dir }}" -- ${{ inputs.vagrant_ssh_options }}
 
-      - name: Run ./uac -a live_response/process/ps.yaml -u ${{ inputs.uac_destination_dir }}
-        run: vagrant ssh -c "cd uac && sudo ./uac -a live_response/process/ps.yaml -u ${{ inputs.uac_destination_dir }}" -- ${{ inputs.vagrant_ssh_options }}
+      - name: Run ./uac -a live_response/process/ps.yaml --run-as-non-root ${{ inputs.uac_destination_dir }}
+        run: vagrant ssh -c "cd uac && ./uac -a live_response/process/ps.yaml --run-as-non-root ${{ inputs.uac_destination_dir }}" -- ${{ inputs.vagrant_ssh_options }}
 
-      - name: Run sudo ./uac -a files/logs/var_log.yaml --date-range-start 2022-01-01 ${{ inputs.uac_destination_dir }}
-        run: vagrant ssh -c "cd uac && sudo ./uac -a files/logs/var_log.yaml --date-range-start 2022-01-01 ${{ inputs.uac_destination_dir }}" -- ${{ inputs.vagrant_ssh_options }}
+      - name: Run ./uac -a files/logs/var_log.yaml --run-as-non-root --date-range-start 2022-01-01 ${{ inputs.uac_destination_dir }}
+        run: vagrant ssh -c "cd uac && ./uac -a files/logs/var_log.yaml --run-as-non-root --date-range-start 2022-01-01 ${{ inputs.uac_destination_dir }}" -- ${{ inputs.vagrant_ssh_options }}
 
-      - name: Run sudo ./uac -a files/logs/var_log.yaml --date-range-start 2022-01-01 --date-range-end 2022-01-31 ${{ inputs.uac_destination_dir }}
-        run: vagrant ssh -c "cd uac && sudo ./uac -a files/logs/var_log.yaml --date-range-start 2022-01-01 --date-range-end 2022-01-31 ${{ inputs.uac_destination_dir }}" -- ${{ inputs.vagrant_ssh_options }}
+      - name: Run ./uac -a files/logs/var_log.yaml --run-as-non-root --date-range-start 2022-01-01 --date-range-end 2022-01-31 ${{ inputs.uac_destination_dir }}
+        run: vagrant ssh -c "cd uac && ./uac -a files/logs/var_log.yaml --run-as-non-root --date-range-start 2022-01-01 --date-range-end 2022-01-31 ${{ inputs.uac_destination_dir }}" -- ${{ inputs.vagrant_ssh_options }}
 
-      - name: Run sudo ./uac -a live_response/process/ps.yaml --hostname uac-test-vm ${{ inputs.uac_destination_dir }}
-        run: vagrant ssh -c "cd uac && sudo ./uac -a live_response/process/ps.yaml --hostname uac-test-vm ${{ inputs.uac_destination_dir }}" -- ${{ inputs.vagrant_ssh_options }}
+      - name: Run ./uac -a live_response/process/ps.yaml --run-as-non-root --hostname uac-test-vm ${{ inputs.uac_destination_dir }}
+        run: vagrant ssh -c "cd uac && ./uac -a live_response/process/ps.yaml --run-as-non-root --hostname uac-test-vm ${{ inputs.uac_destination_dir }}" -- ${{ inputs.vagrant_ssh_options }}
 
-      - name: Run sudo ./uac -a live_response/process/ps.yaml --case-number 12345 --description "Case Description" --evidence-number 10 --examiner "Examiner Name" --notes "Case Notes" ${{ inputs.uac_destination_dir }}
-        run: vagrant ssh -c "cd uac && sudo ./uac -a live_response/process/ps.yaml --case-number 12345 --description \"Case Description\" --evidence-number 10 --examiner \"Examiner Name\" --notes \"Case Notes\" ${{ inputs.uac_destination_dir }}" -- ${{ inputs.vagrant_ssh_options }}
+      - name: Run ./uac -a live_response/process/ps.yaml --run-as-non-root --case-number 12345 --description "Case Description" --evidence-number 10 --examiner "Examiner Name" --notes "Case Notes" ${{ inputs.uac_destination_dir }}
+        run: vagrant ssh -c "cd uac && ./uac -a live_response/process/ps.yaml --run-as-non-root --case-number 12345 --description \"Case Description\" --evidence-number 10 --examiner \"Examiner Name\" --notes \"Case Notes\" ${{ inputs.uac_destination_dir }}" -- ${{ inputs.vagrant_ssh_options }}
 
       - name: run ./uac -a live_response/process/ps.yaml --run-as-non-root ${{ inputs.uac_destination_dir }}
         run: vagrant ssh -c "cd uac && ./uac -a live_response/process/ps.yaml --run-as-non-root ${{ inputs.uac_destination_dir }}" -- ${{ inputs.vagrant_ssh_options }}
