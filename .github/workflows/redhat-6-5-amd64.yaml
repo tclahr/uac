@@ -1,0 +1,21 @@
+name: Red Hat 6.5 (amd64)
+
+on:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+
+  run-uac-tests:
+    uses: ./.github/workflows/deploy-vm-and-run-tests.yaml
+    with:
+      runs_on: "macos-10.15"
+      unit_test_operating_system: "linux"
+      unit_test_system_arch: "x86_64"
+      unit_test_hostname: "redhat65-vagrant"
+      uac_destination_dir: "."
+      vagrant_box_name: "anandbitra/redhat-6.5"
+      vagrant_ssh_username: "vagrant"
+      vagrant_ssh_password: "vagrant"
+      vagrant_ssh_options: ""
+      
