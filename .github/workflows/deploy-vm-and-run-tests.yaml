@@ -73,6 +73,7 @@ jobs:
               vb.customize ["modifyvm", :id, "--usb", "off"]
               vb.customize ["modifyvm", :id, "--usbehci", "off"]
             end
+            config.vm.synced_folder '.', '/vagrant', disabled: true
           EOF
 
       - name: Update Vagrantfile
