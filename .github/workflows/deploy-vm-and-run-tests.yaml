@@ -64,7 +64,18 @@ jobs:
             ${{ runner.os }}-vagrant-${{ inputs.vagrant_box_name }}
       
       - name: Create Vagrantfile
-        run: printf %b "Vagrant.configure(\"2\") do |config|\n  config.vm.box = \"${{ inputs.vagrant_box_name }}\"\n  config.ssh.username = \"${{ inputs.vagrant_ssh_username }}\"\n  config.ssh.password = \"${{ inputs.vagrant_ssh_password }}\"\n  config.customize ["modifyvm", :id, "--usb", "off"]\nend" >Vagrantfile
+        run: |
+          cat << EOF >Vagrantfile
+          Vagrant.configure("2") do |config|
+            config.vm.box = "${{ inputs.vagrant_box_name }}"
+            config.ssh.username = "${{ inputs.vagrant_ssh_username }}"
+            config.ssh.password = "${{ inputs.vagrant_ssh_password }}"
+            config.vm.provider "virtualbox" do |vb|
+              vb.customize ["modifyvm", :id, "--usb", "off"]
+              vb.customize ["modifyvm", :id, "--usbehci", "off"]
+            end
+          end
+          EOF
 
       - name: Start ${{ inputs.vagrant_box_name }} VM
         run: vagrant up
