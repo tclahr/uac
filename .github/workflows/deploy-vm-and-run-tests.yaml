@@ -69,13 +69,27 @@ jobs:
           Vagrant.configure("2") do |config|
             config.vm.box = "${{ inputs.vagrant_box_name }}"
             config.ssh.username = "${{ inputs.vagrant_ssh_username }}"
-            config.ssh.password = "${{ inputs.vagrant_ssh_password }}"
             config.vm.provider "virtualbox" do |vb|
               vb.customize ["modifyvm", :id, "--usb", "off"]
               vb.customize ["modifyvm", :id, "--usbehci", "off"]
             end
+          EOF
+
+      - name: Update Vagrantfile
+        if: ${{ inputs.vagrant_ssh_password != '' }}
+        run: |
+          cat << EOF >>Vagrantfile
+            config.ssh.password = "${{ inputs.vagrant_ssh_password }}"
+          EOF
+
+      - name: Close Vagrantfile
+        run: |
+          cat << EOF >>Vagrantfile
           end
           EOF
+
+      - name: Print Vagrantfile
+        run: cat Vagrantfile
 
       - name: Start ${{ inputs.vagrant_box_name }} VM
         run: vagrant up
