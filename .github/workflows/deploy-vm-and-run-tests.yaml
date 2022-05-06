@@ -30,6 +30,9 @@ on:
       vagrant_ssh_options:
         required: true
         type: string
+      vagrant_ssh_shell:
+        required: true
+        type: string
 
 jobs:
 
@@ -69,6 +72,7 @@ jobs:
           Vagrant.configure("2") do |config|
             config.vm.box = "${{ inputs.vagrant_box_name }}"
             config.ssh.username = "${{ inputs.vagrant_ssh_username }}"
+            config.ssh.shell = "${{ inputs.vagrant_ssh_shell }}"
             config.vm.provider "virtualbox" do |vb|
               vb.customize ["modifyvm", :id, "--usb", "off"]
               vb.customize ["modifyvm", :id, "--usbehci", "off"]
