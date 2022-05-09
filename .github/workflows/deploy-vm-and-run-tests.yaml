@@ -102,6 +102,9 @@ jobs:
       - name: Transfer uac-unit-test to VM
         run: vagrant upload uac-unit-test uac-unit-test
 
+      - name: Run date
+        run: vagrant ssh -c "date"
+        
       - name: Run uname -a
         run: vagrant ssh -c "uname -a"
 
@@ -126,11 +129,11 @@ jobs:
       - name: Run ./uac -a live_response/process/ps.yaml --run-as-non-root ${{ inputs.uac_destination_dir }}
         run: vagrant ssh -c "cd uac && ./uac -a live_response/process/ps.yaml --run-as-non-root ${{ inputs.uac_destination_dir }}" -- ${{ inputs.vagrant_ssh_options }}
 
-      - name: Run ./uac -a files/logs/var_log.yaml --run-as-non-root --date-range-start 2022-01-01 ${{ inputs.uac_destination_dir }}
-        run: vagrant ssh -c "cd uac && ./uac -a files/logs/var_log.yaml --run-as-non-root --date-range-start 2022-01-01 ${{ inputs.uac_destination_dir }}" -- ${{ inputs.vagrant_ssh_options }}
+      - name: Run ./uac -a files/logs/var_log.yaml --run-as-non-root --date-range-start 1985-10-26 ${{ inputs.uac_destination_dir }}
+        run: vagrant ssh -c "cd uac && ./uac -a files/logs/var_log.yaml --run-as-non-root --date-range-start 1985-10-26 ${{ inputs.uac_destination_dir }}" -- ${{ inputs.vagrant_ssh_options }}
 
-      - name: Run ./uac -a files/logs/var_log.yaml --run-as-non-root --date-range-start 2022-01-01 --date-range-end 2022-01-31 ${{ inputs.uac_destination_dir }}
-        run: vagrant ssh -c "cd uac && ./uac -a files/logs/var_log.yaml --run-as-non-root --date-range-start 2022-01-01 --date-range-end 2022-01-31 ${{ inputs.uac_destination_dir }}" -- ${{ inputs.vagrant_ssh_options }}
+      - name: Run ./uac -a files/logs/var_log.yaml --run-as-non-root --date-range-start 1985-10-26 --date-range-end 1985-10-30 ${{ inputs.uac_destination_dir }}
+        run: vagrant ssh -c "cd uac && ./uac -a files/logs/var_log.yaml --run-as-non-root --date-range-start 1985-10-26 --date-range-end 1985-10-30 ${{ inputs.uac_destination_dir }}" -- ${{ inputs.vagrant_ssh_options }}
 
       - name: Run ./uac -a live_response/process/ps.yaml --run-as-non-root --hostname uac-test-vm ${{ inputs.uac_destination_dir }}
         run: vagrant ssh -c "cd uac && ./uac -a live_response/process/ps.yaml --run-as-non-root --hostname uac-test-vm ${{ inputs.uac_destination_dir }}" -- ${{ inputs.vagrant_ssh_options }}
