@@ -16,5 +16,5 @@ jobs:
       uac_destination_dir: "."
       vagrant_box_name: "plaurin/solaris-11_3"
       vagrant_ssh_username: "vagrant"
-      vagrant_ssh_password: "1vagrant"
+      vagrant_ssh_password: ""
       vagrant_ssh_options: ""
