@@ -105,9 +105,6 @@ jobs:
       - name: Run uname -a
         run: vagrant ssh -c "uname -a"
 
-      - name: Run id
-        run: vagrant ssh -c "id"
-
       - name: Run unit test
         run: vagrant ssh -c "cd uac-unit-test && ./run_test ../uac ${{ inputs.unit_test_operating_system }} ${{ inputs.unit_test_system_arch }} ${{ inputs.vagrant_ssh_username }} ${{ inputs.unit_test_hostname }} tests/*"
 
