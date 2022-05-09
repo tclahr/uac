@@ -44,6 +44,9 @@ jobs:
           path: uac-unit-test
           ref: main
 
+      - name: Run date
+        run: date
+
       - name: Run uname -a
         run: uname -a
 
@@ -88,15 +91,15 @@ jobs:
           cd uac
           sudo ./uac -a live_response/process/ps.yaml -u ${{ inputs.uac_destination_dir }}
 
-      - name: Run sudo ./uac -a files/logs/var_log.yaml --date-range-start 2022-01-01 ${{ inputs.uac_destination_dir }}
+      - name: Run sudo ./uac -a files/logs/var_log.yaml --date-range-start 1985-10-26 ${{ inputs.uac_destination_dir }}
         run: |
           cd uac
-          sudo ./uac -a files/logs/var_log.yaml --date-range-start 2022-01-01 ${{ inputs.uac_destination_dir }}
+          sudo ./uac -a files/logs/var_log.yaml --date-range-start 1985-10-26 ${{ inputs.uac_destination_dir }}
 
-      - name: Run sudo ./uac -a files/logs/var_log.yaml --date-range-start 2022-01-01 --date-range-end 2022-01-31 ${{ inputs.uac_destination_dir }}
+      - name: Run sudo ./uac -a files/logs/var_log.yaml --date-range-start 1985-10-26 --date-range-end 1985-10-30 ${{ inputs.uac_destination_dir }}
         run: |
           cd uac
-          sudo ./uac -a files/logs/var_log.yaml --date-range-start 2022-01-01 --date-range-end 2022-01-31 ${{ inputs.uac_destination_dir }}
+          sudo ./uac -a files/logs/var_log.yaml --date-range-start 1985-10-26 --date-range-end 1985-10-30 ${{ inputs.uac_destination_dir }}
 
       - name: Run sudo ./uac -a live_response/process/ps.yaml --hostname uac-test-vm ${{ inputs.uac_destination_dir }}
         run: |
