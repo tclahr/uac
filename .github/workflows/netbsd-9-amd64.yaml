@@ -1,4 +1,4 @@
-name: Solaris 10 (i386)
+name: NetBSD 9 (amd64)
 
 on:
   # Allows you to run this workflow manually from the Actions tab
@@ -10,11 +10,11 @@ jobs:
     uses: ./.github/workflows/deploy-vm-and-run-tests.yaml
     with:
       runs_on: "macos-10.15"
-      unit_test_operating_system: "solaris"
-      unit_test_system_arch: "i386"
-      unit_test_hostname: "vagrant-solaris10.dev"
+      unit_test_operating_system: "netbsd"
+      unit_test_system_arch: "amd64"
+      unit_test_hostname: "netbsd9.localdomain"
       uac_destination_dir: "."
-      vagrant_box_name: "tnarik/solaris10-minimal"
+      vagrant_box_name: "generic/netbsd9"
       vagrant_ssh_username: "vagrant"
       vagrant_ssh_password: ""
-      vagrant_ssh_options: "-oKexAlgorithms=+diffie-hellman-group1-sha1"
+      vagrant_ssh_options: ""

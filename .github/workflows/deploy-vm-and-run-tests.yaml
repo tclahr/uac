@@ -64,7 +64,34 @@ jobs:
             ${{ runner.os }}-vagrant-${{ inputs.vagrant_box_name }}
       
       - name: Create Vagrantfile
-        run: printf %b "Vagrant.configure(\"2\") do |config|\n  config.vm.box = \"${{ inputs.vagrant_box_name }}\"\n  config.ssh.username = \"${{ inputs.vagrant_ssh_username }}\"\n  config.ssh.password = \"${{ inputs.vagrant_ssh_password }}\"\nend" >Vagrantfile
+        run: |
+          cat << EOF >Vagrantfile
+          Vagrant.configure("2") do |config|
+            config.vm.box = "${{ inputs.vagrant_box_name }}"
+            config.ssh.username = "${{ inputs.vagrant_ssh_username }}"
+            config.ssh.shell = "/bin/sh"
+            config.vm.provider "virtualbox" do |vb|
+              vb.customize ["modifyvm", :id, "--usb", "off"]
+              vb.customize ["modifyvm", :id, "--usbehci", "off"]
+            end
+            config.vm.synced_folder '.', '/vagrant', disabled: true
+          EOF
+
+      - name: Update Vagrantfile
+        if: ${{ inputs.vagrant_ssh_password != '' }}
+        run: |
+          cat << EOF >>Vagrantfile
+            config.ssh.password = "${{ inputs.vagrant_ssh_password }}"
+          EOF
+
+      - name: Close Vagrantfile
+        run: |
+          cat << EOF >>Vagrantfile
+          end
+          EOF
+
+      - name: Print Vagrantfile
+        run: cat Vagrantfile
 
       - name: Start ${{ inputs.vagrant_box_name }} VM
         run: vagrant up
@@ -75,11 +102,11 @@ jobs:
       - name: Transfer uac-unit-test to VM
         run: vagrant upload uac-unit-test uac-unit-test
 
+      - name: Run date
+        run: vagrant ssh -c "date"
+        
       - name: Run uname -a
         run: vagrant ssh -c "uname -a"
-
-      - name: Run id
-        run: vagrant ssh -c "id"
 
       - name: Run unit test
         run: vagrant ssh -c "cd uac-unit-test && ./run_test ../uac ${{ inputs.unit_test_operating_system }} ${{ inputs.unit_test_system_arch }} ${{ inputs.vagrant_ssh_username }} ${{ inputs.unit_test_hostname }} tests/*"
@@ -102,11 +129,11 @@ jobs:
       - name: Run ./uac -a live_response/process/ps.yaml --run-as-non-root ${{ inputs.uac_destination_dir }}
         run: vagrant ssh -c "cd uac && ./uac -a live_response/process/ps.yaml --run-as-non-root ${{ inputs.uac_destination_dir }}" -- ${{ inputs.vagrant_ssh_options }}
 
-      - name: Run ./uac -a files/logs/var_log.yaml --run-as-non-root --date-range-start 2022-01-01 ${{ inputs.uac_destination_dir }}
-        run: vagrant ssh -c "cd uac && ./uac -a files/logs/var_log.yaml --run-as-non-root --date-range-start 2022-01-01 ${{ inputs.uac_destination_dir }}" -- ${{ inputs.vagrant_ssh_options }}
+      - name: Run ./uac -a files/logs/var_log.yaml --run-as-non-root --date-range-start 1985-10-26 ${{ inputs.uac_destination_dir }}
+        run: vagrant ssh -c "cd uac && ./uac -a files/logs/var_log.yaml --run-as-non-root --date-range-start 1985-10-26 ${{ inputs.uac_destination_dir }}" -- ${{ inputs.vagrant_ssh_options }}
 
-      - name: Run ./uac -a files/logs/var_log.yaml --run-as-non-root --date-range-start 2022-01-01 --date-range-end 2022-01-31 ${{ inputs.uac_destination_dir }}
-        run: vagrant ssh -c "cd uac && ./uac -a files/logs/var_log.yaml --run-as-non-root --date-range-start 2022-01-01 --date-range-end 2022-01-31 ${{ inputs.uac_destination_dir }}" -- ${{ inputs.vagrant_ssh_options }}
+      - name: Run ./uac -a files/logs/var_log.yaml --run-as-non-root --date-range-start 1985-10-26 --date-range-end 1985-10-30 ${{ inputs.uac_destination_dir }}
+        run: vagrant ssh -c "cd uac && ./uac -a files/logs/var_log.yaml --run-as-non-root --date-range-start 1985-10-26 --date-range-end 1985-10-30 ${{ inputs.uac_destination_dir }}" -- ${{ inputs.vagrant_ssh_options }}
 
       - name: Run ./uac -a live_response/process/ps.yaml --run-as-non-root --hostname uac-test-vm ${{ inputs.uac_destination_dir }}
         run: vagrant ssh -c "cd uac && ./uac -a live_response/process/ps.yaml --run-as-non-root --hostname uac-test-vm ${{ inputs.uac_destination_dir }}" -- ${{ inputs.vagrant_ssh_options }}
