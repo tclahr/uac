@@ -186,18 +186,6 @@ Try 'uac --help' for more information.\n" >&2
         exit 1
       fi
       ;;
-    "-o")
-      if [ -n "${2}" ]; then
-        OPERATING_SYSTEM="${2}"
-        printf %b "WARNING: '-o' has been replaced by '-s' option, and will be \
-removed in future releases. Check 'uac --help' for more information.\n" >&2
-        shift
-      else
-        printf %b "uac: option '${1}' requires an argument.\n\
-Try 'uac --help' for more information.\n" >&2
-        exit 1
-      fi
-      ;;
     "-u"|"--run-as-non-root")
       ua_run_as_non_root=true
       ;;

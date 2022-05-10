@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## DEVELOPMENT VERSION
 
+### Deprecated Command Line Option
+
+- '-o' command line switch is no longer available because it was replaced by '-s'.
+
 ### Deprecated Profiles
 
 - 'full-with-memory-dump' profile is no longer available because '--profile full --artifacts memory_dump/avml.yaml' can be used instead. 
