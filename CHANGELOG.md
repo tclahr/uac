@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## DEVELOPMENT VERSION
 
+### Deprecated Profiles
+
+- 'full-with-memory-dump' profile is no longer available because '--profile full --artifacts memory_dump/avml.yaml' can be used instead. 
+- 'memory-dump-only' profile is no longer available because '--artifacts memory_dump/avml.yaml' can be used instead.
+
 ## 2.2.0 (2022-05-02)
 
 ### New Features
