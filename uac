@@ -367,8 +367,8 @@ Try 'uac --help' for more information.\n" >&2
   shift
 done
 
-# treat unset variables as an error when substituting
-# set -u cannot be set the beginning of the file since it will fail on $@
+# do not allow using undefined variables
+# set -u cannot be set at the beginning of the file since it will fail on $@
 set -u
 
 # print available profiles
