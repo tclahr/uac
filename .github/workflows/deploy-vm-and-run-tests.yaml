@@ -32,13 +32,10 @@ on:
         type: string
 
 jobs:
-
   run-tests:
-
     runs-on: ${{ inputs.runs_on }}
 
     steps:
-
       - name: Clone uac repo
         uses: actions/checkout@v3
         with:
@@ -62,7 +59,7 @@ jobs:
           key: ${{ runner.os }}-vagrant-${{ inputs.vagrant_box_name }}
           restore-keys: |
             ${{ runner.os }}-vagrant-${{ inputs.vagrant_box_name }}
-      
+
       - name: Create Vagrantfile
         run: |
           cat << EOF >Vagrantfile
@@ -104,7 +101,7 @@ jobs:
 
       - name: Run date
         run: vagrant ssh -c "date"
-        
+
       - name: Run uname -a
         run: vagrant ssh -c "uname -a"
 
@@ -117,17 +114,17 @@ jobs:
       - name: Run ./uac -p test -a files/system/etc.yaml --run-as-non-root ${{ inputs.uac_destination_dir }}
         run: vagrant ssh -c "cd uac && ./uac -p test -a files/system/etc.yaml --run-as-non-root ${{ inputs.uac_destination_dir }}" -- ${{ inputs.vagrant_ssh_options }}
 
-      - name: Run ./uac -a live_response/process/ps.yaml --run-as-non-root ${{ inputs.uac_destination_dir }}
-        run: vagrant ssh -c "cd uac && ./uac -a live_response/process/ps.yaml --run-as-non-root ${{ inputs.uac_destination_dir }}" -- ${{ inputs.vagrant_ssh_options }}
-      
-      - name: Run ./uac -a live_response/process/ps.yaml,live_response/network/arp.yaml --run-as-non-root ${{ inputs.uac_destination_dir }}
-        run: vagrant ssh -c "cd uac && ./uac -a live_response/process/ps.yaml,live_response/network/arp.yaml --run-as-non-root ${{ inputs.uac_destination_dir }}" -- ${{ inputs.vagrant_ssh_options }}
-      
-      - name: Run ./uac -a live_response/process/\*,\!live_response/process/hash_running_processes.yaml,\!live_response/process/procfs_information.yaml,\!live_response/process/strings_running_processes.yaml --run-as-non-root ${{ inputs.uac_destination_dir }}
-        run: vagrant ssh -c "cd uac && ./uac -a live_response/process/\*,\!live_response/process/hash_running_processes.yaml,\!live_response/process/procfs_information.yaml,\!live_response/process/strings_running_processes.yaml --run-as-non-root ${{ inputs.uac_destination_dir }}" -- ${{ inputs.vagrant_ssh_options }}
+      - name: Run ./uac -a live_response/process/pstree.yaml -p test -a files/system/etc.yaml --run-as-non-root ${{ inputs.uac_destination_dir }}
+        run: vagrant ssh -c "cd uac && ./uac -a live_response/process/pstree.yaml -p test -a files/system/etc.yaml --run-as-non-root ${{ inputs.uac_destination_dir }}" -- ${{ inputs.vagrant_ssh_options }}
 
       - name: Run ./uac -a live_response/process/ps.yaml --run-as-non-root ${{ inputs.uac_destination_dir }}
         run: vagrant ssh -c "cd uac && ./uac -a live_response/process/ps.yaml --run-as-non-root ${{ inputs.uac_destination_dir }}" -- ${{ inputs.vagrant_ssh_options }}
+
+      - name: Run ./uac -a live_response/process/ps.yaml,live_response/network/arp.yaml --run-as-non-root ${{ inputs.uac_destination_dir }}
+        run: vagrant ssh -c "cd uac && ./uac -a live_response/process/ps.yaml,live_response/network/arp.yaml --run-as-non-root ${{ inputs.uac_destination_dir }}" -- ${{ inputs.vagrant_ssh_options }}
+
+      - name: Run ./uac -a live_response/process/\*,\!live_response/process/hash_running_processes.yaml -a \!live_response/process/procfs_information.yaml,\!live_response/process/strings_running_processes.yaml --run-as-non-root ${{ inputs.uac_destination_dir }}
+        run: vagrant ssh -c "cd uac && ./uac -a live_response/process/\*,\!live_response/process/hash_running_processes.yaml -a \!live_response/process/procfs_information.yaml,\!live_response/process/strings_running_processes.yaml --run-as-non-root ${{ inputs.uac_destination_dir }}" -- ${{ inputs.vagrant_ssh_options }}
 
       - name: Run ./uac -a files/logs/var_log.yaml --run-as-non-root --date-range-start 1985-10-26 ${{ inputs.uac_destination_dir }}
         run: vagrant ssh -c "cd uac && ./uac -a files/logs/var_log.yaml --run-as-non-root --date-range-start 1985-10-26 ${{ inputs.uac_destination_dir }}" -- ${{ inputs.vagrant_ssh_options }}

@@ -20,13 +20,10 @@ on:
         type: string
 
 jobs:
-
   run-tests:
-
     runs-on: ${{ inputs.runs_on }}
 
     steps:
-
       - name: Clone uac repo
         uses: actions/checkout@v3
         with:
@@ -71,25 +68,30 @@ jobs:
           cd uac
           sudo ./uac -p test -a files/system/etc.yaml ${{ inputs.uac_destination_dir }}
 
+      - name: Run sudo ./uac -a live_response/process/pstree.yaml -p test -a files/system/etc.yaml ${{ inputs.uac_destination_dir }}
+        run: |
+          cd uac
+          sudo ./uac -a live_response/process/pstree.yaml -p test -a files/system/etc.yaml ${{ inputs.uac_destination_dir }}
+
       - name: Run sudo ./uac -a live_response/process/ps.yaml ${{ inputs.uac_destination_dir }}
         run: |
           cd uac
           sudo ./uac -a live_response/process/ps.yaml ${{ inputs.uac_destination_dir }}
-      
+
       - name: Run sudo ./uac -a live_response/process/ps.yaml,live_response/network/arp.yaml ${{ inputs.uac_destination_dir }}
         run: |
           cd uac
           sudo ./uac -a live_response/process/ps.yaml,live_response/network/arp.yaml ${{ inputs.uac_destination_dir }}
-      
-      - name: Run sudo ./uac -a live_response/process/\*,\!live_response/process/hash_running_processes.yaml,\!live_response/process/procfs_information.yaml,\!live_response/process/strings_running_processes.yaml ${{ inputs.uac_destination_dir }}
-        run: |
-          cd uac
-          sudo ./uac -a live_response/process/\*,\!live_response/process/hash_running_processes.yaml,\!live_response/process/procfs_information.yaml,\!live_response/process/strings_running_processes.yaml ${{ inputs.uac_destination_dir }}
 
-      - name: Run ./uac -a live_response/process/ps.yaml -u ${{ inputs.uac_destination_dir }}
+      - name: Run sudo ./uac -a live_response/process/\*,\!live_response/process/hash_running_processes.yaml -a \!live_response/process/procfs_information.yaml,\!live_response/process/strings_running_processes.yaml ${{ inputs.uac_destination_dir }}
         run: |
           cd uac
-          sudo ./uac -a live_response/process/ps.yaml -u ${{ inputs.uac_destination_dir }}
+          sudo ./uac -a live_response/process/\*,\!live_response/process/hash_running_processes.yaml -a \!live_response/process/procfs_information.yaml,\!live_response/process/strings_running_processes.yaml ${{ inputs.uac_destination_dir }}
+
+      - name: Run ./uac -a live_response/process/ps.yaml --run-as-non-root ${{ inputs.uac_destination_dir }}
+        run: |
+          cd uac
+          sudo ./uac -a live_response/process/ps.yaml --run-as-non-root ${{ inputs.uac_destination_dir }}
 
       - name: Run sudo ./uac -a files/logs/var_log.yaml --date-range-start 1985-10-26 ${{ inputs.uac_destination_dir }}
         run: |
