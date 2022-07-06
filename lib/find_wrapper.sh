@@ -194,7 +194,12 @@ find_wrapper()
 
   # build -type parameter
   if [ -n "${fw_file_type}" ]; then
-    fw_find_type_param="-type ${fw_file_type}"
+    if ${FIND_TYPE_SUPPORT}; then
+      fw_find_type_param="-type ${fw_file_type}"
+    elif ${PERL_TOOL_AVAILABLE}; then
+      fw_find_type_param="-type ${fw_file_type}"
+      fw_find_tool="perl \"${UAC_DIR}/tools/find.pl/find.pl\""
+    fi
   fi
 
   # build -size parameter
