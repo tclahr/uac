@@ -80,10 +80,10 @@ Collection Arguments:
 Filter Arguments:
       --date-range-start YYYY-MM-DD
                     Only collects files that were last modified/accessed/changed
-                    after given date.
+                    after the given date.
       --date-range-end YYYY-MM-DD
                     Only collects files that were last modified/accessed/changed
-                    before given date.
+                    before the given date.
 
 Informational Arguments:
       --case-number CASE_NUMBER
@@ -107,9 +107,9 @@ Remote Transfer Arguments:
                     File from which the identity (private key) for public key
                     authentication is read.
       --s3-presigned-url URL
-                    Transfer output file to AWS S3 using a presigned URL.
+                    Transfer output file to AWS S3 using a pre-signed URL.
       --s3-presigned-url-log-file URL
-                    Transfer log file to AWS S3 using a presigned URL.
+                    Transfer log file to AWS S3 using a pre-signed URL.
       --delete-local-on-successful-transfer
                     Delete local output and log files on successful transfer.
 
