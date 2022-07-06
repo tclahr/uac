@@ -13,26 +13,34 @@
 # limitations under the License.
 
 ###############################################################################
-# List available artifacts.
+# Create a comma separated list of artifacts based on a profile file.
 # Globals:
-#   UAC_DIR
+#   None
 # Requires:
 #   None
 # Arguments:
-#   None
+#   $1: profile file
 # Outputs:
-#   Write available profiles to stdout.
+#   Comma separated list of artifacts.
 # Exit Status:
 #   Exit with status 0 on success.
 #   Exit with status greater than 0 if errors occur.
 ###############################################################################
-list_artifacts()
+profile_file_to_artifact_list()
 {
-  printf %b "--------------------------------------------------------------------------------\n"
-  printf %b "Artifacts\n"
-  printf %b "--------------------------------------------------------------------------------\n"
+  pl_profile_file="${1:-}"
 
-  find "${UAC_DIR}"/artifacts/* -name "*.yaml" -print \
-    | sed -e "s:^${UAC_DIR}/artifacts/::g" 2>/dev/null
-
+  # remove lines starting with # (comments)
+  # remove inline comments
+  # remove blank lines
+  # grep lines starting with "  - "
+  # remove "  - " from the beginning of the line
+  # shellcheck disable=SC2162
+  sed -e 's/#.*$//g' -e '/^ *$/d' -e '/^$/d' <"${pl_profile_file}" 2>/dev/null \
+    | grep -E " +- +" \
+    | sed -e 's: *- *::g' 2>/dev/null \
+    | while read pl_line || [ -n "${pl_line}" ]; do
+        printf %b "${pl_line},"
+      done
+      
 }

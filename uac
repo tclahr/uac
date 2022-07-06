@@ -67,8 +67,9 @@ export PATH
 . "${UAC_DIR}/lib/load_config_file.sh"
 . "${UAC_DIR}/lib/log_message.sh"
 . "${UAC_DIR}/lib/lrstrip.sh"
+. "${UAC_DIR}/lib/parse_artifact_list.sh"
 . "${UAC_DIR}/lib/parse_artifacts_file.sh"
-. "${UAC_DIR}/lib/parse_profile_file.sh"
+. "${UAC_DIR}/lib/profile_file_to_artifact_list.sh"
 . "${UAC_DIR}/lib/s3_presigned_url_transfer_test.sh"
 . "${UAC_DIR}/lib/s3_presigned_url_transfer.sh"
 . "${UAC_DIR}/lib/sanitize_filename.sh"
@@ -147,7 +148,32 @@ while [ "${1:-}" != "" ]; do
     # profiling arguments
     "-p"|"--profile")
       if [ -n "${2}" ]; then
+        # print available profiles
+        if [ "${2}" = "list" ]; then
+          list_profiles
+          exit 1
+        fi
         ua_profile="${2}"
+        # get proper profile file based on the profile name
+        ua_profile_file=""
+        for ua_file in "${UAC_DIR}"/profiles/*.yaml; do
+          if grep -q -E "name: +${ua_profile} *$" <"${ua_file}" 2>/dev/null; then
+            ua_profile_file="${ua_file}"
+            break
+          fi
+        done
+        # exit if profile not found
+        if [ -z "${ua_profile_file}" ]; then
+          printf %b "uac: profile not found '${ua_profile}'\n"
+          exit 1
+        fi
+        # check if profile file is valid
+        validate_profile_file "${ua_profile_file}" || exit 1
+
+        # convert profile file into a comma separated list of artifacts
+        ua_artifacts_from_profile=`profile_file_to_artifact_list "${ua_profile_file}"`
+        ua_artifacts="${ua_artifacts},${ua_artifacts_from_profile}"
+
         shift
       else
         printf %b "uac: option '${1}' requires an argument.\n\
@@ -157,7 +183,12 @@ Try 'uac --help' for more information.\n" >&2
       ;;
     "-a"|"--artifacts")
       if [ -n "${2}" ]; then
-        ua_artifacts="${2}"
+        # print available artifacts
+        if [ "${2}" = "list" ]; then
+          list_artifacts
+          exit 1
+        fi
+        ua_artifacts="${ua_artifacts},${2}"
         shift
       else
         printf %b "uac: option '${1}' requires an argument.\n\
@@ -371,68 +402,42 @@ done
 # set -u cannot be set at the beginning of the file since it will fail on $@
 set -u
 
-# print available profiles
-if [ -n "${ua_profile}" ] && [ "${ua_profile}" = "list" ]; then
-  list_profiles
-  exit 1
-fi
-
-# print available artifacts
-if [ -n "${ua_artifacts}" ] && [ "${ua_artifacts}" = "list" ]; then
-  list_artifacts
-  exit 1
-fi
-
-# exit if profile and artifacts, or destination dir is empty
-if { [ -z "${ua_profile}" ] && [ -z "${ua_artifacts}" ]; } \
-  || [ -z "${ua_destination_dir}" ] ; then
+# exit if list of artifacts or destination dir is empty
+if [ -z "${ua_artifacts}" ] || [ -z "${ua_destination_dir}" ] ; then
   usage
   exit 1
 fi
 
-# profile name provided
-if [ -n "${ua_profile}" ]; then
-  # get proper profile file based on the profile name
-  ua_profile_file=""
-  for ua_file in "${UAC_DIR}"/profiles/*.yaml; do
-    if grep -q -E "name: +${ua_profile} *$" <"${ua_file}"; then
-      ua_profile_file="${ua_file}"
-      break
-    fi
-  done
-
-  # exit if profile not found
-  if [ -z "${ua_profile_file}" ]; then
-    printf %b "uac: profile not found '${ua_profile}'\n"
-    exit 1
-  fi
-
-  # check if profile file is valid
-  validate_profile_file "${ua_profile_file}" || exit 1
-fi
-
-# artifacts list provided
-if [ -n "${ua_artifacts}" ]; then
-  OIFS="${IFS}"
-  IFS=","
-  for ua_artifact_file in ${ua_artifacts}; do
-    ua_artifact_file=`echo "${ua_artifact_file}" | sed -e 's:^!::g' -e 's:\.\.::g'`
-    if [ -n "${ua_artifact_file}" ]; then
-      # shellcheck disable=SC2086
-      find "${UAC_DIR}"/artifacts/${ua_artifact_file} -name "*.yaml" \
-        -type f -print >/dev/null 2>/dev/null
-      if [ "$?" -gt 0 ]; then
-        printf %b "uac: artifact file not found \
-  '${UAC_DIR}/artifacts/${ua_artifact_file}'\n" >&2
-        exit 1
-      fi
-    else
-      printf %b "uac: artifact not found '${ua_artifact_file}'\n" >&2
+# replace ,.. by , 
+# replace /.. by /
+# replace consecutive commas by one comma
+# remove leading and trailing comma
+ua_artifacts=`echo "${ua_artifacts}" \
+  | sed -e 's:^,\.\.:,:g' \
+        -e 's:/\.\.:/:g' \
+        -e 's:,,*:,:g' \
+        -e 's:^,::' \
+        -e 's:,$::'`
+OIFS="${IFS}"
+IFS=","
+# check if artifacts exist
+for ua_artifact_file in ${ua_artifacts}; do
+  ua_artifact_file=`echo "${ua_artifact_file}" | sed -e 's:^!::g'`
+  if [ -n "${ua_artifact_file}" ]; then
+    # shellcheck disable=SC2086
+    find "${UAC_DIR}"/artifacts/${ua_artifact_file} -name "*.yaml" \
+      -print >/dev/null 2>/dev/null
+    if [ "$?" -gt 0 ]; then
+      printf %b "uac: artifact file not found \
+'${UAC_DIR}/artifacts/${ua_artifact_file}'\n" >&2
       exit 1
     fi
-  done
-  IFS="${OIFS}"
-fi
+  else
+    printf %b "uac: artifact not found '${ua_artifact_file}'\n" >&2
+    exit 1
+  fi
+done
+IFS="${OIFS}"
 
 # check if destination directory exists
 if [ ! -d "${ua_destination_dir}" ]; then
@@ -651,25 +656,6 @@ log_message INFO "'statx' tool available: ${STATX_TOOL_AVAILABLE}"
 
 log_message INFO "PATH: ${PATH}"
 
-# if profile defined, copy it to a temporary profile file
-if [ -n "${ua_profile}" ]; then
-  cp "${ua_profile_file}" "${TEMP_DATA_DIR}/.temp-profile.yaml" \
-    >/dev/null 2>/dev/null
-fi
-
-# if artifacts defined, add them to the temporary profile file
-if [ -n "${ua_artifacts}" ]; then
-  OIFS="${IFS}"
-  IFS=","
-  for ua_artifact_file in ${ua_artifacts}; do
-    printf %b "  - ${ua_artifact_file}\n" >>"${TEMP_DATA_DIR}/.temp-profile.yaml"
-  done
-  IFS="${OIFS}"
-fi
-
-# parse temporary profile file
-parse_profile_file "${TEMP_DATA_DIR}/.temp-profile.yaml" || exit 1
-
 # add UAC_DIR abd TEMP_DATA_DIR to GLOBAL_EXCLUDE_PATH_PATTERN
 if [ -n "${GLOBAL_EXCLUDE_PATH_PATTERN}" ]; then
   GLOBAL_EXCLUDE_PATH_PATTERN="${GLOBAL_EXCLUDE_PATH_PATTERN},${UAC_DIR},${TEMP_DATA_DIR}"
@@ -691,6 +677,11 @@ ua_acq_start_date_epoch=`get_epoch_date 2>>"${UAC_STDERR_LOG_FILE}"`
 
 log_message INFO "Artifacts collection started"
 printf %b "Artifacts collection started...\n"
+
+# parse artifact list
+parse_artifact_list "${ua_artifacts}" \
+  >"${TEMP_DATA_DIR}/.artifacts.tmp" \
+  2>>"${UAC_STDERR_LOG_FILE}"
 
 ua_progress_current=0
 ua_progress_total=`wc -l "${TEMP_DATA_DIR}/.artifacts.tmp" | awk '{print $1}'`

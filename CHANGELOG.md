@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## DEVELOPMENT VERSION
 
+## New Features
+
+- You can now use as many --artifacts (-a) and --profile (-p) as you want to build an even more customized collection. Artifacts will be collected in the order they were provided in the command line. Please check the [project's documentation page](https://tclahr.github.io/uac-docs/#using-uac) for more information.
+
 ### Deprecated Command Line Option
 
 - '-o' command line switch is no longer available because it was replaced by '-s'.
@@ -19,9 +23,9 @@ All notable changes to this project will be documented in this file.
 
 - VMware ESXi is now fully supported as an operating system. Note that ESXi is not built upon the Linux kernel, and uses its own VMware proprietary kernel (the VMkernel) and software. So it misses most of the applications and components that are commonly found in all Linux distributions ([#33](https://github.com/tclahr/uac/issues/33)).
 - UAC now collects copies of '/proc/[pid]/exe' and their related '/proc/[pid]/fd/*' if they are shown up as being (deleted). They are copied using 'dd conv=swab' tool in order to avoid UAC output file being flagged and quarantined by any antivirus tool ([#36](https://github.com/tclahr/uac/issues/36)).
-- Added '--s3-presigned-url' switch which allows for pushing the output file to S3 presigned URLs (if curl available) ([#38](https://github.com/tclahr/uac/issues/38)).
-- Added '--s3-presigned-url-log-file' switch which allows for pushing the output log file to S3 presigned URLs (if curl available) ([#38](https://github.com/tclahr/uac/issues/38)).
-- Added '--delete-local-on-successful-transfer' switch which will delete both local output and log files after they are successfully transferred either via sftp or to a presigned S3 URL.
+- Added '--s3-presigned-url' switch which allows for pushing the output file to S3 pre-signed URLs (if curl available) ([#38](https://github.com/tclahr/uac/issues/38)).
+- Added '--s3-presigned-url-log-file' switch which allows for pushing the output log file to S3 pre-signed URLs (if curl available) ([#38](https://github.com/tclahr/uac/issues/38)).
+- Added '--delete-local-on-successful-transfer' switch which will delete both local output and log files after they are successfully transferred either via sftp or to a pre-signed S3 URL.
 - AVML was updated to v0.6.1 ([#45](https://github.com/tclahr/uac/issues/45)).
 
 ### New Artifacts
