@@ -172,8 +172,7 @@ check_available_system_tools()
   fi
 
   # check which options are supported by the find tool
-  if eval "find \"${UAC_DIR}\" \\( -name \"uac\" -o -name \"uac\" \\) -type f \
-    -print"; then
+  if eval "find \"${UAC_DIR}\" \\( -name \"uac.conf\" -o -name \"uac.conf\" \\) -print"; then
     FIND_OPERATORS_SUPPORT=true
   fi
 

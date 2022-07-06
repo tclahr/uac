@@ -32,7 +32,7 @@ list_artifacts()
   printf %b "Artifacts\n"
   printf %b "--------------------------------------------------------------------------------\n"
 
-  find "${UAC_DIR}"/artifacts/* -name "*.yaml" -type f -print \
+  find "${UAC_DIR}"/artifacts/* -name "*.yaml" -print \
     | sed -e "s:^${UAC_DIR}/artifacts/::g" 2>/dev/null
 
 }
