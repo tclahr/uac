@@ -60,6 +60,7 @@ check_available_system_tools()
   FIND_PATH_SUPPORT=false
   FIND_PERM_SUPPORT=false
   FIND_SIZE_SUPPORT=false
+  FIND_TYPE_SUPPORT=false
   GZIP_TOOL_AVAILABLE=false
   MD5_HASHING_TOOL=""
   PERL_TOOL_AVAILABLE=false
@@ -190,6 +191,10 @@ check_available_system_tools()
 
   if eval "find \"${UAC_DIR}/uac\" -perm -0000 -print"; then
     FIND_PERM_SUPPORT=true
+  fi
+
+  if eval "find \"${UAC_DIR}/uac\" -type f -print"; then
+    FIND_TYPE_SUPPORT=true
   fi
 
   if eval "find \"${UAC_DIR}/uac\" -atime +1 -print"; then
