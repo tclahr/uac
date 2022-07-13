@@ -6,7 +6,7 @@ artifacts:
     # this is to avoid dd hitting an invalid file descriptor (such as /dev/null) and generating an endless output file
     supported_os: [linux]
     collector: command
-    loop_command: ls -l /proc/[0-9]*/exe | grep -E "\(deleted\)" | grep -v -E "> /dev/|> /proc/" | awk -F"/proc/|/exe" '{print $2}'
+    loop_command: ls -l /proc/[0-9]*/exe | grep -E "\(deleted\)" | grep -v -E "> /proc/" | awk -F"/proc/|/exe" '{print $2}'
     command: dd if=/proc/%line%/exe of=%output_file% conv=swab bs=1024 count=50000
     output_directory: proc/%line%
     output_file: recovered_exe.dd.swab
