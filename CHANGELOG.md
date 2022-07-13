@@ -8,6 +8,16 @@ All notable changes to this project will be documented in this file.
 
 - You can now use as many --artifacts (-a) and --profile (-p) as you want to build an even more customized collection. Artifacts will be collected in the order they were provided in the command line. Please check the [project's documentation page](https://tclahr.github.io/uac-docs/#using-uac) for more information.
 
+### New Artifacts
+
+- New artifact to collect the contents of /dev/shm (files/system/dev_shm.yaml) ([#68](https://github.com/tclahr/uac/issues/68)).
+- New artifact to collect the contents of /run/shm (files/system/run_shm.yaml) ([#68](https://github.com/tclahr/uac/issues/68)).
+- New artifact to collect the contents of /var/tmp (files/system/var_tmp.yaml) ([#68](https://github.com/tclahr/uac/issues/68)).
+
+### Updated Artifacts
+
+- /dev was removed from the exclusion list during deleted process collection ([#65](https://github.com/tclahr/uac/issues/65)).
+
 ### Deprecated Command Line Option
 
 - '-o' command line switch is no longer available because it was replaced by '-s'.
