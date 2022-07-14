@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ## New Features
 
 - You can now use as many --artifacts (-a) and --profile (-p) as you want to build an even more customized collection. Artifacts will be collected in the order they were provided in the command line. Please check the [project's documentation page](https://tclahr.github.io/uac-docs/#using-uac) for more information.
+- UAC now collects copies of '/proc/[pid]/fd/*' from deleted processes even if they are not shown up as being (deleted).
 
 ### New Artifacts
 
