@@ -770,9 +770,13 @@ if ${TAR_TOOL_AVAILABLE} && ${GZIP_TOOL_AVAILABLE}; then
     "${ua_destination_dir}/${ua_output_file}" 2>/dev/null; then
     printf %b "Output file created '${ua_destination_dir}/${ua_output_file}'\n"
     cd "${UAC_DIR}" || exit 1
-    rm -rf "${TEMP_DATA_DIR}" >/dev/null 2>/dev/null
-    if [ -d "${TEMP_DATA_DIR}" ]; then
-        printf %b "Cannot remove temporary directory '${TEMP_DATA_DIR}'\n"
+    if ${ua_debug_mode}; then
+      printf %b "Temporary directory not removed '${TEMP_DATA_DIR}'\n"
+    else
+      rm -rf "${TEMP_DATA_DIR}" >/dev/null 2>/dev/null
+      if [ -d "${TEMP_DATA_DIR}" ]; then
+          printf %b "Cannot remove temporary directory '${TEMP_DATA_DIR}'\n"
+      fi
     fi
   else
     printf %b "Cannot create output file\n"
@@ -790,9 +794,13 @@ elif ${TAR_TOOL_AVAILABLE}; then
     "${ua_destination_dir}/${ua_output_file}" 2>/dev/null; then
     printf %b "Output file created '${ua_destination_dir}/${ua_output_file}'\n"
     cd "${UAC_DIR}" || exit 1
-    rm -rf "${TEMP_DATA_DIR}" >/dev/null 2>/dev/null
-    if [ -d "${TEMP_DATA_DIR}" ]; then
-        printf %b "Cannot remove temporary directory '${TEMP_DATA_DIR}'\n"
+    if ${ua_debug_mode}; then
+      printf %b "Temporary directory not removed '${TEMP_DATA_DIR}'\n"
+    else
+      rm -rf "${TEMP_DATA_DIR}" >/dev/null 2>/dev/null
+      if [ -d "${TEMP_DATA_DIR}" ]; then
+          printf %b "Cannot remove temporary directory '${TEMP_DATA_DIR}'\n"
+      fi
     fi
   else
     printf %b "Cannot create output file\n"
