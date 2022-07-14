@@ -43,7 +43,8 @@
 #   $11: max file size (optional)
 #   $12: permissions (optional)
 #   $13: ignore date range (optional) (default: false)
-#   $14: output file
+#   $14: root output directory
+#   $15: output file
 # Exit Status:
 #   Exit with status 0 on success.
 #   Exit with status greater than 0 if errors occur.
@@ -79,11 +80,20 @@ file_collector()
   shift
   fl_ignore_date_range="${1:-false}"
   shift
+  fl_root_output_directory="${1:-}"
+  shift
   fl_output_file="${1:-}"
 
   # return if path is empty
   if [ -z "${fl_path}" ]; then
     printf %b "file_collector: missing required argument: 'path'\n" >&2
+    return 22
+  fi
+
+  # return if root output directory is empty
+  if [ -z "${fl_root_output_directory}" ]; then
+    printf %b "file_collector: missing required argument: \
+'root_output_directory'\n" >&2
     return 22
   fi
 
@@ -96,7 +106,7 @@ file_collector()
   # prepend TEMP_DATA_DIR to path if it does not start with /
   # (which means local file)
   if echo "${fl_path}" | grep -q -v -E "^/"; then
-    fl_path=`sanitize_path "${TEMP_DATA_DIR}/${fl_path}"`
+    fl_path=`sanitize_path "${TEMP_DATA_DIR}/${fl_root_output_directory}/${fl_path}"`
   fi
 
   # return if is file list and file list does not exist
