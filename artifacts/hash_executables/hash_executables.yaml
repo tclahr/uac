@@ -4,7 +4,7 @@ artifacts:
     description: Find files that contain at least +x flag set for other.
     supported_os: [all]
     collector: find
-    path: /*
+    path: /
     exclude_file_system: [proc, procfs]
     file_type: f
     max_depth: 4
@@ -15,7 +15,7 @@ artifacts:
     description: Find files that contain at least +x flag set for group.
     supported_os: [all]
     collector: find
-    path: /*
+    path: /
     exclude_file_system: [proc, procfs]
     file_type: f
     max_depth: 4
@@ -26,7 +26,7 @@ artifacts:
     description: Find files that contain at least +x flag set for owner.
     supported_os: [all]
     collector: find
-    path: /*
+    path: /
     exclude_file_system: [proc, procfs]
     file_type: f
     max_depth: 4

@@ -4,6 +4,6 @@ artifacts:
     description: iTunes backup directory.
     supported_os: [macos]
     collector: file
-    path: /%user_home%/Library/"Application Support"/MobileSync/Backup/*
+    path: /%user_home%/Library/"Application Support"/MobileSync/Backup
     exclude_nologin_users: true
     

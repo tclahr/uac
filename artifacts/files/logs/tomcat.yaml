@@ -4,6 +4,6 @@ artifacts:
     description: Collect Apache Tomcat logs.
     supported_os: [aix, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris]
     collector: file
-    path: /*
+    path: /
     name_pattern: ["access_log*", "error_log*", "httpd-access.log*", "httpd-error.log*", "catalina.out"]
     max_file_size: 1073741824 # 1GB

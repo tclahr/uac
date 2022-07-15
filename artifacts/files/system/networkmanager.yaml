@@ -4,5 +4,5 @@ artifacts:
     description: Collect Network Manager files.
     supported_os: [linux]
     collector: file
-    path: /var/lib/NetworkManager/*
+    path: /var/lib/NetworkManager
     ignore_date_range: true

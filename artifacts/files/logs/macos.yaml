@@ -10,12 +10,12 @@ artifacts:
     description: Collect system logs.
     supported_os: [macos]
     collector: file
-    path: /Library/Logs/*
+    path: /Library/Logs
     max_file_size: 1073741824 # 1GB
   -
     description: Collect user applications logs.
     supported_os: [macos]
     collector: file
-    path: /%user_home%/Library/Logs/*
+    path: /%user_home%/Library/Logs
     max_file_size: 1073741824 # 1GB
   

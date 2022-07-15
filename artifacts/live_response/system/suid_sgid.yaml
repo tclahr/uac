@@ -4,7 +4,7 @@ artifacts:
     description: Search for files that have SUID bit set.
     supported_os: [all]
     collector: find
-    path: /*
+    path: /
     exclude_file_system: [proc, procfs]
     file_type: f
     max_depth: 5
@@ -14,7 +14,7 @@ artifacts:
     description: Search for files that have SGID bit set.
     supported_os: [all]
     collector: find
-    path: /*
+    path: /
     exclude_file_system: [proc, procfs]
     file_type: f
     max_depth: 5

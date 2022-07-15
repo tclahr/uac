@@ -4,13 +4,13 @@ artifacts:
     description: Collect Aspera Client file lists.
     supported_os: [linux, macos]
     collector: file
-    path: /%user_home%/.aspera/connect/filelists/*
+    path: /%user_home%/.aspera/connect/filelists
     exclude_nologin_users: true
   -
     description: Collect Aspera Client logs.
     supported_os: [linux, macos]
     collector: file
-    path: /%user_home%/.aspera/connect/var/log/*
+    path: /%user_home%/.aspera/connect/var/log
     exclude_nologin_users: true
   -
     description: Collect Aspera Client sqlite database.
