@@ -11,9 +11,13 @@ All notable changes to this project will be documented in this file.
 
 ### New Artifacts
 
-- New artifact to collect the contents of /dev/shm (files/system/dev_shm.yaml) ([#68](https://github.com/tclahr/uac/issues/68)).
-- New artifact to collect the contents of /run/shm (files/system/run_shm.yaml) ([#68](https://github.com/tclahr/uac/issues/68)).
-- New artifact to collect the contents of /var/tmp (files/system/var_tmp.yaml) ([#68](https://github.com/tclahr/uac/issues/68)).
+- New artifact that collects the contents of /dev/shm (files/system/dev_shm.yaml) ([#68](https://github.com/tclahr/uac/issues/68)).
+- New artifact that collects the contents of /run/shm (files/system/run_shm.yaml) ([#68](https://github.com/tclahr/uac/issues/68)).
+- New artifact that collects the contents of /var/tmp (files/system/var_tmp.yaml) ([#68](https://github.com/tclahr/uac/issues/68)).
+- New artifact that lists hidden files and directories created outside of user home directories (live_response/system/hidden_files_directories.yaml) ([#69](https://github.com/tclahr/uac/issues/69)).
+- New artifact that lists world writable files and directories (live_response/system/world_writable.yaml).
+- New artifact that collects last logins and logouts (live_response/system/last.yaml).
+- New artifact that collects unsuccessful logins (live_response/system/lastb.yaml).
 
 ### Updated Artifacts
 
