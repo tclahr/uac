@@ -4,5 +4,5 @@ artifacts:
     description: Collect system configuration files.
     supported_os: [netscaler]
     collector: file
-    path: /flash/nsconfig/*
+    path: /flash/nsconfig
     ignore_date_range: true

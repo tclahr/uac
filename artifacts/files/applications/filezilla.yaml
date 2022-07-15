@@ -4,7 +4,7 @@ artifacts:
     description: Collect FileZilla XML and sqlite files.
     supported_os: [linux, macos]
     collector: file
-    path: /%user_home%/.config/filezilla/*
+    path: /%user_home%/.config/filezilla
     name_pattern: ["*.xml*", "*.sqlite3*"]
     file_type: f
     ignore_date_range: true
@@ -13,7 +13,7 @@ artifacts:
     description: Collect FileZilla XML and sqlite files (Flatpak version).
     supported_os: [linux]
     collector: file
-    path: /%user_home%/.var/app/org.filezillaproject.Filezilla/*
+    path: /%user_home%/.var/app/org.filezillaproject.Filezilla
     name_pattern: ["*.xml*", "*.sqlite3*"]
     file_type: f
     ignore_date_range: true

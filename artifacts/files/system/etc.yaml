@@ -4,12 +4,12 @@ artifacts:
     description: Collect system configuration files.
     supported_os: [all]
     collector: file
-    path: /etc/*
+    path: /etc
     exclude_name_pattern: ["shadow", "shadow-"]
     ignore_date_range: true
   -
     description: Collect system configuration files.
     supported_os: [macos]
     collector: file
-    path: /private/etc/*
+    path: /private/etc
     ignore_date_range: true

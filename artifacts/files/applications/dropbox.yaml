@@ -4,7 +4,7 @@ artifacts:
     description: Collect Dropbox Cloud Storage metadata.
     supported_os: [linux, macos]
     collector: file
-    path: /%user_home%/.dropbox/*
+    path: /%user_home%/.dropbox
     file_type: f
     ignore_date_range: true
     exclude_nologin_users: true

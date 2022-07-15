@@ -4,7 +4,7 @@ artifacts:
     description: Collect Microsoft Teams cache files.
     supported_os: [linux]
     collector: file
-    path: /%user_home%/.config/Microsoft/"Microsoft Teams"/Cache/*
+    path: /%user_home%/.config/Microsoft/"Microsoft Teams"/Cache
     exclude_nologin_users: true
   -
     description: Collect Microsoft Teams chat log files.
@@ -17,7 +17,7 @@ artifacts:
     description: Collect Microsoft Teams leveldb files.
     supported_os: [linux]
     collector: file
-    path: /%user_home%/.config/Microsoft/"Microsoft Teams"/"Local Storage"/leveldb/*
+    path: /%user_home%/.config/Microsoft/"Microsoft Teams"/"Local Storage"/leveldb
     exclude_nologin_users: true
   -
     description: Collect Microsoft Teams config file.
@@ -29,7 +29,7 @@ artifacts:
     description: Collect Microsoft Teams logs directory.
     supported_os: [linux]
     collector: file
-    path: /%user_home%/.config/Microsoft/"Microsoft Teams"/logs/*
+    path: /%user_home%/.config/Microsoft/"Microsoft Teams"/logs
     exclude_nologin_users: true
   -
     description: Collect Microsoft Teams log file.
@@ -127,7 +127,7 @@ artifacts:
     description: Collect Microsoft Teams cache files.
     supported_os: [macos]
     collector: file
-    path: /%user_home%/Library/"Application Support"/Microsoft/Teams/Cache/*
+    path: /%user_home%/Library/"Application Support"/Microsoft/Teams/Cache
     exclude_nologin_users: true
   -
     description: Collect Microsoft Teams chat log files.
@@ -140,7 +140,7 @@ artifacts:
     description: Collect Microsoft Teams leveldb files.
     supported_os: [macos]
     collector: file
-    path: /%user_home%/Library/"Application Support"/Microsoft/Teams/"Local Storage"/leveldb/*
+    path: /%user_home%/Library/"Application Support"/Microsoft/Teams/"Local Storage"/leveldb
     exclude_nologin_users: true
   -
     description: Collect Microsoft Teams config file.
@@ -152,7 +152,7 @@ artifacts:
     description: Collect Microsoft Teams logs directory.
     supported_os: [macos]
     collector: file
-    path: /%user_home%/Library/"Application Support"/Microsoft/Teams/logs/*
+    path: /%user_home%/Library/"Application Support"/Microsoft/Teams/logs
     exclude_nologin_users: true
   -
     description: Collect Microsoft Teams log file.

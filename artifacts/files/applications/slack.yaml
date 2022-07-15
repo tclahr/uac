@@ -4,7 +4,7 @@ artifacts:
     description: Collect Slack cache files.
     supported_os: [linux]
     collector: file
-    path: /%user_home%/.config/Slack/Cache/*
+    path: /%user_home%/.config/Slack/Cache
     exclude_nologin_users: true
   -
     description: Collect Slack chat log files.
@@ -17,19 +17,19 @@ artifacts:
     description: Collect Slack leveldb files.
     supported_os: [linux]
     collector: file
-    path: /%user_home%/.config/Slack/"Local Storage"/leveldb/*
+    path: /%user_home%/.config/Slack/"Local Storage"/leveldb
     exclude_nologin_users: true
   -
     description: Collect Slack log files.
     supported_os: [linux]
     collector: file
-    path: /%user_home%/.config/Slack/logs/*
+    path: /%user_home%/.config/Slack/logs
     exclude_nologin_users: true
   -
     description: Collect Slack storage files.
     supported_os: [linux]
     collector: file
-    path: /%user_home%/.config/Slack/storage/*
+    path: /%user_home%/.config/Slack/storage
     exclude_nologin_users: true
   -
     description: Collect Slack cache files (Flatpak version).
@@ -107,7 +107,7 @@ artifacts:
     description: Collect Slack cache files.
     supported_os: [macos]
     collector: file
-    path: /%user_home%/Library/"Application Support"/Slack/Cache/*
+    path: /%user_home%/Library/"Application Support"/Slack/Cache
     exclude_nologin_users: true
   -
     description: Collect Slack chat log files.
@@ -120,19 +120,19 @@ artifacts:
     description: Collect Slack leveldb files.
     supported_os: [macos]
     collector: file
-    path: /%user_home%/Library/"Application Support"/Slack/"Local Storage"/leveldb/*
+    path: /%user_home%/Library/"Application Support"/Slack/"Local Storage"/leveldb
     exclude_nologin_users: true
   -
     description: Collect Slack log files.
     supported_os: [macos]
     collector: file
-    path: /%user_home%/Library/"Application Support"/Slack/logs/*
+    path: /%user_home%/Library/"Application Support"/Slack/logs
     exclude_nologin_users: true
   -
     description: Collect Slack storage files.
     supported_os: [macos]
     collector: file
-    path: /%user_home%/Library/"Application Support"/Slack/storage/*
+    path: /%user_home%/Library/"Application Support"/Slack/storage
     exclude_nologin_users: true
 
 # References:
