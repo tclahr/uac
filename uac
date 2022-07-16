@@ -33,6 +33,13 @@ export _POSIX2_VERSION
 # $PWD is not set in solaris 10
 UAC_DIR=`pwd`
 
+# check if UAC is being executed from untarred directory
+if [ ! -d "${UAC_DIR}/lib" ] || [ ! -d "${UAC_DIR}/artifacts" ]; then
+  printf %b "uac: required files not found. Make sure you are executing uac \
+from untarred directory.\n" >&2
+  exit 1
+fi
+
 # set path
 PATH="/usr/xpg4/bin:/usr/xpg6/bin:/bin:/sbin:/usr/bin:/usr/sbin"
 PATH="${PATH}:/usr/local/bin:/usr/local/sbin:/usr/ucb:/usr/ccs/bin:/opt/bin"
