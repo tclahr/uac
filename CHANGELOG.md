@@ -18,6 +18,9 @@ All notable changes to this project will be documented in this file.
 - New artifact that lists world writable files and directories (live_response/system/world_writable.yaml).
 - New artifact that collects last logins and logouts (live_response/system/last.yaml).
 - New artifact that collects unsuccessful logins (live_response/system/lastb.yaml).
+- New artifact that lists all socket files (live_response/system/socket_files.yaml).
+- New artifact that collects macOS .DS_Store files (files/system/ds_store.yaml).
+- New artifact that collects macOS network and application usage database files (files/system/network_application_usage.yaml).
 
 ### Updated Artifacts
 

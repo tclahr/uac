@@ -1,0 +1,10 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect .DS_Store files.
+    supported_os: [macos]
+    collector: file
+    path: /
+    name_pattern: [".DS_Store"]
+    file_type: f
+  
