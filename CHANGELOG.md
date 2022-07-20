@@ -21,9 +21,12 @@ All notable changes to this project will be documented in this file.
 - New artifact that lists all socket files (live_response/system/socket_files.yaml).
 - New artifact that collects macOS .DS_Store files (files/system/ds_store.yaml).
 - New artifact that collects macOS network and application usage database files (files/system/network_application_usage.yaml).
+- New artifact that collects terse runtime status information about one or more logged in users, followed by the most recent log data from the journal (live_response/system/loginctl.yaml).
 
 ### Updated Artifacts
 
+- New artifact to collect sessions files from /run/systemd/sessions (files/system/systemd.yaml).
+- New artifact to collect scope files from /run/systemd/transient (files/system/systemd.yaml).
 - /dev was removed from the exclusion list during deleted process collection ([#65](https://github.com/tclahr/uac/issues/65)).
 
 ### Deprecated Command Line Option
