@@ -39,6 +39,10 @@ All notable changes to this project will be documented in this file.
 - 'full-with-memory-dump' profile is no longer available because '--profile full --artifacts memory_dump/avml.yaml' can be used instead. 
 - 'memory-dump-only' profile is no longer available because '--artifacts memory_dump/avml.yaml' can be used instead.
 
+### Fixed
+
+- UAC now copies all collected artifacts to a destination directory if 'tar' tool is not available ([#63](https://github.com/tclahr/uac/issues/63)).
+
 ## 2.2.0 (2022-05-02)
 
 ### New Features
