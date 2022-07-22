@@ -22,8 +22,8 @@ artifacts:
     description: Show a listing of last logins and logouts, but display the hostname in the last column and print full login and logout times and dates.
     supported_os: [linux]
     collector: command
-    command: last -a -d -F
-    output_file: last_-a_-d_-F.txt
+    command: last -a -F
+    output_file: last_-a_-F.txt
   -
     description: Show a listing of last logins and logouts, but displays the hostname in the last column.
     supported_os: [solaris]
