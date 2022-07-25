@@ -1,9 +1,0 @@
-version: 1.0
-artifacts:
-  -
-    description: Collect wifi plist file. This can be useful in determining where a machine has been, or if a user has joined an illegitimate or unauthorized wireless network.
-    supported_os: [macos]
-    collector: file
-    path: /Library/Preferences/SystemConfiguration/com.apple.airport.preferences.plist
-    ignore_date_range: true
-  
