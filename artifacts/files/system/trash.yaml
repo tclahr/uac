@@ -6,17 +6,3 @@ artifacts:
     collector: file
     path: /%user_home%/.local/share/Trash/info
     exclude_nologin_users: true
-  -
-    description: List trash items.
-    supported_os: [freebsd, linux, netbsd, openbsd]
-    collector: command
-    command: ls -la /%user_home%/.local/share/Trash/files
-    output_file: trash_items.txt
-    exclude_nologin_users: true
-  -
-    description: List trash items.
-    supported_os: [macos]
-    collector: command
-    command: ls -la /%user_home%/.Trash
-    output_file: trash_items.txt
-    exclude_nologin_users: true
