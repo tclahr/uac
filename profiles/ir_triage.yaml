@@ -24,9 +24,6 @@ artifacts:
   - live_response/vms/*
   - chkrootkit/chkrootkit.yaml
   - hash_executables/hash_executables.yaml
-  - files/logs/*
-  - files/packages/*
-  - files/shell/*
-  - files/ssh/*
-  - files/system/*
-  
+  - files/*
+  - !files/applications/*
+  - !files/browsers/*

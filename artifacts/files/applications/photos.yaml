@@ -1,0 +1,9 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect Photos artifacts.
+    supported_os: [macos]
+    collector: file
+    path: /%user_home%/Pictures/Photos Library.photoslibrary
+    name_pattern: ["Photos.sqlite*"]
+    exclude_nologin_users: true
