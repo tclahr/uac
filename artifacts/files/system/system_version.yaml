@@ -1,0 +1,9 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect system name and version.
+    supported_os: [macos]
+    collector: file
+    path: /System/Library/CoreServices/SystemVersion.plist
+    ignore_date_range: true
+  

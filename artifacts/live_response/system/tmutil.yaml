@@ -1,0 +1,27 @@
+version: 1.0
+artifacts:
+  -
+    description: Print paths for all of this computer's completed snapshots.
+    supported_os: [macos]
+    collector: command
+    command: tmutil listbackups
+    output_file: tmutil_listbackups.txt
+  -
+    description: Print the path to the current machine directory for this computer.
+    supported_os: [macos]
+    collector: command
+    command: tmutil machinedirectory
+    output_file: tmutil_machinedirectory.txt
+  -
+    description: List local Time Machine snapshots of the specified volume.
+    supported_os: [macos]
+    collector: command
+    command: tmutil listlocalsnapshots %mount_point%
+    output_file: tmutil_listlocalsnapshots.txt
+  -
+    description: List the creation dates of all local Time Machine snapshots.
+    supported_os: [macos]
+    collector: command
+    command: tmutil listlocalsnapshotdates %mount_point%
+    output_file: tmutil_listlocalsnapshotdates.txt
+  

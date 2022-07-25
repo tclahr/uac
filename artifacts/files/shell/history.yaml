@@ -8,3 +8,10 @@ artifacts:
     # lesshst: less command history file
     name_pattern: [".*_history", ".*history", ".lesshst", ".zhistory"]
     max_depth: 2
+  -
+    description: Collect fish shell history files.
+    supported_os: [all]
+    collector: file
+    path: /%user_home%
+    name_pattern: ["fish_history"]
+    max_depth: 4
