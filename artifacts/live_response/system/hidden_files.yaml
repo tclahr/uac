@@ -9,13 +9,4 @@ artifacts:
     exclude_path_pattern: ["/root", "/home", "/export/home", "/Users"]
     file_type: f
     output_file: hidden_files.txt
-  -
-    description: List all hidden directories outside of user home directory.
-    supported_os: [all]
-    collector: find
-    path: /
-    name_pattern: [".*"]
-    exclude_path_pattern: ["/root", "/home", "/export/home", "/Users"]
-    file_type: d
-    output_file: hidden_directories.txt
   

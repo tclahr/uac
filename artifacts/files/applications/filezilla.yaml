@@ -1,4 +1,4 @@
-version: 1.0
+version: 2.0
 artifacts:
   -
     description: Collect FileZilla XML and sqlite files.
@@ -6,7 +6,6 @@ artifacts:
     collector: file
     path: /%user_home%/.config/filezilla
     name_pattern: ["*.xml*", "*.sqlite3*"]
-    file_type: f
     ignore_date_range: true
     exclude_nologin_users: true
   -
@@ -15,6 +14,5 @@ artifacts:
     collector: file
     path: /%user_home%/.var/app/org.filezillaproject.Filezilla
     name_pattern: ["*.xml*", "*.sqlite3*"]
-    file_type: f
     ignore_date_range: true
     exclude_nologin_users: true
