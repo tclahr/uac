@@ -120,13 +120,13 @@ jobs:
 
       - name: (no gzip) run ./uac -a live_response/process/ps.yaml --run-as-non-root ${{ inputs.uac_destination_dir }}
         run: |
-          alias gzip=gzip_
+          rm -f `which gzip`
           cd uac
           ./uac -a live_response/process/ps.yaml --run-as-non-root ${{ inputs.uac_destination_dir }}
 
       - name: (no tar) run ./uac -a live_response/process/ps.yaml --run-as-non-root ${{ inputs.uac_destination_dir }}
         run: |
-          alias tar=tar_
+          rm -f `which tar`
           cd uac
           ./uac -a live_response/process/ps.yaml --run-as-non-root ${{ inputs.uac_destination_dir }}
 
