@@ -100,7 +100,7 @@ jobs:
         run: vagrant upload uac-unit-test uac-unit-test
 
       - name: Run date
-        run: vagrant ssh -c "date"
+        run: vagrant ssh -c "date || true"
 
       - name: Run uname -a
         run: vagrant ssh -c "uname -a"
