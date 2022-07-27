@@ -118,18 +118,6 @@ jobs:
           cd uac
           ./uac -a live_response/process/ps.yaml --run-as-non-root ${{ inputs.uac_destination_dir }}
 
-      - name: (no gzip) run ./uac -a live_response/process/ps.yaml --run-as-non-root ${{ inputs.uac_destination_dir }}
-        run: |
-          sudo rm -f `which gzip`
-          cd uac
-          ./uac -a live_response/process/ps.yaml --run-as-non-root ${{ inputs.uac_destination_dir }}
-
-      - name: (no tar) run ./uac -a live_response/process/ps.yaml --run-as-non-root ${{ inputs.uac_destination_dir }}
-        run: |
-          sudo rm -f `which tar`
-          cd uac
-          ./uac -a live_response/process/ps.yaml --run-as-non-root ${{ inputs.uac_destination_dir }}
-
       - name: Run ./uac --validate-artifacts-file ./artifacts/live_response/process/ps.yaml
         run: |
           cd uac
