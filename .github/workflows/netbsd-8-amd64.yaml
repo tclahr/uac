@@ -17,4 +17,5 @@ jobs:
       vagrant_box_name: "generic/netbsd8"
       vagrant_ssh_username: "vagrant"
       vagrant_ssh_password: ""
+      vagrant_ssh_shell: "/bin/sh"
       vagrant_ssh_options: ""
