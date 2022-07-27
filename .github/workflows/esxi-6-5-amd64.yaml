@@ -17,5 +17,6 @@ jobs:
       vagrant_box_name: "david-flynn/esxi-6.5.0-base"
       vagrant_ssh_username: "root"
       vagrant_ssh_password: ""
+      vagrant_ssh_shell: "/bin/sh"
       vagrant_ssh_options: ""
       
