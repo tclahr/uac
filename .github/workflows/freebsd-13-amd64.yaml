@@ -9,7 +9,7 @@ jobs:
   run-uac-tests:
     uses: ./.github/workflows/deploy-vm-and-run-tests.yaml
     with:
-      runs_on: "macos-10.15"
+      runs_on: "macos-12"
       unit_test_operating_system: "freebsd"
       unit_test_system_arch: "amd64"
       unit_test_hostname: "freebsd13.localdomain"
