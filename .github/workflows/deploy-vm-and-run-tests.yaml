@@ -27,6 +27,9 @@ on:
       vagrant_ssh_password:
         required: true
         type: string
+      vagrant_ssh_shell:
+        required: true
+        type: string
       vagrant_ssh_options:
         required: true
         type: string
@@ -66,7 +69,7 @@ jobs:
           Vagrant.configure("2") do |config|
             config.vm.box = "${{ inputs.vagrant_box_name }}"
             config.ssh.username = "${{ inputs.vagrant_ssh_username }}"
-            config.ssh.shell = "/bin/sh"
+            config.ssh.shell = "${{ inputs.vagrant_ssh_shell }}"
             config.vm.provider "virtualbox" do |vb|
               vb.customize ["modifyvm", :id, "--usb", "off"]
               vb.customize ["modifyvm", :id, "--usbehci", "off"]
@@ -100,7 +103,7 @@ jobs:
         run: vagrant upload uac-unit-test uac-unit-test
 
       - name: Run date
-        run: vagrant ssh -c "date || true"
+        run: vagrant ssh -c "date"
 
       - name: Run uname -a
         run: vagrant ssh -c "uname -a"
