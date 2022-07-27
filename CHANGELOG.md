@@ -17,11 +17,12 @@ All notable changes to this project will be documented in this file.
 - New artifact that collects the contents of /var/tmp (files/system/var_tmp.yaml) ([#68](https://github.com/tclahr/uac/issues/68)).
 - New artifact that lists hidden files and directories created outside of user home directories (live_response/system/hidden_files_directories.yaml) ([#69](https://github.com/tclahr/uac/issues/69)).
 - New artifact that lists world writable files and directories (live_response/system/world_writable.yaml).
+- New artifact that lists loaded kernel modules from /sys/module directory (live_response/system/sys_module.yaml).
 - New artifact that collects last logins and logouts (live_response/system/last.yaml).
 - New artifact that collects unsuccessful logins (live_response/system/lastb.yaml).
 - New artifact that lists all socket files (live_response/system/socket_files.yaml).
-- New artifact to collect sessions files from /run/systemd/sessions (files/system/systemd.yaml).
-- New artifact to collect scope files from /run/systemd/transient (files/system/systemd.yaml).
+- New artifact that collects sessions files from /run/systemd/sessions (files/system/systemd.yaml).
+- New artifact that collects scope files from /run/systemd/transient (files/system/systemd.yaml).
 - New artifact that collects the list of trash items (files/system/trash.yaml).
 - New artifact that collects Vivaldi browser artifacts (files/browsers/vivaldi.yaml).
 - New artifact that collects Linux terse runtime status information about one or more logged in users, followed by the most recent log data from the journal (live_response/system/loginctl.yaml).
@@ -35,6 +36,7 @@ All notable changes to this project will be documented in this file.
 - New artifact that collects macOS unified logging and activity tracing files (files/system/var_db_diagnostics.yaml).
 - New artifact that collects macOS time machine information (live_response/system/tmutil.yaml).
 - New artitact that collects macOS Photos application database files (files/applications/photos.yaml).
+- New artifact that collects AIX failed login attemtps from /etc/security/failedlogin (live_response/system/who.yaml).
 
 ### Updated Artifacts
 
@@ -47,8 +49,8 @@ All notable changes to this project will be documented in this file.
 
 ### Deprecated Profiles
 
-- 'full-with-memory-dump' profile is no longer available because '--artifacts memory_dump/avml.yaml --profile full' can be used instead. 
-- 'memory-dump-only' profile is no longer available because '--artifacts memory_dump/avml.yaml' can be used instead.
+- 'full-with-memory-dump' profile is no longer available because '-a memory_dump/avml.yaml -p full' can be used instead.
+- 'memory-dump-only' profile is no longer available because '-a memory_dump/avml.yaml' can be used instead.
 
 ### Fixed
 
