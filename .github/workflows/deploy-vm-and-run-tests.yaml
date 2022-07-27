@@ -141,5 +141,11 @@ jobs:
       - name: run ./uac -a live_response/process/ps.yaml --run-as-non-root ${{ inputs.uac_destination_dir }}
         run: vagrant ssh -c "cd uac && ./uac -a live_response/process/ps.yaml --run-as-non-root ${{ inputs.uac_destination_dir }}" -- ${{ inputs.vagrant_ssh_options }}
 
+      - name: (no gzip) run ./uac -a live_response/process/ps.yaml --run-as-non-root ${{ inputs.uac_destination_dir }}
+        run: vagrant ssh -c "rm -f `which gzip` || true; cd uac && ./uac -a live_response/process/ps.yaml --run-as-non-root ${{ inputs.uac_destination_dir }}"
+
+      - name: (no tar) run ./uac -a live_response/process/ps.yaml --run-as-non-root ${{ inputs.uac_destination_dir }}
+        run: vagrant ssh -c "rm -f `which tar` || true; cd uac && ./uac -a live_response/process/ps.yaml --run-as-non-root ${{ inputs.uac_destination_dir }}"
+
       - name: Run ./uac --validate-artifacts-file ./artifacts/live_response/process/ps.yaml
         run: vagrant ssh -c "cd uac && ./uac --validate-artifacts-file ./artifacts/live_response/process/ps.yaml" -- ${{ inputs.vagrant_ssh_options }}
