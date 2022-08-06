@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## 2.3.0-rc2 (2022-08-02)
+## 2.3.0-rc3 (2022-08-06)
 
 ## New Features
 
@@ -28,6 +28,7 @@ All notable changes to this project will be documented in this file.
 - New artifact that collects Vivaldi browser artifacts (files/browsers/vivaldi.yaml).
 - New artifact that collects Linux terse runtime status information about one or more logged in users, followed by the most recent log data from the journal (live_response/system/loginctl.yaml).
 - New artifact that collects fish shell history files (files/shell/history.yaml).
+- New artifact that collects Tracker database files (files/system/tracker.yaml).
 - New artifact that collects macOS .DS_Store files (files/system/ds_store.yaml).
 - New artifact that collects macOS network and application usage database files (files/system/network_application_usage.yaml).
 - New artifact that collects macOS Powerlog files (files/system/powerlog.yaml).
