@@ -19,7 +19,7 @@
 # Requires:
 #   None
 # Arguments:
-#   $1: source file
+#   $1: source file or directory
 #   $2: remote destination
 #   $3: remote port (default: 22)
 #   $4: identity file
@@ -37,7 +37,8 @@ sftp_transfer()
   sr_identity_file="${4:-}"
 
   if [ -n "${sr_identity_file}" ]; then
-    sftp -P "${sr_port}" \
+    sftp -r \
+      -P "${sr_port}" \
       -o StrictHostKeyChecking=no \
       -o UserKnownHostsFile=/dev/null \
       -i "${sr_identity_file}" \
@@ -45,7 +46,8 @@ sftp_transfer()
 mput "${sr_source}"
 EOF
   else
-    sftp -P "${sr_port}" \
+    sftp -r \
+      -P "${sr_port}" \
       -o StrictHostKeyChecking=no \
       -o UserKnownHostsFile=/dev/null \
       "${sr_destination}" >/dev/null << EOF

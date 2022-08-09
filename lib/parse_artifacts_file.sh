@@ -294,6 +294,7 @@ sequence of mappings\n" >&2
                         "${pa_max_file_size}" \
                         "${pa_permissions}" \
                         "${pa_ignore_date_range}" \
+                        "${pa_root_output_directory}" \
                         ".files.tmp"
                     elif [ "${pa_collector}" = "find" ]; then
                       find_collector \
@@ -376,6 +377,7 @@ sequence of mappings\n" >&2
                   "${pa_max_file_size}" \
                   "${pa_permissions}" \
                   "${pa_ignore_date_range}" \
+                  "${pa_root_output_directory}" \
                   ".files.tmp"
               elif [ "${pa_collector}" = "find" ]; then
                 find_collector \

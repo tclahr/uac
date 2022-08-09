@@ -1,14 +1,26 @@
-version: 1.0
+version: 2.0
 artifacts:
   -
     description: Collect systemd configuration files.
     supported_os: [linux]
     collector: file
-    path: /lib/systemd/system/*
+    path: /lib/systemd/system
     ignore_date_range: true
   -
     description: Collect systemd configuration files.
     supported_os: [linux]
     collector: file
-    path: /usr/lib/systemd/system/*
+    path: /usr/lib/systemd/system
     ignore_date_range: true
+  -
+    description: Collect systemd sessions files.
+    supported_os: [linux]
+    collector: file
+    path: /run/systemd/sessions
+    file_type: f
+  -
+    description: Collect systemd scope files.
+    supported_os: [linux]
+    collector: file
+    path: /run/systemd/transient
+    name_pattern: ["*.scope"]

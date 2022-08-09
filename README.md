@@ -41,7 +41,7 @@ Project documentation page: [https://tclahr.github.io/uac-docs](https://tclahr.g
 
 ## 💾 Supported Operating Systems
 
-UAC runs on any Unix-like system (regardless the processor architecture). All UAC needs is shell :)
+UAC runs on any Unix-like system (regardless of the processor architecture). All UAC needs is shell :)
 
 [![AIX](https://img.shields.io/static/v1?label=&message=AIX&color=brightgreen&style=for-the-badge)](https://github.com/tclahr/uac/actions)
 [![Android](https://img.shields.io/static/v1?label=&message=Android&color=green&style=for-the-badge)](https://github.com/tclahr/uac/actions)
@@ -62,7 +62,7 @@ UAC runs on any Unix-like system (regardless the processor architecture). All UA
 
 UAC does not need to be installed on the target system. You only need to download the latest version from the [releases page](https://github.com/tclahr/uac/releases), uncompress and run it. As simple as that!
 
-A profile name and/or a list of artifacts, and the destination directory need to be provided in order to run a collection. The remaining parameters are optional.
+A profile name and/or a list of artifacts, and the destination directory need to be provided to run a collection. The remaining parameters are optional.
 
 Common usage scenarios may include the following:
 
@@ -84,13 +84,19 @@ Common usage scenarios may include the following:
 ./uac -p full -a \!bodyfile/bodyfile.yaml /tmp
 ```
 
-**Note that when a profile and a list of artifacts are provided, the artifacts from the profile will always be collected first, even if the parameter ```-a``` was provided before ```-p``` in the command line. In the example below, the ```memory_dump/avml.yaml``` artifact will only be collected after all artifacts from ```full``` profile were collected.**
+**Collect the memory dump, then all artifacts based on the ```full``` profile.**
 
 ```shell
 ./uac -a memory_dump/avml.yaml -p full /tmp
 ```
 
-**Collect all artifacts based on the ```full``` profile, but limiting the data collection based on the date range provided.**
+**Collect the memory dump, then all artifacts based on the ```ir_triage``` profile excluding the ```bodyfile/bodyfile.yaml``` artifact.**
+
+```shell
+./uac -a memory_dump/avml.yaml -p ir_triage -a \!bodyfile/bodyfile.yaml /tmp
+```
+
+**Collect all artifacts based on the ```full``` profile, but limit the data collection based on the date range provided.**
 
 ```shell
 ./uac -p full /tmp --date-range-start 2021-05-01 --date-range-end 2021-08-31
@@ -110,7 +116,7 @@ Please check the [project documentation page](https://tclahr.github.io/uac-docs)
 
 Have you created your own artifact files? Please share them with us!
 
-You can contribute with new artifacts, profiles, bug fixes or even proposing new features. Please read our [Contributing Guide](CONTRIBUTING.md) before submitting a Pull Request to the project.
+You can contribute with new artifacts, profiles, bug fixes or even propose new features. Please read our [Contributing Guide](CONTRIBUTING.md) before submitting a Pull Request to the project.
 
 ***
 

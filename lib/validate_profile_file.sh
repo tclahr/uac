@@ -107,7 +107,7 @@ entry.\n" >&2
 
             # shellcheck disable=SC2086
             find "${UAC_DIR}"/artifacts/${vp_artifact_file} -name "*.yaml" \
-              -type f -print >/dev/null 2>/dev/null
+              -print >/dev/null 2>/dev/null
             # shellcheck disable=SC2181
             if [ "$?" -gt 0 ]; then
               printf %b "uac: profile file: no such \

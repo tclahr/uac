@@ -4,9 +4,9 @@ artifacts:
     description: Collect spool files.
     supported_os: [all]
     collector: file
-    path: /var/spool/*
+    path: /var/spool
   -
     description: Collect spool files.
     supported_os: [macos]
     collector: file
-    path: /private/var/spool/*
+    path: /private/var/spool

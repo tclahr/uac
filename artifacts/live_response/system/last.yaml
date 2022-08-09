@@ -1,0 +1,32 @@
+version: 1.0
+artifacts:
+  -
+    description: Show a listing of last logins and logouts.
+    supported_os: [aix, freebsd, linux, macos, netbsd, solaris]
+    collector: command
+    command: last
+    output_file: last.txt
+  -
+    description: Show a listing of last logins and logouts, but prints all available characters of each user name instead of truncating to the first 8 characters.
+    supported_os: [aix]
+    collector: command
+    command: last -X
+    output_file: last_-X.txt
+  -
+    description: Show a listing of last logins and logouts, but displays the host's IP number instead of the name.
+    supported_os: [linux]
+    collector: command
+    command: last -i
+    output_file: last_-i.txt
+  -
+    description: Show a listing of last logins and logouts, but display the hostname in the last column and print full login and logout times and dates.
+    supported_os: [linux]
+    collector: command
+    command: last -a -F
+    output_file: last_-a_-F.txt
+  -
+    description: Show a listing of last logins and logouts, but displays the hostname in the last column.
+    supported_os: [solaris]
+    collector: command
+    command: last -a
+    output_file: last_-a.txt

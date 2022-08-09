@@ -2,7 +2,7 @@
 
 We welcome contributions to the UAC project in many forms, and there's always plenty to do!
 
-First things first, please review the project's [Code of Conduct](CODE_OF_CONDUCT.md) before participating. It is important that we keep things civil.
+First things first, please review the project's [Code of Conduct](CODE_OF_CONDUCT.md) before participating. We must keep things civil.
 
 Here are a couple of things we are looking for help with:
 
@@ -32,9 +32,9 @@ Share your experience with the community about how UAC is helping you by writing
 
 Before you submit an issue, please search the issue tracker, maybe an issue for your problem already exists and the discussion might inform you of workarounds readily available.
 
-We want to fix all the issues as soon as possible, but before fixing a bug we need to reproduce and confirm it. In order to reproduce bugs we will systematically ask you to provide sufficient information for someone else to reproduce the issue.
+We want to fix all the issues as soon as possible, but before fixing a bug we need to reproduce and confirm it. To reproduce bugs we will systematically ask you to provide sufficient information for someone else to reproduce the issue.
 
-Unfortunately, we are not able to investigate / fix bugs without a minimal reproduction, so if we don't hear back from you we are going to close an issue that doesn't have enough info to be reproduced.
+Unfortunately, we are not able to investigate/fix bugs without a minimal reproduction, so if we don't hear back from you we are going to close an issue that doesn't have enough info to be reproduced.
 
 ### Submitting a Pull Request (PR)
 
@@ -44,7 +44,7 @@ The repo holds two main branches:
 
 **master**: Where the source code of HEAD always reflects a production-ready state.
 
-**develop**: Where the source code of HEAD always reflects a state with the latest delivered development changes for the next release. When the source code in the develop branch reaches a stable point and is ready to be released, all of the changes will be merged back into master and then tagged with a release number.
+**develop**: Where the source code of HEAD always reflects a state with the latest delivered development changes for the next release. When the source code in the develop branch reaches a stable point and is ready to be released, all of the changes will be merged back into the master and then tagged with a release number.
 
 All Pull Requests must be submitted to the **develop** branch.
 
@@ -84,7 +84,7 @@ git checkout -b my-feature-branch develop
 
 1. Create your code following our [Coding Rules](#coding-rules).
 
-1. Test your code against as many system as you can using the [uac-unit-test](https://github.com/tclahr/uac-unit-test). For instance, your code can fully work on a Linux but not on a FreeBSD system.
+1. Test your code against as many systems as you can using the [uac-unit-test](https://github.com/tclahr/uac-unit-test). For instance, your code can fully work on a Linux but not on a FreeBSD system.
 
 1. Commit your changes using a descriptive commit message that follows our [commit message guidelines](#commit-message-guidelines). *Don’t commit code as an unrecognized author. Having commits with unrecognized authors makes it more difficult to track who wrote which part of the code. Ensure your Git client is configured with the correct email address and linked to your GitHub user.*
 
@@ -98,7 +98,7 @@ git checkout -b my-feature-branch develop
   git push origin my-feature-branch
   ```
 
-1. In GitHub, open a Pull Request and select the **develop** branch as base. Never send a Pull Request to master.
+1. In GitHub, open a Pull Request and select the **develop** branch as the base. Never send a Pull Request to master.
 
 - If we suggest changes then:
   - Make the required updates using the same branch.
@@ -173,14 +173,14 @@ Must be one of the following:
 - **fix**: A bug fix.
 - **perf**: A code change that improves performance.
 - **refactor**: A code change that neither fixes a bug nor adds a feature.
-- **style**: Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc).
+- **style**: Changes that do not affect the meaning of the code (white space, formatting, missing semi-colons, etc).
 
 ### Subject
 
-The subject contains succinct description of the change:
+The subject must contain a succinct description of the change:
 
 - use the imperative, present tense: "change" not "changed" nor "changes"
-- don't capitalize first letter
+- don't capitalize the first letter
 - no dot (.) at the end
 
 ### Body

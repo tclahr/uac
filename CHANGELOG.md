@@ -2,15 +2,71 @@
 
 All notable changes to this project will be documented in this file.
 
+## 2.3.0 (2022-08-09)
+
+## New Features
+
+- You can now use as many --artifacts (-a) and --profile (-p) as you want to build an even more customized collection. Artifacts will be collected in the order they were provided in the command line. Please check the [project's documentation page](https://tclahr.github.io/uac-docs/#using-uac) for more information.
+- UAC now collects copies of '/proc/[pid]/fd/*' from deleted processes even if they are not shown up as being (deleted).
+- AVML was updated to v0.7.0.
+
+### New Artifacts
+
+- New artifact that collects the contents of /dev/shm (files/system/dev_shm.yaml) ([#68](https://github.com/tclahr/uac/issues/68)).
+- New artifact that collects the contents of /run/shm (files/system/run_shm.yaml) ([#68](https://github.com/tclahr/uac/issues/68)).
+- New artifact that collects the contents of /var/tmp (files/system/var_tmp.yaml) ([#68](https://github.com/tclahr/uac/issues/68)).
+- New artifact that lists hidden files created outside of user home directories (live_response/system/hidden_files.yaml) ([#69](https://github.com/tclahr/uac/issues/69)).
+- New artifact that lists hidden directories created outside of user home directories (live_response/system/hidden_directories.yaml) ([#69](https://github.com/tclahr/uac/issues/69)).
+- New artifact that lists world writable files (live_response/system/world_writable_files.yaml).
+- New artifact that lists world writable directories (live_response/system/world_writable_directories.yaml).
+- New artifact that lists loaded kernel modules from /sys/module directory (live_response/system/sys_module.yaml).
+- New artifact that collects last logins and logouts (live_response/system/last.yaml).
+- New artifact that collects unsuccessful logins (live_response/system/lastb.yaml).
+- New artifact that lists all socket files (live_response/system/socket_files.yaml).
+- New artifact that collects sessions files from /run/systemd/sessions (files/system/systemd.yaml).
+- New artifact that collects scope files from /run/systemd/transient (files/system/systemd.yaml).
+- New artifact that collects Vivaldi browser artifacts (files/browsers/vivaldi.yaml).
+- New artifact that collects Linux terse runtime status information about one or more logged in users, followed by the most recent log data from the journal (live_response/system/loginctl.yaml).
+- New artifact that collects fish shell history files (files/shell/history.yaml).
+- New artifact that collects Tracker database files (files/system/tracker.yaml).
+- New artifact that collects macOS .DS_Store files (files/system/ds_store.yaml).
+- New artifact that collects macOS network and application usage database files (files/system/network_application_usage.yaml).
+- New artifact that collects macOS Powerlog files (files/system/powerlog.yaml).
+- New artifact that collects macOS recovery account information files (files/system/recovery_account_info.yaml).
+- New artifact that collects macOS system keychain file (files/system/keychain.yaml).
+- New artifact that collects macOS system version file (files/system/system_version.yaml).
+- New artifact that collects macOS unified logging and activity tracing files (files/system/var_db_diagnostics.yaml).
+- New artifact that collects macOS time machine information (live_response/system/tmutil.yaml).
+- New artitact that collects macOS Photos application database files (files/applications/photos.yaml).
+- New artifact that collects AIX failed login attemtps from /etc/security/failedlogin (live_response/system/who.yaml).
+
+### Updated Artifacts
+
+- /dev was removed from the exclusion list during deleted process collection ([#65](https://github.com/tclahr/uac/issues/65)).
+- files/system/time_machine.yaml, files/system/wifi.yaml, files/applications/macos_dock.yaml are no longer available because the same artifacts are been collected by files/system/library_preferences.yaml.
+
+### Deprecated Command Line Option
+
+- '-o' command line switch is no longer available because it was replaced by '-s'.
+
+### Deprecated Profiles
+
+- 'full-with-memory-dump' profile is no longer available because '-a memory_dump/avml.yaml -p full' can be used instead.
+- 'memory-dump-only' profile is no longer available because '-a memory_dump/avml.yaml' can be used instead.
+
+### Fixed
+
+- UAC now copies all collected artifacts to a destination directory if 'tar' tool is not available ([#63](https://github.com/tclahr/uac/issues/63)).
+
 ## 2.2.0 (2022-05-02)
 
 ### New Features
 
 - VMware ESXi is now fully supported as an operating system. Note that ESXi is not built upon the Linux kernel, and uses its own VMware proprietary kernel (the VMkernel) and software. So it misses most of the applications and components that are commonly found in all Linux distributions ([#33](https://github.com/tclahr/uac/issues/33)).
 - UAC now collects copies of '/proc/[pid]/exe' and their related '/proc/[pid]/fd/*' if they are shown up as being (deleted). They are copied using 'dd conv=swab' tool in order to avoid UAC output file being flagged and quarantined by any antivirus tool ([#36](https://github.com/tclahr/uac/issues/36)).
-- Added '--s3-presigned-url' switch which allows for pushing the output file to S3 presigned URLs (if curl available) ([#38](https://github.com/tclahr/uac/issues/38)).
-- Added '--s3-presigned-url-log-file' switch which allows for pushing the output log file to S3 presigned URLs (if curl available) ([#38](https://github.com/tclahr/uac/issues/38)).
-- Added '--delete-local-on-successful-transfer' switch which will delete both local output and log files after they are successfully transferred either via sftp or to a presigned S3 URL.
+- Added '--s3-presigned-url' switch which allows for pushing the output file to S3 pre-signed URLs (if curl available) ([#38](https://github.com/tclahr/uac/issues/38)).
+- Added '--s3-presigned-url-log-file' switch which allows for pushing the output log file to S3 pre-signed URLs (if curl available) ([#38](https://github.com/tclahr/uac/issues/38)).
+- Added '--delete-local-on-successful-transfer' switch which will delete both local output and log files after they are successfully transferred either via sftp or to a pre-signed S3 URL.
 - AVML was updated to v0.6.1 ([#45](https://github.com/tclahr/uac/issues/45)).
 
 ### New Artifacts

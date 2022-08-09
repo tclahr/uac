@@ -17,5 +17,6 @@ jobs:
       vagrant_box_name: "AntonioMeireles/ClearLinux"
       vagrant_ssh_username: "clear"
       vagrant_ssh_password: ""
+      vagrant_ssh_shell: "/bin/sh"
       vagrant_ssh_options: ""
       

@@ -4,19 +4,19 @@ artifacts:
     description: Collect Signal cache files.
     supported_os: [linux]
     collector: file
-    path: /%user_home%/.config/Signal/Cache/*
+    path: /%user_home%/.config/Signal/Cache
     exclude_nologin_users: true
   -
     description: Collect Signal attachments cache files.
     supported_os: [linux]
     collector: file
-    path: /%user_home%/.config/Signal/attachments.noindex/*
+    path: /%user_home%/.config/Signal/attachments.noindex
     exclude_nologin_users: true
   -
     description: Collect Signal log files.
     supported_os: [linux]
     collector: file
-    path: /%user_home%/.config/Signal/logs/*
+    path: /%user_home%/.config/Signal/logs
     exclude_nologin_users: true
   -
     description: Collect Signal config.json file.
@@ -107,19 +107,19 @@ artifacts:
     description: Collect Signal cache files.
     supported_os: [macos]
     collector: file
-    path: /%user_home%/Library/"Application Support"/Signal/Cache/*
+    path: /%user_home%/Library/"Application Support"/Signal/Cache
     exclude_nologin_users: true
   -
     description: Collect Signal attachments cache files.
     supported_os: [macos]
     collector: file
-    path: /%user_home%/Library/"Application Support"/Signal/attachments.noindex/*
+    path: /%user_home%/Library/"Application Support"/Signal/attachments.noindex
     exclude_nologin_users: true
   -
     description: Collect Signal log files.
     supported_os: [macos]
     collector: file
-    path: /%user_home%/Library/"Application Support"/Signal/logs/*
+    path: /%user_home%/Library/"Application Support"/Signal/logs
     exclude_nologin_users: true
   -
     description: Collect Signal config.json file.

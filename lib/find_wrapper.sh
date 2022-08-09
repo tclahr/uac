@@ -193,8 +193,14 @@ find_wrapper()
   fi
 
   # build -type parameter
+  # -type parameter will be added even if 'find' does not support it
   if [ -n "${fw_file_type}" ]; then
     fw_find_type_param="-type ${fw_file_type}"
+    if ${FIND_TYPE_SUPPORT}; then
+      true
+    elif ${PERL_TOOL_AVAILABLE}; then
+      fw_find_tool="perl \"${UAC_DIR}/tools/find.pl/find.pl\""
+    fi
   fi
 
   # build -size parameter
@@ -216,11 +222,12 @@ find_wrapper()
   fi
 
   # build -perm parameter
+  # -perm parameter will be added even if 'find' does not support it
   if [ -n "${fw_permissions}" ]; then
+    fw_find_perm_param="-perm ${fw_permissions}"
     if ${FIND_PERM_SUPPORT}; then
-      fw_find_perm_param="-perm ${fw_permissions}"
+      true
     elif ${PERL_TOOL_AVAILABLE}; then
-      fw_find_perm_param="-perm ${fw_permissions}"
       fw_find_tool="perl \"${UAC_DIR}/tools/find.pl/find.pl\""
     fi
   fi

@@ -1,0 +1,21 @@
+version: 1.0
+artifacts:
+  -
+    description: Show a listing of last unsuccessful logins.
+    supported_os: [linux]
+    collector: command
+    command: lastb
+    output_file: lastb.txt
+  -
+    description: Show a listing of last unsuccessful logins, but displays the host's IP number instead of the name.
+    supported_os: [linux]
+    collector: command
+    command: lastb -i
+    output_file: lastb_-i.txt
+  -
+    description: Show a listing of last unsuccessful logins, but display the hostname in the last column and print full times and dates.
+    supported_os: [linux]
+    collector: command
+    command: lastb -a -F
+    output_file: lastb_-a_-F.txt
+  

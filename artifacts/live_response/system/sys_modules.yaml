@@ -1,0 +1,15 @@
+version: 1.0
+artifacts:
+  -
+    description: List loaded kernel modules.
+    supported_os: [linux]
+    collector: command
+    command: ls -l -a /sys/module
+    output_file: ls_-l_-a_sys_module.txt
+  -
+    description: List loaded kernel modules.
+    supported_os: [linux]
+    collector: command
+    command: ls -l -a -R /sys/module
+    output_file: ls_-l_-a_-R_sys_module.txt
+  

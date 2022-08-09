@@ -1,0 +1,10 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect tracker db files. Tracker provides searching and indexing functionality for the GNOME desktop environment and beyond.
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.cache/tracker3/files
+    name_pattern: ["*Audio.db*", "*Documents.db*", "*FileSystem.db*", "*Pictures.db*", "*Software.db*", "*Video.db*", "meta.db*"]
+    ignore_date_range: true
+    exclude_nologin_users: true

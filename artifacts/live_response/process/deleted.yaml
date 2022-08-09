@@ -1,34 +1,55 @@
 version: 1.0
-artifacts:
+artifacts: 
   -
-    description: Collect the binary of (malicious) processes after they have been deleted.
+    description: Collect the binary of (malicious) processes if they are shown up as being (deleted).
     # the collection will be limited to the first 50M of data only.
     # this is to avoid dd hitting an invalid file descriptor (such as /dev/null) and generating an endless output file
     supported_os: [linux]
     collector: command
-    loop_command: ls -l /proc/[0-9]*/exe | grep -E "\(deleted\)" | grep -v -E "> /dev/|> /proc/" | awk -F"/proc/|/exe" '{print $2}'
+    loop_command: ls -l /proc/[0-9]*/exe | grep -E "\(deleted\)" | grep -v -E "> /proc/" | awk -F"/proc/|/exe" '{print $2}'
     command: dd if=/proc/%line%/exe of=%output_file% conv=swab bs=1024 count=50000
     output_directory: proc/%line%
     output_file: recovered_exe.dd.swab
   -
-    description: Collect the list of file descriptors of (malicious) processes after they have been deleted.
+    description: Collect the list of deleted files of (malicious) processes if they are shown up as being (deleted).
     supported_os: [linux]
     collector: command
     loop_command: ls -l /proc/[0-9]*/exe | grep -E "\(deleted\)" | awk -F"/proc/|/exe" '{print $2}'
     command: ls -l /proc/%line%/fd/[0-9]* | grep -E "\(deleted\)" | grep -v -E "> /dev/|> /proc/" | awk -F"/proc/%line%/fd/| ->" '{print "%line%/fd/"$2}'
     output_file: .deleted_file_descriptors.txt
   -
-    description: Collect files of (malicious) processes after they have been deleted.
+    description: Collect the list of deleted files located in /dev/shm of (malicious) processes if they are shown up as being (deleted).
+    supported_os: [linux]
+    collector: command
+    loop_command: ls -l /proc/[0-9]*/exe | grep -E "\(deleted\)" | awk -F"/proc/|/exe" '{print $2}'
+    command: ls -l /proc/%line%/fd/[0-9]* | grep -E "\(deleted\)" | grep -E "> /dev/shm" | awk -F"/proc/%line%/fd/| ->" '{print "%line%/fd/"$2}'
+    output_file: .deleted_file_descriptors.txt
+  -
+    description: Collect open files of (malicious) processes if they are shown up as being (deleted).
     # the collection will be limited to the first 50M of data only.
     # this is to avoid dd hitting an invalid file descriptor (such as /dev/null) and generating an endless output file
     supported_os: [linux]
     collector: command
     loop_command: cat "%destination_directory%/.deleted_file_descriptors.txt"
-    command: dd if=/proc/%line% of=%output_file% conv=swab bs=1024 count=50000
+    command: dd if=/proc/%line% of=%output_file% bs=1024 count=50000
     output_directory: proc/%line%
-    output_file: recovered_file.dd.swab
+    output_file: recovered_file.dd
   -
-    description: Collect the binary of (malicious) processes after they have been deleted.
+    description: Collect the list of open files of (malicious) processes.
+    supported_os: [linux]
+    collector: command
+    loop_command: ls -l /proc/[0-9]*/exe | grep -E "\(deleted\)" | awk -F"/proc/|/exe" '{print $2}'
+    command: ls -l /proc/%line%/fd/[0-9]* | grep -v -E "\(deleted\)" | awk -F'-> ' '{print $2}' | sed -e "s:^'::" -e "s:'$::" -e ':^"::' -e ':"$::'
+    output_file: .open_file_descriptors.txt
+  -
+    description: Collect open files of (malicious) processes.
+    supported_os: [linux]
+    collector: file
+    path: .open_file_descriptors.txt
+    is_file_list: true
+    file_type: f
+  -
+    description: Collect the binary of (malicious) processes if they are shown up as being (deleted).
     # the collection will be limited to the first 50M of data only.
     # this is to avoid dd hitting an invalid file descriptor (such as /dev/null) and generating an endless output file
     supported_os: [solaris]

@@ -1,33 +1,9 @@
-version: 1.0
+version: 2.0
 artifacts:
   -
     description: Collect system temporary files.
     supported_os: [all]
     collector: file
-    path: /tmp/*
-    file_type: f
-    max_file_size: 5242880 # 5MB
-  -
-    description: Collect hidden system temporary files.
-    supported_os: [all]
-    collector: file
     path: /tmp
-    name_pattern: [".*"]
     file_type: f
     max_file_size: 5242880 # 5MB
-  -
-    description: Collect system temporary files.
-    supported_os: [macos]
-    collector: file
-    path: /private/tmp/*
-    file_type: f
-    max_file_size: 5242880 # 5MB
-  -
-    description: Collect hidden system temporary files.
-    supported_os: [macos]
-    collector: file
-    path: /private/tmp
-    name_pattern: [".*"]
-    file_type: f
-    max_file_size: 5242880 # 5MB
-    
