@@ -477,7 +477,8 @@ if [ "${OPERATING_SYSTEM}" != "android" ] \
   && [ "${OPERATING_SYSTEM}" != "netscaler" ] \
   && [ "${OPERATING_SYSTEM}" != "openbsd" ] \
   && [ "${OPERATING_SYSTEM}" != "solaris" ]; then
-  printf %b "uac: invalid operating system '${OPERATING_SYSTEM}'\n\
+  printf %b "uac: invalid operating system '${OPERATING_SYSTEM}'. \
+Use '-s' option to set one.\n\
 Try 'uac --help' for more information.\n" >&2
   exit 1
 fi
