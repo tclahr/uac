@@ -27,7 +27,6 @@ jobs:
       - name: Clone uac repo
         uses: actions/checkout@v3
         with:
-          repository: tclahr/uac
           path: uac
 
       - name: Create testing profile
