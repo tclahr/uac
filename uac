@@ -377,7 +377,7 @@ Try 'uac --help' for more information.\n" >&2
     "--validate-artifacts-file")
       if [ -n "${2}" ]; then
         validate_artifacts_file "${2}" || exit 1
-        printf %b "uac: artifacts file validated. No errors found.\n"
+        printf %b "uac: artifacts file '${2}' successfully validated.\n"
         exit 0
       else
         printf %b "uac: option '${1}' requires an argument.\n\
@@ -511,7 +511,9 @@ fi
 if is_running_with_root_privileges || "${ua_run_as_non_root}"; then
   true
 else
-  printf %b "uac: this script requires root privileges to run properly.\n" >&2
+  printf %b "uac: this script requires root privileges to run properly. \
+Use '-u' option to disable root user check.\n\
+Try 'uac --help' for more information.\n" >&2
   exit 1
 fi
 
