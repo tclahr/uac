@@ -28,7 +28,9 @@ jobs:
         run: |
           cd uac
           for file in ${{ steps.files.outputs.added_modified }}; do
-            ./uac --validate-artifacts-file "$file"
+            if [[ "${file}" == *.yaml ]]; then
+              ./uac --validate-artifacts-file "$file"
+            fi
           done
 
       
