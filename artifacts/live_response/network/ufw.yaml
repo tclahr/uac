@@ -1,0 +1,8 @@
+version: 1.0
+artifacts:
+  -
+    description: Show status of firewall and ufw managed rules.
+    supported_os: [linux]
+    collector: command
+    command: ufw status verbose
+    output_file: ufw_status_verbose.txt

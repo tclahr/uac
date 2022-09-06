@@ -1,4 +1,4 @@
-version: 1.0
+version: 2.0
 artifacts:
   -
     description: Report a snapshot of the current processes.
@@ -48,6 +48,12 @@ artifacts:
     collector: command
     command: ps -eo pid,user,lstart,args
     output_file: ps_-eo_pid_user_lstart_args.txt
+  -
+    description: Report a snapshot of the current processes including the control groups to which the process belongs.
+    supported_os: [linux]
+    collector: command
+    command: ps -eo pid,user,cgroup
+    output_file: ps_-eo_pid_user_cgroup.txt
   -
     description: Report a snapshot of the current processes including used time, verbose, session ID and process group, state and type.
     supported_os: [esxi]
