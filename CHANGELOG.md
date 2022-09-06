@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## DEVELOPMENT VERSION
 
+### New Artifacts
+
+- New artifact that collects the status of firewall and ufw managed rules (live_response/network/ufw.yaml).
+
 ## 2.3.0 (2022-08-09)
 
 ## New Features
