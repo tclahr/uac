@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ### New Artifacts
 
 - New artifact that collects the status of firewall and ufw managed rules (live_response/network/ufw.yaml).
+- New artifact that collects macOS saved application state files (files/system/saved_application_state.yaml).
 
 ## 2.3.0 (2022-08-09)
 
