@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## DEVELOPMENT VERSION
 
+### New Features
+
+- Added '--azure-storage-sas-url' switch which allows for pushing the output file to Azure Storage using shared access signature (SAS) URLs (if curl available) ([#62](https://github.com/tclahr/uac/issues/62)).
+- Added '--azure-storage-sas-url-log-file' switch which allows for pushing the output log file to Azure Storage using shared access signature (SAS) URLs (if curl available) ([#62](https://github.com/tclahr/uac/issues/62)).
+
 ### New Artifacts
 
 - New artifact that collects the status of firewall and ufw managed rules (live_response/network/ufw.yaml).

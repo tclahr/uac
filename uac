@@ -50,6 +50,8 @@ export PATH
 . "${UAC_DIR}/lib/archive_compress_data.sh"
 . "${UAC_DIR}/lib/archive_data.sh"
 . "${UAC_DIR}/lib/array_to_list.sh"
+. "${UAC_DIR}/lib/azure_storage_sas_url_transfer_test.sh"
+. "${UAC_DIR}/lib/azure_storage_sas_url_transfer.sh"
 . "${UAC_DIR}/lib/check_available_system_tools.sh"
 . "${UAC_DIR}/lib/command_collector.sh"
 . "${UAC_DIR}/lib/copy_data.sh"
@@ -126,6 +128,8 @@ ua_sftp_port=""
 ua_sftp_identity_file=""
 ua_s3_presigned_url=""
 ua_s3_presigned_url_log_file=""
+ua_azure_storage_sas_url=""
+ua_azure_storage_sas_url_log_file=""
 ua_delete_local_on_successful_transfer=false
 ua_debug_mode=false
 ua_temp_data_dir_symlink_support=false
@@ -370,6 +374,26 @@ Try 'uac --help' for more information.\n" >&2
         exit 1
       fi
       ;;
+      "--azure-storage-sas-url")
+      if [ -n "${2}" ]; then
+        ua_azure_storage_sas_url="${2}"
+        shift
+      else
+        printf %b "uac: option '${1}' requires an argument.\n\
+Try 'uac --help' for more information.\n" >&2
+        exit 1
+      fi
+      ;;
+    "--azure-storage-sas-url-log-file")
+      if [ -n "${2}" ]; then
+        ua_azure_storage_sas_url_log_file="${2}"
+        shift
+      else
+        printf %b "uac: option '${1}' requires an argument.\n\
+Try 'uac --help' for more information.\n" >&2
+        exit 1
+      fi
+      ;;
     "--delete-local-on-successful-transfer")
       ua_delete_local_on_successful_transfer=true
       ;;
@@ -549,7 +573,7 @@ if [ -n "${ua_sftp_destination}" ]; then
   fi
 fi
 
-# test the connectivity to s3 presigned url
+# test the connectivity to S3 presigned url
 if [ -n "${ua_s3_presigned_url}" ]; then
   if eval "curl --version" >/dev/null 2>/dev/null; then
     if s3_presigned_url_transfer_test "${ua_s3_presigned_url}"; then
@@ -559,6 +583,21 @@ if [ -n "${ua_s3_presigned_url}" ]; then
     fi
   else
     printf %b "uac: cannot transfer to S3 presigned URL because 'curl' \
+tool was not found.\n"
+    exit 1
+  fi
+fi
+
+# test the connectivity to Azure Blob Storage SAS url
+if [ -n "${ua_azure_storage_sas_url}" ]; then
+  if eval "curl --version" >/dev/null 2>/dev/null; then
+    if azure_storage_sas_url_transfer_test "${ua_azure_storage_sas_url}"; then
+      true
+    else
+      exit 1
+    fi
+  else
+    printf %b "uac: cannot transfer to Azure Blob Storage SAS URL because 'curl' \
 tool was not found.\n"
     exit 1
   fi
@@ -894,7 +933,7 @@ if [ -f "${ua_destination_dir}/${ua_output_name}" ] \
   fi
 fi
 
-# transfer output and log file to s3 presigned url
+# transfer output and log file to S3 presigned url
 if [ -f "${ua_destination_dir}/${ua_output_name}" ]; then
   if [ -n "${ua_s3_presigned_url}" ]; then
     printf %b "Transferring output file to S3 presigned URL. Please wait...\n"
@@ -918,6 +957,36 @@ if [ -f "${ua_destination_dir}/${ua_output_name}" ]; then
           && rm -f "${ua_destination_dir}/${ua_acquisition_log}" 2>/dev/null
       else
         printf %b "Could not transfer log file to S3 presigned URL\n"
+        exit 1
+      fi
+    fi
+  fi
+fi
+
+# transfer output and log file to Azure Storage SAS url
+if [ -f "${ua_destination_dir}/${ua_output_name}" ]; then
+  if [ -n "${ua_azure_storage_sas_url}" ]; then
+    printf %b "Transferring output file to Azure Storage SAS URL. Please wait...\n"
+    if azure_storage_sas_url_transfer "${ua_destination_dir}/${ua_output_name}" \
+      "${ua_azure_storage_sas_url}"; then
+      printf %b "File transferred successfully\n"
+      # delete output file on success transfer
+      ${ua_delete_local_on_successful_transfer} \
+        && rm -f "${ua_destination_dir}/${ua_output_name}" 2>/dev/null
+    else
+      printf %b "Could not transfer output file to Azure Storage SAS URL\n"
+      exit 1
+    fi
+    if [ -n "${ua_azure_storage_sas_url_log_file}" ]; then
+      printf %b "Transferring log file to Azure Storage SAS URL. Please wait...\n"
+      if azure_storage_sas_url_transfer "${ua_destination_dir}/${ua_acquisition_log}" \
+        "${ua_azure_storage_sas_url_log_file}"; then
+        printf %b "File transferred successfully\n"
+        # delete output file on success transfer
+        ${ua_delete_local_on_successful_transfer} \
+          && rm -f "${ua_destination_dir}/${ua_acquisition_log}" 2>/dev/null
+      else
+        printf %b "Could not transfer log file to Azure Storage SAS URL\n"
         exit 1
       fi
     fi
