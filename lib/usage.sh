@@ -110,6 +110,10 @@ Remote Transfer Arguments:
                     Transfer output file to AWS S3 using a pre-signed URL.
       --s3-presigned-url-log-file URL
                     Transfer log file to AWS S3 using a pre-signed URL.
+      --azure-storage-sas-url URL
+                    Transfer output file to Azure Storage using a SAS URL.
+      --azure-storage-sas-url-log-file URL
+                    Transfer log file to Azure Storage using a SAS URL.
       --delete-local-on-successful-transfer
                     Delete local output and log files on successful transfer.
 
