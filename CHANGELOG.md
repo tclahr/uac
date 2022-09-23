@@ -6,6 +6,9 @@ All notable changes to this project will be documented in this file.
 
 ### New Features
 
+- Added '--ibm-cos-url' switch which allows for pushing the output file to IBM Cloud Object Storage (if curl available).
+- Added '--ibm-cos-url-log-file' switch which allows for pushing the output log file to IBM Cloud Object Storage (if curl available).
+- Added '--ibm-cloud-api-key' switch which is required for transferring files to IBM Cloud Object Storage.
 - Added '--azure-storage-sas-url' switch which allows for pushing the output file to Azure Storage using shared access signature (SAS) URLs (if curl available) ([#62](https://github.com/tclahr/uac/issues/62)).
 - Added '--azure-storage-sas-url-log-file' switch which allows for pushing the output log file to Azure Storage using shared access signature (SAS) URLs (if curl available) ([#62](https://github.com/tclahr/uac/issues/62)).
 
