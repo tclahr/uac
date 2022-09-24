@@ -38,6 +38,8 @@ usage()
              [--sftp-port PORT] [--sftp-identity-file FILE]
              [--s3-presigned-url URL] [--s3-presigned-url-log-file URL]
              [--azure-storage-sas-url URL] [--azure-storage-sas-url-log-file URL]
+             [--ibm-cos-url URL] [--ibm-cos-url-log-file URL]
+             [--ibm-cloud-api-key KEY]
              [--delete-local-on-successful-transfer] [--debug]
    or: $0 --validate-artifacts-file FILE
 
@@ -115,6 +117,12 @@ Remote Transfer Arguments:
                     Transfer output file to Azure Storage using a SAS URL.
       --azure-storage-sas-url-log-file URL
                     Transfer log file to Azure Storage using a SAS URL.
+      --ibm-cos-url URL
+                    Transfer output file to IBM Cloud Object Storage.
+      --ibm-cos-url-log-file URL
+                    Transfer log file to IBM Cloud Object Storage.
+      --ibm-cloud-api-key KEY
+                    IBM Cloud API key / Bearer token.
       --delete-local-on-successful-transfer
                     Delete local output and log files on successful transfer.
 

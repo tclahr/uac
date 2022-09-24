@@ -68,6 +68,8 @@ export PATH
 . "${UAC_DIR}/lib/get_system_arch.sh"
 . "${UAC_DIR}/lib/get_user_home_list.sh"
 . "${UAC_DIR}/lib/hash_collector.sh"
+. "${UAC_DIR}/lib/ibm_cos_transfer_test.sh"
+. "${UAC_DIR}/lib/ibm_cos_transfer.sh"
 . "${UAC_DIR}/lib/is_element_in_list.sh"
 . "${UAC_DIR}/lib/is_integer.sh"
 . "${UAC_DIR}/lib/is_running_with_root_privileges.sh"
@@ -130,6 +132,9 @@ ua_s3_presigned_url=""
 ua_s3_presigned_url_log_file=""
 ua_azure_storage_sas_url=""
 ua_azure_storage_sas_url_log_file=""
+ua_ibm_cos_url=""
+ua_ibm_cos_url_log_file=""
+ua_ibm_cloud_api_key=""
 ua_delete_local_on_successful_transfer=false
 ua_debug_mode=false
 ua_temp_data_dir_symlink_support=false
@@ -394,6 +399,36 @@ Try 'uac --help' for more information.\n" >&2
         exit 1
       fi
       ;;
+      "--ibm-cos-url")
+      if [ -n "${2}" ]; then
+        ua_ibm_cos_url="${2}"
+        shift
+      else
+        printf %b "uac: option '${1}' requires an argument.\n\
+Try 'uac --help' for more information.\n" >&2
+        exit 1
+      fi
+      ;;
+    "--ibm-cos-url-log-file")
+      if [ -n "${2}" ]; then
+        ua_ibm_cos_url_log_file="${2}"
+        shift
+      else
+        printf %b "uac: option '${1}' requires an argument.\n\
+Try 'uac --help' for more information.\n" >&2
+        exit 1
+      fi
+      ;;
+    "--ibm-cloud-api-key")
+      if [ -n "${2}" ]; then
+        ua_ibm_cloud_api_key="${2}"
+        shift
+      else
+        printf %b "uac: option '${1}' requires an argument.\n\
+Try 'uac --help' for more information.\n" >&2
+        exit 1
+      fi
+      ;;
     "--delete-local-on-successful-transfer")
       ua_delete_local_on_successful_transfer=true
       ;;
@@ -600,6 +635,28 @@ if [ -n "${ua_azure_storage_sas_url}" ]; then
     printf %b "uac: cannot transfer to Azure Blob Storage SAS URL because 'curl' \
 tool was not found.\n"
     exit 1
+  fi
+fi
+
+# test the connectivity to IBM Cloud Object Storage url
+if [ -n "${ua_ibm_cos_url}" ]; then
+  if [ -n "${ua_ibm_cloud_api_key}" ]; then
+    if eval "curl --version" >/dev/null 2>/dev/null; then
+      if ibm_cos_transfer_test "${ua_ibm_cos_url}" "${ua_ibm_cloud_api_key}"; then
+        true
+      else
+        exit 1
+      fi
+    else
+      printf %b "uac: cannot transfer to IBM Cloud Object Storage because 'curl' \
+tool was not found.\n"
+      exit 1
+    fi
+  else
+    printf %b "uac: cannot transfer to IBM Cloud Object Storage. No API \
+key / Bearer token provided. Please use --ibm-cloud-api-key option to \
+provide one.\n"
+      exit 1
   fi
 fi
 
@@ -879,6 +936,12 @@ else
           printf %b "Cannot remove temporary directory '${TEMP_DATA_DIR}'\n"
       fi
     fi
+    # hash collected files
+    printf %b "Hashing collected files. Please wait...\n"
+    cd "${ua_destination_dir}/${ua_output_name}" || exit 1
+    ua_output_file_hash
+    ua_output_file_hash=`${MD5_HASHING_TOOL} "${ua_output_name}"`
+    cd "${UAC_DIR}" || exit 1
   else
     printf %b "Cannot copy collected artifacts\n"
     printf %b "Please check collected artifacts in '${TEMP_DATA_DIR}'\n"
@@ -987,6 +1050,36 @@ if [ -f "${ua_destination_dir}/${ua_output_name}" ]; then
           && rm -f "${ua_destination_dir}/${ua_acquisition_log}" 2>/dev/null
       else
         printf %b "Could not transfer log file to Azure Storage SAS URL\n"
+        exit 1
+      fi
+    fi
+  fi
+fi
+
+# transfer output and log file to IBM Cloud Object Storage
+if [ -f "${ua_destination_dir}/${ua_output_name}" ]; then
+  if [ -n "${ua_ibm_cos_url}" ]; then
+    printf %b "Transferring output file to IBM Cloud Object Storage. Please wait...\n"
+    if ibm_cos_transfer "${ua_destination_dir}/${ua_output_name}" \
+      "${ua_ibm_cos_url}" "${ua_ibm_cloud_api_key}"; then
+      printf %b "File transferred successfully\n"
+      # delete output file on success transfer
+      ${ua_delete_local_on_successful_transfer} \
+        && rm -f "${ua_destination_dir}/${ua_output_name}" 2>/dev/null
+    else
+      printf %b "Could not transfer output file to IBM Cloud Object Storage\n"
+      exit 1
+    fi
+    if [ -n "${ua_ibm_cos_url_log_file}" ]; then
+      printf %b "Transferring log file to IBM Cloud Object Storage. Please wait...\n"
+      if ibm_cos_transfer "${ua_destination_dir}/${ua_acquisition_log}" \
+        "${ua_ibm_cos_url_log_file}" "${ua_ibm_cloud_api_key}"; then
+        printf %b "File transferred successfully\n"
+        # delete output file on success transfer
+        ${ua_delete_local_on_successful_transfer} \
+          && rm -f "${ua_destination_dir}/${ua_acquisition_log}" 2>/dev/null
+      else
+        printf %b "Could not transfer log file to IBM Cloud Object Storage\n"
         exit 1
       fi
     fi
