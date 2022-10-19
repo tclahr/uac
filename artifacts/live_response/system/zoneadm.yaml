@@ -1,0 +1,9 @@
+version: 1.0
+artifacts:
+  -
+    description: Display all installed zones. A zone is an application container that is maintained by the operating system run-time.
+    supported_os: [solaris]
+    collector: command
+    command: zoneadm list -i -v
+    output_file: zoneadm_list_-i_-v.txt
+  

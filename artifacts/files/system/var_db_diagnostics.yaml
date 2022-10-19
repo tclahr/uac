@@ -1,9 +1,0 @@
-version: 1.0
-artifacts:
-  -
-    description: Collect AirDrop activity files.
-    supported_os: [macos]
-    collector: file
-    path: /private/var/db/diagnostics
-    name_pattern: ["*.tracev3"]
-  
