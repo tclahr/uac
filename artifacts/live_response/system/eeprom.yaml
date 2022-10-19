@@ -1,0 +1,9 @@
+version: 1.0
+artifacts:
+  -
+    description: Display the values of parameters in the EEPROM.
+    supported_os: [solaris]
+    collector: command
+    command: eeprom
+    output_file: eeprom.txt
+  
