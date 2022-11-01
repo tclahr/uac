@@ -1,4 +1,4 @@
-version: 2.0
+version: 3.0
 artifacts:
   -
     description: Collect cron files.
@@ -24,7 +24,7 @@ artifacts:
     description: Collect at files.
     supported_os: [aix, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris]
     collector: file
-    path: /private/var/at/tabs
+    path: /var/at/tabs
   -
     description: Collect cron files.
     supported_os: [macos]
