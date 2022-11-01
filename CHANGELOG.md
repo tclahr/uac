@@ -15,13 +15,14 @@ All notable changes to this project will be documented in this file.
 
 ### New Artifacts
 
-- New artifact that collects the status of firewall and ufw managed rules (live_response/network/ufw.yaml).
+- New artifact that collects macOS Biome data files (if SIP is disabled) (files/system/biome.yaml).
 - New artifact that collects macOS saved application state files (files/system/saved_application_state.yaml).
 - New artifact that collects macOS Unified Logs UUID and Timesync files (files/logs/macos_unified_logs.yaml).
 - New artifact that collects macOS System Integrity Protection (SIP) status (live_response/system/csrutil.yaml).
 - New artifact that collects macOS login items installed using the Service Management framework (files/system/startup_items.yaml).
 - New artifact that collects macOS installed updates history information (live_response/packages/softwareupdate.yaml).
 - New artifact that collects SSH rc files (files/ssh/rc.yaml).
+- New artifact that collects the status of firewall and ufw managed rules (live_response/network/ufw.yaml).
 - New artifact that collects kernel audit status and rules on Linux systems (live_response/system/auditctl.yaml).
 - New artifact that collects installed packages on Gentoo Linux systems (live_response/packages/qlist.yaml).
 - New artifact that collects the values of parameters in the EEPROM on Solaris systems (live_response/system/eeprom.yaml).
