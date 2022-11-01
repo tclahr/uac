@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 - Added '--ibm-cloud-api-key' switch which is required for transferring files to IBM Cloud Object Storage ([#106](https://github.com/tclahr/uac/issues/106)).
 - Added '--azure-storage-sas-url' switch which allows for pushing the output file to Azure Storage using shared access signature (SAS) URLs (if curl is available) ([#62](https://github.com/tclahr/uac/issues/62)).
 - Added '--azure-storage-sas-url-log-file' switch which allows for pushing the output log file to Azure Storage using shared access signature (SAS) URLs (if curl is available) ([#62](https://github.com/tclahr/uac/issues/62)).
+- AVML was updated to v0.9.0.
 
 ### New Artifacts
 
