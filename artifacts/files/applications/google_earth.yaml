@@ -1,0 +1,17 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect Google Earth KML files.
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.googleearth
+    name_pattern: ["*.kml"]
+    exclude_nologin_users: true
+  -
+    description: Collect Google Earth KML files.
+    supported_os: [macos]
+    collector: file
+    path: /%user_home%/Library/"Application Support"/"Google Earth"
+    name_pattern: ["*.kml"]
+    exclude_nologin_users: true
+    
