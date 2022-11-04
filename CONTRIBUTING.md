@@ -20,7 +20,7 @@ You can request a new feature by submitting an issue to our GitHub Repository. I
 
 If you are a user and you find a bug, please submit an [issue](https://github.com/tclahr/uac/issues). Please try to provide sufficient information for someone else to reproduce the issue. One of the project's [maintainers](MAINTAINERS.md) should respond to your issue soon.
 
-Please search within our [already reported bugs](https://github.com/tclahr/uac/issues) before raising a new one to make sure you're not raising a duplicate.
+Please search within our [already-reported bugs](https://github.com/tclahr/uac/issues) before raising a new one to make sure you're not raising a duplicate.
 
 ## Tutorials
 
@@ -42,9 +42,9 @@ Before you submit your Pull Request (PR) consider the following guidelines. We a
 
 The repo holds two main branches:
 
-**master**: Where the source code of HEAD always reflects a production-ready state.
+**main**: Where the source code of HEAD always reflects a production-ready state.
 
-**develop**: Where the source code of HEAD always reflects a state with the latest delivered development changes for the next release. When the source code in the develop branch reaches a stable point and is ready to be released, all of the changes will be merged back into the master and then tagged with a release number.
+**develop**: Where the source code of HEAD always reflects a state with the latest delivered development changes for the next release. When the source code in the develop branch reaches a stable point and is ready to be released, all of the changes will be merged back into the main branch and then tagged with a release number.
 
 All Pull Requests must be submitted to the **develop** branch.
 
@@ -70,7 +70,7 @@ git remote add upstream git@github.com:tclahr/uac.git
 git checkout -b develop
 ```
 
-1. Make sure your local develop branch is up to date with respect to the upstream one.
+1. Make sure your local develop branch is up to date with the upstream one.
 
 ```shell
 git pull upstream develop
@@ -98,7 +98,7 @@ git checkout -b my-feature-branch develop
   git push origin my-feature-branch
   ```
 
-1. In GitHub, open a Pull Request and select the **develop** branch as the base. Never send a Pull Request to master.
+1. In GitHub, open a Pull Request and select the **develop** branch as the base. Never send a Pull Request to **main**.
 
 - If we suggest changes then:
   - Make the required updates using the same branch.
@@ -140,7 +140,7 @@ git pull --ff upstream develop
 To ensure consistency throughout the source code, keep these rules in mind as you are working:
 
 - You can use the [Shell Style Guide](https://google.github.io/styleguide/shellguide.html) as a reference. Keep in mind that UAC is meant to run on any bourne shell, so some features like arrays, command substitution ```$(command)``` and tests ```[[ ... ]]``` are not fully supported by most of them.
-- Use [ShellCheck](https://www.shellcheck.net) to identify common bugs and warnings on your code.
+- Use [ShellCheck](https://www.shellcheck.net) to identify common bugs and warnings in your code.
 
 ## Commit message guidelines
 

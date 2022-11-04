@@ -936,12 +936,6 @@ else
           printf %b "Cannot remove temporary directory '${TEMP_DATA_DIR}'\n"
       fi
     fi
-    # hash collected files
-    printf %b "Hashing collected files. Please wait...\n"
-    cd "${ua_destination_dir}/${ua_output_name}" || exit 1
-    ua_output_file_hash
-    ua_output_file_hash=`${MD5_HASHING_TOOL} "${ua_output_name}"`
-    cd "${UAC_DIR}" || exit 1
   else
     printf %b "Cannot copy collected artifacts\n"
     printf %b "Please check collected artifacts in '${TEMP_DATA_DIR}'\n"
@@ -968,9 +962,9 @@ else
 fi
 
 # transfer output and log file to remote sftp server
-if [ -f "${ua_destination_dir}/${ua_output_name}" ] \
-  || [ -d "${ua_destination_dir}/${ua_output_name}" ]; then
-  if [ -n "${ua_sftp_destination}" ]; then
+if [ -n "${ua_sftp_destination}" ]; then
+  if [ -f "${ua_destination_dir}/${ua_output_name}" ] \
+    || [ -d "${ua_destination_dir}/${ua_output_name}" ]; then
     printf %b "Transferring output file to remote SFTP server. Please wait...\n"
     if sftp_transfer "${ua_destination_dir}/${ua_output_name}" \
       "${ua_sftp_destination}" "${ua_sftp_port}" "${ua_sftp_identity_file}"; then
@@ -997,8 +991,8 @@ if [ -f "${ua_destination_dir}/${ua_output_name}" ] \
 fi
 
 # transfer output and log file to S3 presigned url
-if [ -f "${ua_destination_dir}/${ua_output_name}" ]; then
-  if [ -n "${ua_s3_presigned_url}" ]; then
+if [ -n "${ua_s3_presigned_url}" ]; then
+  if [ -f "${ua_destination_dir}/${ua_output_name}" ]; then
     printf %b "Transferring output file to S3 presigned URL. Please wait...\n"
     if s3_presigned_url_transfer "${ua_destination_dir}/${ua_output_name}" \
       "${ua_s3_presigned_url}"; then
@@ -1027,8 +1021,8 @@ if [ -f "${ua_destination_dir}/${ua_output_name}" ]; then
 fi
 
 # transfer output and log file to Azure Storage SAS url
-if [ -f "${ua_destination_dir}/${ua_output_name}" ]; then
-  if [ -n "${ua_azure_storage_sas_url}" ]; then
+if [ -n "${ua_azure_storage_sas_url}" ]; then
+  if [ -f "${ua_destination_dir}/${ua_output_name}" ]; then
     printf %b "Transferring output file to Azure Storage SAS URL. Please wait...\n"
     if azure_storage_sas_url_transfer "${ua_destination_dir}/${ua_output_name}" \
       "${ua_azure_storage_sas_url}"; then
@@ -1057,8 +1051,8 @@ if [ -f "${ua_destination_dir}/${ua_output_name}" ]; then
 fi
 
 # transfer output and log file to IBM Cloud Object Storage
-if [ -f "${ua_destination_dir}/${ua_output_name}" ]; then
-  if [ -n "${ua_ibm_cos_url}" ]; then
+if [ -n "${ua_ibm_cos_url}" ]; then
+  if [ -f "${ua_destination_dir}/${ua_output_name}" ]; then
     printf %b "Transferring output file to IBM Cloud Object Storage. Please wait...\n"
     if ibm_cos_transfer "${ua_destination_dir}/${ua_output_name}" \
       "${ua_ibm_cos_url}" "${ua_ibm_cloud_api_key}"; then
