@@ -12,7 +12,7 @@ jobs:
       runs_on: "macos-12"
       unit_test_operating_system: "esxi"
       unit_test_system_arch: "x86_64"
-      unit_test_hostname: "localhost.wireless.intranet"
+      unit_test_hostname: "localhost.example.org"
       uac_destination_dir: "."
       vagrant_box_name: "david-flynn/esxi-6.5.0-base"
       vagrant_ssh_username: "root"
