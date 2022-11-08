@@ -144,20 +144,20 @@ jobs:
       - name: run ./uac -a live_response/process/ps.yaml --run-as-non-root ${{ inputs.uac_destination_dir }}
         run: vagrant ssh -c "cd uac && ./uac -a live_response/process/ps.yaml --run-as-non-root ${{ inputs.uac_destination_dir }}" -- ${{ inputs.vagrant_ssh_options }}
 
-      - name: rm -f `which gzip`
-        run: vagrant ssh -c "rm -f `which gzip` || true"
+      - name: rm -f gzip /bin/gzip /usr/bin/gzip
+        run: vagrant ssh -c "rm -f /bin/gzip /usr/bin/gzip || true"
 
-      - name: sudo rm -f `which gzip`
-        run: vagrant ssh -c "sudo rm -f `which gzip` || true"
+      - name: sudo rm -f /bin/gzip /usr/bin/gzip
+        run: vagrant ssh -c "sudo rm -f /bin/gzip /usr/bin/gzip || true"
       
       - name: (no gzip) run ./uac -a live_response/process/ps.yaml --run-as-non-root ${{ inputs.uac_destination_dir }}
         run: vagrant ssh -c "cd uac && ./uac -a live_response/process/ps.yaml --run-as-non-root ${{ inputs.uac_destination_dir }}"
 
-      - name: rm -f `which tar`
-        run: vagrant ssh -c "rm -f `which tar` || true"
+      - name: rm -f /bin/tar /usr/bin/tar
+        run: vagrant ssh -c "rm -f /bin/tar /usr/bin/tar || true"
 
-      - name: sudo rm -f `which tar`
-        run: vagrant ssh -c "sudo rm -f `which tar` || true"
+      - name: sudo rm -f /bin/tar /usr/bin/tar
+        run: vagrant ssh -c "sudo rm -f /bin/tar /usr/bin/tar || true"
 
       - name: (no tar) run ./uac -a live_response/process/ps.yaml --run-as-non-root ${{ inputs.uac_destination_dir }}
         run: vagrant ssh -c "cd uac && ./uac -a live_response/process/ps.yaml --run-as-non-root ${{ inputs.uac_destination_dir }}"
