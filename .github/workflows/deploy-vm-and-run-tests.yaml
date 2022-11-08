@@ -103,13 +103,13 @@ jobs:
         run: vagrant upload uac-unit-test uac-unit-test
 
       - name: Run date
-        run: vagrant ssh -c "date"
+        run: vagrant ssh -c "date" -- ${{ inputs.vagrant_ssh_options }}
 
       - name: Run uname -a
-        run: vagrant ssh -c "uname -a"
+        run: vagrant ssh -c "uname -a" -- ${{ inputs.vagrant_ssh_options }}
 
       - name: Run unit test
-        run: vagrant ssh -c "cd uac-unit-test && ./run_test ../uac ${{ inputs.unit_test_operating_system }} ${{ inputs.unit_test_system_arch }} ${{ inputs.vagrant_ssh_username }} ${{ inputs.unit_test_hostname }} tests/*"
+        run: vagrant ssh -c "cd uac-unit-test && ./run_test ../uac ${{ inputs.unit_test_operating_system }} ${{ inputs.unit_test_system_arch }} ${{ inputs.vagrant_ssh_username }} ${{ inputs.unit_test_hostname }} tests/*" -- ${{ inputs.vagrant_ssh_options }}
 
       - name: Run ./uac -p test --run-as-non-root ${{ inputs.uac_destination_dir }}
         run: vagrant ssh -c "cd uac && ./uac -p test --run-as-non-root ${{ inputs.uac_destination_dir }}" -- ${{ inputs.vagrant_ssh_options }}
