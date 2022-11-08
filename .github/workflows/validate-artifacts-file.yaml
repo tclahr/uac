@@ -9,7 +9,7 @@ on:
       - 'artifacts/**'
     branches:
       - develop
-      - 'releases/**'
+      - 'release/**'
 
 jobs:
   validate-artifacts-file:
