@@ -1,4 +1,4 @@
-name: Debian 6 (i386)
+name: Debian 6.0 (i386)
 
 on:
   # Allows you to run this workflow manually from the Actions tab
