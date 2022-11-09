@@ -103,6 +103,9 @@ jobs:
       - name: Print host memory size
         run: sysctl hw.memsize
 
+      - name: Reload Vagrantfile
+        run: vagrant reload
+
       - name: Start ${{ inputs.vagrant_box_name }} VM
         run: vagrant up --debug
 
