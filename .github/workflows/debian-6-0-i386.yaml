@@ -17,6 +17,5 @@ jobs:
       vagrant_box_name: "uac/debian-6-0-i386"
       vagrant_ssh_username: "vagrant"
       vagrant_ssh_password: ""
-      vagrant_ssh_shell: "/bin/sh"
-      vagrant_ssh_options: "-o HostKeyAlgorithms=+ssh-rsa -o PubkeyAcceptedKeyTypes=+ssh-rsa"
+      vagrant_ssh_shell: "/bin/bash"
       
