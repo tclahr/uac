@@ -73,6 +73,8 @@ jobs:
               "-oHostKeyAlgorithms=+ssh-rsa"
             ]
             config.vm.provider "virtualbox" do |vb|
+              vb.customize ["modifyvm", :id, "--memory", "2048"]
+              vb.customize ["modifyvm", :id, "--cpus", "2"]
               vb.customize ["modifyvm", :id, "--usb", "off"]
               vb.customize ["modifyvm", :id, "--usbehci", "off"]
             end
@@ -95,8 +97,14 @@ jobs:
       - name: Print Vagrantfile
         run: cat Vagrantfile
 
+      - name: Print host CPU count
+        run: sysctl hw.ncpu
+
+      - name: Print host memory size
+        run: sysctl hw.memsize
+
       - name: Start ${{ inputs.vagrant_box_name }} VM
-        run: vagrant up
+        run: vagrant up --debug
 
       - name: Transfer uac to VM
         run: vagrant upload uac uac
