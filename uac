@@ -711,7 +711,7 @@ while read ua_artifact_file || [ -n "${ua_artifact_file}" ]; do
   log_message INFO "Parsing artifacts file '${ua_artifact_file}'"
   # shellcheck disable=SC2003
   ua_progress_current=`expr ${ua_progress_current} + 1`
-  printf "[%03d/%03d] %b\n" "${ua_progress_current}" \
+  printf "[`date "+%a %b %d %H:%M:%S %Y %z"`] [%03d/%03d] %b\n" "${ua_progress_current}" \
     "${ua_progress_total}" "${ua_artifact_file}"
   ua_artifacts_root_output_directory=`dirname "${ua_artifact_file}"`
   parse_artifacts_file "${UAC_DIR}/artifacts/${ua_artifact_file}" \
