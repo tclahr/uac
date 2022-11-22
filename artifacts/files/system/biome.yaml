@@ -4,7 +4,7 @@ artifacts:
     description: Collect Biome data files. Note that this artifact will only be collected if System Integrity Protection (SIP) is disabled.
     supported_os: [macos]
     collector: file
-    path: /var/db/biome
+    path: /private/var/db/biome
     ignore_date_range: true
   
 # References:

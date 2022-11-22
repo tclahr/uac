@@ -1,9 +1,9 @@
-version: 1.0
+version: 2.0
 artifacts:
   -
     description: Collect Powerlog files.
     supported_os: [macos]
     collector: file
-    path: /var/db/powerlog/Library/BatteryLife/CurrentPowerlog.PLSQL*
+    path: /private/var/db/powerlog/Library/BatteryLife/CurrentPowerlog.PLSQL*
     ignore_date_range: true
   

@@ -1,4 +1,4 @@
-version: 3.0
+version: 4.0
 artifacts:
   -
     description: Collect Startup Items configuration files.
@@ -40,6 +40,6 @@ artifacts:
     description: Collect login items installed using the Service Management framework.
     supported_os: [macos]
     collector: file
-    path: /var/db/com.apple.xpc.launchd
+    path: /private/var/db/com.apple.xpc.launchd
     name_pattern: ["loginitems.*.plist"]
     ignore_date_range: true
