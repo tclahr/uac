@@ -1,10 +1,10 @@
-version: 1.0
+version: 2.0
 artifacts:
   -
     description: Collect recovery account information files.
     supported_os: [macos]
     collector: file
-    path: /var/db
+    path: /private/var/db
     name_pattern: ["AdminUserRecoveryInfo.plist", "CryptoUserInfo.plist"]
     ignore_date_range: true
   
