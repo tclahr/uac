@@ -1,0 +1,9 @@
+version: 1.0
+artifacts:
+  -
+    description: Display the System Integrity Protection (SIP) status.
+    supported_os: [macos]
+    collector: command
+    command: csrutil status
+    output_file: csrutil_status.txt
+  

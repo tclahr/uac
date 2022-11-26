@@ -1,0 +1,8 @@
+version: 1.0
+artifacts:
+  -
+    description: Display installed updates.
+    supported_os: [macos]
+    collector: command
+    command: softwareupdate --history --all
+    output_file: softwareupdate_--history_--all.txt

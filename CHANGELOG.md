@@ -2,6 +2,37 @@
 
 All notable changes to this project will be documented in this file.
 
+## DEVELOPMENT VERSION
+
+### New Features
+
+- Added '--ibm-cos-url' switch which allows for pushing the output file to IBM Cloud Object Storage (if curl is available) ([#106](https://github.com/tclahr/uac/issues/106)).
+- Added '--ibm-cos-url-log-file' switch which allows for pushing the output log file to IBM Cloud Object Storage (if curl is available) ([#106](https://github.com/tclahr/uac/issues/106)).
+- Added '--ibm-cloud-api-key' switch which is required for transferring files to IBM Cloud Object Storage ([#106](https://github.com/tclahr/uac/issues/106)).
+- Added '--azure-storage-sas-url' switch which allows for pushing the output file to Azure Storage using shared access signature (SAS) URLs (if curl is available) ([#62](https://github.com/tclahr/uac/issues/62)).
+- Added '--azure-storage-sas-url-log-file' switch which allows for pushing the output log file to Azure Storage using shared access signature (SAS) URLs (if curl is available) ([#62](https://github.com/tclahr/uac/issues/62)).
+- AVML was updated to v0.9.0.
+
+### New Artifacts
+
+- New artifact that collects macOS Biome data files (if SIP is disabled) (files/system/biome.yaml).
+- New artifact that collects macOS saved application state files (files/system/saved_application_state.yaml).
+- New artifact that collects macOS Unified Logs UUID and Timesync files (files/logs/macos_unified_logs.yaml).
+- New artifact that collects macOS System Integrity Protection (SIP) status (live_response/system/csrutil.yaml).
+- New artifact that collects macOS login items installed using the Service Management framework (files/system/startup_items.yaml).
+- New artifact that collects macOS installed updates history information (live_response/packages/softwareupdate.yaml).
+- New artifact that collects SSH rc files (files/ssh/rc.yaml).
+- New artifact that collects Google Earth KML files (files/applications/google_earth.yaml).
+- New artifact that collects the status of firewall and ufw managed rules (live_response/network/ufw.yaml).
+- New artifact that collects kernel audit status and rules on Linux systems (live_response/system/auditctl.yaml).
+- New artifact that collects installed packages on Gentoo Linux systems (live_response/packages/qlist.yaml).
+- New artifact that collects the values of parameters in the EEPROM on Solaris systems (live_response/system/eeprom.yaml).
+- New artifact that collects information about installed zones on Solaris systems (live_response/system/zoneadm.yaml).
+
+### Updated Artifacts
+
+- 'files/system/var_db_diagnostics.yaml' was moved and renamed to 'files/logs/macos_unified_logs.yaml'.
+
 ## 2.3.0 (2022-08-09)
 
 ## New Features

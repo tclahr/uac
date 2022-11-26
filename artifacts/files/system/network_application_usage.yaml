@@ -1,13 +1,13 @@
-version: 1.0
+version: 2.0
 artifacts:
   -
     description: Collect netusage.sqlite database file. Network Usage Application Data contains information about how an application sends or receives data over the network.
     supported_os: [macos]
     collector: file
-    path: /private/var/networkd/db/netusage.sqlite
+    path: /var/networkd/db/netusage.sqlite
   -
     description: Collect DataUsage.sqlite database file. Network Usage Application Data contains information about how an application sends or receives data over the network.
     supported_os: [macos]
     collector: file
-    path: /private/var/wireless/Library/Databases/DataUsage.sqlite
+    path: /var/wireless/Library/Databases/DataUsage.sqlite
   

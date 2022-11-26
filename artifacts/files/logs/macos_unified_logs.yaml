@@ -1,0 +1,19 @@
+version: 2.0
+artifacts:
+  -
+    description: Collect macOS Unified Logs tracev3 files.
+    supported_os: [macos]
+    collector: file
+    path: /var/db/diagnostics
+    name_pattern: ["*.tracev3"]
+  -
+    description: Collect macOS Unified Logs UUID files.
+    supported_os: [macos]
+    collector: file
+    path: /var/db/uuidtext
+  -
+    description: Collect macOS Unified Logs timesync files.
+    supported_os: [macos]
+    collector: file
+    path: /var/db/diagnostics/Timesync
+  

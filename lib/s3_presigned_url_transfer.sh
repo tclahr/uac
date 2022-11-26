@@ -35,7 +35,7 @@ s3_presigned_url_transfer()
   curl \
     --fail \
     --request PUT \
-    --header "Content-Type: application/text" \
+    --header "Content-Type: application/octet-stream" \
     --header "Accept: */*" \
     --header "Expect: 100-continue" \
     --upload-file "${pu_source}" \

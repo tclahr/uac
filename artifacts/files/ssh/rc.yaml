@@ -1,0 +1,7 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect rc files. If the file ~/.ssh/rc exists, sh runs it after reading the environment files but before starting the user's shell or command.
+    supported_os: [all]
+    collector: file
+    path: /%user_home%/.ssh/rc
