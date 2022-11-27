@@ -1,0 +1,8 @@
+version: 1.0
+artifacts:
+  -
+    description: Dump process memory sections and strings
+    supported_os: [linux]
+    collector: command
+    command: linux_procmemdump.sh -b -d %output_file%
+    output_file: processes

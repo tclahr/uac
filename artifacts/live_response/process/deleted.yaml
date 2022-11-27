@@ -11,6 +11,13 @@ artifacts:
     output_directory: proc/%line%
     output_file: recovered_exe.dd.swab
   -
+    description: Collect the memory sections and strings from (deleted) processes
+    supported_os: [linux]
+    collector: command
+    loop_command: ls -l /proc/[0-9]*/exe | grep -E "\(deleted\)" | grep -v -E "> /proc/" | awk -F"/proc/|/exe" '{print $2}'
+    command: linux_procmemdump.sh -b -u -p %line% -d %output_file%
+    output_file: proc
+  -
     description: Collect the list of deleted files of (malicious) processes if they are shown up as being (deleted).
     supported_os: [linux]
     collector: command
