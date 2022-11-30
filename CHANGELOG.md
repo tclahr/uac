@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file.
 
+## DEVELOPMENT VERSION
+
 ## 2.4.0 (2022-11-30)
 
 ### New Features
