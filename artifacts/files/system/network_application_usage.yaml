@@ -1,4 +1,4 @@
-version: 1.0
+version: 3.0
 artifacts:
   -
     description: Collect netusage.sqlite database file. Network Usage Application Data contains information about how an application sends or receives data over the network.

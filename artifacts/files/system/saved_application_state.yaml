@@ -1,0 +1,13 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect saved application state files.
+    supported_os: [macos]
+    collector: file
+    path: /%user_home%/Library/"Saved Application State"
+    name_pattern: ["data.data", "windows.plist", "window_*.data"]
+    ignore_date_range: true
+    exclude_nologin_users: true
+
+# References:
+# https://www.crowdstrike.com/blog/reconstructing-command-line-activity-on-macos/

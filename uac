@@ -50,6 +50,8 @@ export PATH
 . "${UAC_DIR}/lib/archive_compress_data.sh"
 . "${UAC_DIR}/lib/archive_data.sh"
 . "${UAC_DIR}/lib/array_to_list.sh"
+. "${UAC_DIR}/lib/azure_storage_sas_url_transfer_test.sh"
+. "${UAC_DIR}/lib/azure_storage_sas_url_transfer.sh"
 . "${UAC_DIR}/lib/check_available_system_tools.sh"
 . "${UAC_DIR}/lib/command_collector.sh"
 . "${UAC_DIR}/lib/copy_data.sh"
@@ -66,6 +68,8 @@ export PATH
 . "${UAC_DIR}/lib/get_system_arch.sh"
 . "${UAC_DIR}/lib/get_user_home_list.sh"
 . "${UAC_DIR}/lib/hash_collector.sh"
+. "${UAC_DIR}/lib/ibm_cos_transfer_test.sh"
+. "${UAC_DIR}/lib/ibm_cos_transfer.sh"
 . "${UAC_DIR}/lib/is_element_in_list.sh"
 . "${UAC_DIR}/lib/is_integer.sh"
 . "${UAC_DIR}/lib/is_running_with_root_privileges.sh"
@@ -91,7 +95,7 @@ export PATH
 . "${UAC_DIR}/lib/validate_profile_file.sh"
 
 # global vars
-UAC_VERSION="2.3.0"
+UAC_VERSION="2.4.0"
 MOUNT_POINT="/"
 OPERATING_SYSTEM=""
 SYSTEM_ARCH=""
@@ -126,6 +130,11 @@ ua_sftp_port=""
 ua_sftp_identity_file=""
 ua_s3_presigned_url=""
 ua_s3_presigned_url_log_file=""
+ua_azure_storage_sas_url=""
+ua_azure_storage_sas_url_log_file=""
+ua_ibm_cos_url=""
+ua_ibm_cos_url_log_file=""
+ua_ibm_cloud_api_key=""
 ua_delete_local_on_successful_transfer=false
 ua_debug_mode=false
 ua_temp_data_dir_symlink_support=false
@@ -370,6 +379,56 @@ Try 'uac --help' for more information.\n" >&2
         exit 1
       fi
       ;;
+      "--azure-storage-sas-url")
+      if [ -n "${2}" ]; then
+        ua_azure_storage_sas_url="${2}"
+        shift
+      else
+        printf %b "uac: option '${1}' requires an argument.\n\
+Try 'uac --help' for more information.\n" >&2
+        exit 1
+      fi
+      ;;
+    "--azure-storage-sas-url-log-file")
+      if [ -n "${2}" ]; then
+        ua_azure_storage_sas_url_log_file="${2}"
+        shift
+      else
+        printf %b "uac: option '${1}' requires an argument.\n\
+Try 'uac --help' for more information.\n" >&2
+        exit 1
+      fi
+      ;;
+      "--ibm-cos-url")
+      if [ -n "${2}" ]; then
+        ua_ibm_cos_url="${2}"
+        shift
+      else
+        printf %b "uac: option '${1}' requires an argument.\n\
+Try 'uac --help' for more information.\n" >&2
+        exit 1
+      fi
+      ;;
+    "--ibm-cos-url-log-file")
+      if [ -n "${2}" ]; then
+        ua_ibm_cos_url_log_file="${2}"
+        shift
+      else
+        printf %b "uac: option '${1}' requires an argument.\n\
+Try 'uac --help' for more information.\n" >&2
+        exit 1
+      fi
+      ;;
+    "--ibm-cloud-api-key")
+      if [ -n "${2}" ]; then
+        ua_ibm_cloud_api_key="${2}"
+        shift
+      else
+        printf %b "uac: option '${1}' requires an argument.\n\
+Try 'uac --help' for more information.\n" >&2
+        exit 1
+      fi
+      ;;
     "--delete-local-on-successful-transfer")
       ua_delete_local_on_successful_transfer=true
       ;;
@@ -377,7 +436,7 @@ Try 'uac --help' for more information.\n" >&2
     "--validate-artifacts-file")
       if [ -n "${2}" ]; then
         validate_artifacts_file "${2}" || exit 1
-        printf %b "uac: artifacts file validated. No errors found.\n"
+        printf %b "uac: artifacts file '${2}' successfully validated.\n"
         exit 0
       else
         printf %b "uac: option '${1}' requires an argument.\n\
@@ -477,7 +536,8 @@ if [ "${OPERATING_SYSTEM}" != "android" ] \
   && [ "${OPERATING_SYSTEM}" != "netscaler" ] \
   && [ "${OPERATING_SYSTEM}" != "openbsd" ] \
   && [ "${OPERATING_SYSTEM}" != "solaris" ]; then
-  printf %b "uac: invalid operating system '${OPERATING_SYSTEM}'\n\
+  printf %b "uac: invalid operating system '${OPERATING_SYSTEM}'. \
+Use '-s' option to set one.\n\
 Try 'uac --help' for more information.\n" >&2
   exit 1
 fi
@@ -510,7 +570,9 @@ fi
 if is_running_with_root_privileges || "${ua_run_as_non_root}"; then
   true
 else
-  printf %b "uac: this script requires root privileges to run properly.\n" >&2
+  printf %b "uac: this script requires root privileges to run properly. \
+Use '-u' option to disable root user check.\n\
+Try 'uac --help' for more information.\n" >&2
   exit 1
 fi
 
@@ -546,7 +608,7 @@ if [ -n "${ua_sftp_destination}" ]; then
   fi
 fi
 
-# test the connectivity to s3 presigned url
+# test the connectivity to S3 presigned url
 if [ -n "${ua_s3_presigned_url}" ]; then
   if eval "curl --version" >/dev/null 2>/dev/null; then
     if s3_presigned_url_transfer_test "${ua_s3_presigned_url}"; then
@@ -558,6 +620,43 @@ if [ -n "${ua_s3_presigned_url}" ]; then
     printf %b "uac: cannot transfer to S3 presigned URL because 'curl' \
 tool was not found.\n"
     exit 1
+  fi
+fi
+
+# test the connectivity to Azure Blob Storage SAS url
+if [ -n "${ua_azure_storage_sas_url}" ]; then
+  if eval "curl --version" >/dev/null 2>/dev/null; then
+    if azure_storage_sas_url_transfer_test "${ua_azure_storage_sas_url}"; then
+      true
+    else
+      exit 1
+    fi
+  else
+    printf %b "uac: cannot transfer to Azure Blob Storage SAS URL because 'curl' \
+tool was not found.\n"
+    exit 1
+  fi
+fi
+
+# test the connectivity to IBM Cloud Object Storage url
+if [ -n "${ua_ibm_cos_url}" ]; then
+  if [ -n "${ua_ibm_cloud_api_key}" ]; then
+    if eval "curl --version" >/dev/null 2>/dev/null; then
+      if ibm_cos_transfer_test "${ua_ibm_cos_url}" "${ua_ibm_cloud_api_key}"; then
+        true
+      else
+        exit 1
+      fi
+    else
+      printf %b "uac: cannot transfer to IBM Cloud Object Storage because 'curl' \
+tool was not found.\n"
+      exit 1
+    fi
+  else
+    printf %b "uac: cannot transfer to IBM Cloud Object Storage. No API \
+key / Bearer token provided. Please use --ibm-cloud-api-key option to \
+provide one.\n"
+      exit 1
   fi
 fi
 
@@ -863,9 +962,9 @@ else
 fi
 
 # transfer output and log file to remote sftp server
-if [ -f "${ua_destination_dir}/${ua_output_name}" ] \
-  || [ -d "${ua_destination_dir}/${ua_output_name}" ]; then
-  if [ -n "${ua_sftp_destination}" ]; then
+if [ -n "${ua_sftp_destination}" ]; then
+  if [ -f "${ua_destination_dir}/${ua_output_name}" ] \
+    || [ -d "${ua_destination_dir}/${ua_output_name}" ]; then
     printf %b "Transferring output file to remote SFTP server. Please wait...\n"
     if sftp_transfer "${ua_destination_dir}/${ua_output_name}" \
       "${ua_sftp_destination}" "${ua_sftp_port}" "${ua_sftp_identity_file}"; then
@@ -891,9 +990,9 @@ if [ -f "${ua_destination_dir}/${ua_output_name}" ] \
   fi
 fi
 
-# transfer output and log file to s3 presigned url
-if [ -f "${ua_destination_dir}/${ua_output_name}" ]; then
-  if [ -n "${ua_s3_presigned_url}" ]; then
+# transfer output and log file to S3 presigned url
+if [ -n "${ua_s3_presigned_url}" ]; then
+  if [ -f "${ua_destination_dir}/${ua_output_name}" ]; then
     printf %b "Transferring output file to S3 presigned URL. Please wait...\n"
     if s3_presigned_url_transfer "${ua_destination_dir}/${ua_output_name}" \
       "${ua_s3_presigned_url}"; then
@@ -915,6 +1014,66 @@ if [ -f "${ua_destination_dir}/${ua_output_name}" ]; then
           && rm -f "${ua_destination_dir}/${ua_acquisition_log}" 2>/dev/null
       else
         printf %b "Could not transfer log file to S3 presigned URL\n"
+        exit 1
+      fi
+    fi
+  fi
+fi
+
+# transfer output and log file to Azure Storage SAS url
+if [ -n "${ua_azure_storage_sas_url}" ]; then
+  if [ -f "${ua_destination_dir}/${ua_output_name}" ]; then
+    printf %b "Transferring output file to Azure Storage SAS URL. Please wait...\n"
+    if azure_storage_sas_url_transfer "${ua_destination_dir}/${ua_output_name}" \
+      "${ua_azure_storage_sas_url}"; then
+      printf %b "File transferred successfully\n"
+      # delete output file on success transfer
+      ${ua_delete_local_on_successful_transfer} \
+        && rm -f "${ua_destination_dir}/${ua_output_name}" 2>/dev/null
+    else
+      printf %b "Could not transfer output file to Azure Storage SAS URL\n"
+      exit 1
+    fi
+    if [ -n "${ua_azure_storage_sas_url_log_file}" ]; then
+      printf %b "Transferring log file to Azure Storage SAS URL. Please wait...\n"
+      if azure_storage_sas_url_transfer "${ua_destination_dir}/${ua_acquisition_log}" \
+        "${ua_azure_storage_sas_url_log_file}"; then
+        printf %b "File transferred successfully\n"
+        # delete output file on success transfer
+        ${ua_delete_local_on_successful_transfer} \
+          && rm -f "${ua_destination_dir}/${ua_acquisition_log}" 2>/dev/null
+      else
+        printf %b "Could not transfer log file to Azure Storage SAS URL\n"
+        exit 1
+      fi
+    fi
+  fi
+fi
+
+# transfer output and log file to IBM Cloud Object Storage
+if [ -n "${ua_ibm_cos_url}" ]; then
+  if [ -f "${ua_destination_dir}/${ua_output_name}" ]; then
+    printf %b "Transferring output file to IBM Cloud Object Storage. Please wait...\n"
+    if ibm_cos_transfer "${ua_destination_dir}/${ua_output_name}" \
+      "${ua_ibm_cos_url}" "${ua_ibm_cloud_api_key}"; then
+      printf %b "File transferred successfully\n"
+      # delete output file on success transfer
+      ${ua_delete_local_on_successful_transfer} \
+        && rm -f "${ua_destination_dir}/${ua_output_name}" 2>/dev/null
+    else
+      printf %b "Could not transfer output file to IBM Cloud Object Storage\n"
+      exit 1
+    fi
+    if [ -n "${ua_ibm_cos_url_log_file}" ]; then
+      printf %b "Transferring log file to IBM Cloud Object Storage. Please wait...\n"
+      if ibm_cos_transfer "${ua_destination_dir}/${ua_acquisition_log}" \
+        "${ua_ibm_cos_url_log_file}" "${ua_ibm_cloud_api_key}"; then
+        printf %b "File transferred successfully\n"
+        # delete output file on success transfer
+        ${ua_delete_local_on_successful_transfer} \
+          && rm -f "${ua_destination_dir}/${ua_acquisition_log}" 2>/dev/null
+      else
+        printf %b "Could not transfer log file to IBM Cloud Object Storage\n"
         exit 1
       fi
     fi

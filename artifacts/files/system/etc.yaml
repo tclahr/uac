@@ -1,8 +1,8 @@
-version: 1.0
+version: 3.0
 artifacts:
   -
     description: Collect system configuration files.
-    supported_os: [all]
+    supported_os: [aix, android, esxi, freebsd, linux, netbsd, netscaler, openbsd, solaris]
     collector: file
     path: /etc
     exclude_name_pattern: ["shadow", "shadow-"]
@@ -12,4 +12,5 @@ artifacts:
     supported_os: [macos]
     collector: file
     path: /private/etc
+    exclude_name_pattern: ["shadow", "shadow-"]
     ignore_date_range: true

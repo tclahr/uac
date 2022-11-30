@@ -1,0 +1,11 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect Biome data files. Note that this artifact will only be collected if System Integrity Protection (SIP) is disabled.
+    supported_os: [macos]
+    collector: file
+    path: /private/var/db/biome
+    ignore_date_range: true
+  
+# References:
+# https://blog.d204n6.com/2022/09/ios-16-now-you-c-it-now-you-dont.html

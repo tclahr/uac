@@ -1,7 +1,7 @@
-version: 1.0
+version: 3.0
 artifacts:
   -
-    description: Collect knowledgeC database file.
+    description: Collect knowledgeC database file. Note that this artifact will only be collected if System Integrity Protection (SIP) is disabled.
     supported_os: [macos]
     collector: file
     path: /private/var/db/CoreDuet/Knowledge/knowledgeC.db
