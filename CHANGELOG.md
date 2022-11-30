@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## 2.4.0-rc2 (2022-11-22)
+## 2.4.0 (2022-11-30)
 
 ### New Features
 
