@@ -322,7 +322,8 @@ sequence of mappings\n" >&2
                         "${pa_ignore_date_range}" \
                         "${pa_root_output_directory}" \
                         "${pa_new_output_directory}" \
-                        "${pa_new_output_file}"
+                        "${pa_new_output_file}" \
+                        "${pa_new_stderr_output_file}"
                     elif [ "${pa_collector}" = "hash" ]; then
                       hash_collector \
                         "${pa_new_path}" \
@@ -340,7 +341,8 @@ sequence of mappings\n" >&2
                         "${pa_ignore_date_range}" \
                         "${pa_root_output_directory}" \
                         "${pa_new_output_directory}" \
-                        "${pa_new_output_file}"
+                        "${pa_new_output_file}" \
+                        "${pa_new_stderr_output_file}"
                     elif [ "${pa_collector}" = "stat" ]; then
                       stat_collector \
                         "${pa_new_path}" \
@@ -358,7 +360,8 @@ sequence of mappings\n" >&2
                         "${pa_ignore_date_range}" \
                         "${pa_root_output_directory}" \
                         "${pa_new_output_directory}" \
-                        "${pa_new_output_file}"
+                        "${pa_new_output_file}" \
+                        "${pa_new_stderr_output_file}"
                     fi
                   done
 
@@ -406,7 +409,8 @@ sequence of mappings\n" >&2
                   "${pa_ignore_date_range}" \
                   "${pa_root_output_directory}" \
                   "${pa_output_directory}" \
-                  "${pa_output_file}"
+                  "${pa_output_file}" \
+                  "${pa_stderr_output_file}"
               elif [ "${pa_collector}" = "hash" ]; then
                 hash_collector \
                   "${pa_path}" \
@@ -424,7 +428,8 @@ sequence of mappings\n" >&2
                   "${pa_ignore_date_range}" \
                   "${pa_root_output_directory}" \
                   "${pa_output_directory}" \
-                  "${pa_output_file}"
+                  "${pa_output_file}" \
+                  "${pa_stderr_output_file}"
               elif [ "${pa_collector}" = "stat" ]; then
                 stat_collector \
                   "${pa_path}" \
@@ -442,7 +447,8 @@ sequence of mappings\n" >&2
                   "${pa_ignore_date_range}" \
                   "${pa_root_output_directory}" \
                   "${pa_output_directory}" \
-                  "${pa_output_file}"
+                  "${pa_output_file}" \
+                  "${pa_stderr_output_file}"
               fi
 
             fi
