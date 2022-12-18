@@ -47,6 +47,7 @@
 #   $13: root output directory
 #   $14: output directory (optional)
 #   $15: output file
+#   $16: stderr output file (optional)
 # Exit Status:
 #   Exit with status 0 on success.
 #   Exit with status greater than 0 if errors occur.
@@ -85,6 +86,8 @@ find_collector()
   fc_output_directory="${1:-}"
   shift
   fc_output_file="${1:-}"
+  shift
+  fc_stderr_output_file="${1:-}"
   
   # return if path is empty
   if [ -z "${fc_path}" ]; then
@@ -107,6 +110,13 @@ find_collector()
 
   # sanitize output file name
   fc_output_file=`sanitize_filename "${fc_output_file}"`
+
+  if [ -n "${fc_stderr_output_file}" ]; then
+    # sanitize stderr output file name
+    fc_stderr_output_file=`sanitize_filename "${fc_stderr_output_file}"`
+  else
+    fc_stderr_output_file="${fc_output_file}.stderr"
+  fi
 
   # sanitize output directory
   fc_output_directory=`sanitize_path \
@@ -165,7 +175,7 @@ ${GLOBAL_EXCLUDE_NAME_PATTERN}"
     "${fc_date_range_start_days}" \
     "${fc_date_range_end_days}" \
     >>"${TEMP_DATA_DIR}/${fc_output_directory}/${fc_output_file}" \
-    2>>"${TEMP_DATA_DIR}/${fc_output_directory}/${fc_output_file}.stderr"
+    2>>"${TEMP_DATA_DIR}/${fc_output_directory}/${fc_stderr_output_file}"
   
   # sort and uniq output file
   sort_uniq_file "${TEMP_DATA_DIR}/${fc_output_directory}/${fc_output_file}"
@@ -179,8 +189,8 @@ ${GLOBAL_EXCLUDE_NAME_PATTERN}"
 
   # add stderr file to the list of files to be archived within the 
   # output file if it is not empty
-  if [ -s "${TEMP_DATA_DIR}/${fc_output_directory}/${fc_output_file}.stderr" ]; then
-    echo "${fc_output_directory}/${fc_output_file}.stderr" \
+  if [ -s "${TEMP_DATA_DIR}/${fc_output_directory}/${fc_stderr_output_file}" ]; then
+    echo "${fc_output_directory}/${fc_stderr_output_file}" \
       >>"${TEMP_DATA_DIR}/.output_file.tmp"
   fi
 

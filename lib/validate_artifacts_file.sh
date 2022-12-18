@@ -325,6 +325,14 @@ empty.\n" >&2
               return 152
             fi
             ;;
+          "stderr_output_file")
+            va_stderr_output_file=`lrstrip "${va_value}"`
+            if [ -z "${va_stderr_output_file}" ]; then
+              printf %b "uac: artifacts file: 'stderr_output_file' must not be \
+empty.\n" >&2
+              return 152
+            fi
+            ;;
           "is_file_list")
             va_is_file_list=`lrstrip "${va_value}"`
             if [ "${va_is_file_list}" != true ] \
