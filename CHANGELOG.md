@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 ## DEVELOPMENT VERSION
 
+### New Features
+
+- Process memory sections and strings will be extracted from '/proc/[pid]/mem' using the data from '/proc/[pid]/maps', even if they are shown up as being (deleted). This functionality is enabled via 'linux_procmemdump.sh' script.
+
+### New Artifacts
+
+- New artifact that collects Linux process memory sections and strings from '/proc/[pid]/mem' (memory_dump/process_memory_sections_strings.yaml).
+- New artifact that collects Linux process memory strings only from '/proc/[pid]/mem' (memory_dump/process_memory_strings.yaml).
+
+### Updated Artifacts
+
+- New artifact that collects Linux process memory sections and strings from '/proc/[pid]/mem' was added to 'live_response/process/deleted.yaml'.
+
 ## 2.4.0 (2022-11-30)
 
 ### New Features

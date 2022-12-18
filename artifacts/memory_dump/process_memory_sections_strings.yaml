@@ -1,11 +1,11 @@
 version: 1.0
 artifacts:
   -
-    description: Dump strings from the memory space of running processes.
+    description: Dump process memory sections and strings.
     supported_os: [linux]
     collector: command
     loop_command: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
-    command: linux_procmemdump.sh -p %line% -s -d %output_file%
+    command: linux_procmemdump.sh -p %line% -b -d %output_file%
     output_directory: proc/%line%
     output_file: sections
     stderr_output_file: linux_procmemdump.txt.stderr
