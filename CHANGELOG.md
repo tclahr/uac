@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ### New Features
 
 - Process memory sections and strings will be extracted from '/proc/[pid]/mem' using the data from '/proc/[pid]/maps', even if they are shown up as being (deleted). This functionality is enabled via 'linux_procmemdump.sh' script.
+- Artifacts file: You can now use 'stderr_output_file' option to define a custom output file name where the standard error messages (stderr stream) will be stored in. Please check the [project's documentation page](https://tclahr.github.io/uac-docs/collectors/#stderr_output_file) for more information.
 
 ### New Artifacts
 
