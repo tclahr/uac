@@ -8,6 +8,7 @@ on:
     paths:
       - 'uac'
       - 'lib/**'
+      - 'tools/**'
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
@@ -26,6 +27,4 @@ jobs:
         uses: ludeeus/action-shellcheck@master
         with:
           ignore_paths: artifacts bin config profiles
-        env:
-          SHELLCHECK_OPTS: -s sh
       
