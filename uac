@@ -874,6 +874,9 @@ if ${TAR_TOOL_AVAILABLE}; then
   # add uac.log.stderr to the list of files to be archived within the output file
   echo "uac.log.stderr" >>"${TEMP_DATA_DIR}/.output_file.tmp"
 
+  # sort and uniq
+  sort_uniq_file "${TEMP_DATA_DIR}/.output_file.tmp" 2>>"${UAC_STDERR_LOG_FILE}"
+
   # archive (and compress) collected artifacts to output file
   printf %b "Creating output file. Please wait...\n"
   cd "${TEMP_DATA_DIR}" || exit 1
@@ -922,6 +925,9 @@ else
   echo "uac.log" >>"${TEMP_DATA_DIR}/.output_file.tmp"
   # add uac.log.stderr to the list of files to be archived within the output file
   echo "uac.log.stderr" >>"${TEMP_DATA_DIR}/.output_file.tmp"
+
+  # sort and uniq
+  sort_uniq_file "${TEMP_DATA_DIR}/.output_file.tmp" 2>>"${UAC_STDERR_LOG_FILE}"
 
   cd "${TEMP_DATA_DIR}" || exit 1
   copy_data "${TEMP_DATA_DIR}/.output_file.tmp" "${ua_destination_dir}/${ua_output_name}" \

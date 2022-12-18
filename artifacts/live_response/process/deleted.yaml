@@ -15,8 +15,10 @@ artifacts:
     supported_os: [linux]
     collector: command
     loop_command: ls -l /proc/[0-9]*/exe | grep -E "\(deleted\)" | grep -v -E "> /proc/" | awk -F"/proc/|/exe" '{print $2}'
-    command: linux_procmemdump.sh -b -u -p %line% -d %output_file%
-    output_file: proc
+    command: linux_procmemdump.sh -p %line% -b -d %output_file%
+    output_directory: proc/%line%
+    output_file: sections
+    stderr_output_file: linux_procmemdump.txt.stderr
   -
     description: Collect the list of deleted files of (malicious) processes if they are shown up as being (deleted).
     supported_os: [linux]
