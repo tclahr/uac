@@ -180,18 +180,16 @@ ${GLOBAL_EXCLUDE_NAME_PATTERN}"
   # sort and uniq output file
   sort_uniq_file "${TEMP_DATA_DIR}/${fc_output_directory}/${fc_output_file}"
 
-  # add output file to the list of files to be archived within the 
-  # output file if it is not empty
-  if [ -s "${TEMP_DATA_DIR}/${fc_output_directory}/${fc_output_file}" ]; then
-    echo "${fc_output_directory}/${fc_output_file}" \
-      >>"${TEMP_DATA_DIR}/.output_file.tmp"
+  # remove output file if it is empty
+  if [ ! -s "${TEMP_DATA_DIR}/${fc_output_directory}/${fc_output_file}" ]; then
+    rm -f "${TEMP_DATA_DIR}/${fc_output_directory}/${fc_output_file}" \
+      >/dev/null
   fi
 
-  # add stderr file to the list of files to be archived within the 
-  # output file if it is not empty
-  if [ -s "${TEMP_DATA_DIR}/${fc_output_directory}/${fc_stderr_output_file}" ]; then
-    echo "${fc_output_directory}/${fc_stderr_output_file}" \
-      >>"${TEMP_DATA_DIR}/.output_file.tmp"
+  # remove stderr output file if it is empty
+  if [ ! -s "${TEMP_DATA_DIR}/${fc_output_directory}/${fc_stderr_output_file}" ]; then
+    rm -f "${TEMP_DATA_DIR}/${fc_output_directory}/${fc_stderr_output_file}" \
+      >/dev/null
   fi
 
 }

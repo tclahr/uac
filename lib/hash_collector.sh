@@ -261,18 +261,16 @@ ${GLOBAL_EXCLUDE_NAME_PATTERN}"
     # sort and uniq output file
     sort_uniq_file "${TEMP_DATA_DIR}/${hc_output_directory}/${hc_output_file}.md5"
 
-    # add output file to the list of files to be archived within the 
-    # output file if it is not empty
-    if [ -s "${TEMP_DATA_DIR}/${hc_output_directory}/${hc_output_file}.md5" ]; then
-      echo "${hc_output_directory}/${hc_output_file}.md5" \
-        >>"${TEMP_DATA_DIR}/.output_file.tmp"
+    # remove output file if it is empty
+    if [ ! -s "${TEMP_DATA_DIR}/${hc_output_directory}/${hc_output_file}.md5" ]; then
+      rm -f "${TEMP_DATA_DIR}/${hc_output_directory}/${hc_output_file}.md5" \
+        >/dev/null
     fi
 
-    # add stderr file to the list of files to be archived within the 
-    # output file if it is not empty
-    if [ -s "${TEMP_DATA_DIR}/${hc_output_directory}/${hc_stderr_output_file}" ]; then
-      echo "${hc_output_directory}/${hc_stderr_output_file}" \
-        >>"${TEMP_DATA_DIR}/.output_file.tmp"
+    # remove stderr output file if it is empty
+    if [ ! -s "${TEMP_DATA_DIR}/${hc_output_directory}/${hc_stderr_output_file}" ]; then
+      rm -f "${TEMP_DATA_DIR}/${hc_output_directory}/${hc_stderr_output_file}" \
+        >/dev/null
     fi
 
   fi
@@ -355,18 +353,16 @@ ${GLOBAL_EXCLUDE_NAME_PATTERN}"
     # sort and uniq output file
     sort_uniq_file "${TEMP_DATA_DIR}/${hc_output_directory}/${hc_output_file}.sha1"
 
-    # add output file to the list of files to be archived within the 
-    # output file if it is not empty
-    if [ -s "${TEMP_DATA_DIR}/${hc_output_directory}/${hc_output_file}.sha1" ]; then
-      echo "${hc_output_directory}/${hc_output_file}.sha1" \
-        >>"${TEMP_DATA_DIR}/.output_file.tmp"
+    # remove output file if it is empty
+    if [ ! -s "${TEMP_DATA_DIR}/${hc_output_directory}/${hc_output_file}.sha1" ]; then
+      rm -f "${TEMP_DATA_DIR}/${hc_output_directory}/${hc_output_file}.sha1" \
+        >/dev/null
     fi
 
-    # add stderr file to the list of files to be archived within the 
-    # output file if it is not empty
-    if [ -s "${TEMP_DATA_DIR}/${hc_output_directory}/${hc_stderr_output_file}" ]; then
-      echo "${hc_output_directory}/${hc_stderr_output_file}" \
-        >>"${TEMP_DATA_DIR}/.output_file.tmp"
+    # remove stderr output file if it is empty
+    if [ ! -s "${TEMP_DATA_DIR}/${hc_output_directory}/${hc_stderr_output_file}" ]; then
+      rm -f "${TEMP_DATA_DIR}/${hc_output_directory}/${hc_stderr_output_file}" \
+        >/dev/null
     fi
 
   fi
@@ -449,18 +445,16 @@ ${GLOBAL_EXCLUDE_NAME_PATTERN}"
     # sort and uniq output file
     sort_uniq_file "${TEMP_DATA_DIR}/${hc_output_directory}/${hc_output_file}.sha256"
 
-    # add output file to the list of files to be archived within the 
-    # output file if it is not empty
-    if [ -s "${TEMP_DATA_DIR}/${hc_output_directory}/${hc_output_file}.sha256" ]; then
-      echo "${hc_output_directory}/${hc_output_file}.sha256" \
-        >>"${TEMP_DATA_DIR}/.output_file.tmp"
+    # remove output file if it is empty
+    if [ ! -s "${TEMP_DATA_DIR}/${hc_output_directory}/${hc_output_file}.sha256" ]; then
+      rm -f "${TEMP_DATA_DIR}/${hc_output_directory}/${hc_output_file}.sha256" \
+        >/dev/null
     fi
 
-    # add stderr file to the list of files to be archived within the 
-    # output file if it is not empty
-    if [ -s "${TEMP_DATA_DIR}/${hc_output_directory}/${hc_stderr_output_file}" ]; then
-      echo "${hc_output_directory}/${hc_stderr_output_file}" \
-        >>"${TEMP_DATA_DIR}/.output_file.tmp"
+    # remove stderr output file will be hidden if it is empty
+    if [ ! -s "${TEMP_DATA_DIR}/${hc_output_directory}/${hc_stderr_output_file}" ]; then
+      rm -f "${TEMP_DATA_DIR}/${hc_output_directory}/${hc_stderr_output_file}" \
+        >/dev/null
     fi
 
   fi

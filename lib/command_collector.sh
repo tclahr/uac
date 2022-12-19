@@ -133,10 +133,11 @@ ${cc_loop_command}\n" >&2
             eval "${cc_new_command}" \
               >>"${TEMP_DATA_DIR}/${cc_new_output_directory}/${cc_new_stderr_output_file}" \
               2>>"${TEMP_DATA_DIR}/${cc_new_output_directory}/${cc_new_stderr_output_file}"
-            # add output file to the list of files to be archived within the 
-            # output file
-            echo "${cc_new_output_directory}/${cc_new_output_file}" \
-              >>"${TEMP_DATA_DIR}/.output_file.tmp"
+            # remove output file if it is empty
+            if [ ! -s "${TEMP_DATA_DIR}/${cc_new_output_directory}/${cc_new_output_file}" ]; then
+              rm -f "${TEMP_DATA_DIR}/${cc_new_output_directory}/${cc_new_output_file}" \
+                >/dev/null
+            fi
           else
             if "${cc_compress_output_file}" && ${GZIP_TOOL_AVAILABLE}; then
               # run command and append output to compressed file
@@ -144,41 +145,32 @@ ${cc_loop_command}\n" >&2
               eval "${cc_new_command} | gzip - | cat -" \
                 >>"${TEMP_DATA_DIR}/${cc_new_output_directory}/${cc_new_output_file}.gz" \
                 2>>"${TEMP_DATA_DIR}/${cc_new_output_directory}/${cc_new_stderr_output_file}"
-              # add output file to the list of files to be archived within the 
-              # output file if it is not empty
-              if [ -s "${TEMP_DATA_DIR}/${cc_new_output_directory}/${cc_new_output_file}.gz" ]; then
-                echo "${cc_new_output_directory}/${cc_new_output_file}.gz" \
-                  >>"${TEMP_DATA_DIR}/.output_file.tmp"
-              fi
             else
               # run command and append output to existing file
               log_message COMMAND "${cc_new_command}"
               eval "${cc_new_command}" \
                 >>"${TEMP_DATA_DIR}/${cc_new_output_directory}/${cc_new_output_file}" \
                 2>>"${TEMP_DATA_DIR}/${cc_new_output_directory}/${cc_new_stderr_output_file}"
-              # add output file to the list of files to be archived within the 
-              # output file if it is not empty
-              if [ -s "${TEMP_DATA_DIR}/${cc_new_output_directory}/${cc_new_output_file}" ]; then
-                echo "${cc_new_output_directory}/${cc_new_output_file}" \
-                  >>"${TEMP_DATA_DIR}/.output_file.tmp"
+              # remove output file if it is empty
+              if [ ! -s "${TEMP_DATA_DIR}/${cc_new_output_directory}/${cc_new_output_file}" ]; then
+                rm -f "${TEMP_DATA_DIR}/${cc_new_output_directory}/${cc_new_output_file}" \
+                  >/dev/null
               fi
             fi
           fi
 
-          # add stderr file to the list of files to be archived within the 
-          # output file if it is not empty
-          if [ -s "${TEMP_DATA_DIR}/${cc_new_output_directory}/${cc_new_stderr_output_file}" ]; then
-            echo "${cc_new_output_directory}/${cc_new_stderr_output_file}" \
-              >>"${TEMP_DATA_DIR}/.output_file.tmp"
+          # remove stderr output file if it is empty
+          if [ ! -s "${TEMP_DATA_DIR}/${cc_new_output_directory}/${cc_new_stderr_output_file}" ]; then
+            rm -f "${TEMP_DATA_DIR}/${cc_new_output_directory}/${cc_new_stderr_output_file}" \
+              >/dev/null
           fi
 
         done
 
-    # add loop_command.stderr file to the list of files to be archived
-    # within the output file if it is not empty
-    if [ -s "${TEMP_DATA_DIR}/${cc_root_output_directory}/loop_command.stderr" ]; then
-      echo "${cc_root_output_directory}/loop_command.stderr" \
-        >>"${TEMP_DATA_DIR}/.output_file.tmp"
+    # remove loop_command.stderr file if it is empty
+    if [ ! -s "${TEMP_DATA_DIR}/${cc_root_output_directory}/loop_command.stderr" ]; then
+      rm -f "${TEMP_DATA_DIR}/${cc_root_output_directory}/loop_command.stderr"  \
+        >/dev/null
     fi
  
   else
@@ -211,10 +203,11 @@ ${cc_loop_command}\n" >&2
       eval "${cc_command}" \
         >>"${TEMP_DATA_DIR}/${cc_output_directory}/${cc_stderr_output_file}" \
         2>>"${TEMP_DATA_DIR}/${cc_output_directory}/${cc_stderr_output_file}"
-      # add output file to the list of files to be archived within the 
-      # output file
-      echo "${cc_output_directory}/${cc_output_file}" \
-        >>"${TEMP_DATA_DIR}/.output_file.tmp"
+      # remove output file if it is empty
+      if [ ! -s "${TEMP_DATA_DIR}/${cc_output_directory}/${cc_output_file}" ]; then
+        rm -f "${TEMP_DATA_DIR}/${cc_output_directory}/${cc_output_file}" \
+          >/dev/null
+      fi
     else
       if "${cc_compress_output_file}" && ${GZIP_TOOL_AVAILABLE}; then
         # run command and append output to compressed file
@@ -222,32 +215,24 @@ ${cc_loop_command}\n" >&2
         eval "${cc_command} | gzip - | cat -" \
           >>"${TEMP_DATA_DIR}/${cc_output_directory}/${cc_output_file}.gz" \
           2>>"${TEMP_DATA_DIR}/${cc_output_directory}/${cc_stderr_output_file}"
-        # add output file to the list of files to be archived within the 
-        # output file if it is not empty
-        if [ -s "${TEMP_DATA_DIR}/${cc_output_directory}/${cc_output_file}.gz" ]; then
-          echo "${cc_output_directory}/${cc_output_file}.gz" \
-            >>"${TEMP_DATA_DIR}/.output_file.tmp"
-        fi
       else
         # run command and append output to existing file
         log_message COMMAND "${cc_command}"
         eval "${cc_command}" \
           >>"${TEMP_DATA_DIR}/${cc_output_directory}/${cc_output_file}" \
           2>>"${TEMP_DATA_DIR}/${cc_output_directory}/${cc_stderr_output_file}"
-        # add output file to the list of files to be archived within the 
-        # output file if it is not empty
-        if [ -s "${TEMP_DATA_DIR}/${cc_output_directory}/${cc_output_file}" ]; then
-          echo "${cc_output_directory}/${cc_output_file}" \
-            >>"${TEMP_DATA_DIR}/.output_file.tmp"
+        # remove output file if it is empty
+        if [ ! -s "${TEMP_DATA_DIR}/${cc_output_directory}/${cc_output_file}" ]; then
+          rm -f "${TEMP_DATA_DIR}/${cc_output_directory}/${cc_output_file}" \
+            >/dev/null
         fi
       fi
     fi
 
-    # add stderr file to the list of files to be archived within the 
-    # output file if it is not empty
-    if [ -s "${TEMP_DATA_DIR}/${cc_output_directory}/${cc_stderr_output_file}" ]; then
-      echo "${cc_output_directory}/${cc_stderr_output_file}" \
-        >>"${TEMP_DATA_DIR}/.output_file.tmp"
+    # remove stderr output file if it is empty
+    if [ ! -s "${TEMP_DATA_DIR}/${cc_output_directory}/${cc_stderr_output_file}" ]; then
+      rm -f "${TEMP_DATA_DIR}/${cc_output_directory}/${cc_stderr_output_file}" \
+        >/dev/null
     fi
 
   fi
