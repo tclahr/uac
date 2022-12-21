@@ -18,6 +18,13 @@ All notable changes to this project will be documented in this file.
 
 - New artifact that collects Linux process memory sections and strings from '/proc/[pid]/mem' was added to 'live_response/process/deleted.yaml'.
 
+## 2.4.1 (2022-12-21)
+
+### Fixed
+
+- macOS FSEvents were not being collected from additional volumes located at '/System/Volumes' (files/logs/macos.yaml).
+- macOS Timesync files location was fixed (files/logs/macos_unified_logs.yaml).
+
 ## 2.4.0 (2022-11-30)
 
 ### New Features
