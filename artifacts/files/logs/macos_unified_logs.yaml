@@ -1,4 +1,4 @@
-version: 3.0
+version: 4.0
 artifacts:
   -
     description: Collect macOS Unified Logs tracev3 files.
@@ -15,5 +15,5 @@ artifacts:
     description: Collect macOS Unified Logs timesync files.
     supported_os: [macos]
     collector: file
-    path: /private/var/db/diagnostics/Timesync
+    path: /private/var/db/diagnostics/timesync
   
