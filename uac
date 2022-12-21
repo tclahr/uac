@@ -817,6 +817,7 @@ while read ua_artifact_file || [ -n "${ua_artifact_file}" ]; do
   ua_artifacts_root_output_directory=`dirname "${ua_artifact_file}"`
   parse_artifacts_file "${UAC_DIR}/artifacts/${ua_artifact_file}" \
     "${ua_artifacts_root_output_directory}"
+  echo "${ua_artifacts_root_output_directory}" >>"${TEMP_DATA_DIR}/.output_file.tmp"
 done <"${TEMP_DATA_DIR}/.artifacts.tmp" 2>>"${UAC_STDERR_LOG_FILE}"
 
 # disable debug mode
@@ -849,6 +850,13 @@ ua_acquisition_log="${ua_output_base_name}.log"
 # output file hash
 ua_output_file_hash="-"
 
+# sort and uniq
+sort_uniq_file "${TEMP_DATA_DIR}/.output_file.tmp" 2>>"${UAC_STDERR_LOG_FILE}"
+# add uac.log to the list of files to be archived/copied within the output file
+echo "uac.log" >>"${TEMP_DATA_DIR}/.output_file.tmp"
+# add uac.log.stderr to the list of files to be archived/copied within the output file
+echo "uac.log.stderr" >>"${TEMP_DATA_DIR}/.output_file.tmp"
+
 if ${TAR_TOOL_AVAILABLE}; then
 
   if [ -f "${TEMP_DATA_DIR}/.files.tmp" ]; then
@@ -868,14 +876,6 @@ if ${TAR_TOOL_AVAILABLE}; then
     sed -e 's:^/:\[root\]/:' "${TEMP_DATA_DIR}/.files.tmp" \
       >>"${TEMP_DATA_DIR}/.output_file.tmp"
   fi
-
-  # add uac.log to the list of files to be archived within the output file
-  echo "uac.log" >>"${TEMP_DATA_DIR}/.output_file.tmp"
-  # add uac.log.stderr to the list of files to be archived within the output file
-  echo "uac.log.stderr" >>"${TEMP_DATA_DIR}/.output_file.tmp"
-
-  # sort and uniq
-  sort_uniq_file "${TEMP_DATA_DIR}/.output_file.tmp" 2>>"${UAC_STDERR_LOG_FILE}"
 
   # archive (and compress) collected artifacts to output file
   printf %b "Creating output file. Please wait...\n"
@@ -920,14 +920,6 @@ else
     copy_data "${TEMP_DATA_DIR}/.files.tmp" "${ua_destination_dir}/${ua_output_name}/[root]" \
       2>>"${UAC_STDERR_LOG_FILE}"
   fi
-
-  # add uac.log to the list of files to be archived within the output file
-  echo "uac.log" >>"${TEMP_DATA_DIR}/.output_file.tmp"
-  # add uac.log.stderr to the list of files to be archived within the output file
-  echo "uac.log.stderr" >>"${TEMP_DATA_DIR}/.output_file.tmp"
-
-  # sort and uniq
-  sort_uniq_file "${TEMP_DATA_DIR}/.output_file.tmp" 2>>"${UAC_STDERR_LOG_FILE}"
 
   cd "${TEMP_DATA_DIR}" || exit 1
   copy_data "${TEMP_DATA_DIR}/.output_file.tmp" "${ua_destination_dir}/${ua_output_name}" \
