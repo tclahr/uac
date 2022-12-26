@@ -64,6 +64,8 @@ UAC does not need to be installed on the target system. You only need to downloa
 
 A profile name and/or a list of artifacts, and the destination directory need to be provided to run a collection. The remaining parameters are optional.
 
+> **Full Disk Access** permission is a privacy feature introduced in macOS Mojave (10.14) that prevents some applications from accessing important data, such as Mail, Messages, and Safari files. So it is strongly recommended that you manually [grant permission for Terminal application](https://support.apple.com/guide/mac-help/allow-access-to-system-configuration-files-mchlccb25729/mac) before running UAC from the terminal, or [grant permission for remote users](https://support.apple.com/guide/mac-help/allow-a-remote-computer-to-access-your-mac-mchlp1066/mac) before running UAC via ssh.
+
 Common usage scenarios may include the following:
 
 **Collect all artifacts based on the ```full``` profile, and create the output file in ```/tmp```.**
