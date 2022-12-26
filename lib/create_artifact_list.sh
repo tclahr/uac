@@ -17,7 +17,8 @@
 # shellcheck disable=SC2001,SC2006
 
 ###############################################################################
-# Parse artifact list.
+# Create artifact list to be collected based on the artifact list provided in
+# the command line.
 # Globals:
 #   TEMP_DATA_DIR
 #   UAC_DIR
@@ -31,7 +32,7 @@
 #   Exit with status 0 on success.
 #   Exit with status greater than 0 if errors occur.
 ###############################################################################
-parse_artifact_list()
+create_artifact_list()
 {
   pr_artifact_list="${1:-}"
 
@@ -43,7 +44,7 @@ parse_artifact_list()
       # shellcheck disable=SC2086
       find "${UAC_DIR}"/artifacts/${pr_artifact} -name "*.yaml" -print \
         | sed -e "s:${UAC_DIR}/artifacts/::g" \
-          >>"${TEMP_DATA_DIR}/.artifacts.exclude.tmp"
+          >"${TEMP_DATA_DIR}/.artifacts.exclude.tmp"
       
       # remove common lines between include and exclude
       awk 'NR==FNR {a[$0]=1; next} !a[$0]' \

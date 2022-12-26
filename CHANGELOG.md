@@ -16,7 +16,7 @@ All notable changes to this project will be documented in this file.
 
 ### Updated Artifacts
 
-- New artifact that collects Linux process memory sections and strings from '/proc/[pid]/mem' was added to 'live_response/process/deleted.yaml'.
+- New artifact that collects Linux process memory sections and strings (for processes shown up as being deleted) from '/proc/[pid]/mem' was added to 'live_response/process/deleted.yaml'.
 
 ## 2.4.1 (2022-12-21)
 

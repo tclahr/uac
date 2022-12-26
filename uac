@@ -50,12 +50,14 @@ export PATH
 . "${UAC_DIR}/lib/archive_compress_data.sh"
 . "${UAC_DIR}/lib/archive_data.sh"
 . "${UAC_DIR}/lib/array_to_list.sh"
+. "${UAC_DIR}/lib/artifact_file_exist.sh"
 . "${UAC_DIR}/lib/azure_storage_sas_url_transfer_test.sh"
 . "${UAC_DIR}/lib/azure_storage_sas_url_transfer.sh"
 . "${UAC_DIR}/lib/check_available_system_tools.sh"
 . "${UAC_DIR}/lib/command_collector.sh"
 . "${UAC_DIR}/lib/copy_data.sh"
 . "${UAC_DIR}/lib/create_acquisition_log.sh"
+. "${UAC_DIR}/lib/create_artifact_list.sh"
 . "${UAC_DIR}/lib/file_collector.sh"
 . "${UAC_DIR}/lib/find_collector.sh"
 . "${UAC_DIR}/lib/find_wrapper.sh"
@@ -78,11 +80,11 @@ export PATH
 . "${UAC_DIR}/lib/load_config_file.sh"
 . "${UAC_DIR}/lib/log_message.sh"
 . "${UAC_DIR}/lib/lrstrip.sh"
-. "${UAC_DIR}/lib/parse_artifact_list.sh"
 . "${UAC_DIR}/lib/parse_artifacts_file.sh"
 . "${UAC_DIR}/lib/profile_file_to_artifact_list.sh"
 . "${UAC_DIR}/lib/s3_presigned_url_transfer_test.sh"
 . "${UAC_DIR}/lib/s3_presigned_url_transfer.sh"
+. "${UAC_DIR}/lib/sanitize_artifact_list.sh"
 . "${UAC_DIR}/lib/sanitize_filename.sh"
 . "${UAC_DIR}/lib/sanitize_path.sh"
 . "${UAC_DIR}/lib/sftp_transfer_test.sh"
@@ -474,32 +476,18 @@ if [ -z "${ua_artifacts}" ] || [ -z "${ua_destination_dir}" ] ; then
   exit 1
 fi
 
-# replace ,.. by , 
-# replace /.. by /
-# replace consecutive commas by one comma
-# remove leading and trailing comma
-ua_artifacts=`echo "${ua_artifacts}" \
-  | sed -e 's:^,\.\.:,:g' \
-        -e 's:/\.\.:/:g' \
-        -e 's:,,*:,:g' \
-        -e 's:^,::' \
-        -e 's:,$::'`
+# sanitize artifact list
+ua_artifacts=`sanitize_artifact_list "${ua_artifacts}"`
+
 OIFS="${IFS}"
 IFS=","
 # check if artifacts exist
 for ua_artifact_file in ${ua_artifacts}; do
-  ua_artifact_file=`echo "${ua_artifact_file}" | sed -e 's:^!::g'`
-  if [ -n "${ua_artifact_file}" ]; then
-    # shellcheck disable=SC2086
-    find "${UAC_DIR}"/artifacts/${ua_artifact_file} -name "*.yaml" \
-      -print >/dev/null 2>/dev/null
-    if [ "$?" -gt 0 ]; then
-      printf %b "uac: artifact file not found \
-'${UAC_DIR}/artifacts/${ua_artifact_file}'\n" >&2
-      exit 1
-    fi
+  ua_artifact_file=`echo "${ua_artifact_file}" | sed -e 's:^!::'`
+  if artifact_file_exist "${ua_artifact_file}"; then
+    true
   else
-    printf %b "uac: artifact not found '${ua_artifact_file}'\n" >&2
+    printf %b "uac: artifact file not found '${UAC_DIR}/artifacts/${ua_artifact_file}'\n" >&2
     exit 1
   fi
 done
@@ -796,8 +784,8 @@ ua_acq_start_date_epoch=`get_epoch_date 2>>"${UAC_STDERR_LOG_FILE}"`
 log_message INFO "Artifacts collection started"
 printf %b "Artifacts collection started...\n"
 
-# parse artifact list
-parse_artifact_list "${ua_artifacts}" \
+# create artifact list
+create_artifact_list "${ua_artifacts}" \
   >"${TEMP_DATA_DIR}/.artifacts.tmp" \
   2>>"${UAC_STDERR_LOG_FILE}"
 
