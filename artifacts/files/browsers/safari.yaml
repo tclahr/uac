@@ -1,11 +1,28 @@
-version: 2.0
+version: 3.0
 artifacts:
   -
     description: Collect Safari browser files.
     supported_os: [macos]
     collector: file
     path: /%user_home%/Library/Safari*
-    name_pattern: ["AutoFillCorrections*", "AutomaticBookmarksBackup.html", "Bookmarks.plist", "CloudAutoFillCorrections*", "CloudTabs*", "ContentBlockerStatistics*", "Cookies.plist", "Downloads.plist", "FaviconCache", "FormValues", "History*", "LastSession.plist", "PerSitePreferences*", "RecentlyClosedTabs.plist", "TopSites.plist"]
+    name_pattern: ["AutoFillCorrections*", "AutoFillQuirks.plist", "AutomaticBookmarksBackup.html", "Bookmarks.plist", "CloudAutoFillCorrections*", "CloudExtensions.db*", "CloudTabs*", "ContentBlockerStatistics*", "Cookies.plist", "Downloads.plist", "Extensions.plist", "History*", "LastSession.plist", "PerSitePreferences*", "RecentlyClosedTabs.plist", "SafariTabs.db*", "TopSites.plist"]
+    ignore_date_range: true
+    exclude_nologin_users: true
+  -
+    description: Collect Safari browser files.
+    supported_os: [macos]
+    collector: file
+    path: /%user_home%/Library/Containers/com.apple.Safari*/Data/Library/Safari*
+    name_pattern: ["AutoFillCorrections*", "AutoFillQuirks.plist", "AutomaticBookmarksBackup.html", "Bookmarks.plist", "CloudAutoFillCorrections*", "CloudExtensions.db*", "CloudTabs*", "ContentBlockerStatistics*", "Cookies.plist", "Downloads.plist", "Extensions.plist", "History*", "LastSession.plist", "PerSitePreferences*", "RecentlyClosedTabs.plist", "SafariTabs.db*", "TopSites.plist"]
+    ignore_date_range: true
+    exclude_nologin_users: true
+  -
+    description: Collect Safari browser directories.
+    supported_os: [macos]
+    collector: file
+    path: /%user_home%/Library/Safari*
+    name_pattern: ["Favicon Cache", "Form Values"]
+    file_type: d
     ignore_date_range: true
     exclude_nologin_users: true
   -

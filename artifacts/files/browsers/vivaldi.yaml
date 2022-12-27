@@ -1,11 +1,20 @@
-version: 1.0
+version: 2.0
 artifacts:
   -
     description: Collect Vivaldi browser files.
     supported_os: [linux]
     collector: file
     path: /%user_home%/.config/vivaldi
-    name_pattern: ["Bookmarks*", "Cookies*", "DownloadMetadata", "Extension Cookies*", "Extensions", "Favicons*", "File System", "History*", "Login Data*", "Media History*", "Network Action Predictor*", "Network Persistent State", "Preferences", "QuotaManager*", "Reporting and NEL*", "SecurePreferences", "Sessions", "Shortcuts*", "SyncData.sqlite3", "Top Sites*", "Trust Tokens*", "Visited Links", "Web Data*"]
+    name_pattern: ["Bookmarks*", "Cookies*", "DownloadMetadata", "Extension Cookies*", "Favicons*", "History*", "Login Data*", "Media History*", "Network Action Predictor*", "Network Persistent State", "Preferences", "QuotaManager*", "Reporting and NEL*", "SecurePreferences", "Shortcuts*", "SyncData.sqlite3", "Top Sites*", "Trust Tokens*", "Visited Links", "Web Data*"]
+    ignore_date_range: true
+    exclude_nologin_users: true
+  -
+    description: Collect Vivaldi browser directories.
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.config/vivaldi
+    name_pattern: ["Extensions", "File System", "Sessions"]
+    file_type: d
     ignore_date_range: true
     exclude_nologin_users: true
   -
@@ -13,6 +22,15 @@ artifacts:
     supported_os: [macos]
     collector: file
     path: /%user_home%/Library/"Application Support"/Vivaldi
-    name_pattern: ["Bookmarks*", "Cookies*", "DownloadMetadata", "Extension Cookies*", "Extensions", "Favicons*", "File System", "History*", "Login Data*", "Media History*", "Network Action Predictor*", "Network Persistent State", "Preferences", "QuotaManager*", "Reporting and NEL*", "SecurePreferences", "Sessions", "Shortcuts*", "SyncData.sqlite3", "Top Sites*", "Trust Tokens*", "Visited Links", "Web Data*"]
+    name_pattern: ["Bookmarks*", "Cookies*", "DownloadMetadata", "Extension Cookies*", "Favicons*", "History*", "Login Data*", "Media History*", "Network Action Predictor*", "Network Persistent State", "Preferences", "QuotaManager*", "Reporting and NEL*", "SecurePreferences", "Shortcuts*", "SyncData.sqlite3", "Top Sites*", "Trust Tokens*", "Visited Links", "Web Data*"]
+    ignore_date_range: true
+    exclude_nologin_users: true
+  -
+    description: Collect Vivaldi browser directories.
+    supported_os: [macos]
+    collector: file
+    path: /%user_home%/Library/"Application Support"/Vivaldi
+    name_pattern: ["Extensions", "File System", "Sessions"]
+    file_type: d
     ignore_date_range: true
     exclude_nologin_users: true

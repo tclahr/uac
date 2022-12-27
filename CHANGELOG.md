@@ -13,10 +13,11 @@ All notable changes to this project will be documented in this file.
 
 - New artifact that collects Linux process memory sections and strings from '/proc/[pid]/mem' (memory_dump/process_memory_sections_strings.yaml).
 - New artifact that collects Linux process memory strings only from '/proc/[pid]/mem' (memory_dump/process_memory_strings.yaml).
-
-### Updated Artifacts
-
 - New artifact that collects Linux process memory sections and strings (for processes shown up as being deleted) from '/proc/[pid]/mem' was added to 'live_response/process/deleted.yaml'.
+- New artifact that collects the listing of UNIX domain socket files (live_response/network/lsof.yaml).
+- New artifact that collects information about macOS system usage and application execution history (files/system/coreanalytics.yaml).
+- New artifact that collects macOS Powerlog archive files (files/system/powerlog.yaml).
+- New artifact that collects information about the searches that a user performed in the Spotlight application (files/applications/spotlight_shortcuts.yaml).
 
 ## 2.4.1 (2022-12-21)
 

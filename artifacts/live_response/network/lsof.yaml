@@ -1,4 +1,4 @@
-version: 2.0
+version: 3.0
 artifacts:
   -
     description: Collect the listing of all Internet network files.
@@ -6,3 +6,9 @@ artifacts:
     collector: command
     command: lsof -nPli
     output_file: lsof_-nPli.txt
+  -
+    description: Collect the listing of UNIX domain socket files.
+    supported_os: [aix, esxi, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris]
+    collector: command
+    command: lsof -U
+    output_file: lsof_-U.txt

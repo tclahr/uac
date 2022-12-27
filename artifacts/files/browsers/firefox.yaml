@@ -1,11 +1,20 @@
-version: 2.0
+version: 3.0
 artifacts:
   -
     description: Collect Firefox browser files.
     supported_os: [linux]
     collector: file
     path: /%user_home%/.mozilla/firefox
-    name_pattern: ["addons.sqlite", "bookmarkbackups", "bookmarks.sqlite*", "cookies.sqlite*", "downloads.sqlite*", "extensions.json", "favicons.sqlite*", "firefox_cookies.sqlite*", "formhistory.sqlite*", "key*.db", "logins.json", "permissions.sqlite*", "places.sqlite*", "prefs.js", "protections.sqlite*", "search.sqlite*", "sessionstore*", "signon*.*", "signons.sqlite*", "storage-sync.sqlite*", "Web Data*", "webappstore.sqlite*"]
+    name_pattern: ["addons.*", "bookmarks.sqlite*", "cookies.sqlite*", "downloads.sqlite*", "extensions.json", "favicons.sqlite*", "firefox_cookies.sqlite*", "formhistory.sqlite*", "key*.db", "logins.json", "permissions.sqlite*", "places.sqlite*", "prefs.js", "protections.sqlite*", "search.sqlite*", "signon*.*", "signons.sqlite*", "storage-sync*.sqlite*", "webappstore.sqlite*"]
+    ignore_date_range: true
+    exclude_nologin_users: true
+  -
+    description: Collect Firefox browser directories.
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.mozilla/firefox
+    name_pattern: ["bookmarkbackups", "sessionstore*"]
+    file_type: d
     ignore_date_range: true
     exclude_nologin_users: true
   -
@@ -13,7 +22,16 @@ artifacts:
     supported_os: [linux]
     collector: file
     path: /%user_home%/.var/app/org.mozilla.firefox
-    name_pattern: ["addons.sqlite", "bookmarkbackups", "bookmarks.sqlite*", "cookies.sqlite*", "downloads.sqlite*", "extensions.json", "favicons.sqlite*", "firefox_cookies.sqlite*", "formhistory.sqlite*", "key*.db", "logins.json", "permissions.sqlite*", "places.sqlite*", "prefs.js", "protections.sqlite*", "search.sqlite*", "sessionstore*", "signon*.*", "signons.sqlite*", "storage-sync.sqlite*", "Web Data*", "webappstore.sqlite*"]
+    name_pattern: ["addons.*", "bookmarks.sqlite*", "cookies.sqlite*", "downloads.sqlite*", "extensions.json", "favicons.sqlite*", "firefox_cookies.sqlite*", "formhistory.sqlite*", "key*.db", "logins.json", "permissions.sqlite*", "places.sqlite*", "prefs.js", "protections.sqlite*", "search.sqlite*", "signon*.*", "signons.sqlite*", "storage-sync*.sqlite*", "webappstore.sqlite*"]
+    ignore_date_range: true
+    exclude_nologin_users: true
+  -
+    description: Collect Firefox browser directories (Flatpak version).
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.var/app/org.mozilla.firefox
+    name_pattern: ["bookmarkbackups", "sessionstore*"]
+    file_type: d
     ignore_date_range: true
     exclude_nologin_users: true
   -
@@ -21,7 +39,16 @@ artifacts:
     supported_os: [linux]
     collector: file
     path: /%user_home%/snap/firefox
-    name_pattern: ["addons.sqlite", "bookmarkbackups", "bookmarks.sqlite*", "cookies.sqlite*", "downloads.sqlite*", "extensions.json", "favicons.sqlite*", "firefox_cookies.sqlite*", "formhistory.sqlite*", "key*.db", "logins.json", "permissions.sqlite*", "places.sqlite*", "prefs.js", "protections.sqlite*", "search.sqlite*", "sessionstore*", "signon*.*", "signons.sqlite*", "storage-sync.sqlite*", "Web Data*", "webappstore.sqlite*"]
+    name_pattern: ["addons.*", "bookmarks.sqlite*", "cookies.sqlite*", "downloads.sqlite*", "extensions.json", "favicons.sqlite*", "firefox_cookies.sqlite*", "formhistory.sqlite*", "key*.db", "logins.json", "permissions.sqlite*", "places.sqlite*", "prefs.js", "protections.sqlite*", "search.sqlite*", "signon*.*", "signons.sqlite*", "storage-sync*.sqlite*", "webappstore.sqlite*"]
+    ignore_date_range: true
+    exclude_nologin_users: true
+  -
+    description: Collect Firefox browser directories (Snap version).
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/snap/firefox
+    name_pattern: ["bookmarkbackups", "sessionstore*"]
+    file_type: d
     ignore_date_range: true
     exclude_nologin_users: true
   -
@@ -29,7 +56,16 @@ artifacts:
     supported_os: [macos]
     collector: file
     path: /%user_home%/Library/"Application Support"/Firefox
-    name_pattern: ["addons.sqlite", "bookmarkbackups", "bookmarks.sqlite*", "cookies.sqlite*", "downloads.sqlite*", "extensions.json", "favicons.sqlite*", "firefox_cookies.sqlite*", "formhistory.sqlite*", "key*.db", "logins.json", "permissions.sqlite*", "places.sqlite*", "prefs.js", "protections.sqlite*", "search.sqlite*", "sessionstore*", "signon*.*", "signons.sqlite*", "storage-sync.sqlite*", "Web Data*", "webappstore.sqlite*"]
+    name_pattern: ["addons.*", "bookmarks.sqlite*", "cookies.sqlite*", "downloads.sqlite*", "extensions.json", "favicons.sqlite*", "firefox_cookies.sqlite*", "formhistory.sqlite*", "key*.db", "logins.json", "permissions.sqlite*", "places.sqlite*", "prefs.js", "protections.sqlite*", "search.sqlite*", "signon*.*", "signons.sqlite*", "storage-sync*.sqlite*", "webappstore.sqlite*"]
+    ignore_date_range: true
+    exclude_nologin_users: true
+  -
+    description: Collect Firefox browser directories.
+    supported_os: [macos]
+    collector: file
+    path: /%user_home%/Library/"Application Support"/Firefox
+    name_pattern: ["bookmarkbackups", "sessionstore*"]
+    file_type: d
     ignore_date_range: true
     exclude_nologin_users: true
 
