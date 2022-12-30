@@ -1,4 +1,4 @@
-version: 2.0
+version: 3.0
 artifacts:
   -
     description: Display the current run-level of the process.
@@ -16,6 +16,6 @@ artifacts:
     description: Show who is logged on.
     supported_os: [all]
     collector: command
-    command: who
-    output_file: who.txt
+    command: who -T
+    output_file: who_-T.txt
   

@@ -220,6 +220,8 @@ check_available_system_tools()
     MD5_HASHING_TOOL="digest -v -a md5"
   elif eval "csum -h MD5 \"${UAC_DIR}/uac\""; then
     MD5_HASHING_TOOL="csum -h MD5"
+  elif eval "echo \"uac\" | openssl dgst -md5"; then
+    MD5_HASHING_TOOL="openssl dgst -md5"
   fi
 
   # check for available SHA1 hashing tools
@@ -233,6 +235,8 @@ check_available_system_tools()
     SHA1_HASHING_TOOL="digest -v -a sha1"
   elif eval "csum -h SHA1 \"${UAC_DIR}/uac\""; then
     SHA1_HASHING_TOOL="csum -h SHA1"
+  elif eval "echo \"uac\" | openssl dgst -sha1"; then
+    MD5_HASHING_TOOL="openssl dgst -sha1"
   fi
 
   # check for available SHA256 hashing tools
@@ -246,6 +250,8 @@ check_available_system_tools()
     SHA256_HASHING_TOOL="digest -v -a sha256"
   elif eval "csum -h SHA256 \"${UAC_DIR}/uac\""; then
     SHA256_HASHING_TOOL="csum -h SHA256"
+  elif eval "echo \"uac\" | openssl dgst -sha256"; then
+    MD5_HASHING_TOOL="openssl dgst -sha256"
   fi
 
 }

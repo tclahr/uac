@@ -15,6 +15,8 @@ All notable changes to this project will be documented in this file.
 - New artifact that collects Linux process memory strings only from '/proc/[pid]/mem' (memory_dump/process_memory_strings.yaml).
 - New artifact that collects Linux process memory sections and strings (for processes shown up as being deleted) from '/proc/[pid]/mem' was added to 'live_response/process/deleted.yaml'.
 - New artifact that collects the listing of UNIX domain socket files (live_response/network/lsof.yaml).
+- New artifact that collects the contents of the last login log /var/log/lastlog file on Linux systems (live_response/system/lastlog.yaml).
+- New artifact that collects the current settings of the system clock and RTC on Linux systems, including whether network time synchronization is active (live_response/system/timedatectl.yaml).
 - New artifact that collects information about macOS system usage and application execution history (files/system/coreanalytics.yaml).
 - New artifact that collects macOS Powerlog archive files (files/system/powerlog.yaml).
 - New artifact that collects information about the searches that a user performed in the Spotlight application (files/applications/spotlight_shortcuts.yaml).
