@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# shellcheck disable=SC1091,SC2006,SC2181
+# shellcheck disable=SC2006,SC2181
 
 # remove all existing aliases
 unalias -a
@@ -47,54 +47,8 @@ PATH="${PATH}:/opt/sbin:/opt/local/bin:/netscaler"
 export PATH
 
 # load lib files
-. "${UAC_DIR}/lib/archive_compress_data.sh"
-. "${UAC_DIR}/lib/archive_data.sh"
-. "${UAC_DIR}/lib/array_to_list.sh"
-. "${UAC_DIR}/lib/artifact_file_exist.sh"
-. "${UAC_DIR}/lib/azure_storage_sas_url_transfer_test.sh"
-. "${UAC_DIR}/lib/azure_storage_sas_url_transfer.sh"
-. "${UAC_DIR}/lib/check_available_system_tools.sh"
-. "${UAC_DIR}/lib/command_collector.sh"
-. "${UAC_DIR}/lib/copy_data.sh"
-. "${UAC_DIR}/lib/create_acquisition_log.sh"
-. "${UAC_DIR}/lib/create_artifact_list.sh"
-. "${UAC_DIR}/lib/file_collector.sh"
-. "${UAC_DIR}/lib/find_collector.sh"
-. "${UAC_DIR}/lib/find_wrapper.sh"
-. "${UAC_DIR}/lib/get_current_user.sh"
-. "${UAC_DIR}/lib/get_days_since_date_until_now.sh"
-. "${UAC_DIR}/lib/get_epoch_date.sh"
-. "${UAC_DIR}/lib/get_hostname.sh"
-. "${UAC_DIR}/lib/get_mount_point_by_file_system.sh"
-. "${UAC_DIR}/lib/get_operating_system.sh"
-. "${UAC_DIR}/lib/get_system_arch.sh"
-. "${UAC_DIR}/lib/get_user_home_list.sh"
-. "${UAC_DIR}/lib/hash_collector.sh"
-. "${UAC_DIR}/lib/ibm_cos_transfer_test.sh"
-. "${UAC_DIR}/lib/ibm_cos_transfer.sh"
-. "${UAC_DIR}/lib/is_element_in_list.sh"
-. "${UAC_DIR}/lib/is_integer.sh"
-. "${UAC_DIR}/lib/is_running_with_root_privileges.sh"
-. "${UAC_DIR}/lib/list_artifacts.sh"
-. "${UAC_DIR}/lib/list_profiles.sh"
-. "${UAC_DIR}/lib/load_config_file.sh"
-. "${UAC_DIR}/lib/log_message.sh"
-. "${UAC_DIR}/lib/lrstrip.sh"
-. "${UAC_DIR}/lib/parse_artifacts_file.sh"
-. "${UAC_DIR}/lib/profile_file_to_artifact_list.sh"
-. "${UAC_DIR}/lib/s3_presigned_url_transfer_test.sh"
-. "${UAC_DIR}/lib/s3_presigned_url_transfer.sh"
-. "${UAC_DIR}/lib/sanitize_artifact_list.sh"
-. "${UAC_DIR}/lib/sanitize_filename.sh"
-. "${UAC_DIR}/lib/sanitize_path.sh"
-. "${UAC_DIR}/lib/sftp_transfer_test.sh"
-. "${UAC_DIR}/lib/sftp_transfer.sh"
-. "${UAC_DIR}/lib/sort_uniq_file.sh"
-. "${UAC_DIR}/lib/stat_collector.sh"
-. "${UAC_DIR}/lib/terminate.sh"
-. "${UAC_DIR}/lib/usage.sh"
-. "${UAC_DIR}/lib/validate_artifacts_file.sh"
-. "${UAC_DIR}/lib/validate_profile_file.sh"
+# shellcheck disable=SC1091
+. "${UAC_DIR}/lib/load_lib_files.sh"
 
 # global vars
 UAC_VERSION="DEVELOPMENT VERSION"
@@ -117,7 +71,6 @@ HOSTNAME="${HOSTNAME}"
 
 # local vars
 ua_artifacts=""
-ua_profile=""
 ua_destination_dir=""
 ua_run_as_non_root=false
 ua_temp_dir=""
@@ -138,6 +91,7 @@ ua_ibm_cos_url=""
 ua_ibm_cos_url_log_file=""
 ua_ibm_cloud_api_key=""
 ua_delete_local_on_successful_transfer=false
+ua_verbose_mode=true
 ua_debug_mode=false
 ua_temp_data_dir_symlink_support=false
 
@@ -171,20 +125,14 @@ while [ "${1:-}" != "" ]; do
           list_profiles
           exit 1
         fi
-        ua_profile="${2}"
-        # get proper profile file based on the profile name
-        ua_profile_file=""
-        for ua_file in "${UAC_DIR}"/profiles/*.yaml; do
-          if grep -q -E "name: +${ua_profile} *$" <"${ua_file}" 2>/dev/null; then
-            ua_profile_file="${ua_file}"
-            break
-          fi
-        done
+        # get profile file based on the profile name
+        ua_profile_file=`get_profile_file "${2}"`
         # exit if profile not found
         if [ -z "${ua_profile_file}" ]; then
-          printf %b "uac: profile not found '${ua_profile}'\n"
+          printf %b "uac: profile not found '${2}'\n"
           exit 1
         fi
+        ua_profile_file="${UAC_DIR}/profiles/${ua_profile_file}"
         # check if profile file is valid
         validate_profile_file "${ua_profile_file}" || exit 1
 
@@ -506,24 +454,16 @@ if [ -n "${ua_temp_dir}" ] && [ ! -d "${ua_temp_dir}" ]; then
 fi
 
 # get absolute destination directory path
-cd "${ua_destination_dir}" && ua_destination_dir=`pwd` && cd "${UAC_DIR}" \
-  || exit 1
+ua_destination_dir=`get_absolute_directory_path "${ua_destination_dir}" 2>/dev/null`
 
 # get operating system if not set by --operating_system
 if [ -z "${OPERATING_SYSTEM}" ]; then
   OPERATING_SYSTEM=`get_operating_system`
 fi
 # check if operating system is supported
-if [ "${OPERATING_SYSTEM}" != "android" ] \
-  && [ "${OPERATING_SYSTEM}" != "aix" ] \
-  && [ "${OPERATING_SYSTEM}" != "esxi" ] \
-  && [ "${OPERATING_SYSTEM}" != "freebsd" ] \
-  && [ "${OPERATING_SYSTEM}" != "linux" ] \
-  && [ "${OPERATING_SYSTEM}" != "macos" ] \
-  && [ "${OPERATING_SYSTEM}" != "netbsd" ] \
-  && [ "${OPERATING_SYSTEM}" != "netscaler" ] \
-  && [ "${OPERATING_SYSTEM}" != "openbsd" ] \
-  && [ "${OPERATING_SYSTEM}" != "solaris" ]; then
+if is_valid_operating_system "${OPERATING_SYSTEM}"; then
+  true
+else
   printf %b "uac: invalid operating system '${OPERATING_SYSTEM}'. \
 Use '-s' option to set one.\n\
 Try 'uac --help' for more information.\n" >&2
@@ -572,17 +512,12 @@ fi
 
 # check if destination directory's file system supports symlink creation
 if [ -n "${ua_temp_dir}" ]; then
-  rm "${ua_temp_dir}/.uac-symlink.tmp" 2>/dev/null
-  if ln -s "${UAC_DIR}" "${ua_temp_dir}/.uac-symlink.tmp" 2>/dev/null; then
-    rm "${ua_temp_dir}/.uac-symlink.tmp" 2>/dev/null
-    ua_temp_data_dir_symlink_support=true
-  fi
+  file_system_symlink_support "${ua_temp_dir}" >/dev/null 2>/dev/null \
+    && ua_temp_data_dir_symlink_support=true
   TEMP_DATA_DIR="${ua_temp_dir}/uac-data.tmp"
 else
-  if ln -s "${UAC_DIR}" "${ua_destination_dir}/.uac-symlink.tmp" 2>/dev/null; then
-    rm "${ua_destination_dir}/.uac-symlink.tmp" 2>/dev/null
-    ua_temp_data_dir_symlink_support=true
-  fi
+  file_system_symlink_support "${ua_destination_dir}" >/dev/null 2>/dev/null \
+    && ua_temp_data_dir_symlink_support=true
   TEMP_DATA_DIR="${ua_destination_dir}/uac-data.tmp"
 fi
 
@@ -800,8 +735,12 @@ while read ua_artifact_file || [ -n "${ua_artifact_file}" ]; do
   log_message INFO "Parsing artifacts file '${ua_artifact_file}'"
   # shellcheck disable=SC2003,SC2086
   ua_progress_current=`expr ${ua_progress_current} + 1`
-  printf "[`date "+%Y-%m-%d %H:%M:%S %z"`] [%03d/%03d] %b\n" "${ua_progress_current}" \
-    "${ua_progress_total}" "${ua_artifact_file}"
+  ${ua_verbose_mode} && ua_progress_timestamp=`date "+%Y-%m-%d %H:%M:%S %z"`
+  ${ua_verbose_mode} \
+    && printf "[%03d/%03d] [%b] %b\n" "${ua_progress_current}" \
+      "${ua_progress_total}" "${ua_progress_timestamp}" "${ua_artifact_file}" \
+    || printf "[%03d/%03d] %b\n" \
+    "${ua_progress_current}" "${ua_progress_total}" "${ua_artifact_file}"
   ua_artifacts_root_output_directory=`dirname "${ua_artifact_file}"`
   parse_artifacts_file "${UAC_DIR}/artifacts/${ua_artifact_file}" \
     "${ua_artifacts_root_output_directory}"

@@ -373,7 +373,7 @@ ${fw_find_date_range_param} -print"
           -e 's:, *:,:g' -e 's:^,*::' \
         | awk 'BEGIN { FS=","; } {
             for(N = 1; N <= NF; N ++) {
-              printf "%s\n", $N;
+              printf "\"%s\"\n", $N;
             }
           }' \
         | sed -e 's:#_COMMA_#:,:g' \
