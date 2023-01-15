@@ -1,0 +1,49 @@
+version: 1.0
+artifacts:
+  # AnyDesk artifacts are stored within different locations depending on the version downloaded and installed on the system (.tar.gz, .deb, .rpm, .dmg).
+  -
+    description: Collect AnyDesk configuration, session recordings, screenshot, chat and trace files.
+    supported_os: [freebsd, linux, macos]
+    collector: file
+    path: /%user_home%/.anydesk
+    exclude_nologin_users: true
+  -
+    # some Linux and FreeBSD Session Recordings can be stored in /home/<user>/Videos/AnyDesk
+    # some Linux and FreeBSD Screenshots can be stored in /home/<user>/Pictures/AnyDesk
+    # some Linux and FreeBSD Chat Logs can be stored in /home/<user>/Documents/AnyDesk
+    description: Collect AnyDesk session recordings, screenshots and chat log files.
+    supported_os: [freebsd, linux]
+    collector: file
+    path: /%user_home%/*/AnyDesk
+    exclude_nologin_users: true
+  -
+    description: Collect AnyDesk screenshot files.
+    supported_os: [freebsd, linux, macos]
+    collector: file
+    path: /%user_home%/
+    name_pattern: ["anydesk*.png"]
+    file_type: f
+    max_depth: 4
+    exclude_nologin_users: true
+  -
+    description: Collect AnyDesk session recording files.
+    supported_os: [freebsd, linux, macos]
+    collector: file
+    path: /%user_home%/
+    name_pattern: ["*.anydesk"]
+    file_type: f
+    max_depth: 4
+    exclude_nologin_users: true
+  -
+    description: Collect AnyDesk global configuration and connection trace files.
+    supported_os: [linux]
+    collector: file
+    path: /etc/anydesk
+  -
+    description: Collect AnyDesk trace log file.
+    supported_os: [linux]
+    collector: file
+    path: /var/log/anydesk.trace
+  
+# References:
+# https://support.anydesk.com/knowledge/trace-files
