@@ -77,7 +77,6 @@ ua_ibm_cos_url=""
 ua_ibm_cos_url_log_file=""
 ua_ibm_cloud_api_key=""
 ua_delete_local_on_successful_transfer=false
-ua_verbose_mode=true
 ua_debug_mode=false
 ua_temp_data_dir_symlink_support=false
 
@@ -721,12 +720,9 @@ while read ua_artifact_file || [ -n "${ua_artifact_file}" ]; do
   log_message INFO "Parsing artifacts file '${ua_artifact_file}'"
   # shellcheck disable=SC2003,SC2086
   ua_progress_current=`expr ${ua_progress_current} + 1`
-  ${ua_verbose_mode} && ua_progress_timestamp=`date "+%Y-%m-%d %H:%M:%S %z"`
-  ${ua_verbose_mode} \
-    && printf "[%03d/%03d] [%b] %b\n" "${ua_progress_current}" \
-      "${ua_progress_total}" "${ua_progress_timestamp}" "${ua_artifact_file}" \
-    || printf "[%03d/%03d] %b\n" \
-    "${ua_progress_current}" "${ua_progress_total}" "${ua_artifact_file}"
+  ua_progress_timestamp=`date "+%Y-%m-%d %H:%M:%S %z"`
+  printf "[%03d/%03d] %b %b\n" "${ua_progress_current}" \
+    "${ua_progress_total}" "${ua_progress_timestamp}" "${ua_artifact_file}"
   ua_artifacts_root_output_directory=`dirname "${ua_artifact_file}"`
   parse_artifacts_file "${UAC_DIR}/artifacts/${ua_artifact_file}" \
     "${ua_artifacts_root_output_directory}"
