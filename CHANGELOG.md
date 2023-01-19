@@ -4,23 +4,24 @@ All notable changes to this project will be documented in this file.
 
 ## DEVELOPMENT VERSION
 
-### New Features
+### Features
 
-- Process memory sections and strings will be extracted from '/proc/[pid]/mem' using the data from '/proc/[pid]/maps', even if they are shown up as being (deleted). This functionality is enabled via 'linux_procmemdump.sh' script.
+- Process memory sections and strings will be extracted from '/proc/[pid]/mem' using the data from '/proc/[pid]/maps', even if they are shown up as being (deleted). This functionality is enabled via 'tools/linux_procmemdump.sh' script.
 - Artifacts file: You can now use 'stderr_output_file' option to define a custom output file name where the standard error messages (stderr stream) will be stored in. Please check the [project's documentation page](https://tclahr.github.io/uac-docs/collectors/#stderr_output_file) for more information.
 
-### New Artifacts
+### Artifacts
 
-- New artifact that collects Linux process memory sections and strings from '/proc/[pid]/mem' (memory_dump/process_memory_sections_strings.yaml).
-- New artifact that collects Linux process memory strings only from '/proc/[pid]/mem' (memory_dump/process_memory_strings.yaml).
-- New artifact that collects Linux process memory sections and strings (for processes shown up as being deleted) from '/proc/[pid]/mem' was added to 'live_response/process/deleted.yaml'.
-- New artifact that collects AnyDesk configuration, chat transcript, screenshot, session recording and trace files on FreeBSD, Linux and macOS systems (files/applications/anydesk.yaml).
-- New artifact that collects the listing of UNIX domain socket files (live_response/network/lsof.yaml).
-- New artifact that collects the contents of the last login log /var/log/lastlog file on Linux systems (live_response/system/lastlog.yaml).
-- New artifact that collects the current settings of the system clock and RTC on Linux systems, including whether network time synchronization is active (live_response/system/timedatectl.yaml).
-- New artifact that collects information about macOS system usage and application execution history (files/system/coreanalytics.yaml).
-- New artifact that collects macOS Powerlog archive files (files/system/powerlog.yaml).
-- New artifact that collects information about the searches that a user performed in the Spotlight application (files/applications/spotlight_shortcuts.yaml).
+- files/applications/anydesk.yaml: Added collection of AnyDesk configuration, chat transcript, screenshot, session recording and trace files [freebsd, linux, macos].
+- files/applications/box_drive.yaml: Added collection of Box Drive configuration and sqlite database files [macos].
+- files/applications/spotlight_shortcuts.yaml: Added collection of searches that a user performed in the Spotlight application [macos].
+- files/system/coreanalytics.yaml: Added collection of information about the system usage and application execution history [macos].
+- files/system/powerlog.yaml: Added collection of Powerlog archive files [macos].
+- live_response/network/lsof.yaml: Added listing of UNIX domain socket files.
+- live_response/process/deleted.yaml: Added collection of process memory sections and strings (for processes shown up as being deleted) from '/proc/[pid]/mem' [linux].
+- live_response/system/lastlog.yaml: Added collection of the last login log '/var/log/lastlog' file [linux].
+- live_response/system/timedatectl.yaml: Added collection of current settings of the system clock and RTC, including whether network time synchronization is active or not [linux].
+- memory_dump/process_memory_sections_strings.yaml: Added collection of process memory sections and strings from '/proc/[pid]/mem' [linux].
+- memory_dump/process_memory_strings.yaml: Added collection of process memory strings only from '/proc/[pid]/mem' [linux].
 
 ## 2.4.1 (2022-12-21)
 
