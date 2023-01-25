@@ -1,0 +1,27 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect Synology Drive application database and data files.
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.SynologyDrive/data
+    exclude_nologin_users: true
+  -
+    description: Collect Synology Drive application log files.
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.SynologyDrive/log
+    exclude_nologin_users: true
+  -
+    description: Collect Synology Drive application database and data files.
+    supported_os: [macos]
+    collector: file
+    path: /%user_home%/Library/"Application Support"/SynologyDrive/data
+    exclude_nologin_users: true
+  -
+    description: Collect Synology Drive application log files.
+    supported_os: [macos]
+    collector: file
+    path: /%user_home%/Library/"Application Support"/SynologyDrive/log
+    exclude_nologin_users: true
+  

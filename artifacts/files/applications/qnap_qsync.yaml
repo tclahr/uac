@@ -1,0 +1,15 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect QNAP Qsync application configuration and log files.
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.local/share/QNAP/Qsync
+    exclude_nologin_users: true
+  -
+    description: Collect QNAP Qsync application configuration and log files.
+    supported_os: [macos]
+    collector: file
+    path: /%user_home%/.Qsync
+    exclude_nologin_users: true
+  
