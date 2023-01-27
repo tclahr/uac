@@ -23,3 +23,7 @@
 - live_response/system/timedatectl.yaml: Added the collection of current settings of the system clock and RTC, including whether network time synchronization is active or not [linux].
 - memory_dump/process_memory_sections_strings.yaml: Added the collection of process memory sections and strings from '/proc/[pid]/mem' [linux].
 - memory_dump/process_memory_strings.yaml: Added the collection of process memory strings only from '/proc/[pid]/mem' [linux].
+
+### Tools
+
+- AVML updated to v0.10.0.
