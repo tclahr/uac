@@ -24,6 +24,11 @@
 - memory_dump/process_memory_sections_strings.yaml: Added the collection of process memory sections and strings from '/proc/[pid]/mem' [linux].
 - memory_dump/process_memory_strings.yaml: Added the collection of process memory strings only from '/proc/[pid]/mem' [linux].
 
+### Profiles
+
+- full.yaml: Updated the artifacts collection order. 'bodyfile/bodyfile.yaml' artifact is now collected sooner.
+- ir_triage.yaml: Updated the artifacts collection order. 'bodyfile/bodyfile.yaml' artifact is now collected sooner.
+
 ### Tools
 
 - AVML updated to v0.10.0.
