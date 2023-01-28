@@ -1,6 +1,6 @@
 # Changelog
 
-## DEVELOPMENT VERSION
+## 2.5.0-rc1 (2022-01-28)
 
 ### Features
 
