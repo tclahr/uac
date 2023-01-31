@@ -222,7 +222,7 @@ check_available_system_tools()
   elif eval "csum -h SHA1 \"${UAC_DIR}/uac\""; then
     SHA1_HASHING_TOOL="csum -h SHA1"
   elif eval "echo \"uac\" | openssl dgst -sha1"; then
-    MD5_HASHING_TOOL="openssl dgst -sha1"
+    SHA1_HASHING_TOOL="openssl dgst -sha1"
   fi
 
   # check for available SHA256 hashing tools
@@ -237,7 +237,7 @@ check_available_system_tools()
   elif eval "csum -h SHA256 \"${UAC_DIR}/uac\""; then
     SHA256_HASHING_TOOL="csum -h SHA256"
   elif eval "echo \"uac\" | openssl dgst -sha256"; then
-    MD5_HASHING_TOOL="openssl dgst -sha256"
+    SHA256_HASHING_TOOL="openssl dgst -sha256"
   fi
 
 }
