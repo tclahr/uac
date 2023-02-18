@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.5.0-rc1 (2022-02-02)
+## 2.5.0-rc2 (2022-02-10)
 
 ### Features
 
@@ -16,6 +16,8 @@
 - files/applications/synology_drive.yaml: Added the collection of Synology Drive client configuration, database and log files [linux, macos].
 - files/system/coreanalytics.yaml: Added the collection of information about the system usage and application execution history [macos].
 - files/system/powerlog.yaml: Added the collection of Powerlog archive files [macos].
+- live_response/network/ip6tables.yaml: Added the collection of firewall rules information using ip6tables tool [android, linux].
+- live_response/network/iptables.yaml: Updated command parameters to support legacy iptables versions [android, linux].
 - live_response/network/lsof.yaml: Added the listing of UNIX domain socket files.
 - live_response/packages/synopkg.yaml: Added the collection of installed packages on Synology DSM systems [linux].
 - live_response/process/deleted.yaml: Added the collection of process memory sections and strings (for processes shown up as being deleted) from '/proc/[pid]/mem' [linux].
