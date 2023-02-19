@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.5.0-rc2 (2022-02-10)
+## 2.5.0-rc2 (2022-02-19)
 
 ### Features
 
@@ -33,4 +33,4 @@
 
 ### Tools
 
-- AVML updated to v0.10.0.
+- AVML updated to v0.11.0.
