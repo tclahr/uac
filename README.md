@@ -31,11 +31,11 @@ Project documentation page: [https://tclahr.github.io/uac-docs](https://tclahr.g
 - Customizable and extensible collections and artifacts.
 - Respects the order of volatility during artifacts collection.
 - Collects information from processes running without a binary on disk.
-- Extracts information from files and directories to create a bodyfile (including enhanced file attributes for ext4).
 - Hashes running processes and executable files.
+- Extracts information from files and directories to create a bodyfile (including enhanced file attributes for ext4).
 - Collects user and system configuration files and logs.
 - Collects artifacts from applications.
-- Acquires volatile memory from Linux systems using Microsoft's [avml](https://github.com/microsoft/avml) tool.
+- Acquires volatile memory from Linux systems using different methods and tools.
 
 ***
 
