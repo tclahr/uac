@@ -1,0 +1,9 @@
+version: 1.0
+artifacts:
+  -
+    description: Display the current settings of the system clock and RTC, including whether network time synchronization is active.
+    supported_os: [linux]
+    collector: command
+    command: timedatectl status
+    output_file: timedatectl_status.txt
+  

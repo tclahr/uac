@@ -1,14 +1,14 @@
-version: 1.0
+version: 2.0
 artifacts:
   -
     description: Collect firewall rules from all chains with numerical addresses instead of trying to determine symbolic host, port or user names.
     supported_os: [android, linux]
     collector: command
-    command: iptables -Lvn
-    output_file: iptables_-Lvn.txt
+    command: iptables -L -v -n
+    output_file: iptables_-L_-v_-n.txt
   -
     description: Collect firewall rules from nat chain with numerical addresses instead of trying to determine symbolic host, port or user names.
     supported_os: [android, linux]
     collector: command
-    command: iptables -t nat -Lvn
-    output_file: iptables_-t_nat_-Lvn.txt
+    command: iptables -t nat -L -v -n
+    output_file: iptables_-t_nat_-L_-v_-n.txt

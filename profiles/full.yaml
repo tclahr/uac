@@ -15,8 +15,8 @@ artifacts:
   - live_response/process/strings_running_processes.yaml
   - live_response/process/*
   - live_response/network/*
-  - live_response/system/*
   - bodyfile/bodyfile.yaml
+  - live_response/system/*
   - live_response/hardware/*
   - live_response/packages/*
   - live_response/storage/*

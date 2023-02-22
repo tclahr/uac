@@ -1,17 +1,5 @@
-# Copyright (C) 2020 IBM Corporation
-#
-# Licensed under the Apache License, Version 2.0 (the “License”);
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-# http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an “AS IS” BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
+#!/bin/sh
+# SPDX-License-Identifier: Apache-2.0
 # shellcheck disable=SC2001,SC2006
 
 ###############################################################################
@@ -27,7 +15,8 @@
 #   $3: root output directory
 #   $4: output directory (optional)
 #   $5: output file
-#   $6: compress output file (optional) (default: false)
+#   $6: stderr output file (optional)
+#   $7: compress output file (optional) (default: false)
 # Outputs:
 #   Write command output to stdout.
 #   Write command errors to stderr.
@@ -42,7 +31,8 @@ command_collector()
   cc_root_output_directory="${3:-}"
   cc_output_directory="${4:-}"
   cc_output_file="${5:-}"
-  cc_compress_output_file="${6:-false}"
+  cc_stderr_output_file="${6:-}"
+  cc_compress_output_file="${7:-false}"
   
   # return if command is empty
   if [ -z "${cc_command}" ]; then
@@ -82,16 +72,10 @@ ${cc_loop_command}\n" >&2
       return 61
     fi
 
-    if "${cc_compress_output_file}" && ${GZIP_TOOL_AVAILABLE}; then
-      log_message COMMAND "| sort -u | while read %line%; do ${cc_command} | gzip - | cat - ; done"
-    else
-      log_message COMMAND "| sort -u | while read %line%; do ${cc_command}; done"
-    fi
-    
     # shellcheck disable=SC2162
     sort -u <"${TEMP_DATA_DIR}/.loop_command.tmp" \
       | while read cc_line || [ -n "${cc_line}" ]; do
-          
+
           # replace %line% by cc_line value
           cc_new_command=`echo "${cc_command}" \
             | sed -e "s:%line%:${cc_line}:g"`
@@ -110,64 +94,82 @@ ${cc_loop_command}\n" >&2
           cc_new_output_file=`sanitize_filename \
             "${cc_new_output_file}"`
 
+          if [ -n "${cc_stderr_output_file}" ]; then
+            # replace %line% by cc_line value
+            cc_new_stderr_output_file=`echo "${cc_stderr_output_file}" \
+              | sed -e "s:%line%:${cc_line}:g"`
+            # sanitize stderr output file
+            cc_new_stderr_output_file=`sanitize_filename \
+              "${cc_new_stderr_output_file}"`
+          else
+            cc_new_stderr_output_file="${cc_new_output_file}.stderr"
+          fi        
+
           # create output directory if it does not exist
           if [ ! -d  "${TEMP_DATA_DIR}/${cc_new_output_directory}" ]; then
             mkdir -p "${TEMP_DATA_DIR}/${cc_new_output_directory}" >/dev/null
           fi
 
-          if "${cc_compress_output_file}" && ${GZIP_TOOL_AVAILABLE}; then
-            # run command and append output to compressed file
-            eval "${cc_new_command} | gzip - | cat -" \
-              >>"${TEMP_DATA_DIR}/${cc_new_output_directory}/${cc_new_output_file}.gz" \
-              2>>"${TEMP_DATA_DIR}/${cc_new_output_directory}/${cc_new_output_file}.stderr"
-            # add output file to the list of files to be archived within the output file
-            echo "${cc_new_output_directory}/${cc_new_output_file}.gz" \
-              >>"${TEMP_DATA_DIR}/.output_file.tmp"
+          if echo "${cc_new_command}" | grep -q -E "%output_file%"; then
+            # replace %output_file% by ${cc_output_file} in command
+            cc_new_command=`echo "${cc_new_command}" \
+              | sed -e "s:%output_file%:${TEMP_DATA_DIR}/${cc_new_output_directory}/${cc_new_output_file}:g"`
+            # run command and append output to existing file
+            log_message COMMAND "${cc_new_command}"
+            eval "${cc_new_command}" \
+              >>"${TEMP_DATA_DIR}/${cc_new_output_directory}/${cc_new_stderr_output_file}" \
+              2>>"${TEMP_DATA_DIR}/${cc_new_output_directory}/${cc_new_stderr_output_file}"
+            # remove output file if it is empty
+            if [ ! -s "${TEMP_DATA_DIR}/${cc_new_output_directory}/${cc_new_output_file}" ]; then
+              rm -f "${TEMP_DATA_DIR}/${cc_new_output_directory}/${cc_new_output_file}" \
+                >/dev/null
+            fi
           else
-            if echo "${cc_command}" | grep -q -E "%output_file%"; then
-              # replace %output_file% by ${cc_new_output_file} in command
-              cc_new_command=`echo "${cc_new_command}" \
-                | sed -e "s:%output_file%:${TEMP_DATA_DIR}/${cc_new_output_directory}/${cc_new_output_file}:g"`
-              # run command and append output to existing file
-              log_message COMMAND "${cc_new_command}"
-              eval "${cc_new_command}" \
-                2>>"${TEMP_DATA_DIR}/${cc_new_output_directory}/${cc_new_output_file}.stderr"
+            if "${cc_compress_output_file}" && ${GZIP_TOOL_AVAILABLE}; then
+              # run command and append output to compressed file
+              log_message COMMAND "${cc_new_command} | gzip - | cat -"
+              eval "${cc_new_command} | gzip - | cat -" \
+                >>"${TEMP_DATA_DIR}/${cc_new_output_directory}/${cc_new_output_file}.gz" \
+                2>>"${TEMP_DATA_DIR}/${cc_new_output_directory}/${cc_new_stderr_output_file}"
             else
               # run command and append output to existing file
               log_message COMMAND "${cc_new_command}"
               eval "${cc_new_command}" \
                 >>"${TEMP_DATA_DIR}/${cc_new_output_directory}/${cc_new_output_file}" \
-                2>>"${TEMP_DATA_DIR}/${cc_new_output_directory}/${cc_new_output_file}.stderr"
-            fi
-
-            # add output file to the list of files to be archived within the 
-            # output file if it is not empty
-            if [ -s "${TEMP_DATA_DIR}/${cc_new_output_directory}/${cc_new_output_file}" ]; then
-              echo "${cc_new_output_directory}/${cc_new_output_file}" \
-                >>"${TEMP_DATA_DIR}/.output_file.tmp"
+                2>>"${TEMP_DATA_DIR}/${cc_new_output_directory}/${cc_new_stderr_output_file}"
+              # remove output file if it is empty
+              if [ ! -s "${TEMP_DATA_DIR}/${cc_new_output_directory}/${cc_new_output_file}" ]; then
+                rm -f "${TEMP_DATA_DIR}/${cc_new_output_directory}/${cc_new_output_file}" \
+                  >/dev/null
+              fi
             fi
           fi
 
-          # add stderr file to the list of files to be archived within the 
-          # output file if it is not empty
-          if [ -s "${TEMP_DATA_DIR}/${cc_new_output_directory}/${cc_new_output_file}.stderr" ]; then
-            echo "${cc_new_output_directory}/${cc_new_output_file}.stderr" \
-              >>"${TEMP_DATA_DIR}/.output_file.tmp"
+          # remove stderr output file if it is empty
+          if [ ! -s "${TEMP_DATA_DIR}/${cc_new_output_directory}/${cc_new_stderr_output_file}" ]; then
+            rm -f "${TEMP_DATA_DIR}/${cc_new_output_directory}/${cc_new_stderr_output_file}" \
+              >/dev/null
           fi
 
         done
 
-    # add loop_command.stderr file to the list of files to be archived
-    # within the output file if it is not empty
-    if [ -s "${TEMP_DATA_DIR}/${cc_output_directory}/loop_command.stderr" ]; then
-      echo "${cc_output_directory}/loop_command.stderr" \
-        >>"${TEMP_DATA_DIR}/.output_file.tmp"
+    # remove loop_command.stderr file if it is empty
+    if [ ! -s "${TEMP_DATA_DIR}/${cc_root_output_directory}/loop_command.stderr" ]; then
+      rm -f "${TEMP_DATA_DIR}/${cc_root_output_directory}/loop_command.stderr"  \
+        >/dev/null
     fi
  
   else
 
     # sanitize output file name
     cc_output_file=`sanitize_filename "${cc_output_file}"`
+    
+    if [ -n "${cc_stderr_output_file}" ]; then
+      # sanitize stderr output file name
+      cc_stderr_output_file=`sanitize_filename "${cc_stderr_output_file}"`
+    else
+      cc_stderr_output_file="${cc_output_file}.stderr"
+    fi
 
     # sanitize output directory
     cc_output_directory=`sanitize_path \
@@ -178,48 +180,45 @@ ${cc_loop_command}\n" >&2
       mkdir -p "${TEMP_DATA_DIR}/${cc_output_directory}" >/dev/null
     fi
 
-    if "${cc_compress_output_file}" && ${GZIP_TOOL_AVAILABLE}; then
-      # run command and append output to compressed file
-      log_message COMMAND "${cc_command} | gzip - | cat -"
-      eval "${cc_command} | gzip - | cat -" \
-        >>"${TEMP_DATA_DIR}/${cc_output_directory}/${cc_output_file}.gz" \
-        2>>"${TEMP_DATA_DIR}/${cc_output_directory}/${cc_output_file}.stderr"
-      # add output file to the list of files to be archived within the 
-      # output file if it is not empty
-      if [ -s "${TEMP_DATA_DIR}/${cc_output_directory}/${cc_output_file}.gz" ]; then
-        echo "${cc_output_directory}/${cc_output_file}.gz" \
-          >>"${TEMP_DATA_DIR}/.output_file.tmp"
+    if echo "${cc_command}" | grep -q -E "%output_file%"; then
+      # replace %output_file% by ${cc_output_file} in command
+      cc_command=`echo "${cc_command}" \
+        | sed -e "s:%output_file%:${TEMP_DATA_DIR}/${cc_output_directory}/${cc_output_file}:g"`
+      # run command and append output to existing file
+      log_message COMMAND "${cc_command}"
+      eval "${cc_command}" \
+        >>"${TEMP_DATA_DIR}/${cc_output_directory}/${cc_stderr_output_file}" \
+        2>>"${TEMP_DATA_DIR}/${cc_output_directory}/${cc_stderr_output_file}"
+      # remove output file if it is empty
+      if [ ! -s "${TEMP_DATA_DIR}/${cc_output_directory}/${cc_output_file}" ]; then
+        rm -f "${TEMP_DATA_DIR}/${cc_output_directory}/${cc_output_file}" \
+          >/dev/null
       fi
     else
-      if echo "${cc_command}" | grep -q -E "%output_file%"; then
-        # replace %output_file% by ${cc_output_file} in command
-        cc_command=`echo "${cc_command}" \
-          | sed -e "s:%output_file%:${TEMP_DATA_DIR}/${cc_output_directory}/${cc_output_file}:g"`
-        # run command and append output to existing file
-        log_message COMMAND "${cc_command}"
-        eval "${cc_command}" \
-          2>>"${TEMP_DATA_DIR}/${cc_output_directory}/${cc_output_file}.stderr"
+      if "${cc_compress_output_file}" && ${GZIP_TOOL_AVAILABLE}; then
+        # run command and append output to compressed file
+        log_message COMMAND "${cc_command} | gzip - | cat -"
+        eval "${cc_command} | gzip - | cat -" \
+          >>"${TEMP_DATA_DIR}/${cc_output_directory}/${cc_output_file}.gz" \
+          2>>"${TEMP_DATA_DIR}/${cc_output_directory}/${cc_stderr_output_file}"
       else
         # run command and append output to existing file
         log_message COMMAND "${cc_command}"
         eval "${cc_command}" \
           >>"${TEMP_DATA_DIR}/${cc_output_directory}/${cc_output_file}" \
-          2>>"${TEMP_DATA_DIR}/${cc_output_directory}/${cc_output_file}.stderr"
-      fi
-
-      # add output file to the list of files to be archived within the 
-      # output file if it is not empty
-      if [ -s "${TEMP_DATA_DIR}/${cc_output_directory}/${cc_output_file}" ]; then
-        echo "${cc_output_directory}/${cc_output_file}" \
-          >>"${TEMP_DATA_DIR}/.output_file.tmp"
+          2>>"${TEMP_DATA_DIR}/${cc_output_directory}/${cc_stderr_output_file}"
+        # remove output file if it is empty
+        if [ ! -s "${TEMP_DATA_DIR}/${cc_output_directory}/${cc_output_file}" ]; then
+          rm -f "${TEMP_DATA_DIR}/${cc_output_directory}/${cc_output_file}" \
+            >/dev/null
+        fi
       fi
     fi
 
-    # add stderr file to the list of files to be archived within the 
-    # output file if it is not empty
-    if [ -s "${TEMP_DATA_DIR}/${cc_output_directory}/${cc_output_file}.stderr" ]; then
-      echo "${cc_output_directory}/${cc_output_file}.stderr" \
-        >>"${TEMP_DATA_DIR}/.output_file.tmp"
+    # remove stderr output file if it is empty
+    if [ ! -s "${TEMP_DATA_DIR}/${cc_output_directory}/${cc_stderr_output_file}" ]; then
+      rm -f "${TEMP_DATA_DIR}/${cc_output_directory}/${cc_stderr_output_file}" \
+        >/dev/null
     fi
 
   fi

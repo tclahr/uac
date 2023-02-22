@@ -1,0 +1,11 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect information about macOS system usage and application execution history (CoreAnalytics).
+    supported_os: [macos]
+    collector: file
+    path: /Library/Logs/DiagnosticReports
+    name_pattern: ["*.core_analytics"]
+    ignore_date_range: true
+    exclude_nologin_users: true
+  

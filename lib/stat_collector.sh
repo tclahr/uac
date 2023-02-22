@@ -1,17 +1,5 @@
-# Copyright (C) 2020 IBM Corporation
-#
-# Licensed under the Apache License, Version 2.0 (the “License”);
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-# http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an “AS IS” BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
+#!/bin/sh
+# SPDX-License-Identifier: Apache-2.0
 # shellcheck disable=SC2006
 
 ###############################################################################
@@ -51,6 +39,7 @@
 #   $14: root output directory
 #   $15: output directory (optional)
 #   $16: output file
+#   $17: stderr output file (optional)
 # Exit Status:
 #   Exit with status 0 on success.
 #   Exit with status greater than 0 if errors occur.
@@ -91,6 +80,8 @@ stat_collector()
   sc_output_directory="${1:-}"
   shift
   sc_output_file="${1:-}"
+  shift
+  sc_stderr_output_file="${1:-}"
 
   # function that runs 'stat' tool
   _stat()
@@ -531,6 +522,13 @@ stat_collector()
   # sanitize output file name
   sc_output_file=`sanitize_filename "${sc_output_file}"`
 
+  if [ -n "${sc_stderr_output_file}" ]; then
+    # sanitize stderr output file name
+    sc_stderr_output_file=`sanitize_filename "${sc_stderr_output_file}"`
+  else
+    sc_stderr_output_file="${sc_output_file}.stderr"
+  fi
+
   # sanitize output directory
   sc_output_directory=`sanitize_path \
     "${sc_root_output_directory}/${sc_output_directory}"`
@@ -592,7 +590,7 @@ ${GLOBAL_EXCLUDE_NAME_PATTERN}"
       "${sc_date_range_end_days}" \
       "${sc_output_directory}" \
       "${sc_output_file}" \
-        2>>"${TEMP_DATA_DIR}/${sc_output_directory}/${sc_output_file}.stderr"
+        2>>"${TEMP_DATA_DIR}/${sc_output_directory}/${sc_stderr_output_file}"
   
   # run 'statx' if native 'stat' does not collect file's birth time
   elif ${STATX_TOOL_AVAILABLE}; then
@@ -612,7 +610,7 @@ ${GLOBAL_EXCLUDE_NAME_PATTERN}"
       "${sc_date_range_end_days}" \
       "${sc_output_directory}" \
       "${sc_output_file}" \
-        2>>"${TEMP_DATA_DIR}/${sc_output_directory}/${sc_output_file}.stderr"
+        2>>"${TEMP_DATA_DIR}/${sc_output_directory}/${sc_stderr_output_file}"
   
   # run native 'stat' if 'statx' is not available
   elif ${STAT_TOOL_AVAILABLE}; then
@@ -632,7 +630,7 @@ ${GLOBAL_EXCLUDE_NAME_PATTERN}"
       "${sc_date_range_end_days}" \
       "${sc_output_directory}" \
       "${sc_output_file}" \
-        2>>"${TEMP_DATA_DIR}/${sc_output_directory}/${sc_output_file}.stderr"
+        2>>"${TEMP_DATA_DIR}/${sc_output_directory}/${sc_stderr_output_file}"
 
   # run 'stat.pl' if neither 'stat' nor 'statx' is available
   elif ${PERL_TOOL_AVAILABLE}; then
@@ -652,7 +650,7 @@ ${GLOBAL_EXCLUDE_NAME_PATTERN}"
       "${sc_date_range_end_days}" \
       "${sc_output_directory}" \
       "${sc_output_file}" \
-        2>>"${TEMP_DATA_DIR}/${sc_output_directory}/${sc_output_file}.stderr"
+        2>>"${TEMP_DATA_DIR}/${sc_output_directory}/${sc_stderr_output_file}"
 
   else
     printf %b "stat_collector: target system has neither 'stat', 'statx' nor \
@@ -663,18 +661,16 @@ ${GLOBAL_EXCLUDE_NAME_PATTERN}"
   # sort and uniq output file
   sort_uniq_file "${TEMP_DATA_DIR}/${sc_output_directory}/${sc_output_file}"
 
-  # add output file to the list of files to be archived within the 
-  # output file if it is not empty
-  if [ -s "${TEMP_DATA_DIR}/${sc_output_directory}/${sc_output_file}" ]; then
-    echo "${sc_output_directory}/${sc_output_file}" \
-      >>"${TEMP_DATA_DIR}/.output_file.tmp"
+  # remove output file if it is empty
+  if [ ! -s "${TEMP_DATA_DIR}/${sc_output_directory}/${sc_output_file}" ]; then
+    rm -f "${TEMP_DATA_DIR}/${sc_output_directory}/${sc_output_file}" \
+      >/dev/null
   fi
 
-  # add stderr file to the list of files to be archived within the 
-  # output file if it is not empty
-  if [ -s "${TEMP_DATA_DIR}/${sc_output_directory}/${sc_output_file}.stderr" ]; then
-    echo "${sc_output_directory}/${sc_output_file}.stderr" \
-      >>"${TEMP_DATA_DIR}/.output_file.tmp"
+  # remove stderr output file if it is empty
+  if [ ! -s "${TEMP_DATA_DIR}/${sc_output_directory}/${sc_stderr_output_file}" ]; then
+    rm -f "${TEMP_DATA_DIR}/${sc_output_directory}/${sc_stderr_output_file}" \
+      >/dev/null
   fi
 
 }

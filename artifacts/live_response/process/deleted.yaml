@@ -1,4 +1,4 @@
-version: 1.0
+version: 2.0
 artifacts: 
   -
     description: Collect the binary of (malicious) processes if they are shown up as being (deleted).
@@ -10,6 +10,14 @@ artifacts:
     command: dd if=/proc/%line%/exe of=%output_file% conv=swab bs=1024 count=50000
     output_directory: proc/%line%
     output_file: recovered_exe.dd.swab
+  -
+    description: Collect the memory sections and strings from (deleted) processes.
+    supported_os: [linux]
+    collector: command
+    loop_command: ls -l /proc/[0-9]*/exe | grep -E "\(deleted\)" | grep -v -E "> /proc/" | awk -F"/proc/|/exe" '{print $2}'
+    command: linux_procmemdump.sh -p %line% -u -b -d %output_file%
+    output_file: proc
+    stderr_output_file: linux_procmemdump.txt.stderr
   -
     description: Collect the list of deleted files of (malicious) processes if they are shown up as being (deleted).
     supported_os: [linux]
@@ -35,11 +43,19 @@ artifacts:
     output_directory: proc/%line%
     output_file: recovered_file.dd
   -
-    description: Collect the list of open files of (malicious) processes.
+    description: List of open files of (malicious) processes.
     supported_os: [linux]
     collector: command
     loop_command: ls -l /proc/[0-9]*/exe | grep -E "\(deleted\)" | awk -F"/proc/|/exe" '{print $2}'
     command: ls -l /proc/%line%/fd/[0-9]* | grep -v -E "\(deleted\)" | awk -F'-> ' '{print $2}' | sed -e "s:^'::" -e "s:'$::" -e ':^"::' -e ':"$::'
+    output_file: .list_open_file_descriptors.txt
+  -
+    description: Find open files of (malicious) processes.
+    supported_os: [linux]
+    collector: find
+    path: .list_open_file_descriptors.txt
+    is_file_list: true
+    file_type: f
     output_file: .open_file_descriptors.txt
   -
     description: Collect open files of (malicious) processes.
@@ -47,7 +63,6 @@ artifacts:
     collector: file
     path: .open_file_descriptors.txt
     is_file_list: true
-    file_type: f
   -
     description: Collect the binary of (malicious) processes if they are shown up as being (deleted).
     # the collection will be limited to the first 50M of data only.
@@ -58,4 +73,3 @@ artifacts:
     command: dd if=/proc/%line%/object/a.out of=%output_file% conv=swab bs=1024 count=50000
     output_directory: proc/%line%
     output_file: recovered_a.out.dd.swab
-

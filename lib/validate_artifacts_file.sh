@@ -1,17 +1,5 @@
-# Copyright (C) 2020 IBM Corporation
-#
-# Licensed under the Apache License, Version 2.0 (the “License”);
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-# http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an “AS IS” BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
+#!/bin/sh
+# SPDX-License-Identifier: Apache-2.0
 # shellcheck disable=SC2006
 
 ###############################################################################
@@ -319,6 +307,14 @@ be empty.\n" >&2
             va_output_file=`lrstrip "${va_value}"`
             if [ -z "${va_output_file}" ]; then
               printf %b "uac: artifacts file: 'output_file' must not be \
+empty.\n" >&2
+              return 152
+            fi
+            ;;
+          "stderr_output_file")
+            va_stderr_output_file=`lrstrip "${va_value}"`
+            if [ -z "${va_stderr_output_file}" ]; then
+              printf %b "uac: artifacts file: 'stderr_output_file' must not be \
 empty.\n" >&2
               return 152
             fi

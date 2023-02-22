@@ -1,20 +1,6 @@
 #!/bin/sh
-
-# Copyright (C) 2020 IBM Corporation
-#
-# Licensed under the Apache License, Version 2.0 (the “License”);
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-# http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an “AS IS” BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-# shellcheck disable=SC1091,SC2006,SC2181
+# SPDX-License-Identifier: Apache-2.0
+# shellcheck disable=SC2006,SC2181
 
 # remove all existing aliases
 unalias -a
@@ -47,55 +33,11 @@ PATH="${PATH}:/opt/sbin:/opt/local/bin:/netscaler"
 export PATH
 
 # load lib files
-. "${UAC_DIR}/lib/archive_compress_data.sh"
-. "${UAC_DIR}/lib/archive_data.sh"
-. "${UAC_DIR}/lib/array_to_list.sh"
-. "${UAC_DIR}/lib/azure_storage_sas_url_transfer_test.sh"
-. "${UAC_DIR}/lib/azure_storage_sas_url_transfer.sh"
-. "${UAC_DIR}/lib/check_available_system_tools.sh"
-. "${UAC_DIR}/lib/command_collector.sh"
-. "${UAC_DIR}/lib/copy_data.sh"
-. "${UAC_DIR}/lib/create_acquisition_log.sh"
-. "${UAC_DIR}/lib/file_collector.sh"
-. "${UAC_DIR}/lib/find_collector.sh"
-. "${UAC_DIR}/lib/find_wrapper.sh"
-. "${UAC_DIR}/lib/get_current_user.sh"
-. "${UAC_DIR}/lib/get_days_since_date_until_now.sh"
-. "${UAC_DIR}/lib/get_epoch_date.sh"
-. "${UAC_DIR}/lib/get_hostname.sh"
-. "${UAC_DIR}/lib/get_mount_point_by_file_system.sh"
-. "${UAC_DIR}/lib/get_operating_system.sh"
-. "${UAC_DIR}/lib/get_system_arch.sh"
-. "${UAC_DIR}/lib/get_user_home_list.sh"
-. "${UAC_DIR}/lib/hash_collector.sh"
-. "${UAC_DIR}/lib/ibm_cos_transfer_test.sh"
-. "${UAC_DIR}/lib/ibm_cos_transfer.sh"
-. "${UAC_DIR}/lib/is_element_in_list.sh"
-. "${UAC_DIR}/lib/is_integer.sh"
-. "${UAC_DIR}/lib/is_running_with_root_privileges.sh"
-. "${UAC_DIR}/lib/list_artifacts.sh"
-. "${UAC_DIR}/lib/list_profiles.sh"
-. "${UAC_DIR}/lib/load_config_file.sh"
-. "${UAC_DIR}/lib/log_message.sh"
-. "${UAC_DIR}/lib/lrstrip.sh"
-. "${UAC_DIR}/lib/parse_artifact_list.sh"
-. "${UAC_DIR}/lib/parse_artifacts_file.sh"
-. "${UAC_DIR}/lib/profile_file_to_artifact_list.sh"
-. "${UAC_DIR}/lib/s3_presigned_url_transfer_test.sh"
-. "${UAC_DIR}/lib/s3_presigned_url_transfer.sh"
-. "${UAC_DIR}/lib/sanitize_filename.sh"
-. "${UAC_DIR}/lib/sanitize_path.sh"
-. "${UAC_DIR}/lib/sftp_transfer_test.sh"
-. "${UAC_DIR}/lib/sftp_transfer.sh"
-. "${UAC_DIR}/lib/sort_uniq_file.sh"
-. "${UAC_DIR}/lib/stat_collector.sh"
-. "${UAC_DIR}/lib/terminate.sh"
-. "${UAC_DIR}/lib/usage.sh"
-. "${UAC_DIR}/lib/validate_artifacts_file.sh"
-. "${UAC_DIR}/lib/validate_profile_file.sh"
+# shellcheck disable=SC1091
+. "${UAC_DIR}/lib/load_lib_files.sh"
 
 # global vars
-UAC_VERSION="2.4.0"
+UAC_VERSION="2.5.0-rc2"
 MOUNT_POINT="/"
 OPERATING_SYSTEM=""
 SYSTEM_ARCH=""
@@ -115,7 +57,6 @@ HOSTNAME="${HOSTNAME}"
 
 # local vars
 ua_artifacts=""
-ua_profile=""
 ua_destination_dir=""
 ua_run_as_non_root=false
 ua_temp_dir=""
@@ -169,20 +110,14 @@ while [ "${1:-}" != "" ]; do
           list_profiles
           exit 1
         fi
-        ua_profile="${2}"
-        # get proper profile file based on the profile name
-        ua_profile_file=""
-        for ua_file in "${UAC_DIR}"/profiles/*.yaml; do
-          if grep -q -E "name: +${ua_profile} *$" <"${ua_file}" 2>/dev/null; then
-            ua_profile_file="${ua_file}"
-            break
-          fi
-        done
+        # get profile file based on the profile name
+        ua_profile_file=`get_profile_file "${2}"`
         # exit if profile not found
         if [ -z "${ua_profile_file}" ]; then
-          printf %b "uac: profile not found '${ua_profile}'\n"
+          printf %b "uac: profile not found '${2}'\n"
           exit 1
         fi
+        ua_profile_file="${UAC_DIR}/profiles/${ua_profile_file}"
         # check if profile file is valid
         validate_profile_file "${ua_profile_file}" || exit 1
 
@@ -474,32 +409,18 @@ if [ -z "${ua_artifacts}" ] || [ -z "${ua_destination_dir}" ] ; then
   exit 1
 fi
 
-# replace ,.. by , 
-# replace /.. by /
-# replace consecutive commas by one comma
-# remove leading and trailing comma
-ua_artifacts=`echo "${ua_artifacts}" \
-  | sed -e 's:^,\.\.:,:g' \
-        -e 's:/\.\.:/:g' \
-        -e 's:,,*:,:g' \
-        -e 's:^,::' \
-        -e 's:,$::'`
+# sanitize artifact list
+ua_artifacts=`sanitize_artifact_list "${ua_artifacts}"`
+
 OIFS="${IFS}"
 IFS=","
 # check if artifacts exist
 for ua_artifact_file in ${ua_artifacts}; do
-  ua_artifact_file=`echo "${ua_artifact_file}" | sed -e 's:^!::g'`
-  if [ -n "${ua_artifact_file}" ]; then
-    # shellcheck disable=SC2086
-    find "${UAC_DIR}"/artifacts/${ua_artifact_file} -name "*.yaml" \
-      -print >/dev/null 2>/dev/null
-    if [ "$?" -gt 0 ]; then
-      printf %b "uac: artifact file not found \
-'${UAC_DIR}/artifacts/${ua_artifact_file}'\n" >&2
-      exit 1
-    fi
+  ua_artifact_file=`echo "${ua_artifact_file}" | sed -e 's:^!::'`
+  if artifact_file_exist "${ua_artifact_file}"; then
+    true
   else
-    printf %b "uac: artifact not found '${ua_artifact_file}'\n" >&2
+    printf %b "uac: artifact file not found '${UAC_DIR}/artifacts/${ua_artifact_file}'\n" >&2
     exit 1
   fi
 done
@@ -518,24 +439,16 @@ if [ -n "${ua_temp_dir}" ] && [ ! -d "${ua_temp_dir}" ]; then
 fi
 
 # get absolute destination directory path
-cd "${ua_destination_dir}" && ua_destination_dir=`pwd` && cd "${UAC_DIR}" \
-  || exit 1
+ua_destination_dir=`get_absolute_directory_path "${ua_destination_dir}" 2>/dev/null`
 
 # get operating system if not set by --operating_system
 if [ -z "${OPERATING_SYSTEM}" ]; then
   OPERATING_SYSTEM=`get_operating_system`
 fi
 # check if operating system is supported
-if [ "${OPERATING_SYSTEM}" != "android" ] \
-  && [ "${OPERATING_SYSTEM}" != "aix" ] \
-  && [ "${OPERATING_SYSTEM}" != "esxi" ] \
-  && [ "${OPERATING_SYSTEM}" != "freebsd" ] \
-  && [ "${OPERATING_SYSTEM}" != "linux" ] \
-  && [ "${OPERATING_SYSTEM}" != "macos" ] \
-  && [ "${OPERATING_SYSTEM}" != "netbsd" ] \
-  && [ "${OPERATING_SYSTEM}" != "netscaler" ] \
-  && [ "${OPERATING_SYSTEM}" != "openbsd" ] \
-  && [ "${OPERATING_SYSTEM}" != "solaris" ]; then
+if is_valid_operating_system "${OPERATING_SYSTEM}"; then
+  true
+else
   printf %b "uac: invalid operating system '${OPERATING_SYSTEM}'. \
 Use '-s' option to set one.\n\
 Try 'uac --help' for more information.\n" >&2
@@ -584,17 +497,12 @@ fi
 
 # check if destination directory's file system supports symlink creation
 if [ -n "${ua_temp_dir}" ]; then
-  rm "${ua_temp_dir}/.uac-symlink.tmp" 2>/dev/null
-  if ln -s "${UAC_DIR}" "${ua_temp_dir}/.uac-symlink.tmp" 2>/dev/null; then
-    rm "${ua_temp_dir}/.uac-symlink.tmp" 2>/dev/null
-    ua_temp_data_dir_symlink_support=true
-  fi
+  file_system_symlink_support "${ua_temp_dir}" >/dev/null 2>/dev/null \
+    && ua_temp_data_dir_symlink_support=true
   TEMP_DATA_DIR="${ua_temp_dir}/uac-data.tmp"
 else
-  if ln -s "${UAC_DIR}" "${ua_destination_dir}/.uac-symlink.tmp" 2>/dev/null; then
-    rm "${ua_destination_dir}/.uac-symlink.tmp" 2>/dev/null
-    ua_temp_data_dir_symlink_support=true
-  fi
+  file_system_symlink_support "${ua_destination_dir}" >/dev/null 2>/dev/null \
+    && ua_temp_data_dir_symlink_support=true
   TEMP_DATA_DIR="${ua_destination_dir}/uac-data.tmp"
 fi
 
@@ -694,6 +602,8 @@ SYSTEM_ARCH=`get_system_arch 2>>"${UAC_STDERR_LOG_FILE}"`
 PATH="${UAC_DIR}/bin/${OPERATING_SYSTEM}/${SYSTEM_ARCH}:${PATH}"
 # add 'avml' tool directory to path
 PATH="${UAC_DIR}/tools/avml/bin/${OPERATING_SYSTEM}/${SYSTEM_ARCH}:${PATH}"
+# add 'linux_procmemdump.sh' tool directory to path
+PATH="${UAC_DIR}/tools/linux_procmemdump.sh:${PATH}"
 export PATH
 
 printf %b "--------------------------------------------------------------------------------\n"
@@ -794,8 +704,8 @@ ua_acq_start_date_epoch=`get_epoch_date 2>>"${UAC_STDERR_LOG_FILE}"`
 log_message INFO "Artifacts collection started"
 printf %b "Artifacts collection started...\n"
 
-# parse artifact list
-parse_artifact_list "${ua_artifacts}" \
+# create artifact list
+create_artifact_list "${ua_artifacts}" \
   >"${TEMP_DATA_DIR}/.artifacts.tmp" \
   2>>"${UAC_STDERR_LOG_FILE}"
 
@@ -808,13 +718,15 @@ ${ua_debug_mode} && set -x
 # shellcheck disable=SC2162
 while read ua_artifact_file || [ -n "${ua_artifact_file}" ]; do
   log_message INFO "Parsing artifacts file '${ua_artifact_file}'"
-  # shellcheck disable=SC2003
+  # shellcheck disable=SC2003,SC2086
   ua_progress_current=`expr ${ua_progress_current} + 1`
-  printf "[%03d/%03d] %b\n" "${ua_progress_current}" \
-    "${ua_progress_total}" "${ua_artifact_file}"
+  ua_progress_timestamp=`date "+%Y-%m-%d %H:%M:%S %z"`
+  printf "[%03d/%03d] %b %b\n" "${ua_progress_current}" \
+    "${ua_progress_total}" "${ua_progress_timestamp}" "${ua_artifact_file}"
   ua_artifacts_root_output_directory=`dirname "${ua_artifact_file}"`
   parse_artifacts_file "${UAC_DIR}/artifacts/${ua_artifact_file}" \
     "${ua_artifacts_root_output_directory}"
+  echo "${ua_artifacts_root_output_directory}" >>"${TEMP_DATA_DIR}/.output_file.tmp"
 done <"${TEMP_DATA_DIR}/.artifacts.tmp" 2>>"${UAC_STDERR_LOG_FILE}"
 
 # disable debug mode
@@ -847,6 +759,13 @@ ua_acquisition_log="${ua_output_base_name}.log"
 # output file hash
 ua_output_file_hash="-"
 
+# sort and uniq
+sort_uniq_file "${TEMP_DATA_DIR}/.output_file.tmp" 2>>"${UAC_STDERR_LOG_FILE}"
+# add uac.log to the list of files to be archived/copied within the output file
+echo "uac.log" >>"${TEMP_DATA_DIR}/.output_file.tmp"
+# add uac.log.stderr to the list of files to be archived/copied within the output file
+echo "uac.log.stderr" >>"${TEMP_DATA_DIR}/.output_file.tmp"
+
 if ${TAR_TOOL_AVAILABLE}; then
 
   if [ -f "${TEMP_DATA_DIR}/.files.tmp" ]; then
@@ -866,11 +785,6 @@ if ${TAR_TOOL_AVAILABLE}; then
     sed -e 's:^/:\[root\]/:' "${TEMP_DATA_DIR}/.files.tmp" \
       >>"${TEMP_DATA_DIR}/.output_file.tmp"
   fi
-
-  # add uac.log to the list of files to be archived within the output file
-  echo "uac.log" >>"${TEMP_DATA_DIR}/.output_file.tmp"
-  # add uac.log.stderr to the list of files to be archived within the output file
-  echo "uac.log.stderr" >>"${TEMP_DATA_DIR}/.output_file.tmp"
 
   # archive (and compress) collected artifacts to output file
   printf %b "Creating output file. Please wait...\n"
@@ -915,11 +829,6 @@ else
     copy_data "${TEMP_DATA_DIR}/.files.tmp" "${ua_destination_dir}/${ua_output_name}/[root]" \
       2>>"${UAC_STDERR_LOG_FILE}"
   fi
-
-  # add uac.log to the list of files to be archived within the output file
-  echo "uac.log" >>"${TEMP_DATA_DIR}/.output_file.tmp"
-  # add uac.log.stderr to the list of files to be archived within the output file
-  echo "uac.log.stderr" >>"${TEMP_DATA_DIR}/.output_file.tmp"
 
   cd "${TEMP_DATA_DIR}" || exit 1
   copy_data "${TEMP_DATA_DIR}/.output_file.tmp" "${ua_destination_dir}/${ua_output_name}" \

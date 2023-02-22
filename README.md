@@ -31,11 +31,11 @@ Project documentation page: [https://tclahr.github.io/uac-docs](https://tclahr.g
 - Customizable and extensible collections and artifacts.
 - Respects the order of volatility during artifacts collection.
 - Collects information from processes running without a binary on disk.
-- Extracts information from files and directories to create a bodyfile (including enhanced file attributes for ext4).
 - Hashes running processes and executable files.
+- Extracts information from files and directories to create a bodyfile (including enhanced file attributes for ext4).
 - Collects user and system configuration files and logs.
 - Collects artifacts from applications.
-- Acquires volatile memory from Linux systems using Microsoft's [avml](https://github.com/microsoft/avml) tool.
+- Acquires volatile memory from Linux systems using different methods and tools.
 
 ***
 
@@ -89,13 +89,13 @@ Common usage scenarios may include the following:
 **Collect the memory dump, then all artifacts based on the ```full``` profile.**
 
 ```shell
-./uac -a memory_dump/avml.yaml -p full /tmp
+./uac -a artifacts/memory_dump/avml.yaml -p full /tmp
 ```
 
 **Collect the memory dump, then all artifacts based on the ```ir_triage``` profile excluding the ```bodyfile/bodyfile.yaml``` artifact.**
 
 ```shell
-./uac -a memory_dump/avml.yaml -p ir_triage -a \!bodyfile/bodyfile.yaml /tmp
+./uac -a ./artifacts/memory_dump/avml.yaml -p ir_triage -a \!artifacts/bodyfile/bodyfile.yaml /tmp
 ```
 
 **Collect all artifacts based on the ```full``` profile, but limit the data collection based on the date range provided.**
@@ -116,7 +116,7 @@ Please check the [project documentation page](https://tclahr.github.io/uac-docs)
 
 ## 💙 Contributing
 
-Have you created your own artifact files? Please share them with us!
+Have you created any artifact files? Please share them with us!
 
 You can contribute with new artifacts, profiles, bug fixes or even propose new features. Please read our [Contributing Guide](CONTRIBUTING.md) before submitting a Pull Request to the project.
 

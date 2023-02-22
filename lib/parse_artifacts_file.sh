@@ -1,17 +1,5 @@
-# Copyright (C) 2020 IBM Corporation
-#
-# Licensed under the Apache License, Version 2.0 (the “License”);
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-# http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an “AS IS” BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
+#!/bin/sh
+# SPDX-License-Identifier: Apache-2.0
 # shellcheck disable=SC2001,SC2006
 
 ###############################################################################
@@ -68,6 +56,7 @@ parse_artifacts_file()
     pa_ignore_date_range=false
     pa_output_file=""
     pa_output_directory=""
+    pa_stderr_output_file=""
     pa_is_file_list=false
     pa_compress_output_file=false
     pa_exclude_nologin_users=false
@@ -187,6 +176,9 @@ sequence of mappings\n" >&2
           "output_file")
             pa_output_file="${pa_value}"
             ;;
+          "stderr_output_file")
+            pa_stderr_output_file="${pa_value}"
+            ;;
           "is_file_list")
             pa_is_file_list="${pa_value}"
             ;;
@@ -271,6 +263,11 @@ sequence of mappings\n" >&2
                       | sed -e "s:%user%:${pa_user}:g" \
                       | sed -e "s:%user_home%:${pa_home}:g"`
 
+                    # replace %user% and %user_home% in stderr_output_file
+                    pa_new_stderr_output_file=`echo "${pa_stderr_output_file}" \
+                      | sed -e "s:%user%:${pa_user}:g" \
+                      | sed -e "s:%user_home%:${pa_home}:g"`
+
                     if [ "${pa_collector}" = "command" ]; then
                       command_collector \
                         "${pa_new_loop_command}" \
@@ -278,6 +275,7 @@ sequence of mappings\n" >&2
                         "${pa_root_output_directory}" \
                         "${pa_new_output_directory}" \
                         "${pa_new_output_file}" \
+                        "${pa_new_stderr_output_file}" \
                         "${pa_compress_output_file}"
                     elif [ "${pa_collector}" = "file" ]; then
                       file_collector \
@@ -312,7 +310,8 @@ sequence of mappings\n" >&2
                         "${pa_ignore_date_range}" \
                         "${pa_root_output_directory}" \
                         "${pa_new_output_directory}" \
-                        "${pa_new_output_file}"
+                        "${pa_new_output_file}" \
+                        "${pa_new_stderr_output_file}"
                     elif [ "${pa_collector}" = "hash" ]; then
                       hash_collector \
                         "${pa_new_path}" \
@@ -330,7 +329,8 @@ sequence of mappings\n" >&2
                         "${pa_ignore_date_range}" \
                         "${pa_root_output_directory}" \
                         "${pa_new_output_directory}" \
-                        "${pa_new_output_file}"
+                        "${pa_new_output_file}" \
+                        "${pa_new_stderr_output_file}"
                     elif [ "${pa_collector}" = "stat" ]; then
                       stat_collector \
                         "${pa_new_path}" \
@@ -348,7 +348,8 @@ sequence of mappings\n" >&2
                         "${pa_ignore_date_range}" \
                         "${pa_root_output_directory}" \
                         "${pa_new_output_directory}" \
-                        "${pa_new_output_file}"
+                        "${pa_new_output_file}" \
+                        "${pa_new_stderr_output_file}"
                     fi
                   done
 
@@ -361,6 +362,7 @@ sequence of mappings\n" >&2
                   "${pa_root_output_directory}" \
                   "${pa_output_directory}" \
                   "${pa_output_file}" \
+                  "${pa_stderr_output_file}" \
                   "${pa_compress_output_file}"
               elif [ "${pa_collector}" = "file" ]; then
                 file_collector \
@@ -395,7 +397,8 @@ sequence of mappings\n" >&2
                   "${pa_ignore_date_range}" \
                   "${pa_root_output_directory}" \
                   "${pa_output_directory}" \
-                  "${pa_output_file}"
+                  "${pa_output_file}" \
+                  "${pa_stderr_output_file}"
               elif [ "${pa_collector}" = "hash" ]; then
                 hash_collector \
                   "${pa_path}" \
@@ -413,7 +416,8 @@ sequence of mappings\n" >&2
                   "${pa_ignore_date_range}" \
                   "${pa_root_output_directory}" \
                   "${pa_output_directory}" \
-                  "${pa_output_file}"
+                  "${pa_output_file}" \
+                  "${pa_stderr_output_file}"
               elif [ "${pa_collector}" = "stat" ]; then
                 stat_collector \
                   "${pa_path}" \
@@ -431,7 +435,8 @@ sequence of mappings\n" >&2
                   "${pa_ignore_date_range}" \
                   "${pa_root_output_directory}" \
                   "${pa_output_directory}" \
-                  "${pa_output_file}"
+                  "${pa_output_file}" \
+                  "${pa_stderr_output_file}"
               fi
 
             fi

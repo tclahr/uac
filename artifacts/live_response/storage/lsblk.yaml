@@ -1,4 +1,4 @@
-version: 1.0
+version: 2.0
 artifacts:
   -
     description: List block devices.
@@ -12,4 +12,10 @@ artifacts:
     collector: command
     command: lsblk -l
     output_file: lsblk_-l.txt
+  -
+    description: List block devices including information about filesystems.
+    supported_os: [linux]
+    collector: command
+    command: lsblk -f
+    output_file: lsblk_-f.txt
     
