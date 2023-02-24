@@ -1,5 +1,5 @@
 CFLAGS=-static -O2
-BIN_DIR=../bin
+BIN_DIR=../bin/linux
 
 all: arm arm64 i686 x86_64 mips mips64 ppc ppc64 ppc64le s390 sparc
 
