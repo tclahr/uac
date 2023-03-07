@@ -1,0 +1,80 @@
+version: 1.0
+artifacts:
+  -
+    description: List all containers and virtual machines.
+    supported_os: [linux]
+    collector: command
+    command: lxc list --all-projects --format compact
+    output_file: lxc_list.txt
+  -
+    description: List all images.
+    supported_os: [linux]
+    collector: command
+    command: lxc image list --format compact
+    output_file: lxc_image_list.txt
+  -
+    description: Display system-wide information.
+    supported_os: [linux]
+    collector: command
+    command: lxc info
+    output_file: lxc_info.txt
+  -
+    description: List profiles.
+    supported_os: [linux]
+    collector: command
+    command: lxc profile list --format compact
+    output_file: lxc_profile_list.txt
+  -
+    description: List available storage pools.
+    supported_os: [linux]
+    collector: command
+    command: lxc storage list --format compact
+    output_file: lxc_storage_list.txt
+  -
+    description: List warnings.
+    supported_os: [linux]
+    collector: command
+    command: lxc warning list --format compact
+    output_file: lxc_warning_list.txt
+  -
+    description: Show the version information.
+    supported_os: [linux]
+    collector: command
+    command: lxc version
+    output_file: lxc_version.txt
+  -
+    description: Show detailed information about all containers and virtual machines including the instance's last 100 log lines.
+    supported_os: [linux]
+    collector: command
+    loop_command: lxc list --format compact | sed 1d | awk '{print $1}'
+    command: lxc info %line% --show-log
+    output_file: lxc_info_%line%_--show-log.txt
+  -
+    description: Show detailed configuration about all containers and virtual machines.
+    supported_os: [linux]
+    collector: command
+    loop_command: lxc list --format compact | sed 1d | awk '{print $1}'
+    command: lxc config show %line%
+    output_file: lxc_config_show_%line%.txt
+  -
+    description: Show detailed information on one or more networks.
+    supported_os: [linux]
+    collector: command
+    loop_command: lxc list --format compact | sed 1d | awk '{print $1}'
+    command: lxc network info %line%
+    output_file: lxc_network_info_%line%.txt
+  -
+    description: Show detailed information about all profiles.
+    supported_os: [linux]
+    collector: command
+    loop_command: lxc profile list --format compact | sed 1d | awk '{print $1}'
+    command: lxc profile show %line%
+    output_file: lxc_profile_show_%line%.txt
+  -
+    description: Show detailed information about all storage pools.
+    supported_os: [linux]
+    collector: command
+    loop_command: lxc storage list --format compact | sed 1d | awk '{print $1}'
+    command: lxc storage show %line%
+    output_file: lxc_storage_show_%line%.txt
+  

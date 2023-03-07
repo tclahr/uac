@@ -1,0 +1,29 @@
+version: 1.0
+artifacts:
+  -
+    description: List all Proxmox VE active and inactive LXC containers.
+    supported_os: [linux]
+    collector: command
+    command: pct list
+    output_file: pct_list.txt
+  -
+    description: Get the current configuration of LXC containers.
+    supported_os: [linux]
+    collector: command
+    loop_command: pct list | sed -e '1d' | awk '{print $1}'
+    command: pct config %line% --current
+    output_file: pct_config_%line%_--current.txt
+  -
+    description: List all snapshots.
+    supported_os: [linux]
+    collector: command
+    loop_command: pct list | sed -e '1d' | awk '{print $1}'
+    command: pct listsnapshot %line%
+    output_file: pct_listsnapshot_%line%.txt
+  -
+    description: Print the list of assigned CPU sets.
+    supported_os: [linux]
+    collector: command
+    command: pct cpusets
+    output_file: pct_cpusets.txt
+ 

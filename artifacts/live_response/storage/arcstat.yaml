@@ -1,0 +1,9 @@
+version: 1.0
+artifacts:
+  -
+    description: Report ZFS ARC and L2ARC statistics.
+    supported_os: [freebsd, linux, netbsd, openbsd, solaris]
+    collector: command
+    command: arcstat
+    output_file: arcstat.txt
+    

@@ -25,7 +25,7 @@ artifacts:
     command: docker version
     output_file: docker_version.txt
   -
-    description: Display a live stream of one or more container’s resource usage statistics
+    description: Display a live stream of one or more container's resource usage statistics.
     supported_os: [linux]
     collector: command
     command: docker stats --all --no-stream --no-trunc
