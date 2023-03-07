@@ -1,9 +1,16 @@
 version: 1.0
 artifacts:
+  # iscsiadm is an open-iscsi administration utility.
   -
-    description: 
+    description: List iSCSI devices.
     supported_os: [linux]
     collector: command
     command: iscsiadm -m node
     output_file: iscsiadm_-m_node.txt
+  -
+    description: Display session statistics.
+    supported_os: [linux]
+    collector: command
+    command: iscsiadm -s
+    output_file: iscsiadm_-s.txt
     

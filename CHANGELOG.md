@@ -10,6 +10,7 @@
 - live_response/containers/pct.yaml: Added the collection of the list of assigned CPU sets for each Linux container (LXC) running on Proxmox VE [linux].
 - live_response/storage/arcstat.yaml: Added the collection of ZFS ARC and L2ARC statistics [freebsd, linux, netbsd, openbsd, solaris].
 - live_response/storage/findmnt.yaml: Added the collection of all mounted filesystems in the tree-like format [linux].
+- live_response/storage/iscsiadm.yaml: Added the collection of information about iSCSI connected devices [linux].
 - live_response/storage/ls_dev_disk.yaml: Added the collection of the mapping of logical volumes with physical disks [linux].
 - live_response/storage/pvesm.yaml: Added the collection of status for all Proxmox VE datastores [linux].
 - live_response/system/ha-manager.yaml: Added the collection of information about Proxmox VE HA manager status [linux].
