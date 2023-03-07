@@ -1,0 +1,15 @@
+version: 1.0
+artifacts:
+  -
+    description: Display Proxmox VE user list.
+    supported_os: [linux]
+    collector: command
+    command: pveum user list
+    output_file: pveum_user_list.txt
+  -
+    description: Display Proxmox VE group list.
+    supported_os: [linux]
+    collector: command
+    command: pveum group list
+    output_file: pveum_group_list.txt
+  

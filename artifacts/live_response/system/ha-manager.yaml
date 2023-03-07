@@ -1,0 +1,9 @@
+version: 1.0
+artifacts:
+  -
+    description: Display Proxmox VE HA manager status.
+    supported_os: [linux]
+    collector: command
+    command: ha-manager status
+    output_file: ha-manager_status.txt
+  

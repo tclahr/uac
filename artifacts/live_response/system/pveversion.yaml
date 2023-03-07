@@ -1,0 +1,9 @@
+version: 1.0
+artifacts:
+  -
+    description: Display version information for Proxmox VE packages.
+    supported_os: [linux]
+    collector: command
+    command: pveversion -v
+    output_file: pveversion_-v.txt
+  

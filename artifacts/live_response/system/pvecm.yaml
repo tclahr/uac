@@ -1,0 +1,15 @@
+version: 1.0
+artifacts:
+  -
+    description: Display Proxmox VE local view of the cluster nodes.
+    supported_os: [linux]
+    collector: command
+    command: pvecm nodes
+    output_file: pvecm_nodes.txt
+  -
+    description: Display Proxmox VE local view of the cluster status.
+    supported_os: [linux]
+    collector: command
+    command: pvecm status
+    output_file: pvecm_status.txt
+  
