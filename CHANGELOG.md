@@ -2,6 +2,10 @@
 
 ## DEVELOPMENT VERSION
 
+### Features
+
+- GNU 'strings' tool is now available via tools directory for macOS systems (Intel and Apple Silicon) as it is only available on systems that have the command line developer tools installed. This will also make the dialog box that says "The 'strings' command requires the command line developer tools." not show up during the collection of strings from running processes.
+
 ### Artifacts
 
 - live_response/containers/lxc.yaml: Added the collection of information about all active and inactive Linux containers and virtual machines (LXD), including their configuration, network, and storage information [linux].
