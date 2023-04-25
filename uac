@@ -5,6 +5,9 @@
 # remove all existing aliases
 unalias -a
 
+# use a safe umask for created files
+umask 027
+
 # set locale
 LANG=C
 export LANG
