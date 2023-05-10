@@ -607,8 +607,6 @@ PATH="${UAC_DIR}/bin/${OPERATING_SYSTEM}/${SYSTEM_ARCH}:${PATH}"
 PATH="${UAC_DIR}/tools/avml/bin/${OPERATING_SYSTEM}/${SYSTEM_ARCH}:${PATH}"
 # add 'linux_procmemdump.sh' tool directory to path
 PATH="${UAC_DIR}/tools/linux_procmemdump.sh:${PATH}"
-# add 'strings' tool directory to path
-PATH="${UAC_DIR}/tools/strings/bin/${OPERATING_SYSTEM}/${SYSTEM_ARCH}:${PATH}"
 export PATH
 
 printf %b "--------------------------------------------------------------------------------\n"
