@@ -16,6 +16,8 @@
 - live_response/storage/ls_dev_disk.yaml: Added the collection of the mapping of logical volumes with physical disks [linux].
 - live_response/storage/pvesm.yaml: Added the collection of status for all Proxmox VE datastores [linux].
 - live_response/system/ha-manager.yaml: Added the collection of information about Proxmox VE HA manager status [linux].
+- live_response/system/hidden_directories.yaml: Updated max_depth value to 6 [all].
+- live_response/system/hidden_files.yaml: Updated max_depth value to 6 [all].
 - live_response/system/kernel_tainted_state.yaml: Added the collection of the kernel tainted state [linux].
 - live_response/system/kernel_tainted_state.yaml: Added the collection of the list of what modules are marked at tainting the kernel [linux].
 - live_response/system/pvecm.yaml: Added the collection of information about Proxmox VE local view of the cluster nodes [linux].
@@ -23,5 +25,14 @@
 - live_response/system/pvesubscription.yaml: Added the collection of Proxmox VM subscription information [linux].
 - live_response/system/pveum.yaml: Added the collection of Proxmox VE users and groups list [linux].
 - live_response/system/pveversion.yaml: Added the collection of version information for Proxmox VE packages [linux].
+- live_response/system/sgid.yaml: Updated max_depth value to 6 [all].
+- live_response/system/socket_files.yaml: Updated max_depth value to 6 [all].
+- live_response/system/suid.yaml: Updated max_depth value to 6 [all].
+- live_response/system/world_writable_directories.yaml: Updated max_depth value to 6 [all].
+- live_response/system/world_writable_files.yaml: Updated max_depth value to 6 [all].
 - live_response/vms/qm.yaml: Added the collection of information about all active and inactive virtual machines running on Proxmox VE [linux].
 - live_response/vms/qm.yaml: Added the collection of the current configuration of virtual machines running on Proxmox VE [linux].
+
+### Tools
+
+- AVML updated to v0.11.2.
