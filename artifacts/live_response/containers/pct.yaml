@@ -10,14 +10,14 @@ artifacts:
     description: Get the current configuration of LXC containers.
     supported_os: [linux]
     collector: command
-    loop_command: pct list | sed -e '1d' | awk '{print $1}'
+    foreach: pct list | sed -e '1d' | awk '{print $1}'
     command: pct config %line% --current
     output_file: pct_config_%line%_--current.txt
   -
     description: List all snapshots.
     supported_os: [linux]
     collector: command
-    loop_command: pct list | sed -e '1d' | awk '{print $1}'
+    foreach: pct list | sed -e '1d' | awk '{print $1}'
     command: pct listsnapshot %line%
     output_file: pct_listsnapshot_%line%.txt
   -

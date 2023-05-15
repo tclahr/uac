@@ -10,7 +10,7 @@
 # Requires:
 #   log_message
 # Arguments:
-#   $1: loop command (optional)
+#   $1: foreach (optional)
 #   $2: command
 #   $3: root output directory
 #   $4: output directory (optional)
@@ -26,7 +26,7 @@
 ###############################################################################
 command_collector()
 {
-  cc_loop_command="${1:-}"
+  cc_foreach="${1:-}"
   cc_command="${2:-}"
   cc_root_output_directory="${3:-}"
   cc_output_directory="${4:-}"
@@ -54,26 +54,26 @@ command_collector()
   fi
 
   # loop command
-  if [ -n "${cc_loop_command}" ]; then
+  if [ -n "${cc_foreach}" ]; then
 
     # create output directory if it does not exist
     if [ ! -d  "${TEMP_DATA_DIR}/${cc_root_output_directory}" ]; then
       mkdir -p "${TEMP_DATA_DIR}/${cc_root_output_directory}" >/dev/null
     fi
 
-    log_message COMMAND "${cc_loop_command}"
-    eval "${cc_loop_command}" \
-      >"${TEMP_DATA_DIR}/.loop_command.tmp" \
-      2>>"${TEMP_DATA_DIR}/${cc_root_output_directory}/loop_command.stderr"
+    log_message COMMAND "${cc_foreach}"
+    eval "${cc_foreach}" \
+      >"${TEMP_DATA_DIR}/.foreach.tmp" \
+      2>>"${TEMP_DATA_DIR}/${cc_root_output_directory}/foreach.stderr"
     
-    if [ ! -s "${TEMP_DATA_DIR}/.loop_command.tmp" ]; then
+    if [ ! -s "${TEMP_DATA_DIR}/.foreach.tmp" ]; then
       printf %b "command_collector: loop command returned zero lines: \
-${cc_loop_command}\n" >&2
+${cc_foreach}\n" >&2
       return 61
     fi
 
     # shellcheck disable=SC2162
-    sort -u <"${TEMP_DATA_DIR}/.loop_command.tmp" \
+    sort -u <"${TEMP_DATA_DIR}/.foreach.tmp" \
       | while read cc_line || [ -n "${cc_line}" ]; do
 
           # replace %line% by cc_line value
@@ -153,9 +153,9 @@ ${cc_loop_command}\n" >&2
 
         done
 
-    # remove loop_command.stderr file if it is empty
-    if [ ! -s "${TEMP_DATA_DIR}/${cc_root_output_directory}/loop_command.stderr" ]; then
-      rm -f "${TEMP_DATA_DIR}/${cc_root_output_directory}/loop_command.stderr"  \
+    # remove foreach.stderr file if it is empty
+    if [ ! -s "${TEMP_DATA_DIR}/${cc_root_output_directory}/foreach.stderr" ]; then
+      rm -f "${TEMP_DATA_DIR}/${cc_root_output_directory}/foreach.stderr"  \
         >/dev/null
     fi
  

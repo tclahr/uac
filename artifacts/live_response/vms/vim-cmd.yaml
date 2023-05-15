@@ -10,35 +10,35 @@ artifacts:
     description: Retrieves and displays the listsummary status from the vm.
     supported_os: [esxi]
     collector: command
-    loop_command: vim-cmd vmsvc/getallvms | tail -1 | awk '{print $1}'
+    foreach: vim-cmd vmsvc/getallvms | tail -1 | awk '{print $1}'
     command: vim-cmd vmsvc/get.summary %line%
     output_file: vim-cmd_vmsvc_get.summary_%line%.txt
   -
     description: Retrieves and displays the configuration object for the vm.
     supported_os: [esxi]
     collector: command
-    loop_command: vim-cmd vmsvc/getallvms | tail -1 | awk '{print $1}'
+    foreach: vim-cmd vmsvc/getallvms | tail -1 | awk '{print $1}'
     command: vim-cmd vmsvc/get.config %line%
     output_file: vim-cmd_vmsvc_get.config_%line%.txt
   -
     description: Retrieves and displays the virtual devices for the vm.
     supported_os: [esxi]
     collector: command
-    loop_command: vim-cmd vmsvc/getallvms | tail -1 | awk '{print $1}'
+    foreach: vim-cmd vmsvc/getallvms | tail -1 | awk '{print $1}'
     command: vim-cmd vmsvc/device.getdevices %line%
     output_file: vim-cmd_vmsvc_device.getdevices_%line%.txt
   -
     description: 
     supported_os: [esxi]
     collector: command
-    loop_command: vim-cmd vmsvc/getallvms | tail -1 | awk '{print $1}'
+    foreach: vim-cmd vmsvc/getallvms | tail -1 | awk '{print $1}'
     command: vim-cmd vmsvc/get.datastores %line%
     output_file: vim-cmd_vmsvc_get.datastores_%line%.txt
   -
     description: 
     supported_os: [esxi]
     collector: command
-    loop_command: vim-cmd vmsvc/getallvms | tail -1 | awk '{print $1}'
+    foreach: vim-cmd vmsvc/getallvms | tail -1 | awk '{print $1}'
     command: vim-cmd vmsvc/get.networks %line%
     output_file: vim-cmd_vmsvc_get.networks_%line%.txt
  

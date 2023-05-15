@@ -16,6 +16,6 @@ artifacts:
     description: List all running VMs.
     supported_os: [linux, macos, solaris]
     collector: command
-    loop_command: VBoxManage list vms | sed -e 's:.*{::' -e 's:}::'
+    foreach: VBoxManage list vms | sed -e 's:.*{::' -e 's:}::'
     command: VBoxManage showvminfo %line%
     output_file: VBoxManage_showvminfo_%line%.txt

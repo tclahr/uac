@@ -6,7 +6,7 @@ artifacts:
     # this is to avoid dd hitting an invalid file descriptor (such as /dev/null) and generating an endless output file
     supported_os: [linux]
     collector: command
-    loop_command: ls -l /proc/[0-9]*/exe | grep -E "\(deleted\)" | grep -v -E "> /proc/" | awk -F"/proc/|/exe" '{print $2}'
+    foreach: ls -l /proc/[0-9]*/exe | grep -E "\(deleted\)" | grep -v -E "> /proc/" | awk -F"/proc/|/exe" '{print $2}'
     command: dd if=/proc/%line%/exe of=%output_file% conv=swab bs=1024 count=50000
     output_directory: proc/%line%
     output_file: recovered_exe.dd.swab
@@ -14,7 +14,7 @@ artifacts:
     description: Collect the memory sections and strings from (deleted) processes.
     supported_os: [linux]
     collector: command
-    loop_command: ls -l /proc/[0-9]*/exe | grep -E "\(deleted\)" | grep -v -E "> /proc/" | awk -F"/proc/|/exe" '{print $2}'
+    foreach: ls -l /proc/[0-9]*/exe | grep -E "\(deleted\)" | grep -v -E "> /proc/" | awk -F"/proc/|/exe" '{print $2}'
     command: linux_procmemdump.sh -p %line% -u -b -d %output_file%
     output_file: proc
     stderr_output_file: linux_procmemdump.txt.stderr
@@ -22,14 +22,14 @@ artifacts:
     description: Collect the list of deleted files of (malicious) processes if they are shown up as being (deleted).
     supported_os: [linux]
     collector: command
-    loop_command: ls -l /proc/[0-9]*/exe | grep -E "\(deleted\)" | awk -F"/proc/|/exe" '{print $2}'
+    foreach: ls -l /proc/[0-9]*/exe | grep -E "\(deleted\)" | awk -F"/proc/|/exe" '{print $2}'
     command: ls -l /proc/%line%/fd/[0-9]* | grep -E "\(deleted\)" | grep -v -E "> /dev/|> /proc/" | awk -F"/proc/%line%/fd/| ->" '{print "%line%/fd/"$2}'
     output_file: .deleted_file_descriptors.txt
   -
     description: Collect the list of deleted files located in /dev/shm of (malicious) processes if they are shown up as being (deleted).
     supported_os: [linux]
     collector: command
-    loop_command: ls -l /proc/[0-9]*/exe | grep -E "\(deleted\)" | awk -F"/proc/|/exe" '{print $2}'
+    foreach: ls -l /proc/[0-9]*/exe | grep -E "\(deleted\)" | awk -F"/proc/|/exe" '{print $2}'
     command: ls -l /proc/%line%/fd/[0-9]* | grep -E "\(deleted\)" | grep -E "> /dev/shm" | awk -F"/proc/%line%/fd/| ->" '{print "%line%/fd/"$2}'
     output_file: .deleted_file_descriptors.txt
   -
@@ -38,7 +38,7 @@ artifacts:
     # this is to avoid dd hitting an invalid file descriptor (such as /dev/null) and generating an endless output file
     supported_os: [linux]
     collector: command
-    loop_command: cat "%destination_directory%/.deleted_file_descriptors.txt"
+    foreach: cat "%destination_directory%/.deleted_file_descriptors.txt"
     command: dd if=/proc/%line% of=%output_file% bs=1024 count=50000
     output_directory: proc/%line%
     output_file: recovered_file.dd
@@ -46,7 +46,7 @@ artifacts:
     description: Collect the list of files being hidden in a memfd socket.
     supported_os: [linux]
     collector: command
-    loop_command: ls -l /proc/[0-9]*/exe | awk -F"/proc/|/exe" '{print $2}'
+    foreach: ls -l /proc/[0-9]*/exe | awk -F"/proc/|/exe" '{print $2}'
     command: ls -l /proc/%line%/fd/[0-9]* | grep "memfd" | grep -E "\(deleted\)" | awk -F"/proc/%line%/fd/| ->" '{print "%line%/fd/"$2}'
     output_file: .files_hidden_in_memfd_socket.txt
   -
@@ -55,7 +55,7 @@ artifacts:
     # this is to avoid dd hitting an invalid file descriptor (such as /dev/null) and generating an endless output file
     supported_os: [linux]
     collector: command
-    loop_command: cat "%destination_directory%/.files_hidden_in_memfd_socket.txt"
+    foreach: cat "%destination_directory%/.files_hidden_in_memfd_socket.txt"
     command: dd if=/proc/%line% of=%output_file% bs=1024 count=50000
     output_directory: proc/%line%
     output_file: recovered_file.dd
@@ -63,7 +63,7 @@ artifacts:
     description: List of open files of (malicious) processes.
     supported_os: [linux]
     collector: command
-    loop_command: ls -l /proc/[0-9]*/exe | grep -E "\(deleted\)" | awk -F"/proc/|/exe" '{print $2}'
+    foreach: ls -l /proc/[0-9]*/exe | grep -E "\(deleted\)" | awk -F"/proc/|/exe" '{print $2}'
     command: ls -l /proc/%line%/fd/[0-9]* | grep -v -E "\(deleted\)" | awk -F'-> ' '{print $2}' | sed -e "s:^'::" -e "s:'$::" -e ':^"::' -e ':"$::'
     output_file: .list_open_file_descriptors.txt
   -
@@ -86,7 +86,7 @@ artifacts:
     # this is to avoid dd hitting an invalid file descriptor (such as /dev/null) and generating an endless output file
     supported_os: [solaris]
     collector: command
-    loop_command: ls -l /proc/[0-9]*/path/a.out | grep -E "a\.out$" | awk -F"/proc/|/path/" '{print $2}'
+    foreach: ls -l /proc/[0-9]*/path/a.out | grep -E "a\.out$" | awk -F"/proc/|/path/" '{print $2}'
     command: dd if=/proc/%line%/object/a.out of=%output_file% conv=swab bs=1024 count=50000
     output_directory: proc/%line%
     output_file: recovered_a.out.dd.swab
