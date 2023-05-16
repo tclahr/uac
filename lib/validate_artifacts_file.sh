@@ -33,7 +33,7 @@ validate_artifacts_file()
     va_description=""
     va_collector=""
     va_supported_os=""
-    va_loop_command=""
+    va_foreach=""
     va_command=""
     va_path=""
     va_path_pattern=""
@@ -138,10 +138,10 @@ array/list.\n" >&2
             done
             IFS="${OIFS}"
             ;;
-          "loop_command")
-            va_loop_command=`lrstrip "${va_value}"`
-            if [ -z "${va_loop_command}" ]; then
-              printf %b "uac: artifacts file: 'loop_command' must not be \
+          "foreach"|"loop_command")
+            va_foreach=`lrstrip "${va_value}"`
+            if [ -z "${va_foreach}" ]; then
+              printf %b "uac: artifacts file: 'foreach' must not be \
 empty.\n" >&2
               return 152
             fi

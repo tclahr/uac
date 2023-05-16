@@ -33,6 +33,10 @@
 - live_response/vms/qm.yaml: Added the collection of information about all active and inactive virtual machines running on Proxmox VE [linux].
 - live_response/vms/qm.yaml: Added the collection of the current configuration of virtual machines running on Proxmox VE [linux].
 
+### Artifacts File
+
+- 'loop_command' property was renamed to 'foreach'. Don't forget to update your custom artifacts files as 'loop_command' property name will be removed in the next release.
+
 ### Tools
 
 - AVML updated to v0.11.2.

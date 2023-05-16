@@ -46,7 +46,7 @@ artifacts:
     description: Collect the command name associated with a process.
     supported_os: [android, linux]
     collector: command
-    loop_command: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
+    foreach: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
     command: cat /proc/%line%/comm
     output_directory: proc/%line%
     output_file: comm.txt
@@ -54,7 +54,7 @@ artifacts:
     description: Collect command line arguments for a process.
     supported_os: [android, linux, netbsd, netscaler, solaris]
     collector: command
-    loop_command: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
+    foreach: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
     command: strings /proc/%line%/cmdline
     output_directory: proc/%line%
     output_file: cmdline.txt
@@ -62,7 +62,7 @@ artifacts:
     description: Collect mapped memory regions and their access permissions.
     supported_os: [netbsd, netscaler]
     collector: command
-    loop_command: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
+    foreach: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
     command: cat /proc/%line%/map
     output_directory: proc/%line%
     output_file: map.txt
@@ -70,7 +70,7 @@ artifacts:
     description: Collect mapped memory regions and their access permissions.
     supported_os: [android, linux, netbsd]
     collector: command
-    loop_command: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
+    foreach: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
     command: cat /proc/%line%/maps
     output_directory: proc/%line%
     output_file: maps.txt
@@ -78,7 +78,7 @@ artifacts:
     description: Collect initial environment that was set when the process was started.
     supported_os: [android, linux, solaris]
     collector: command
-    loop_command: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
+    foreach: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
     command: strings /proc/%line%/environ
     output_directory: proc/%line%
     output_file: environ.txt
@@ -86,7 +86,7 @@ artifacts:
     description: Collect the list of child tasks of a process.
     supported_os: [android, linux]
     collector: command
-    loop_command: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
+    foreach: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
     command: cat /proc/%line%/task/%line%/children
     output_directory: proc/%line%
     output_file: children.txt
@@ -94,7 +94,7 @@ artifacts:
     description: Collect the list of files which the process has open.
     supported_os: [android, linux]
     collector: command
-    loop_command: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
+    foreach: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
     command: ls -la /proc/%line%/fd
     output_directory: proc/%line%
     output_file: fd.txt
@@ -102,7 +102,7 @@ artifacts:
     description: Collect the initial process' stack trace.
     supported_os: [android, linux]
     collector: command
-    loop_command: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
+    foreach: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
     command: cat /proc/%line%/stack
     output_directory: proc/%line%
     output_file: stack.txt
@@ -110,7 +110,7 @@ artifacts:
     description: Collect status information about the process.
     supported_os: [android, linux, netbsd, netscaler]
     collector: command
-    loop_command: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
+    foreach: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
     command: cat /proc/%line%/status
     output_directory: proc/%line%
     output_file: status.txt
@@ -118,7 +118,7 @@ artifacts:
     description: Collect running process information.
     supported_os: [aix, solaris]
     collector: command
-    loop_command: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
+    foreach: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
     command: strings /proc/%line%/psinfo
     output_directory: proc/%line%
     output_file: psinfo.txt
@@ -126,7 +126,7 @@ artifacts:
     description: Collect the list of files which the process has open.
     supported_os: [solaris]
     collector: command
-    loop_command: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
+    foreach: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
     command: pfiles -F %line%
     output_directory: proc/%line%
     output_file: pfiles.txt
@@ -134,7 +134,7 @@ artifacts:
     description: Collect information about all file descriptors opened by a process.
     supported_os: [aix]
     collector: command
-    loop_command: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
+    foreach: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
     command: procfiles -n -c %line%
     output_directory: proc/%line%
     output_file: procfiles.txt
