@@ -5,6 +5,9 @@
 # remove all existing aliases
 unalias -a
 
+# use a safe umask for created files
+umask 027
+
 # set locale
 LANG=C
 export LANG
@@ -29,7 +32,7 @@ fi
 # set path
 PATH="/usr/xpg4/bin:/usr/xpg6/bin:/bin:/sbin:/usr/bin:/usr/sbin"
 PATH="${PATH}:/usr/local/bin:/usr/local/sbin:/usr/ucb:/usr/ccs/bin:/opt/bin"
-PATH="${PATH}:/opt/sbin:/opt/local/bin:/netscaler"
+PATH="${PATH}:/opt/sbin:/opt/local/bin:/snap/bin:/netscaler"
 export PATH
 
 # load lib files
@@ -37,7 +40,7 @@ export PATH
 . "${UAC_DIR}/lib/load_lib_files.sh"
 
 # global vars
-UAC_VERSION="2.5.0"
+UAC_VERSION="2.6.0"
 MOUNT_POINT="/"
 OPERATING_SYSTEM=""
 SYSTEM_ARCH=""

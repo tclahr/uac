@@ -40,7 +40,7 @@ parse_artifacts_file()
   _cleanup_local_vars() {
     pa_collector=""
     pa_supported_os=""
-    pa_loop_command=""
+    pa_foreach=""
     pa_command=""
     pa_path=""
     pa_path_pattern=""
@@ -128,8 +128,8 @@ sequence of mappings\n" >&2
           "supported_os")
             pa_supported_os=`array_to_list "${pa_value}"`
             ;;
-          "loop_command")
-            pa_loop_command="${pa_value}"
+          "foreach"|"loop_command")
+            pa_foreach="${pa_value}"
             ;;
           "command")
             pa_command="${pa_value}"
@@ -214,14 +214,14 @@ sequence of mappings\n" >&2
               continue
             fi
 
-            # path, command or loop_command contains %user% and/or %user_home%
+            # path, command or foreach contains %user% and/or %user_home%
             # the same collector needs to be run for each %user% and/or %user_home%
             if echo "${pa_path}" | grep -q -E "%user%" 2>/dev/null \
               || echo "${pa_command}" | grep -q -E "%user%" 2>/dev/null \
-              || echo "${pa_loop_command}" | grep -q -E "%user%" 2>/dev/null \
+              || echo "${pa_foreach}" | grep -q -E "%user%" 2>/dev/null \
               || echo "${pa_path}" | grep -q -E "%user_home%" 2>/dev/null \
               || echo "${pa_command}" | grep -q -E "%user_home%" 2>/dev/null \
-              || echo "${pa_loop_command}" | grep -q -E "%user_home%" 2>/dev/null; then
+              || echo "${pa_foreach}" | grep -q -E "%user_home%" 2>/dev/null; then
 
               # loop through users
               pa_user_home_list="${USER_HOME_LIST}"
@@ -241,8 +241,8 @@ sequence of mappings\n" >&2
                       | sed -e "s:%user%:${pa_user}:g" \
                       | sed -e "s:%user_home%:${pa_home}:g"`
 
-                    # replace %user% and %user_home% in loop_command
-                    pa_new_loop_command=`echo "${pa_loop_command}" \
+                    # replace %user% and %user_home% in foreach
+                    pa_new_foreach=`echo "${pa_foreach}" \
                       | sed -e "s:%user%:${pa_user}:g" \
                       | sed -e "s:%user_home%:${pa_home}:g"`
 
@@ -270,7 +270,7 @@ sequence of mappings\n" >&2
 
                     if [ "${pa_collector}" = "command" ]; then
                       command_collector \
-                        "${pa_new_loop_command}" \
+                        "${pa_new_foreach}" \
                         "${pa_new_command}" \
                         "${pa_root_output_directory}" \
                         "${pa_new_output_directory}" \
@@ -357,7 +357,7 @@ sequence of mappings\n" >&2
               
               if [ "${pa_collector}" = "command" ]; then
                 command_collector \
-                  "${pa_loop_command}" \
+                  "${pa_foreach}" \
                   "${pa_command}" \
                   "${pa_root_output_directory}" \
                   "${pa_output_directory}" \

@@ -1,0 +1,9 @@
+version: 1.0
+artifacts:
+  -
+    description: Get status for all Proxmox VE datastores.
+    supported_os: [linux]
+    collector: command
+    command: pvesm status
+    output_file: pvesm_status.txt
+    

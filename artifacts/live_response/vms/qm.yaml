@@ -1,0 +1,31 @@
+version: 1.0
+artifacts:
+  -
+    description: List all Proxmox VE active and inactive virtual machines.
+    supported_os: [linux]
+    collector: command
+    command: qm list
+    output_file: qm_list.txt
+  -
+    description: Get the current virtual machine configuration.
+    supported_os: [linux]
+    collector: command
+    foreach: qm list | sed -e '1d' | awk '{print $1}'
+    command: qm config %line% --current
+    output_file: qm_config_%line%_--current.txt
+  -
+    description: List all snapshots.
+    supported_os: [linux]
+    collector: command
+    foreach: qm list | sed -e '1d' | awk '{print $1}'
+    command: qm listsnapshot %line%
+    output_file: qm_listsnapshot_%line%.txt
+  -
+    description: Show command line which is used to start the VM.
+    supported_os: [linux]
+    collector: command
+    foreach: qm list | sed -e '1d' | awk '{print $1}'
+    command: qm showcmd %line%
+    output_file: qm_showcmd_%line%.txt
+  
+ 

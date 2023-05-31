@@ -4,7 +4,7 @@ artifacts:
     description: Extract strings from running processes.
     supported_os: [aix]
     collector: command
-    loop_command: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
+    foreach: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
     command: strings -a /proc/%line%/object/a.out
     output_directory: proc/%line%
     output_file: strings.txt
@@ -13,7 +13,7 @@ artifacts:
     description: Extract strings from running processes.
     supported_os: [freebsd, macos, openbsd]
     collector: command
-    loop_command: ps -eo args | grep ^/ | awk '{print $1}' | sort -u
+    foreach: ps -eo args | grep ^/ | awk '{print $1}' | sort -u
     command: strings -a %line%
     output_directory: strings
     output_file: %line%.txt
@@ -22,7 +22,7 @@ artifacts:
     description: Extract strings from running processes.
     supported_os: [android, linux, netbsd]
     collector: command
-    loop_command: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
+    foreach: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
     command: strings -a /proc/%line%/exe
     output_directory: proc/%line%
     output_file: strings.txt
@@ -31,7 +31,7 @@ artifacts:
     description: Extract strings from running processes.
     supported_os: [netscaler]
     collector: command
-    loop_command: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
+    foreach: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
     command: strings -a /proc/%line%/file
     output_directory: proc/%line%
     output_file: strings.txt
@@ -40,7 +40,7 @@ artifacts:
     description: Extract strings from running processes.
     supported_os: [solaris]
     collector: command
-    loop_command: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
+    foreach: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
     command: strings -a /proc/%line%/path/a.out
     output_directory: proc/%line%
     output_file: strings.txt

@@ -1,36 +1,42 @@
 # Changelog
 
-## 2.5.0 (2022-02-22)
-
-### Features
-
-- Added extraction of memory sections and strings from '/proc/[pid]/mem' using the data available in '/proc/[pid]/maps', even if processes are shown up as being (deleted). This functionality is enabled via 'tools/linux_procmemdump.sh' script.
-- Artifacts file: Added a new option to define a custom output file name where the standard error messages (stderr stream) will be stored in. Please check the [project's documentation page](https://tclahr.github.io/uac-docs/collectors/#stderr_output_file) for more information.
+## 2.6.0 (2023-05-30)
 
 ### Artifacts
 
-- files/applications/anydesk.yaml: Added the collection of AnyDesk configuration, chat transcript, screenshot, session recording and trace files [freebsd, linux, macos].
-- files/applications/box_drive.yaml: Added the collection of Box Drive client configuration and sqlite database files [macos].
-- files/applications/qnap_qsync.yaml: Added the collection of QNAP Qsync client configuration and log files [linux, macos].
-- files/applications/spotlight_shortcuts.yaml: Added the collection of searches that a user performed in the Spotlight application [macos].
-- files/applications/synology_drive.yaml: Added the collection of Synology Drive client configuration, database and log files [linux, macos].
-- files/system/coreanalytics.yaml: Added the collection of information about the system usage and application execution history [macos].
-- files/system/powerlog.yaml: Added the collection of Powerlog archive files [macos].
-- live_response/network/ip6tables.yaml: Added the collection of firewall rules information using ip6tables tool [android, linux].
-- live_response/network/iptables.yaml: Updated command parameters to support legacy iptables versions [android, linux].
-- live_response/network/lsof.yaml: Added the listing of UNIX domain socket files.
-- live_response/packages/synopkg.yaml: Added the collection of installed packages on Synology DSM systems [linux].
-- live_response/process/deleted.yaml: Added the collection of process memory sections and strings (for processes shown up as being deleted) from '/proc/[pid]/mem' [linux].
-- live_response/system/lastlog.yaml: Added the collection of the last login log '/var/log/lastlog' file [linux].
-- live_response/system/timedatectl.yaml: Added the collection of current settings of the system clock and RTC, including whether network time synchronization is active or not [linux].
-- memory_dump/process_memory_sections_strings.yaml: Added the collection of process memory sections and strings from '/proc/[pid]/mem' [linux].
-- memory_dump/process_memory_strings.yaml: Added the collection of process memory strings only from '/proc/[pid]/mem' [linux].
+- live_response/containers/lxc.yaml: Added the collection of information about all active and inactive Linux containers and virtual machines (LXD), including their configuration, network, and storage information [linux].
+- live_response/containers/pct.yaml: Added the collection of information about all active and inactive Linux containers (LXC) running on Proxmox VE [linux].
+- live_response/containers/pct.yaml: Added the collection of the current configuration of Linux containers (LXC) running on Proxmox VE [linux].
+- live_response/containers/pct.yaml: Added the collection of the list of assigned CPU sets for each Linux container (LXC) running on Proxmox VE [linux].
+- live_response/process/deleted.yaml: Added the collection of files being hidden in a memfd socket [linux].
+- live_response/storage/arcstat.yaml: Added the collection of ZFS ARC and L2ARC statistics [freebsd, linux, netbsd, openbsd, solaris].
+- live_response/storage/findmnt.yaml: Added the collection of all mounted filesystems in the tree-like format [linux].
+- live_response/storage/iostat.yaml: Updated the collection of device I/O statistics [aix, freebsd, linux, openbsd, solaris].
+- live_response/storage/iscsiadm.yaml: Added the collection of information about iSCSI connected devices [linux].
+- live_response/storage/ls_dev_disk.yaml: Added the collection of the mapping of logical volumes with physical disks [linux].
+- live_response/storage/pvesm.yaml: Added the collection of status for all Proxmox VE datastores [linux].
+- live_response/system/ha-manager.yaml: Added the collection of information about Proxmox VE HA manager status [linux].
+- live_response/system/hidden_directories.yaml: Updated max_depth value to 6 [all].
+- live_response/system/hidden_files.yaml: Updated max_depth value to 6 [all].
+- live_response/system/kernel_tainted_state.yaml: Added the collection of the kernel tainted state [linux].
+- live_response/system/kernel_tainted_state.yaml: Added the collection of the list of what modules are marked at tainting the kernel [linux].
+- live_response/system/pvecm.yaml: Added the collection of information about Proxmox VE local view of the cluster nodes [linux].
+- live_response/system/pvecm.yaml: Added the collection of information about Proxmox VE local view of the cluster status [linux].
+- live_response/system/pvesubscription.yaml: Added the collection of Proxmox VM subscription information [linux].
+- live_response/system/pveum.yaml: Added the collection of Proxmox VE users and groups list [linux].
+- live_response/system/pveversion.yaml: Added the collection of version information for Proxmox VE packages [linux].
+- live_response/system/sgid.yaml: Updated max_depth value to 6 [all].
+- live_response/system/socket_files.yaml: Updated max_depth value to 6 [all].
+- live_response/system/suid.yaml: Updated max_depth value to 6 [all].
+- live_response/system/world_writable_directories.yaml: Updated max_depth value to 6 [all].
+- live_response/system/world_writable_files.yaml: Updated max_depth value to 6 [all].
+- live_response/vms/qm.yaml: Added the collection of information about all active and inactive virtual machines running on Proxmox VE [linux].
+- live_response/vms/qm.yaml: Added the collection of the current configuration of virtual machines running on Proxmox VE [linux].
 
-### Profiles
+### Artifacts File
 
-- full.yaml: Updated the artifacts collection order. 'bodyfile/bodyfile.yaml' artifact is now collected sooner.
-- ir_triage.yaml: Updated the artifacts collection order. 'bodyfile/bodyfile.yaml' artifact is now collected sooner.
+- 'loop_command' property was renamed to 'foreach'. Don't forget to update your custom artifacts files as 'loop_command' property name will be removed in the next release.
 
 ### Tools
 
-- AVML updated to v0.11.0.
+- AVML updated to v0.11.2.

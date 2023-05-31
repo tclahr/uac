@@ -1,21 +1,33 @@
-version: 1.0
+version: 2.0
 artifacts:
   -
-    description: Reports I/O statistics.
-    supported_os: [freebsd, solaris]
-    collector: command
-    command: iostat
-    output_file: iostat.txt
-  -
-    description: Reports I/O statistics.
+    description: Report device I/O statistics.
     supported_os: [aix]
     collector: command
-    command: iostat -l
-    output_file: iostat_-l.txt
+    command: iostat -d -l
+    output_file: iostat_-d_-l.txt
   -
-    description: Reports I/O statistics.
+    description: Display device I/O statistics.
+    supported_os: [freebsd, openbsd]
+    collector: command
+    command: iostat -d -c 3
+    output_file: iostat_-d_-c_3.txt
+  -
+    description: Display device I/O statistics.
     supported_os: [solaris]
     collector: command
-    command: iostat -E -n
-    output_file: iostat_-E_-n.txt
+    command: iostat -d 1 3
+    output_file: iostat_-d_1_3.txt
+  -
+    description: Display device I/O statistics but displaying names in descriptive format.
+    supported_os: [solaris]
+    collector: command
+    command: iostat -d -n 1 3
+    output_file: iostat_-d_-n_1_3.txt
+  -
+    description: Display all device error statistics.
+    supported_os: [solaris]
+    collector: command
+    command: iostat -E
+    output_file: iostat_-E.txt
   

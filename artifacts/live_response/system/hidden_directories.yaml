@@ -8,5 +8,6 @@ artifacts:
     name_pattern: [".*"]
     exclude_path_pattern: ["/root", "/home", "/export/home", "/Users"]
     file_type: d
+    max_depth: 6
     output_file: hidden_directories.txt
   

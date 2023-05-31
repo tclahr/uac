@@ -1,0 +1,17 @@
+version: 1.0
+artifacts:
+  -
+    description: Display the kernel tainted state.
+    supported_os: [linux]
+    collector: command
+    command: cat /proc/sys/kernel/tainted
+    output_file: cat_proc_sys_kernel_tainted.txt
+  -
+    description: Display what modules are marked at tainting the kernel.
+    supported_os: [linux]
+    collector: command
+    command: grep "(.*)" /proc/modules
+    output_file: modules_tainting_the_kernel.txt
+
+# References:
+# https://www.kernel.org/doc/html/latest/admin-guide/tainted-kernels.html
