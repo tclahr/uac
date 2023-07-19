@@ -1,0 +1,21 @@
+version: 1.0
+artifacts:
+  -
+    description: Display a snapshot of the kernel's RAID/md state.
+    supported_os: [linux]
+    collector: command
+    command: cat /proc/mdstat
+    output_file: cat_proc_mdstat.txt
+  -
+    description: Scan and print details of one or more md devices.
+    supported_os: [linux]
+    collector: command
+    command: mdadm --detail --scan --verbose
+    output_file: mdadm_--detail_--scan_--verbose.txt
+  -
+    description: Print the details of each md device.
+    supported_os: [linux]
+    collector: command
+    foreach: mdadm --detail --scan | grep "ARRAY" | awk '{print $2}'
+    command: mdadm --detail "%line%"
+    output_file: mdadm_--detail_%line%.txt
