@@ -1,0 +1,26 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect files from /var/vpn
+    supported_os: [netscaler]
+    collector: file
+    path: /var/vpn
+    max_file_size: 5242880 # 5 MB
+  -
+    description: Collect files from /var/netscaler/logon
+    supported_os: [netscaler]
+    collector: file
+    path: /var/netscaler/logon
+    max_file_size: 5242880 # 5 MB
+  -
+    description: Collect files from /var/python
+    supported_os: [netscaler]
+    collector: file
+    path: /var/python
+    max_file_size: 5242880 # 5 MB
+  -
+    description: Collect files from /netscaler/ns_gui
+    supported_os: [netscaler]
+    collector: file
+    path: /netscaler/ns_gui
+    max_file_size: 5242880 # 5 MB
