@@ -444,7 +444,7 @@ fi
 # get absolute destination directory path
 ua_destination_dir=`get_absolute_directory_path "${ua_destination_dir}" 2>/dev/null`
 
-# get operating system if not set by --operating_system
+# get operating system if not set by --operating-system
 if [ -z "${OPERATING_SYSTEM}" ]; then
   OPERATING_SYSTEM=`get_operating_system`
 fi
