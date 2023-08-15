@@ -1,0 +1,108 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect image resources of installed/uninstalled games.
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.local/share/Steam/appcache/librarycache
+    exclude_nologin_users: true
+  -
+    description: Collect multiple configuration files.
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.local/share/Steam
+    name_pattern: ["*.vdf"]
+    exclude_nologin_users: true
+  -
+    description: Collect multiple configuration files.
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.steam
+    name_pattern: ["*.vdf"]
+    exclude_nologin_users: true
+  -
+    description: Collect avatar pictures.
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.local/share/Steam/config/avatarcache
+    exclude_nologin_users: true
+  -
+    description: Collect game icons.
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.local/share/Steam/steam/games
+    exclude_nologin_users: true
+  -
+    description: Collect log files.
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.local/share/Steam/logs
+    exclude_nologin_users: true
+  -
+    description: Collect Steam browser files.
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.local/share/Steam/config/htmlcache
+    name_pattern: ["Bookmarks*", "Cookies*", "DownloadMetadata", "Extension Cookies*", "Favicons*", "History*", "Login Data*", "Media History*", "Network Action Predictor*", "Network Persistent State", "Preferences", "QuotaManager*", "Reporting and NEL*", "SecurePreferences", "Shortcuts*", "SyncData.sqlite3", "Top Sites*", "Trust Tokens*", "Visited Links", "Web Data*"]
+    ignore_date_range: true
+    exclude_nologin_users: true
+  -
+    description: Collect Steam browser directories.
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.local/share/Steam/config/htmlcache
+    name_pattern: ["Extensions", "File System", "Sessions"]
+    file_type: d
+    ignore_date_range: true
+    exclude_nologin_users: true
+  -
+    description: Collect image resources of installed/uninstalled games.
+    supported_os: [macos]
+    collector: file
+    path: /%user_home%/Library/"Application Support"/Steam/appcache/librarycache
+    exclude_nologin_users: true
+  -
+    description: Collect multiple configuration files.
+    supported_os: [macos]
+    collector: file
+    path: /%user_home%/Library/"Application Support"/Steam
+    name_pattern: ["*.vdf"]
+    exclude_nologin_users: true
+  -
+    description: Collect avatar pictures.
+    supported_os: [macos]
+    collector: file
+    path: /%user_home%/Library/"Application Support"/Steam/config/avatarcache
+    exclude_nologin_users: true
+  -
+    description: Collect game icons.
+    supported_os: [macos]
+    collector: file
+    path: /%user_home%/Library/"Application Support"/Steam/steam/games
+    exclude_nologin_users: true
+  -
+    description: Collect log files.
+    supported_os: [macos]
+    collector: file
+    path: /%user_home%/Library/"Application Support"/Steam/logs
+    exclude_nologin_users: true
+  -
+    description: Collect Steam browser files.
+    supported_os: [macos]
+    collector: file
+    path: /%user_home%/Library/"Application Support"/Steam/config/htmlcache
+    name_pattern: ["Bookmarks*", "Cookies*", "DownloadMetadata", "Extension Cookies*", "Favicons*", "History*", "Login Data*", "Media History*", "Network Action Predictor*", "Network Persistent State", "Preferences", "QuotaManager*", "Reporting and NEL*", "SecurePreferences", "Shortcuts*", "SyncData.sqlite3", "Top Sites*", "Trust Tokens*", "Visited Links", "Web Data*"]
+    ignore_date_range: true
+    exclude_nologin_users: true
+  -
+    description: Collect Steam browser directories.
+    supported_os: [macos]
+    collector: file
+    path: /%user_home%/Library/"Application Support"/Steam/config/htmlcache
+    name_pattern: ["Extensions", "File System", "Sessions"]
+    file_type: d
+    ignore_date_range: true
+    exclude_nologin_users: true
+
+# References:
+# https://www.forensicxlab.com/posts/steam/
