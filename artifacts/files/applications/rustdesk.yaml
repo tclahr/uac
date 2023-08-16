@@ -1,0 +1,23 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect access logs.
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.local/share/logs/RustDesk
+    exclude_nologin_users: true
+  -
+    description: Collect session recording files.
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/Videos/RustDesk
+    exclude_nologin_users: true
+  -
+    description: Collect access logs.
+    supported_os: [macos]
+    collector: file
+    path: /%user_home%/Library/Logs/RustDesk
+    exclude_nologin_users: true
+
+# References:
+# https://github.com/rustdesk/rustdesk/wiki/FAQ#access-logs
