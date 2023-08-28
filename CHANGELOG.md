@@ -4,10 +4,11 @@
 
 ### Artifacts
 
-- files/applications/rustdesk.yaml: Added the collection of RustDesk access logs and screen recording files [linux, macos].
+- files/applications/rustdesk.yaml: Added the collection of RustDesk application access logs and screen recording files [linux, macos].
+- files/applications/splashtop.yaml: Added the collecton of Splashtop application artifacts [linux, macos].
 - files/applications/steam.yaml: Added the collection of Steam browser artifacts, avatar pictures, configuration and log files [linux, macos].
-- files/applications/teamviewer.yaml: Added the collection of TeamViewer artifacts [linux, macos].
-- files/applications/thinlinc.yaml: Added the collection of ThinLinc configuration files, connections and post-session logs [linux, macos].
+- files/applications/teamviewer.yaml: Added the collection of TeamViewer application artifacts [linux, macos].
+- files/applications/thinlinc.yaml: Added the collection of ThinLinc application configuration files, connections and post-session logs [linux, macos].
 - files/system/netscaler.yaml: Added the collection of '/var/vpn', '/var/netscaler/logon', and '/netscaler/ns_gui' system files and directories [netscaler].
 - files/system/nsconfig.yaml: Deprecated. All artifacts were moved to 'files/system/netscaler.yaml' [netscaler].
 - live_response/storage/mdadm.yaml: Added the collection of information on Linux software RAID [linux].
