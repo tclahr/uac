@@ -1,0 +1,28 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect client logs and configuration files.
+    supported_os: [linux, macos]
+    collector: file
+    path: /%user_home%/.thinlinc
+    exclude_nologin_users: true
+  -
+    description: Collect VSM server, agent and Web Administration Interface logs.
+    supported_os: [linux]
+    collector: file
+    path: /var/log
+    name_pattern: ["tlwebaccess.log", "tlwebadm.log", "vsmagent.log", "vsmserver.log"]
+  -
+    description: Collect server configuration files.
+    supported_os: [linux]
+    collector: file
+    path: /opt/thinlinc/etc
+  -
+    description: Collect server per-session logs.
+    supported_os: [linux]
+    collector: file
+    path: /var/opt/thinlinc/sessions
+
+# References:
+# https://www.cendio.com/resources/docs/tag/client_logfile_placement.html
+# https://www.cendio.com/resources/docs/tag/config_logging.html
