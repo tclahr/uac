@@ -14,3 +14,7 @@
 - files/system/nsconfig.yaml: Deprecated. All artifacts were moved to 'files/system/netscaler.yaml' [netscaler].
 - live_response/storage/mdadm.yaml: Added the collection of information on Linux software RAID [linux].
 - live_response/storage/zpool.yaml: Added the collection of the command history of all pools [aix, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris].
+
+### Tools
+
+- AVML updated to v0.12.0.
