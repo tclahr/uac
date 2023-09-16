@@ -1,6 +1,6 @@
 # Changelog
 
-## DEVELOPMENT VERSION
+## 2.7.0 (2023-09-16)
 
 ### Artifacts
 
