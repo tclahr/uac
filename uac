@@ -748,10 +748,10 @@ ua_total_running_time=`expr "${ua_acq_end_date_epoch}" - "${ua_acq_start_date_ep
 
 printf %b "--------------------------------------------------------------------------------\n"
 log_message INFO "Artifacts collection complete. \
-Total running time: ${ua_total_running_time} seconds"
+Total execution time: ${ua_total_running_time} seconds"
 
 printf %b "Artifacts collection complete. \
-Total running time: ${ua_total_running_time} seconds\n"
+Total execution time: ${ua_total_running_time} seconds\n"
 
 # output file/directory name
 ua_output_base_name="uac-${ua_hostname}-${OPERATING_SYSTEM}-${ua_current_date_time}"
