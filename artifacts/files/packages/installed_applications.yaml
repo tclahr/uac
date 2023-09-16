@@ -1,0 +1,35 @@
+version: 2.0
+artifacts:
+  -
+    description: Collect InstallHistory.plist file.
+    supported_os: [macos]
+    collector: file
+    path: /Library/Receipts/InstallHistory.plist
+    ignore_date_range: true
+  -
+    description: Collect Info.plist from installed applications.
+    supported_os: [macos]
+    collector: file
+    path: /Applications
+    path_pattern: ["*/Contents/Info.plist"]
+  -
+    description: Collect Info.plist from installed applications.
+    supported_os: [macos]
+    collector: file
+    path: /Library
+    path_pattern: ["*/Contents/Info.plist"]
+  -
+    description: Collect Info.plist from installed applications.
+    supported_os: [macos]
+    collector: file
+    path: /%user_home%/Applications
+    path_pattern: ["*/Contents/Info.plist"]
+    exclude_nologin_users: true
+  -
+    description: Collect Info.plist from installed applications.
+    supported_os: [macos]
+    collector: file
+    path: /%user_home%/Library
+    path_pattern: ["*/Contents/Info.plist"]
+    exclude_nologin_users: true
+  

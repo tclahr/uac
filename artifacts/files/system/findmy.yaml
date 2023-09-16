@@ -1,0 +1,11 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect the list of user's items/devices and items/devices info registered within the Find My application.
+    supported_os: [macos]
+    collector: file
+    path: /%user_home%/Library/Caches/com.apple.findmy.*
+    name_pattern: ["Devices.data"]
+    ignore_date_range: true
+    exclude_nologin_users: true
+  
