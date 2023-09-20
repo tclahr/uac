@@ -76,13 +76,20 @@ ${cc_foreach}\n" >&2
     sort -u <"${TEMP_DATA_DIR}/.foreach.tmp" \
       | while read cc_line || [ -n "${cc_line}" ]; do
 
+          cc_line=`echo "${cc_line}" \
+            | sed -e "s/:/#_COLON_#/g"`
+
           # replace %line% by cc_line value
           cc_new_command=`echo "${cc_command}" \
             | sed -e "s:%line%:${cc_line}:g"`
+          cc_new_command=`echo "${cc_new_command}" \
+            | sed -e "s/#_COLON_#/:/g"`
           
           # replace %line% by cc_line value
           cc_new_output_directory=`echo "${cc_output_directory}" \
             | sed -e "s:%line%:${cc_line}:g"`
+          cc_new_output_directory=`echo "${cc_new_output_directory}" \
+            | sed -e "s/#_COLON_#/:/g"`
           # sanitize output directory
           cc_new_output_directory=`sanitize_path \
             "${cc_root_output_directory}/${cc_new_output_directory}"`
@@ -90,6 +97,8 @@ ${cc_foreach}\n" >&2
           # replace %line% by cc_line value
           cc_new_output_file=`echo "${cc_output_file}" \
             | sed -e "s:%line%:${cc_line}:g"`
+          cc_new_output_file=`echo "${cc_new_output_file}" \
+            | sed -e "s/#_COLON_#/:/g"`
           # sanitize output file
           cc_new_output_file=`sanitize_filename \
             "${cc_new_output_file}"`
@@ -98,6 +107,8 @@ ${cc_foreach}\n" >&2
             # replace %line% by cc_line value
             cc_new_stderr_output_file=`echo "${cc_stderr_output_file}" \
               | sed -e "s:%line%:${cc_line}:g"`
+            cc_new_stderr_output_file=`echo "${cc_new_stderr_output_file}" \
+            | sed -e "s/#_COLON_#/:/g"`
             # sanitize stderr output file
             cc_new_stderr_output_file=`sanitize_filename \
               "${cc_new_stderr_output_file}"`

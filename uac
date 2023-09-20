@@ -40,7 +40,7 @@ export PATH
 . "${UAC_DIR}/lib/load_lib_files.sh"
 
 # global vars
-UAC_VERSION="2.6.0"
+UAC_VERSION="2.7.0"
 MOUNT_POINT="/"
 OPERATING_SYSTEM=""
 SYSTEM_ARCH=""
@@ -444,7 +444,7 @@ fi
 # get absolute destination directory path
 ua_destination_dir=`get_absolute_directory_path "${ua_destination_dir}" 2>/dev/null`
 
-# get operating system if not set by --operating_system
+# get operating system if not set by --operating-system
 if [ -z "${OPERATING_SYSTEM}" ]; then
   OPERATING_SYSTEM=`get_operating_system`
 fi
@@ -748,10 +748,10 @@ ua_total_running_time=`expr "${ua_acq_end_date_epoch}" - "${ua_acq_start_date_ep
 
 printf %b "--------------------------------------------------------------------------------\n"
 log_message INFO "Artifacts collection complete. \
-Total running time: ${ua_total_running_time} seconds"
+Total execution time: ${ua_total_running_time} seconds"
 
 printf %b "Artifacts collection complete. \
-Total running time: ${ua_total_running_time} seconds\n"
+Total execution time: ${ua_total_running_time} seconds\n"
 
 # output file/directory name
 ua_output_base_name="uac-${ua_hostname}-${OPERATING_SYSTEM}-${ua_current_date_time}"

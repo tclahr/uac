@@ -1,0 +1,30 @@
+version: 2.0
+artifacts:
+  -
+    description: Collect system configuration files.
+    supported_os: [netscaler]
+    collector: file
+    path: /flash/nsconfig
+    ignore_date_range: true
+  -
+    description: Collect files from /var/vpn.
+    supported_os: [netscaler]
+    collector: file
+    path: /var/vpn
+    max_file_size: 5242880 # 5 MB
+  -
+    description: Collect files from /var/netscaler/logon.
+    supported_os: [netscaler]
+    collector: file
+    path: /var/netscaler/logon
+    max_file_size: 5242880 # 5 MB
+  -
+    description: Collect files from /netscaler/ns_gui.
+    supported_os: [netscaler]
+    collector: file
+    path: /netscaler/ns_gui
+    max_file_size: 5242880 # 5 MB
+
+# References:
+# https://www.mandiant.com/resources/blog/citrix-zero-day-espionage
+# https://www.deyda.net/index.php/en/2023/07/19/checklist-for-citrix-adc-cve-2023-3519/

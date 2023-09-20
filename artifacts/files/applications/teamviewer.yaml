@@ -1,0 +1,54 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect network and connections logs.
+    supported_os: [linux]
+    collector: file
+    path: /var/log/teamviewer*
+    name_pattern: ["Connections_incoming.txt", "install_teamviewerd.log", "signaturekey.log", "TeamViewer*_Logfile.log", "TV*Install.log", "TV*Network.log"]
+  -
+    description: Collect log files from user's home directory.
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.local/share/teamviewer*/logfiles
+    name_pattern: ["*.log"]
+    exclude_nologin_users: true
+  -
+    description: Collect sqlite3 database storing cache about TeamViewer chat.
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.local/share/teamviewer*
+    name_pattern: ["tvchatfilecache.db*"]
+    exclude_nologin_users: true
+  -
+    description: Collect sqlite3 database storing TeamViewer print jobs.
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.local/share/teamviewer*
+    name_pattern: ["tvprint.db*"]
+    exclude_nologin_users: true
+  -
+    description: Collect network and connections logs.
+    supported_os: [macos]
+    collector: file
+    path: /%user_home%/Library/Logs/TeamViewer
+    name_pattern: ["Connections_incoming.txt", "install_teamviewerd.log", "signaturekey.log", "TeamViewer*_Logfile.log", "TV*Install.log", "TV*Network.log"]
+    exclude_nologin_users: true
+  -
+    description: Collect sqlite3 database storing cache about TeamViewer chat.
+    supported_os: [macos]
+    collector: file
+    path: /%user_home%/Library/Caches/TeamViewer
+    name_pattern: ["tvchatfilecache.db*"]
+    exclude_nologin_users: true
+  -
+    description: Collect sqlite3 database storing TeamViewer print jobs.
+    supported_os: [macos]
+    collector: file
+    path: /%user_home%/Library/Caches/TeamViewer
+    name_pattern: ["tvprint.db*"]
+    exclude_nologin_users: true
+
+# References:
+# https://community.teamviewer.com/English/kb/articles/4694-find-your-log-files
+# https://www.synacktiv.com/en/publications/legitimate-rats-a-comprehensive-forensic-analysis-of-the-usual-suspects

@@ -1,5 +1,11 @@
-version: 2.0
+version: 3.0
 artifacts:
+  -
+    description: Displays the command history of all pools.
+    supported_os: [aix, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris]
+    collector: command
+    command: zpool history
+    output_file: zpool_history.txt
   -
     description: Lists all pools along with a health status and space usage.
     supported_os: [aix, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris]

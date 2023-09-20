@@ -7,5 +7,4 @@ artifacts:
     path: /Library/Logs/DiagnosticReports
     name_pattern: ["*.core_analytics"]
     ignore_date_range: true
-    exclude_nologin_users: true
   
