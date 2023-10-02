@@ -1,9 +1,0 @@
-version: 1.0
-artifacts:
-  -
-    description: Collect Box Drive configuration and sqlite database files.
-    supported_os: [macos]
-    collector: file
-    path: /%user_home%/Library/"Application Support"/Box/Box/data
-    exclude_nologin_users: true
-  
