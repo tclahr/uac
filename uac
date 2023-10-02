@@ -69,6 +69,8 @@ ua_evidence_description=""
 ua_examiner=""
 ua_notes=""
 ua_hostname=""
+ua_zip=false
+ua_zip_password=""
 ua_sftp_destination=""
 ua_sftp_port=""
 ua_sftp_identity_file=""
@@ -187,6 +189,20 @@ Try 'uac --help' for more information.\n" >&2
     "--temp-dir")
       if [ -n "${2}" ]; then
         ua_temp_dir="${2}"
+        shift
+      else
+        printf %b "uac: option '${1}' requires an argument.\n\
+Try 'uac --help' for more information.\n" >&2
+        exit 1
+      fi
+      ;;
+    # output file arguments
+    "-z"|"--zip")
+      ua_zip=true
+      ;;
+    "--zip-password")
+      if [ -n "${2}" ]; then
+        ua_zip_password="${2}"
         shift
       else
         printf %b "uac: option '${1}' requires an argument.\n\
@@ -509,6 +525,23 @@ else
   TEMP_DATA_DIR="${ua_destination_dir}/uac-data.tmp"
 fi
 
+# check if zip is available and if it supports encryption
+if ${ua_zip}; then
+  if eval "zip --version" >/dev/null 2>/dev/null; then
+    if eval "zip --password infected - \"${UAC_DIR}/uac\"" >/dev/null 2>/dev/null; then
+      true
+    else
+      printf %b "uac: cannot create password-protected zip file as 'zip' \
+tool does not support such feature.\n"
+      exit 1
+    fi
+  else
+    printf %b "uac: cannot create zip file as 'zip' \
+tool was not found.\n"
+    exit 1
+  fi
+fi
+
 # test the connectivity to remote sftp server
 if [ -n "${ua_sftp_destination}" ]; then
   if sftp_transfer_test "${ua_sftp_destination}" "${ua_sftp_port}" \
@@ -528,7 +561,7 @@ if [ -n "${ua_s3_presigned_url}" ]; then
       exit 1
     fi
   else
-    printf %b "uac: cannot transfer to S3 presigned URL because 'curl' \
+    printf %b "uac: cannot transfer to S3 presigned URL as 'curl' \
 tool was not found.\n"
     exit 1
   fi
@@ -543,7 +576,7 @@ if [ -n "${ua_azure_storage_sas_url}" ]; then
       exit 1
     fi
   else
-    printf %b "uac: cannot transfer to Azure Blob Storage SAS URL because 'curl' \
+    printf %b "uac: cannot transfer to Azure Blob Storage SAS URL as 'curl' \
 tool was not found.\n"
     exit 1
   fi
@@ -559,7 +592,7 @@ if [ -n "${ua_ibm_cos_url}" ]; then
         exit 1
       fi
     else
-      printf %b "uac: cannot transfer to IBM Cloud Object Storage because 'curl' \
+      printf %b "uac: cannot transfer to IBM Cloud Object Storage as 'curl' \
 tool was not found.\n"
       exit 1
     fi
@@ -769,8 +802,56 @@ echo "uac.log" >>"${TEMP_DATA_DIR}/.output_file.tmp"
 # add uac.log.stderr to the list of files to be archived/copied within the output file
 echo "uac.log.stderr" >>"${TEMP_DATA_DIR}/.output_file.tmp"
 
-if ${TAR_TOOL_AVAILABLE}; then
+# create output file
+if ${ua_zip}; then
+  if [ -f "${TEMP_DATA_DIR}/.files.tmp" ]; then
+    # sort and uniq
+    sort_uniq_file "${TEMP_DATA_DIR}/.files.tmp" 2>>"${UAC_STDERR_LOG_FILE}"
+    if ${ua_temp_data_dir_symlink_support}; then
+      # create symbolic link to /
+      ln -s "/" "${TEMP_DATA_DIR}/[root]" 2>>"${UAC_STDERR_LOG_FILE}"
+    else
+      # copy files to uac-data.tmp/[root]
+      printf %b "Copying files to ${TEMP_DATA_DIR}/[root]. Please wait...\n"
+      copy_data "${TEMP_DATA_DIR}/.files.tmp" "${TEMP_DATA_DIR}/[root]" \
+        2>>"${UAC_STDERR_LOG_FILE}"
+    fi
+    # add [root] string to the beginning of each entry in .files.tmp
+    # and add them to the list of files to be archived within the output file
+    sed -e 's:^/:\[root\]/:' "${TEMP_DATA_DIR}/.files.tmp" \
+      >>"${TEMP_DATA_DIR}/.output_file.tmp"
+  fi
 
+  # archive (and compress) collected artifacts to output file
+  printf %b "Creating output file. Please wait...\n"
+  cd "${TEMP_DATA_DIR}" || exit 1
+
+  ua_output_name="${ua_output_base_name}.zip"
+  zip_data ".output_file.tmp" \
+      "${ua_destination_dir}/${ua_output_name}" "${ua_zip_password}" >/dev/null 2>/dev/null
+
+  if [ -f "${ua_destination_dir}/${ua_output_name}" ]; then
+    printf %b "Output file created '${ua_destination_dir}/${ua_output_name}'\n"
+    cd "${UAC_DIR}" || exit 1
+    if ${ua_debug_mode}; then
+      printf %b "Temporary directory not removed '${TEMP_DATA_DIR}'\n"
+    else
+      rm -rf "${TEMP_DATA_DIR}" >/dev/null 2>/dev/null
+      if [ -d "${TEMP_DATA_DIR}" ]; then
+        printf %b "Cannot remove temporary directory '${TEMP_DATA_DIR}'\n"
+      fi
+    fi
+    # hash output file
+    printf %b "Hashing output file. Please wait...\n"
+    cd "${ua_destination_dir}" || exit 1
+    ua_output_file_hash=`${MD5_HASHING_TOOL} "${ua_output_name}"`
+    cd "${UAC_DIR}" || exit 1
+  else
+    printf %b "Cannot create output file\n"
+    printf %b "Please check collected artifacts in '${TEMP_DATA_DIR}'\n"
+    cd "${UAC_DIR}" && exit 1
+  fi
+elif ${TAR_TOOL_AVAILABLE}; then
   if [ -f "${TEMP_DATA_DIR}/.files.tmp" ]; then
     # sort and uniq
     sort_uniq_file "${TEMP_DATA_DIR}/.files.tmp" 2>>"${UAC_STDERR_LOG_FILE}"
