@@ -10,6 +10,7 @@
 . "${UAC_DIR}/lib/azure_storage_sas_url_transfer.sh"
 . "${UAC_DIR}/lib/check_available_system_tools.sh"
 . "${UAC_DIR}/lib/command_collector.sh"
+. "${UAC_DIR}/lib/command_exists.sh"
 . "${UAC_DIR}/lib/copy_data.sh"
 . "${UAC_DIR}/lib/create_acquisition_log.sh"
 . "${UAC_DIR}/lib/create_artifact_list.sh"

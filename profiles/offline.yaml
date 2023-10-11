@@ -1,5 +1,5 @@
 name: offline
-description: offline artifacts collection.
+description: Offline artifacts collection.
 artifacts:
   - bodyfile/bodyfile.yaml
   - chkrootkit/chkrootkit.yaml

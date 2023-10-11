@@ -10,7 +10,7 @@
 #   OPERATING_SYSTEM
 #   UAC_DIR
 # Requires:
-#   None
+#   command_exists
 # Arguments:
 #   None
 # Outputs:
@@ -32,7 +32,6 @@
 #     STATX_TOOL_AVAILABLE
 #     STAT_BTIME_SUPPORT
 #     STAT_TOOL_AVAILABLE
-#     TAR_TOOL_AVAILABLE
 #     XARGS_REPLACE_STRING_SUPPORT
 # Exit Status:
 #   Last command exit status code.
@@ -58,29 +57,25 @@ check_available_system_tools()
   STATX_TOOL_AVAILABLE=false
   STAT_BTIME_SUPPORT=false
   STAT_TOOL_AVAILABLE=false
-  TAR_TOOL_AVAILABLE=false
   XARGS_REPLACE_STRING_SUPPORT=false
 
-  # each command needs to be tested individually as some systems do not have
-  # 'type' or 'which' tool
-
   # check if 'gzip' tool is available
-  if eval "echo \"uac\" | gzip"; then
+  if command_exists "gzip"; then
     GZIP_TOOL_AVAILABLE=true
   fi
   
   # check if 'perl' is available
-  if eval "perl -e 'print \"uac\"'"; then
+  if command_exists "perl"; then
     PERL_TOOL_AVAILABLE=true
   fi
 
   # check if 'procstat' is available
-  if eval "procstat $$"; then
+  if command_exists "procstat"; then
     PROCSTAT_TOOL_AVAILABLE=true
   fi
 
   # check if 'stat' is available
-  if eval "stat \"${MOUNT_POINT}\""; then
+  if command_exists "stat"; then
     STAT_TOOL_AVAILABLE=true
     # check if birth time is collected by 'stat'
     case "${OPERATING_SYSTEM}" in
@@ -99,58 +94,56 @@ check_available_system_tools()
     esac
   fi
 
-  # check if 'statx' is available for the current system architecture
-  if [ "${OPERATING_SYSTEM}" = "esxi" ] \
-    || [ "${OPERATING_SYSTEM}" = "linux" ]; then
-    ca_arch=""
-    case "${SYSTEM_ARCH}" in
-      armv5*|armv6*|armv7*)
-        ca_arch="arm"
-        ;;
-      aarch64*|armv8*)
-        ca_arch="arm64"
-        ;;
-      "i386"|"i686")
-        ca_arch="i686"
-        ;;
-      "mips")
-        ca_arch="mips"
-        ;;
-      "mips64")
-        ca_arch="mips64"
-        ;;
-      "ppc")
-        ca_arch="ppc"
-        ;;
-      "ppc64")
-        ca_arch="ppc64"
-        ;;
-      "ppc64le")
-        ca_arch="ppc64le"
-        ;;
-      s390*)
-        ca_arch="s390"
-        ;;  
-      sparc*)
-        ca_arch="sparc"
-        ;;
-      "x86_64")
-        ca_arch="x86_64"
-        ;;   
-    esac
-    if [ -n "${ca_arch}" ] \
-      && eval "\"${UAC_DIR}/tools/statx/bin/linux/${ca_arch}/statx\" \
-      \"${MOUNT_POINT}\""; then
-      PATH="${UAC_DIR}/tools/statx/bin/linux/${ca_arch}:${PATH}"
-        export PATH
-        STATX_TOOL_AVAILABLE=true
+  if ${STAT_BTIME_SUPPORT}; then
+    true
+  else
+    # check if 'statx' is available for the current system architecture
+    if [ "${OPERATING_SYSTEM}" = "esxi" ] \
+      || [ "${OPERATING_SYSTEM}" = "linux" ]; then
+      ca_arch=""
+      case "${SYSTEM_ARCH}" in
+        armv5*|armv6*|armv7*)
+          ca_arch="arm"
+          ;;
+        aarch64*|armv8*)
+          ca_arch="arm64"
+          ;;
+        "i386"|"i686")
+          ca_arch="i686"
+          ;;
+        "mips")
+          ca_arch="mips"
+          ;;
+        "mips64")
+          ca_arch="mips64"
+          ;;
+        "ppc")
+          ca_arch="ppc"
+          ;;
+        "ppc64")
+          ca_arch="ppc64"
+          ;;
+        "ppc64le")
+          ca_arch="ppc64le"
+          ;;
+        s390*)
+          ca_arch="s390"
+          ;;  
+        sparc*)
+          ca_arch="sparc"
+          ;;
+        "x86_64")
+          ca_arch="x86_64"
+          ;;   
+      esac
+      if [ -n "${ca_arch}" ] \
+        && eval "\"${UAC_DIR}/tools/statx/bin/linux/${ca_arch}/statx\" \"${MOUNT_POINT}\""; then
+        PATH="${UAC_DIR}/tools/statx/bin/linux/${ca_arch}:${PATH}"
+          export PATH
+          STATX_TOOL_AVAILABLE=true
+      fi
     fi
   fi
-
-  # check if 'tar' tool is available
-  if eval "tar -cf - \"${UAC_DIR}/uac\""; then
-    TAR_TOOL_AVAILABLE=true
-  fi  
 
   # check if 'xargs' supports -I{} parameter
   if eval "echo \"uac\" | xargs -I{}"; then
@@ -198,9 +191,9 @@ check_available_system_tools()
   fi
 
   # check for available MD5 hashing tools
-  if eval "echo \"uac\" | md5sum"; then
+  if command_exists "md5sum"; then
     MD5_HASHING_TOOL="md5sum"
-  elif eval "echo \"uac\" | md5"; then
+  elif command_exists "md5"; then
     MD5_HASHING_TOOL="md5"
   elif eval "echo \"uac\" | digest -v -a md5"; then
     MD5_HASHING_TOOL="digest -v -a md5"
@@ -211,11 +204,11 @@ check_available_system_tools()
   fi
 
   # check for available SHA1 hashing tools
-  if eval "echo \"uac\" | sha1sum"; then
+  if command_exists "sha1sum"; then
     SHA1_HASHING_TOOL="sha1sum"
   elif eval "echo \"uac\" | shasum -a 1"; then
     SHA1_HASHING_TOOL="shasum -a 1"
-  elif eval "echo \"uac\" | sha1"; then
+  elif command_exists "sha1"; then
     SHA1_HASHING_TOOL="sha1"
   elif eval "echo \"uac\" | digest -v -a sha1"; then
     SHA1_HASHING_TOOL="digest -v -a sha1"
@@ -226,11 +219,11 @@ check_available_system_tools()
   fi
 
   # check for available SHA256 hashing tools
-  if eval "echo \"uac\" | sha256sum"; then
+  if command_exists "sha256sum"; then
     SHA256_HASHING_TOOL="sha256sum"
   elif eval "echo \"uac\" | shasum -a 256"; then
     SHA256_HASHING_TOOL="shasum -a 256"
-  elif eval "echo \"uac\" | sha256"; then
+  elif command_exists "sha256"; then
     SHA256_HASHING_TOOL="sha256"
   elif eval "echo \"uac\" | digest -v -a sha256"; then
     SHA256_HASHING_TOOL="digest -v -a sha256"

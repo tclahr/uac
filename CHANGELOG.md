@@ -6,8 +6,18 @@
 
 - Now it is possible to create password-protected zip output files using -z/--zip command line option (if zip is available on the target system). Default password: 'infected'.
 - You can use --zip-password command line option to set a custom password.
+- Now it is possible to set a custom output file name using -o/--output-filename command line option. You can also use variables to format the filename. Please refer to the [project's documentation page](https://tclahr.github.io/uac-docs/) for more information.
 
 ### Artifacts
 
 - files/applications/box_drive.yaml was renamed to box.yaml.
 - files/applications/box.yaml: Added the collection of Box log files [macos].
+- files/system/etc.yaml: Added "master.passwd" and "spwd.db" to the exclude_name_pattern list as they contain the hashed passwords of local users [freebsd, netbsd, netscaler, openbsd].
+
+### Profiles
+
+- profiles/offline.yaml: New 'offline' profile that can be used during offline collections.
+
+### Tools
+
+- ```statx``` source code was moved to a dedicated repository at https://github.com/tclahr/statx

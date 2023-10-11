@@ -63,14 +63,16 @@ ua_artifacts=""
 ua_destination_dir=""
 ua_run_as_non_root=false
 ua_temp_dir=""
+ua_output_base_filename=""
+ua_output_filename=""
+ua_zip=false
+ua_zip_password=""
 ua_case_number=""
 ua_evidence_number=""
 ua_evidence_description=""
 ua_examiner=""
 ua_notes=""
 ua_hostname=""
-ua_zip=false
-ua_zip_password=""
 ua_sftp_destination=""
 ua_sftp_port=""
 ua_sftp_identity_file=""
@@ -152,6 +154,30 @@ Try 'uac --help' for more information.\n" >&2
         exit 1
       fi
       ;;
+    # output file arguments
+    "-o"|"--output-filename")
+      if [ -n "${2}" ]; then
+        ua_output_base_filename="${2}"
+        shift
+      else
+        printf %b "uac: option '${1}' requires an argument.\n\
+Try 'uac --help' for more information.\n" >&2
+        exit 1
+      fi
+      ;;
+    "-z"|"--zip")
+      ua_zip=true
+      ;;
+    "--zip-password")
+      if [ -n "${2}" ]; then
+        ua_zip_password="${2}"
+        shift
+      else
+        printf %b "uac: option '${1}' requires an argument.\n\
+Try 'uac --help' for more information.\n" >&2
+        exit 1
+      fi
+      ;;
     # collection arguments
     "-m"|"--mount-point")
       if [ -n "${2}" ]; then
@@ -189,20 +215,6 @@ Try 'uac --help' for more information.\n" >&2
     "--temp-dir")
       if [ -n "${2}" ]; then
         ua_temp_dir="${2}"
-        shift
-      else
-        printf %b "uac: option '${1}' requires an argument.\n\
-Try 'uac --help' for more information.\n" >&2
-        exit 1
-      fi
-      ;;
-    # output file arguments
-    "-z"|"--zip")
-      ua_zip=true
-      ;;
-    "--zip-password")
-      if [ -n "${2}" ]; then
-        ua_zip_password="${2}"
         shift
       else
         printf %b "uac: option '${1}' requires an argument.\n\
@@ -514,6 +526,34 @@ if [ -z "${ua_hostname}" ]; then
   ua_hostname=`get_hostname 2>/dev/null`
 fi
 
+# get current date and time string
+ua_current_date_time=`date "+%Y%m%d%H%M%S"`
+if [ -n "${ua_output_base_filename}" ]; then
+  ua_output_base_filename=`echo "${ua_output_base_filename}" \
+                        | sed -e "s|%hostname%|${ua_hostname}|g" \
+                              -e "s|%os%|${OPERATING_SYSTEM}|g" \
+                              -e "s|%timestamp%|${ua_current_date_time}|g"`
+  if [ -z "${ua_output_base_filename}" ]; then
+    printf %b "uac: invalid empty output filename\n" >&2
+    exit 1
+  fi
+else
+  ua_output_base_filename="uac-${ua_hostname}-${OPERATING_SYSTEM}-${ua_current_date_time}"
+fi
+
+# check if output filename/directory exists
+if [ -d "${ua_destination_dir}/${ua_output_base_filename}" ]; then
+  printf %b "uac: output directory already exists '${ua_destination_dir}/${ua_output_base_filename}'\n" >&2
+  exit 1
+else
+  for ua_ext in tar.gz tar zip log; do
+    if [ -f "${ua_destination_dir}/${ua_output_base_filename}.${ua_ext}" ]; then
+      printf %b "uac: acquisition with same output file name already exists '${ua_destination_dir}/${ua_output_base_filename}.${ua_ext}'\n" >&2
+      exit 1
+    fi
+  done
+fi
+
 # check if destination directory's file system supports symlink creation
 if [ -n "${ua_temp_dir}" ]; then
   file_system_symlink_support "${ua_temp_dir}" >/dev/null 2>/dev/null \
@@ -527,7 +567,7 @@ fi
 
 # check if zip is available and if it supports encryption
 if ${ua_zip}; then
-  if eval "zip --version" >/dev/null 2>/dev/null; then
+  if command_exists "zip"; then
     if eval "zip --password infected - \"${UAC_DIR}/uac\"" >/dev/null 2>/dev/null; then
       true
     else
@@ -554,7 +594,7 @@ fi
 
 # test the connectivity to S3 presigned url
 if [ -n "${ua_s3_presigned_url}" ]; then
-  if eval "curl --version" >/dev/null 2>/dev/null; then
+  if command_exists "curl"; then
     if s3_presigned_url_transfer_test "${ua_s3_presigned_url}"; then
       true
     else
@@ -569,7 +609,7 @@ fi
 
 # test the connectivity to Azure Blob Storage SAS url
 if [ -n "${ua_azure_storage_sas_url}" ]; then
-  if eval "curl --version" >/dev/null 2>/dev/null; then
+  if command_exists "curl"; then
     if azure_storage_sas_url_transfer_test "${ua_azure_storage_sas_url}"; then
       true
     else
@@ -585,7 +625,7 @@ fi
 # test the connectivity to IBM Cloud Object Storage url
 if [ -n "${ua_ibm_cos_url}" ]; then
   if [ -n "${ua_ibm_cloud_api_key}" ]; then
-    if eval "curl --version" >/dev/null 2>/dev/null; then
+    if command_exists "curl"; then
       if ibm_cos_transfer_test "${ua_ibm_cos_url}" "${ua_ibm_cloud_api_key}"; then
         true
       else
@@ -711,7 +751,6 @@ log_message INFO "SHA1 hashing tool: ${SHA1_HASHING_TOOL}"
 log_message INFO "SHA256 hashing tool: ${SHA256_HASHING_TOOL}"
 log_message INFO "'gzip' tool available: ${GZIP_TOOL_AVAILABLE}"
 log_message INFO "'perl' tool available: ${PERL_TOOL_AVAILABLE}"
-log_message INFO "'tar' tool available: ${TAR_TOOL_AVAILABLE}"
 log_message INFO "'stat' tool available: ${STAT_TOOL_AVAILABLE}"
 log_message INFO "'stat' btime support: ${STAT_BTIME_SUPPORT}"
 log_message INFO "'statx' tool available: ${STATX_TOOL_AVAILABLE}"
@@ -772,8 +811,6 @@ ${ua_debug_mode} && set +x
 ua_acq_end_date=`date "+%a %b %d %H:%M:%S %Y %z" 2>>"${UAC_STDERR_LOG_FILE}"`
 # acquisition end epoch date
 ua_acq_end_date_epoch=`get_epoch_date 2>>"${UAC_STDERR_LOG_FILE}"`
-# get current date and time string (it will be part of the output file name)
-ua_current_date_time=`date "+%Y%m%d%H%M%S"`
 
 # calculate running time
 # shellcheck disable=SC2003
@@ -786,12 +823,8 @@ Total execution time: ${ua_total_running_time} seconds"
 printf %b "Artifacts collection complete. \
 Total execution time: ${ua_total_running_time} seconds\n"
 
-# output file/directory name
-ua_output_base_name="uac-${ua_hostname}-${OPERATING_SYSTEM}-${ua_current_date_time}"
-# output file/directory name
-ua_output_name="${ua_output_base_name}"
 # acquisition log file name
-ua_acquisition_log="${ua_output_base_name}.log"
+ua_acquisition_log="${ua_output_base_filename}.log"
 # output file hash
 ua_output_file_hash="-"
 
@@ -826,12 +859,12 @@ if ${ua_zip}; then
   printf %b "Creating output file. Please wait...\n"
   cd "${TEMP_DATA_DIR}" || exit 1
 
-  ua_output_name="${ua_output_base_name}.zip"
+  ua_output_filename="${ua_output_base_filename}.zip"
   zip_data ".output_file.tmp" \
-      "${ua_destination_dir}/${ua_output_name}" "${ua_zip_password}" >/dev/null 2>/dev/null
+      "${ua_destination_dir}/${ua_output_filename}" "${ua_zip_password}" >/dev/null 2>/dev/null
 
-  if [ -f "${ua_destination_dir}/${ua_output_name}" ]; then
-    printf %b "Output file created '${ua_destination_dir}/${ua_output_name}'\n"
+  if [ -f "${ua_destination_dir}/${ua_output_filename}" ]; then
+    printf %b "Output file created '${ua_destination_dir}/${ua_output_filename}'\n"
     cd "${UAC_DIR}" || exit 1
     if ${ua_debug_mode}; then
       printf %b "Temporary directory not removed '${TEMP_DATA_DIR}'\n"
@@ -844,14 +877,14 @@ if ${ua_zip}; then
     # hash output file
     printf %b "Hashing output file. Please wait...\n"
     cd "${ua_destination_dir}" || exit 1
-    ua_output_file_hash=`${MD5_HASHING_TOOL} "${ua_output_name}"`
+    ua_output_file_hash=`${MD5_HASHING_TOOL} "${ua_output_filename}"`
     cd "${UAC_DIR}" || exit 1
   else
     printf %b "Cannot create output file\n"
     printf %b "Please check collected artifacts in '${TEMP_DATA_DIR}'\n"
     cd "${UAC_DIR}" && exit 1
   fi
-elif ${TAR_TOOL_AVAILABLE}; then
+elif command_exists "tar"; then
   if [ -f "${TEMP_DATA_DIR}/.files.tmp" ]; then
     # sort and uniq
     sort_uniq_file "${TEMP_DATA_DIR}/.files.tmp" 2>>"${UAC_STDERR_LOG_FILE}"
@@ -875,17 +908,17 @@ elif ${TAR_TOOL_AVAILABLE}; then
   cd "${TEMP_DATA_DIR}" || exit 1
 
   if ${GZIP_TOOL_AVAILABLE}; then
-    ua_output_name="${ua_output_base_name}.tar.gz"
+    ua_output_filename="${ua_output_base_filename}.tar.gz"
     archive_compress_data ".output_file.tmp" \
-      "${ua_destination_dir}/${ua_output_name}" 2>/dev/null
+      "${ua_destination_dir}/${ua_output_filename}" 2>/dev/null
   else
-    ua_output_name="${ua_output_base_name}.tar"
+    ua_output_filename="${ua_output_base_filename}.tar"
     archive_data ".output_file.tmp" \
-      "${ua_destination_dir}/${ua_output_name}" 2>/dev/null
+      "${ua_destination_dir}/${ua_output_filename}" 2>/dev/null
   fi
 
-  if [ -f "${ua_destination_dir}/${ua_output_name}" ]; then
-    printf %b "Output file created '${ua_destination_dir}/${ua_output_name}'\n"
+  if [ -f "${ua_destination_dir}/${ua_output_filename}" ]; then
+    printf %b "Output file created '${ua_destination_dir}/${ua_output_filename}'\n"
     cd "${UAC_DIR}" || exit 1
     if ${ua_debug_mode}; then
       printf %b "Temporary directory not removed '${TEMP_DATA_DIR}'\n"
@@ -898,7 +931,7 @@ elif ${TAR_TOOL_AVAILABLE}; then
     # hash output file
     printf %b "Hashing output file. Please wait...\n"
     cd "${ua_destination_dir}" || exit 1
-    ua_output_file_hash=`${MD5_HASHING_TOOL} "${ua_output_name}"`
+    ua_output_file_hash=`${MD5_HASHING_TOOL} "${ua_output_filename}"`
     cd "${UAC_DIR}" || exit 1
   else
     printf %b "Cannot create output file\n"
@@ -906,20 +939,21 @@ elif ${TAR_TOOL_AVAILABLE}; then
     cd "${UAC_DIR}" && exit 1
   fi
 else
-  printf %b "'tar' not found. Copying collected artifacts to '${ua_destination_dir}/${ua_output_name}'. Please wait...\n"
+  ua_output_filename="${ua_output_base_filename}"
+  printf %b "'tar' not found. Copying collected artifacts to '${ua_destination_dir}/${ua_output_filename}'. Please wait...\n"
   if [ -f "${TEMP_DATA_DIR}/.files.tmp" ]; then
     # sort and uniq
     sort_uniq_file "${TEMP_DATA_DIR}/.files.tmp" 2>>"${UAC_STDERR_LOG_FILE}"
-    copy_data "${TEMP_DATA_DIR}/.files.tmp" "${ua_destination_dir}/${ua_output_name}/[root]" \
+    copy_data "${TEMP_DATA_DIR}/.files.tmp" "${ua_destination_dir}/${ua_output_filename}/[root]" \
       2>>"${UAC_STDERR_LOG_FILE}"
   fi
 
   cd "${TEMP_DATA_DIR}" || exit 1
-  copy_data "${TEMP_DATA_DIR}/.output_file.tmp" "${ua_destination_dir}/${ua_output_name}" \
+  copy_data "${TEMP_DATA_DIR}/.output_file.tmp" "${ua_destination_dir}/${ua_output_filename}" \
     2>>"${UAC_STDERR_LOG_FILE}"
-  ua_file_count=`find "${ua_destination_dir}/${ua_output_name}" -print | wc -l`
+  ua_file_count=`find "${ua_destination_dir}/${ua_output_filename}" -print | wc -l`
   if [ "${ua_file_count}" -gt 2 ]; then
-    printf %b "Please check collected artifacts in '${ua_destination_dir}/${ua_output_name}'\n"
+    printf %b "Please check collected artifacts in '${ua_destination_dir}/${ua_output_filename}'\n"
     cd "${UAC_DIR}" || exit 1
     if ${ua_debug_mode}; then
       printf %b "Temporary directory not removed '${TEMP_DATA_DIR}'\n"
@@ -956,15 +990,15 @@ fi
 
 # transfer output and log file to remote sftp server
 if [ -n "${ua_sftp_destination}" ]; then
-  if [ -f "${ua_destination_dir}/${ua_output_name}" ] \
-    || [ -d "${ua_destination_dir}/${ua_output_name}" ]; then
+  if [ -f "${ua_destination_dir}/${ua_output_filename}" ] \
+    || [ -d "${ua_destination_dir}/${ua_output_filename}" ]; then
     printf %b "Transferring output file to remote SFTP server. Please wait...\n"
-    if sftp_transfer "${ua_destination_dir}/${ua_output_name}" \
+    if sftp_transfer "${ua_destination_dir}/${ua_output_filename}" \
       "${ua_sftp_destination}" "${ua_sftp_port}" "${ua_sftp_identity_file}"; then
       printf %b "File transferred successfully\n"
       # delete output file on success transfer
       ${ua_delete_local_on_successful_transfer} \
-        && rm -f "${ua_destination_dir}/${ua_output_name}" 2>/dev/null
+        && rm -f "${ua_destination_dir}/${ua_output_filename}" 2>/dev/null
       printf %b "Transferring log file to remote SFTP server. Please wait...\n"
       if sftp_transfer "${ua_destination_dir}/${ua_acquisition_log}" \
         "${ua_sftp_destination}" "${ua_sftp_port}" "${ua_sftp_identity_file}"; then
@@ -985,14 +1019,14 @@ fi
 
 # transfer output and log file to S3 presigned url
 if [ -n "${ua_s3_presigned_url}" ]; then
-  if [ -f "${ua_destination_dir}/${ua_output_name}" ]; then
+  if [ -f "${ua_destination_dir}/${ua_output_filename}" ]; then
     printf %b "Transferring output file to S3 presigned URL. Please wait...\n"
-    if s3_presigned_url_transfer "${ua_destination_dir}/${ua_output_name}" \
+    if s3_presigned_url_transfer "${ua_destination_dir}/${ua_output_filename}" \
       "${ua_s3_presigned_url}"; then
       printf %b "File transferred successfully\n"
       # delete output file on success transfer
       ${ua_delete_local_on_successful_transfer} \
-        && rm -f "${ua_destination_dir}/${ua_output_name}" 2>/dev/null
+        && rm -f "${ua_destination_dir}/${ua_output_filename}" 2>/dev/null
     else
       printf %b "Could not transfer output file to S3 presigned URL\n"
       exit 1
@@ -1015,14 +1049,14 @@ fi
 
 # transfer output and log file to Azure Storage SAS url
 if [ -n "${ua_azure_storage_sas_url}" ]; then
-  if [ -f "${ua_destination_dir}/${ua_output_name}" ]; then
+  if [ -f "${ua_destination_dir}/${ua_output_filename}" ]; then
     printf %b "Transferring output file to Azure Storage SAS URL. Please wait...\n"
-    if azure_storage_sas_url_transfer "${ua_destination_dir}/${ua_output_name}" \
+    if azure_storage_sas_url_transfer "${ua_destination_dir}/${ua_output_filename}" \
       "${ua_azure_storage_sas_url}"; then
       printf %b "File transferred successfully\n"
       # delete output file on success transfer
       ${ua_delete_local_on_successful_transfer} \
-        && rm -f "${ua_destination_dir}/${ua_output_name}" 2>/dev/null
+        && rm -f "${ua_destination_dir}/${ua_output_filename}" 2>/dev/null
     else
       printf %b "Could not transfer output file to Azure Storage SAS URL\n"
       exit 1
@@ -1045,14 +1079,14 @@ fi
 
 # transfer output and log file to IBM Cloud Object Storage
 if [ -n "${ua_ibm_cos_url}" ]; then
-  if [ -f "${ua_destination_dir}/${ua_output_name}" ]; then
+  if [ -f "${ua_destination_dir}/${ua_output_filename}" ]; then
     printf %b "Transferring output file to IBM Cloud Object Storage. Please wait...\n"
-    if ibm_cos_transfer "${ua_destination_dir}/${ua_output_name}" \
+    if ibm_cos_transfer "${ua_destination_dir}/${ua_output_filename}" \
       "${ua_ibm_cos_url}" "${ua_ibm_cloud_api_key}"; then
       printf %b "File transferred successfully\n"
       # delete output file on success transfer
       ${ua_delete_local_on_successful_transfer} \
-        && rm -f "${ua_destination_dir}/${ua_output_name}" 2>/dev/null
+        && rm -f "${ua_destination_dir}/${ua_output_filename}" 2>/dev/null
     else
       printf %b "Could not transfer output file to IBM Cloud Object Storage\n"
       exit 1
