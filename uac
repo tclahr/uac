@@ -677,7 +677,9 @@ SYSTEM_ARCH=`get_system_arch 2>>"${UAC_STDERR_LOG_FILE}"`
 # add local 'bin' directory to path
 PATH="${UAC_DIR}/bin/${OPERATING_SYSTEM}/${SYSTEM_ARCH}:${PATH}"
 # add 'avml' tool directory to path
-PATH="${UAC_DIR}/tools/avml/bin/${OPERATING_SYSTEM}/${SYSTEM_ARCH}:${PATH}"
+if [ "${OPERATING_SYSTEM}" = "esxi" ] || [ "${OPERATING_SYSTEM}" = "linux" ]; then
+  PATH="${UAC_DIR}/tools/avml/linux:${PATH}"
+fi
 # add 'linux_procmemdump.sh' tool directory to path
 PATH="${UAC_DIR}/tools/linux_procmemdump.sh:${PATH}"
 export PATH
