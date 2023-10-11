@@ -15,12 +15,12 @@ command_exists()
     return 1
   fi
 
-  if eval type type >/dev/null; then
-    eval type "${co_command}" >/dev/null
-  elif command >/dev/null; then
-    command -v "${co_command}" >/dev/null
+  if eval type type >/dev/null 2>/dev/null; then
+    eval type "${co_command}" >/dev/null 2>/dev/null
+  elif command >/dev/null 2>/dev/null; then
+    command -v "${co_command}" >/dev/null 2>/dev/null
   else
-    which "${co_command}" >/dev/null
+    which "${co_command}" >/dev/null 2>/dev/null
   fi
 
 }
