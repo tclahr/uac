@@ -102,14 +102,14 @@ check_available_system_tools()
       || [ "${OPERATING_SYSTEM}" = "linux" ]; then
       ca_arch=""
       case "${SYSTEM_ARCH}" in
-        armv5*|armv6*|armv7*)
+        armv[34567]*)
           ca_arch="arm"
           ;;
-        aarch64*|armv8*)
+        aarch64*|armv[89]*)
           ca_arch="arm64"
           ;;
-        "i386"|"i686")
-          ca_arch="i686"
+        "i486"|"i586"|"i686"|pentium*|athlon*)
+          ca_arch="i386"
           ;;
         "mips")
           ca_arch="mips"
@@ -130,15 +130,15 @@ check_available_system_tools()
           ca_arch="s390"
           ;;  
         sparc*)
-          ca_arch="sparc"
+          ca_arch="sparc64"
           ;;
-        "x86_64")
+        *)
           ca_arch="x86_64"
           ;;   
       esac
       if [ -n "${ca_arch}" ] \
-        && eval "\"${UAC_DIR}/tools/statx/bin/linux/${ca_arch}/statx\" \"${MOUNT_POINT}\""; then
-        PATH="${UAC_DIR}/tools/statx/bin/linux/${ca_arch}:${PATH}"
+        && eval "\"${UAC_DIR}/tools/statx/linux/${ca_arch}/statx\" \"${MOUNT_POINT}\""; then
+        PATH="${UAC_DIR}/tools/statx/linux/${ca_arch}:${PATH}"
           export PATH
           STATX_TOOL_AVAILABLE=true
       fi
