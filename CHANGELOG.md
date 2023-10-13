@@ -4,7 +4,7 @@
 
 ### Features
 
-- Now it is possible to create password-protected zip output files using -z/--zip command line option (if zip is available on the target system). Default password: 'infected'.
+- Now it is possible to create password-protected zip output files using -z/--zip command line option. Default password: 'infected'.
 - You can use --zip-password command line option to set a custom password.
 - Now it is possible to set a custom output file name using -o/--output-filename command line option. You can also use variables to format the filename. Please refer to the [project's documentation page](https://tclahr.github.io/uac-docs/) for more information.
 
@@ -20,4 +20,7 @@
 
 ### Tools
 
+- statically linked ```zip``` is available for the following systems:
+  - linux/esxi (arm, arm64, i386 and x86_64)
+  - freebsd/netscaler (i386 and x86_64)
 - ```statx``` source code was moved to a dedicated repository at https://github.com/tclahr/statx

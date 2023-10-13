@@ -565,9 +565,12 @@ else
   TEMP_DATA_DIR="${ua_destination_dir}/uac-data.tmp"
 fi
 
+# check available system tools
+check_available_system_tools >/dev/null 2>/dev/null
+
 # check if zip is available and if it supports encryption
 if ${ua_zip}; then
-  if command_exists "zip"; then
+  if ${ZIP_TOOL_AVAILABLE}; then
     if eval "zip --password infected - \"${UAC_DIR}/uac\"" >/dev/null 2>/dev/null; then
       true
     else
@@ -577,7 +580,7 @@ tool does not support such feature.\n"
     fi
   else
     printf %b "uac: cannot create zip file as 'zip' \
-tool was not found.\n"
+tool is not available.\n"
     exit 1
   fi
 fi
@@ -594,7 +597,7 @@ fi
 
 # test the connectivity to S3 presigned url
 if [ -n "${ua_s3_presigned_url}" ]; then
-  if command_exists "curl"; then
+  if ${CURL_TOOL_AVAILABLE}; then
     if s3_presigned_url_transfer_test "${ua_s3_presigned_url}"; then
       true
     else
@@ -609,7 +612,7 @@ fi
 
 # test the connectivity to Azure Blob Storage SAS url
 if [ -n "${ua_azure_storage_sas_url}" ]; then
-  if command_exists "curl"; then
+  if ${CURL_TOOL_AVAILABLE}; then
     if azure_storage_sas_url_transfer_test "${ua_azure_storage_sas_url}"; then
       true
     else
@@ -625,7 +628,7 @@ fi
 # test the connectivity to IBM Cloud Object Storage url
 if [ -n "${ua_ibm_cos_url}" ]; then
   if [ -n "${ua_ibm_cloud_api_key}" ]; then
-    if command_exists "curl"; then
+    if ${CURL_TOOL_AVAILABLE}; then
       if ibm_cos_transfer_test "${ua_ibm_cos_url}" "${ua_ibm_cloud_api_key}"; then
         true
       else
@@ -734,11 +737,6 @@ log_message INFO "Hash algorithm: ${HASH_ALGORITHM}"
 log_message INFO "Enable find mtime: ${ENABLE_FIND_MTIME}"
 log_message INFO "Enable find atime: ${ENABLE_FIND_ATIME}"
 log_message INFO "Enable find ctime: ${ENABLE_FIND_CTIME}"
-
-# check available system tools
-log_message INFO "Checking available system tools"
-check_available_system_tools >/dev/null 2>>"${UAC_STDERR_LOG_FILE}"
-
 log_message INFO "'find' opperators support: ${FIND_OPERATORS_SUPPORT}"
 log_message INFO "'find -path' support: ${FIND_PATH_SUPPORT}"
 log_message INFO "'find -type' support: ${FIND_TYPE_SUPPORT}"
