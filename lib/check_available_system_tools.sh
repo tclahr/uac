@@ -15,6 +15,7 @@
 #   None
 # Outputs:
 #   Set the value for the following global vars:
+#     CURL_TOOL_AVAILABLE
 #     FIND_ATIME_SUPPORT
 #     FIND_CTIME_SUPPORT
 #     FIND_MAXDEPTH_SUPPORT
@@ -33,12 +34,13 @@
 #     STAT_BTIME_SUPPORT
 #     STAT_TOOL_AVAILABLE
 #     XARGS_REPLACE_STRING_SUPPORT
+#     ZIP_TOOL_AVAILABLE
 # Exit Status:
 #   Last command exit status code.
 ###############################################################################
 check_available_system_tools()
 {
-
+  CURL_TOOL_AVAILABLE=false
   FIND_ATIME_SUPPORT=false
   FIND_CTIME_SUPPORT=false
   FIND_MAXDEPTH_SUPPORT=false
@@ -58,6 +60,7 @@ check_available_system_tools()
   STAT_BTIME_SUPPORT=false
   STAT_TOOL_AVAILABLE=false
   XARGS_REPLACE_STRING_SUPPORT=false
+  ZIP_TOOL_AVAILABLE=false
 
   # check if 'gzip' tool is available
   if command_exists "gzip"; then
@@ -72,6 +75,36 @@ check_available_system_tools()
   # check if 'procstat' is available
   if command_exists "procstat"; then
     PROCSTAT_TOOL_AVAILABLE=true
+  fi
+
+  # check if 'curl' is available
+  if command_exists "curl"; then
+    CURL_TOOL_AVAILABLE=true
+  fi
+
+  # check if 'zip' is available
+  if command_exists "zip"; then
+    ZIP_TOOL_AVAILABLE=true
+  elif [ "${OPERATING_SYSTEM}" = "esxi" ] \
+    || [ "${OPERATING_SYSTEM}" = "linux" ]; then
+    for ca_directory in "${UAC_DIR}"/tools/zip/linux/*; do
+      if "${ca_directory}/zip" - "${UAC_DIR}/uac" >/dev/null 2>/dev/null; then
+        PATH="${ca_directory}:${PATH}"
+        export PATH
+        ZIP_TOOL_AVAILABLE=true
+        break
+      fi
+    done
+  elif [ "${OPERATING_SYSTEM}" = "freebsd" ] \
+    || [ "${OPERATING_SYSTEM}" = "netscaler" ]; then
+    for ca_directory in "${UAC_DIR}"/tools/zip/freebsd/*; do
+      if "${ca_directory}/zip" - "${UAC_DIR}/uac" >/dev/null 2>/dev/null; then
+        PATH="${ca_directory}:${PATH}"
+        export PATH
+        ZIP_TOOL_AVAILABLE=true
+        break
+      fi
+    done
   fi
 
   # check if 'stat' is available
@@ -139,8 +172,8 @@ check_available_system_tools()
       if [ -n "${ca_arch}" ] \
         && eval "\"${UAC_DIR}/tools/statx/linux/${ca_arch}/statx\" \"${MOUNT_POINT}\""; then
         PATH="${UAC_DIR}/tools/statx/linux/${ca_arch}:${PATH}"
-          export PATH
-          STATX_TOOL_AVAILABLE=true
+        export PATH
+        STATX_TOOL_AVAILABLE=true
       fi
     fi
   fi
