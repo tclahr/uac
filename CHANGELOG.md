@@ -12,6 +12,8 @@
 
 - files/applications/box_drive.yaml was renamed to box.yaml.
 - files/applications/box.yaml: Added the collection of Box log files [macos].
+- files/applications/wget.yaml: Added the collection of wget hsts file. This file is used to store the HSTS cache for the wget utility [aix, esxi, freebsd, linux, macos, netbsd, openbsd, solaris].
+- files/system/etc.yaml: Add exclusions for the group shadow files 'gshadow' and 'gshadow-'. Those files contain password hashes for groups [linux].
 - files/system/etc.yaml: Added "master.passwd" and "spwd.db" to the exclude_name_pattern list as they contain the hashed passwords of local users [freebsd, netbsd, netscaler, openbsd].
 
 ### Profiles
@@ -20,7 +22,7 @@
 
 ### Tools
 
-- statically linked ```zip``` is available for the following systems:
+- statically linked ```zip``` is now available for the following systems:
   - linux/esxi (arm, arm64, i386 and x86_64)
   - freebsd/netscaler (i386 and x86_64)
 - ```statx``` source code was moved to a dedicated repository at https://github.com/tclahr/statx
