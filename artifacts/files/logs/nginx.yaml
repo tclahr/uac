@@ -1,0 +1,16 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect nginx logs.
+    supported_os: [aix, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris]
+    collector: file
+    path: /var/log
+    name_pattern: ["*access_log*", "*access.log*", "*error_log*", "*error.log*"]
+    max_file_size: 1073741824 # 1GB
+  -
+    description: Collect nginx logs.
+    supported_os: [aix, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris]
+    collector: file
+    path: /var/log/nginx
+    max_file_size: 1073741824 # 1GB
+

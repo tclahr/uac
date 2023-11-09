@@ -1,0 +1,27 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect Apache logs.
+    supported_os: [aix, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris]
+    collector: file
+    path: /var/log
+    name_pattern: ["access_log*", "access.log*", "error_log*", "error.log*"]
+    max_file_size: 1073741824 # 1GB
+  -
+    description: Collect Apache logs.
+    supported_os: [aix, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris]
+    collector: file
+    path: /var/log/apache
+    max_file_size: 1073741824 # 1GB
+  -
+    description: Collect Apache logs.
+    supported_os: [aix, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris]
+    collector: file
+    path: /var/log/apache2
+    max_file_size: 1073741824 # 1GB
+  -
+    description: Collect Apache logs.
+    supported_os: [aix, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris]
+    collector: file
+    path: /var/log/httpd
+    max_file_size: 1073741824 # 1GB
