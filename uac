@@ -6,7 +6,7 @@
 unalias -a
 
 # use a safe umask for created files
-umask 027
+umask 022
 
 # set locale
 LANG=C
@@ -223,7 +223,7 @@ Try 'uac --help' for more information.\n" >&2
       fi
       ;;
     # filter arguments
-    "--date-range-start")
+    "--start-date"|"--date-range-start")
       if [ -n "${2}" ]; then
         START_DATE="${2}"
         shift
@@ -233,7 +233,7 @@ Try 'uac --help' for more information.\n" >&2
         exit 1
       fi
       ;;
-    "--date-range-end")
+    "--end-date"|"--date-range-end")
       if [ -n "${2}" ]; then
         END_DATE="${2}"
         shift
