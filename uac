@@ -530,9 +530,9 @@ fi
 ua_current_date_time=`date "+%Y%m%d%H%M%S"`
 if [ -n "${ua_output_base_filename}" ]; then
   ua_output_base_filename=`echo "${ua_output_base_filename}" \
-                        | sed -e "s|%hostname%|${ua_hostname}|g" \
-                              -e "s|%os%|${OPERATING_SYSTEM}|g" \
-                              -e "s|%timestamp%|${ua_current_date_time}|g"`
+                            | sed -e "s|%hostname%|${ua_hostname}|g" \
+                                  -e "s|%os%|${OPERATING_SYSTEM}|g" \
+                                  -e "s|%timestamp%|${ua_current_date_time}|g"`
   if [ -z "${ua_output_base_filename}" ]; then
     printf %b "uac: invalid empty output filename\n" >&2
     exit 1
@@ -541,18 +541,7 @@ else
   ua_output_base_filename="uac-${ua_hostname}-${OPERATING_SYSTEM}-${ua_current_date_time}"
 fi
 
-# check if output filename/directory exists
-if [ -d "${ua_destination_dir}/${ua_output_base_filename}" ]; then
-  printf %b "uac: output directory already exists '${ua_destination_dir}/${ua_output_base_filename}'\n" >&2
-  exit 1
-else
-  for ua_ext in tar.gz tar zip log; do
-    if [ -f "${ua_destination_dir}/${ua_output_base_filename}.${ua_ext}" ]; then
-      printf %b "uac: acquisition with same output file name already exists '${ua_destination_dir}/${ua_output_base_filename}.${ua_ext}'\n" >&2
-      exit 1
-    fi
-  done
-fi
+output_file_exists "${ua_destination_dir}/${ua_output_base_filename}" "${ua_zip}" && exit 1
 
 # check if destination directory's file system supports symlink creation
 if [ -n "${ua_temp_dir}" ]; then
