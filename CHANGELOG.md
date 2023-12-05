@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.8.0-rc1 (2023-11-20)
+## DEVELOPMENT VERSION
 
 ### Features
 
