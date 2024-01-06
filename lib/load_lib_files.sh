@@ -56,4 +56,3 @@
 . "${UAC_DIR}/lib/usage.sh"
 . "${UAC_DIR}/lib/validate_artifacts_file.sh"
 . "${UAC_DIR}/lib/validate_profile_file.sh"
-. "${UAC_DIR}/lib/zip_data.sh"

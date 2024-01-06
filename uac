@@ -65,8 +65,6 @@ ua_run_as_non_root=false
 ua_temp_dir=""
 ua_output_base_filename=""
 ua_output_filename=""
-ua_zip=false
-ua_zip_password=""
 ua_case_number=""
 ua_evidence_number=""
 ua_evidence_description=""
@@ -147,30 +145,6 @@ Try 'uac --help' for more information.\n" >&2
           exit 1
         fi
         ua_artifacts="${ua_artifacts},${2}"
-        shift
-      else
-        printf %b "uac: option '${1}' requires an argument.\n\
-Try 'uac --help' for more information.\n" >&2
-        exit 1
-      fi
-      ;;
-    # output file arguments
-    "-o"|"--output-filename")
-      if [ -n "${2}" ]; then
-        ua_output_base_filename="${2}"
-        shift
-      else
-        printf %b "uac: option '${1}' requires an argument.\n\
-Try 'uac --help' for more information.\n" >&2
-        exit 1
-      fi
-      ;;
-    "-z"|"--zip")
-      ua_zip=true
-      ;;
-    "--zip-password")
-      if [ -n "${2}" ]; then
-        ua_zip_password="${2}"
         shift
       else
         printf %b "uac: option '${1}' requires an argument.\n\
@@ -541,7 +515,7 @@ else
   ua_output_base_filename="uac-${ua_hostname}-${OPERATING_SYSTEM}-${ua_current_date_time}"
 fi
 
-output_file_exists "${ua_destination_dir}/${ua_output_base_filename}" "${ua_zip}" && exit 1
+output_file_exists "${ua_destination_dir}/${ua_output_base_filename}" && exit 1
 
 # check if destination directory's file system supports symlink creation
 if [ -n "${ua_temp_dir}" ]; then
@@ -556,23 +530,6 @@ fi
 
 # check available system tools
 check_available_system_tools >/dev/null 2>/dev/null
-
-# check if zip is available and if it supports encryption
-if ${ua_zip}; then
-  if ${ZIP_TOOL_AVAILABLE}; then
-    if eval "zip --password infected - \"${UAC_DIR}/uac\"" >/dev/null 2>/dev/null; then
-      true
-    else
-      printf %b "uac: cannot create password-protected zip file as 'zip' \
-tool does not support such feature.\n"
-      exit 1
-    fi
-  else
-    printf %b "uac: cannot create zip file as 'zip' \
-tool is not available.\n"
-    exit 1
-  fi
-fi
 
 # test the connectivity to remote sftp server
 if [ -n "${ua_sftp_destination}" ]; then
@@ -825,55 +782,7 @@ echo "uac.log" >>"${TEMP_DATA_DIR}/.output_file.tmp"
 echo "uac.log.stderr" >>"${TEMP_DATA_DIR}/.output_file.tmp"
 
 # create output file
-if ${ua_zip}; then
-  if [ -f "${TEMP_DATA_DIR}/.files.tmp" ]; then
-    # sort and uniq
-    sort_uniq_file "${TEMP_DATA_DIR}/.files.tmp" 2>>"${UAC_STDERR_LOG_FILE}"
-    if ${ua_temp_data_dir_symlink_support}; then
-      # create symbolic link to /
-      ln -s "/" "${TEMP_DATA_DIR}/[root]" 2>>"${UAC_STDERR_LOG_FILE}"
-    else
-      # copy files to uac-data.tmp/[root]
-      printf %b "Copying files to ${TEMP_DATA_DIR}/[root]. Please wait...\n"
-      copy_data "${TEMP_DATA_DIR}/.files.tmp" "${TEMP_DATA_DIR}/[root]" \
-        2>>"${UAC_STDERR_LOG_FILE}"
-    fi
-    # add [root] string to the beginning of each entry in .files.tmp
-    # and add them to the list of files to be archived within the output file
-    sed -e 's:^/:\[root\]/:' "${TEMP_DATA_DIR}/.files.tmp" \
-      >>"${TEMP_DATA_DIR}/.output_file.tmp"
-  fi
-
-  # archive (and compress) collected artifacts to output file
-  printf %b "Creating output file. Please wait...\n"
-  cd "${TEMP_DATA_DIR}" || exit 1
-
-  ua_output_filename="${ua_output_base_filename}.zip"
-  zip_data ".output_file.tmp" \
-      "${ua_destination_dir}/${ua_output_filename}" "${ua_zip_password}" >/dev/null 2>/dev/null
-
-  if [ -f "${ua_destination_dir}/${ua_output_filename}" ]; then
-    printf %b "Output file created '${ua_destination_dir}/${ua_output_filename}'\n"
-    cd "${UAC_DIR}" || exit 1
-    if ${ua_debug_mode}; then
-      printf %b "Temporary directory not removed '${TEMP_DATA_DIR}'\n"
-    else
-      rm -rf "${TEMP_DATA_DIR}" >/dev/null 2>/dev/null
-      if [ -d "${TEMP_DATA_DIR}" ]; then
-        printf %b "Cannot remove temporary directory '${TEMP_DATA_DIR}'\n"
-      fi
-    fi
-    # hash output file
-    printf %b "Hashing output file. Please wait...\n"
-    cd "${ua_destination_dir}" || exit 1
-    ua_output_file_hash=`${MD5_HASHING_TOOL} "${ua_output_filename}"`
-    cd "${UAC_DIR}" || exit 1
-  else
-    printf %b "Cannot create output file\n"
-    printf %b "Please check collected artifacts in '${TEMP_DATA_DIR}'\n"
-    cd "${UAC_DIR}" && exit 1
-  fi
-elif command_exists "tar"; then
+if command_exists "tar"; then
   if [ -f "${TEMP_DATA_DIR}/.files.tmp" ]; then
     # sort and uniq
     sort_uniq_file "${TEMP_DATA_DIR}/.files.tmp" 2>>"${UAC_STDERR_LOG_FILE}"
