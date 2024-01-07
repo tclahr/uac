@@ -788,7 +788,7 @@ if command_exists "tar"; then
     sort_uniq_file "${TEMP_DATA_DIR}/.files.tmp" 2>>"${UAC_STDERR_LOG_FILE}"
     if ${ua_temp_data_dir_symlink_support}; then
       # create symbolic link to /
-      ln -s "/" "${TEMP_DATA_DIR}/[root]" 2>>"${UAC_STDERR_LOG_FILE}"
+      ln -s "${MOUNT_POINT}" "${TEMP_DATA_DIR}/[root]" 2>>"${UAC_STDERR_LOG_FILE}"
     else
       # copy files to uac-data.tmp/[root]
       printf %b "Copying files to ${TEMP_DATA_DIR}/[root]. Please wait...\n"
@@ -797,7 +797,7 @@ if command_exists "tar"; then
     fi
     # add [root] string to the beginning of each entry in .files.tmp
     # and add them to the list of files to be archived within the output file
-    sed -e 's:^/:\[root\]/:' "${TEMP_DATA_DIR}/.files.tmp" \
+    sed -e "s:^${MOUNT_POINT%/}/:\[root\]/:" "${TEMP_DATA_DIR}/.files.tmp" \
       >>"${TEMP_DATA_DIR}/.output_file.tmp"
   fi
 
