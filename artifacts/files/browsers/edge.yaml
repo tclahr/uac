@@ -1,4 +1,4 @@
-version: 2.0
+version: 3.0
 artifacts:
   -
     description: Collect Edge browser files.
@@ -13,6 +13,23 @@ artifacts:
     supported_os: [linux]
     collector: file
     path: /%user_home%/.config/microsoft-edge
+    name_pattern: ["Extensions", "File System", "Sessions"]
+    file_type: d
+    ignore_date_range: true
+    exclude_nologin_users: true
+  -
+    description: Collect Edge browser files (Flatpak version).
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.var/app/com.microsoft.Edge
+    name_pattern: ["Bookmarks*", "Cookies*", "DownloadMetadata", "Extension Cookies*", "Favicons*", "History*", "Login Data*", "Media History*", "Network Action Predictor*", "Network Persistent State", "Preferences", "QuotaManager*", "Reporting and NEL*", "SecurePreferences", "Shortcuts*", "SyncData.sqlite3", "Top Sites*", "Trust Tokens*", "Visited Links", "Web Data*"]
+    ignore_date_range: true
+    exclude_nologin_users: true
+  -
+    description: Collect Edge browser directories (Flatpak version).
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.var/app/com.microsoft.Edge
     name_pattern: ["Extensions", "File System", "Sessions"]
     file_type: d
     ignore_date_range: true
