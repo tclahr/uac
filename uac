@@ -797,7 +797,7 @@ if command_exists "tar"; then
     fi
     # add [root] string to the beginning of each entry in .files.tmp
     # and add them to the list of files to be archived within the output file
-    sed -e "s:^${MOUNT_POINT%/}/:\[root\]/:" "${TEMP_DATA_DIR}/.files.tmp" \
+    sed -e "s:^${MOUNT_POINT}:\[root\]/:" -e 's://*:/:g' "${TEMP_DATA_DIR}/.files.tmp" \
       >>"${TEMP_DATA_DIR}/.output_file.tmp"
   fi
 
