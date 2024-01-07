@@ -27,15 +27,15 @@ Project documentation page: [https://tclahr.github.io/uac-docs](https://tclahr.g
 
 ## 🌟 Main Features
 
-- Runs everywhere with no dependencies (no installation required).
+- Run everywhere with no dependencies (no installation required).
 - Customizable and extensible collections and artifacts.
-- Respects the order of volatility during artifacts collection.
-- Collects information from processes running without a binary on disk.
-- Hashes running processes and executable files.
-- Extracts information from files and directories to create a bodyfile (including enhanced file attributes for ext4).
-- Collects user and system configuration files and logs.
-- Collects artifacts from applications.
-- Acquires volatile memory from Linux systems using different methods and tools.
+- Respect the order of volatility during artifact collection.
+- Collect information from processes running without a binary on disk.
+- Hash running processes and executable files.
+- Extract information from files and directories to create a bodyfile (including enhanced file attributes for ext4).
+- Collect user and system configuration files and logs.
+- Collect artifacts from applications.
+- Acquire volatile memory from Linux systems using different methods and tools.
 
 ***
 
@@ -80,7 +80,7 @@ Common usage scenarios may include the following:
 ./uac -a live_response/\*,bodyfile/bodyfile.yaml .
 ```
 
-**Collect all artifacts based on the ```full``` profile, but excludes the ```bodyfile/bodyfile.yaml``` artifact, and create the output file in ```/tmp```.**
+**Collect all artifacts based on the ```full``` profile, but exclude the ```bodyfile/bodyfile.yaml``` artifact, and create the output file in ```/tmp```.**
 
 ```shell
 ./uac -p full -a \!bodyfile/bodyfile.yaml /tmp
