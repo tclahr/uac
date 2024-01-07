@@ -16,6 +16,10 @@
 - files/system/etc.yaml: Added exclusion for the group shadow files 'gshadow' and 'gshadow-'. Those files contain password hashes for groups [linux] (by [Herbert-Karl](https://github.com/Herbert-Karl)).
 - live_response/network/ss.yaml: Updated collection support for processes listening on UDP ports/sockets [android, linux].
 
+### Fixes
+
+- Offline disk image mount point path was part of the file structure in [root] (by [maxspl](https://github.com/maxspl)).
+
 ### Profiles
 
 - profiles/offline.yaml: New 'offline' profile that can be used during offline collections (by [randomaccess3](https://github.com/randomaccess3)).
