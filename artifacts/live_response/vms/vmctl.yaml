@@ -1,0 +1,9 @@
+version: 1.0
+artifacts:
+  -
+    description: List running virtual machines on this system.
+    supported_os: [openbsd]
+    collector: command
+    command: vmctl status
+    output_file: vmctl_status.txt
+ 
