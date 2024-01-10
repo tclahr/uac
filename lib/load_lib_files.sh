@@ -39,6 +39,7 @@
 . "${UAC_DIR}/lib/list_profiles.sh"
 . "${UAC_DIR}/lib/load_config_file.sh"
 . "${UAC_DIR}/lib/log_message.sh"
+. "${UAC_DIR}/lib/output_file_exists.sh"
 . "${UAC_DIR}/lib/lrstrip.sh"
 . "${UAC_DIR}/lib/parse_artifacts_file.sh"
 . "${UAC_DIR}/lib/profile_file_to_artifact_list.sh"
@@ -55,4 +56,3 @@
 . "${UAC_DIR}/lib/usage.sh"
 . "${UAC_DIR}/lib/validate_artifacts_file.sh"
 . "${UAC_DIR}/lib/validate_profile_file.sh"
-. "${UAC_DIR}/lib/zip_data.sh"

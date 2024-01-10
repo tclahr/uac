@@ -43,15 +43,6 @@ Profiling Arguments:
 Positional Arguments:
   DESTINATION       Specify the directory the output file should be copied to.
 
-Output File Arguments:
-  -o  --output-filename FILENAME
-                    Output filename (without extension).
-                    Default: uac-%hostname%-%os%-%timestamp%
-  -z  --zip         Create a password-protected zip file.
-                    Default password: infected
-      --zip-password PASSWORD
-                    Set a custom password.
-
 Collection Arguments:
   -m, --mount-point MOUNT_POINT
                     Specify the mount point (default: /).
