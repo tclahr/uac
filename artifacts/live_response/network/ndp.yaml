@@ -1,0 +1,8 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect the kernel's IPv6 network neighbour cache.
+    supported_os: [freebsd, netbsd, openbsd]
+    collector: command
+    command: ndp -a
+    output_file: ndp_-a.txt
