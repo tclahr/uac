@@ -19,6 +19,7 @@
 ### Fixes
 
 - Offline disk image mount point path was part of the file structure in [root] (by [maxspl](https://github.com/maxspl)).
+- Collected data was not being properly archived by tar in AIX systems.
 
 ### Profiles
 

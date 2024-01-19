@@ -747,7 +747,8 @@ while read ua_artifact_file || [ -n "${ua_artifact_file}" ]; do
   ua_artifacts_root_output_directory=`dirname "${ua_artifact_file}"`
   parse_artifacts_file "${UAC_DIR}/artifacts/${ua_artifact_file}" \
     "${ua_artifacts_root_output_directory}"
-  echo "${ua_artifacts_root_output_directory}" >>"${TEMP_DATA_DIR}/.output_file.tmp"
+  find "${TEMP_DATA_DIR}/${ua_artifacts_root_output_directory}" -print \
+    | sed -e "s|^${TEMP_DATA_DIR}/||" >>"${TEMP_DATA_DIR}/.output_file.tmp"
 done <"${TEMP_DATA_DIR}/.artifacts.tmp" 2>>"${UAC_STDERR_LOG_FILE}"
 
 # disable debug mode
