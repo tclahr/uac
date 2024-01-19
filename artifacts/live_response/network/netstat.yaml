@@ -2,31 +2,31 @@ version: 2.0
 artifacts:
   -
     description: Collect both listening and non-listening (for TCP this means established connections) sockets.
-    supported_os: [android, aix, freebsd, linux, openbsd, netbsd, netscaler, openbsd, solaris]
+    supported_os: [android, aix, freebsd, linux, netbsd, netscaler, openbsd, solaris]
     collector: command
     command: netstat -a
     output_file: netstat_-a.txt
   -
     description: Collect both listening and non-listening (for TCP this means established connections) sockets with numerical addresses instead of trying to determine symbolic host, port or user names.
-    supported_os: [android, aix, freebsd, linux, openbsd, netbsd, netscaler, openbsd, solaris]
+    supported_os: [android, aix, freebsd, linux, netbsd, netscaler, openbsd, solaris]
     collector: command
     command: netstat -an
     output_file: netstat_-an.txt
   -
     description: Collect a table of all network interfaces.
-    supported_os: [android, aix, freebsd, linux, openbsd, netbsd, netscaler, openbsd, solaris]
+    supported_os: [android, aix, freebsd, linux, netbsd, netscaler, openbsd, solaris]
     collector: command
     command: netstat -i
     output_file: netstat_-i.txt
   -
     description: Collect the kernel routing tables.
-    supported_os: [android, aix, freebsd, linux, openbsd, netbsd, netscaler, openbsd, solaris]
+    supported_os: [android, aix, freebsd, linux, netbsd, netscaler, openbsd, solaris]
     collector: command
     command: netstat -r
     output_file: netstat_-r.txt
   -
     description: Collect the kernel routing tables with numerical addresses instead of trying to determine symbolic host, port or user names.
-    supported_os: [android, aix, freebsd, linux, openbsd, netbsd, netscaler, openbsd, solaris]
+    supported_os: [android, aix, freebsd, linux, netbsd, netscaler, openbsd, solaris]
     collector: command
     command: netstat -rn
     output_file: netstat_-rn.txt

@@ -1,0 +1,9 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect package table of contents files.
+    supported_os: [openbsd]
+    collector: file
+    path: /var/db/pkg
+    path_pattern: ["*/+CONTENTS"]
+
