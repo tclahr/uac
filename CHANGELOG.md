@@ -16,7 +16,7 @@
 - files/browsers/edge.yaml: Updated collection support for Flatpak version [linux].
 - files/browsers/opera.yaml: Updated collection support for Flatpak version [linux].
 - files/browsers/vivaldi.yaml: Updated collection support for Flatpak version [linux].
-- files/packages/packages.yaml: Added collection support for package table of contents files [openbsd] (by [Herbert-Karl](https://github.com/Herbert-Karl)).
+- files/packages/pkg_contents.yaml: Added collection support for package table of contents files [openbsd] (by [Herbert-Karl](https://github.com/Herbert-Karl)).
 - files/system/desktop.yaml: Added collection support for GUI shortcut files (.desktop) of users [freebsd, linux, netbsd, openbsd] (by [Herbert-Karl](https://github.com/Herbert-Karl)).
 - files/system/etc.yaml: Added "master.passwd" and "spwd.db" to the exclude_name_pattern list as they contain the hashed passwords of local users [freebsd, netbsd, netscaler, openbsd] (by [Herbert-Karl](https://github.com/Herbert-Karl)).
 - files/system/etc.yaml: Added exclusion for the group shadow files 'gshadow' and 'gshadow-'. Those files contain password hashes for groups [linux] (by [Herbert-Karl](https://github.com/Herbert-Karl)).
