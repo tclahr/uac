@@ -1,0 +1,10 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect GUI shortcut files of users.
+    supported_os: [linux, freebsd, openbsd, netbsd]
+    collector: file
+    path: /%user_home%
+    name_pattern: ["*.desktop"]
+    ignore_date_range: true
+    exclude_nologin_users: true
