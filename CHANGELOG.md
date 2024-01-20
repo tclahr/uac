@@ -2,6 +2,10 @@
 
 ## DEVELOPMENT VERSION
 
+### Features
+
+- --debug option now does not remove the uac-data.tmp directory created in the destination directory. This is the location where temporary and debugging data is stored during execution.
+
 ### Artifacts
 
 - files/applications/box_drive.yaml: Renamed to box.yaml.
@@ -13,10 +17,12 @@
 - files/browsers/opera.yaml: Updated collection support for Flatpak version [linux].
 - files/browsers/vivaldi.yaml: Updated collection support for Flatpak version [linux].
 - files/packages/packages.yaml: Added collection support for package table of contents files [openbsd] (by [Herbert-Karl](https://github.com/Herbert-Karl)).
+- files/system/desktop.yaml: Added collection support for GUI shortcut files (.desktop) of users [freebsd, linux, netbsd, openbsd] (by [Herbert-Karl](https://github.com/Herbert-Karl)).
 - files/system/etc.yaml: Added "master.passwd" and "spwd.db" to the exclude_name_pattern list as they contain the hashed passwords of local users [freebsd, netbsd, netscaler, openbsd] (by [Herbert-Karl](https://github.com/Herbert-Karl)).
 - files/system/etc.yaml: Added exclusion for the group shadow files 'gshadow' and 'gshadow-'. Those files contain password hashes for groups [linux] (by [Herbert-Karl](https://github.com/Herbert-Karl)).
 - files/system/xsession_errors.yaml: Updated collection support for OpenBSD systems [openbsd] (by [Herbert-Karl](https://github.com/Herbert-Karl)).
 - live_response/network/ndp.yaml: Added collection support for kernel's IPv6 network neighbor cache [freebsd, netbsd, openbsd] (by [Herbert-Karl](https://github.com/Herbert-Karl)).
+- live_response/network/nft.yaml: Added collection support for complete nftables ruleset [linux] (by [sanderu](https://github.com/sanderu)).
 - live_response/network/ss.yaml: Updated collection support for processes listening on UDP ports/sockets [android, linux].
 - live_response/vms/vmctl.yaml: Added collection support for information about running virtual machines on the OpenBSD using the native virtualization system [openbsd] (by [Herbert-Karl](https://github.com/Herbert-Karl)).
 

@@ -6,4 +6,3 @@ artifacts:
     collector: file
     path: /var/db/pkg
     path_pattern: ["*/+CONTENTS"]
-
