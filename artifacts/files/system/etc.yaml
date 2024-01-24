@@ -5,7 +5,7 @@ artifacts:
     supported_os: [aix, android, esxi, freebsd, linux, netbsd, netscaler, openbsd, solaris]
     collector: file
     path: /etc
-    exclude_name_pattern: ["shadow", "shadow-"]
+    exclude_name_pattern: ["shadow", "shadow-", "master.passwd", "spwd.db", "gshadow", "gshadow-"]
     ignore_date_range: true
   -
     description: Collect system configuration files.

@@ -1,4 +1,4 @@
-version: 1.0
+version: 2.0
 artifacts:
   -
     description: Display both listening and non-listening (for TCP this means established connections) sockets with numerical addresses instead of trying to determine symbolic host, port or user names, and show the PID and name of the program to which each socket belongs.
@@ -13,17 +13,29 @@ artifacts:
     command: ss -ap
     output_file: ss_-ap.txt
   -
+    description: Display both listening and non-listening TCP sockets only with numerical addresses instead of trying to determine symbolic host, and show the PID of the program to which socket belongs.
+    supported_os: [android, linux]
+    collector: command
+    command: ss -tanp
+    output_file: ss_-tanp.txt
+  -
     description: Display both listening and non-listening TCP sockets only, and show the PID of the program to which socket belongs.
     supported_os: [android, linux]
     collector: command
     command: ss -tap
     output_file: ss_-tap.txt
   -
-    description: Display both listening and non-listening TCP sockets only with numerical addresses instead of trying to determine symbolic host, and show the PID of the program to which socket belongs.
+    description: Display both listening and non-listening UDP sockets only with numerical addresses instead of trying to determine symbolic host, and show the PID of the program to which socket belongs.
     supported_os: [android, linux]
     collector: command
-    command: ss -tanp
-    output_file: ss_-tanp.txt
+    command: ss -uanp
+    output_file: ss_-uanp.txt
+  -
+    description: Display both listening and non-listening UDP sockets only, and show the PID of the program to which socket belongs.
+    supported_os: [android, linux]
+    collector: command
+    command: ss -uap
+    output_file: ss_-uap.txt
   -
     description: Display listening TCP sockets only, and show the PID of the program to which socket belongs.
     supported_os: [android, linux]
@@ -36,3 +48,15 @@ artifacts:
     collector: command
     command: ss -tlnp
     output_file: ss_-tlnp.txt
+  -
+    description: Display listening UDP sockets only, and show the PID of the program to which socket belongs.
+    supported_os: [android, linux]
+    collector: command
+    command: ss -ulp
+    output_file: ss_-ulp.txt
+  -
+    description: Display listening UDP sockets only with numerical addresses instead of trying to determine symbolic host, and show the PID of the program to which socket belongs.
+    supported_os: [android, linux]
+    collector: command
+    command: ss -ulnp
+    output_file: ss_-ulnp.txt

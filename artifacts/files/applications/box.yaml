@@ -1,0 +1,26 @@
+version: 2.0
+artifacts:
+  -
+    description: Collect Box configuration and sqlite database files.
+    supported_os: [macos]
+    collector: file
+    path: /Library/"Application Support"/Box/Box/data
+    exclude_nologin_users: true
+  -
+    description: Collect Box configuration and sqlite database files.
+    supported_os: [macos]
+    collector: file
+    path: /%user_home%/Library/"Application Support"/Box/Box/data
+    exclude_nologin_users: true
+  -
+    description: Collect Box log files.
+    supported_os: [macos]
+    collector: file
+    path: /Library/Logs/Box/Box
+  -
+    description: Collect Box log files.
+    supported_os: [macos]
+    collector: file
+    path: /%user_home%/Library/Logs/Box/Box
+    exclude_nologin_users: true
+  

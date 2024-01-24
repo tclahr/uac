@@ -18,18 +18,7 @@
 usage()
 {
   
-  printf %b "Usage: $0 [-h] [-V] [--debug] {-p PROFILE | -a ARTIFACTS} DESTINATION 
-             [-m MOUNT_POINT] [-s OPERATING_SYSTEM] [-u] [--temp_dir PATH]
-             [--date-range-start YYYY-MM-DD] [--date-range-start YYYY-MM-DD]
-             [--case-number CASE_NUMBER] [--description DESCRIPTION]
-             [--evidence-number EVIDENCE_NUMBER] [--examiner EXAMINER]
-             [--notes NOTES] [--hostname HOSTNAME] [--stfp SERVER] 
-             [--sftp-port PORT] [--sftp-identity-file FILE]
-             [--s3-presigned-url URL] [--s3-presigned-url-log-file URL]
-             [--azure-storage-sas-url URL] [--azure-storage-sas-url-log-file URL]
-             [--ibm-cos-url URL] [--ibm-cos-url-log-file URL]
-             [--ibm-cloud-api-key KEY]
-             [--delete-local-on-successful-transfer] [--debug]
+  printf %b "Usage: $0 {-p PROFILE | -a ARTIFACTS} DESTINATION [OPTIONS]
    or: $0 --validate-artifacts-file FILE
 
 Optional Arguments:

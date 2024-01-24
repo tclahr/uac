@@ -1,0 +1,8 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect wget hsts file. This file is used to store the HSTS cache for the wget utility.
+    supported_os: [aix, esxi, freebsd, linux, macos, netbsd, openbsd, solaris]
+    collector: file
+    path: /%user_home%/.wget-hsts
+    exclude_nologin_users: true

@@ -1,0 +1,8 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect complete nftables ruleset.
+    supported_os: [linux]
+    collector: command
+    command: nft list ruleset
+    output_file: nft_list_ruleset.txt

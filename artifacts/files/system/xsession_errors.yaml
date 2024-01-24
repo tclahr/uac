@@ -2,8 +2,8 @@ version: 1.0
 artifacts:
   -
     description: Collect xsession errors file. This is the error log produced by X window system.
-    supported_os: [linux]
+    supported_os: [linux, openbsd]
     collector: file
     path: /%user_home%/.xsession-errors
     exclude_nologin_users: true
-    
+
