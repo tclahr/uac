@@ -32,7 +32,7 @@ artifacts:
     output_file: hash_running_processes_full_paths.txt
   -
     description: Collect running processes executable path.
-    supported_os: [exsi]
+    supported_os: [esxi]
     collector: command
     command: ps -c | awk '{print $4}' | sort -u | grep "^/"
     output_file: hash_running_processes_full_paths.txt

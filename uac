@@ -40,7 +40,7 @@ export PATH
 . "${UAC_DIR}/lib/load_lib_files.sh"
 
 # global vars
-UAC_VERSION="DEVELOPMENT VERSION"
+UAC_VERSION="2.8.0"
 MOUNT_POINT="/"
 OPERATING_SYSTEM=""
 SYSTEM_ARCH=""
@@ -747,7 +747,7 @@ while read ua_artifact_file || [ -n "${ua_artifact_file}" ]; do
   ua_artifacts_root_output_directory=`dirname "${ua_artifact_file}"`
   parse_artifacts_file "${UAC_DIR}/artifacts/${ua_artifact_file}" \
     "${ua_artifacts_root_output_directory}"
-  find "${TEMP_DATA_DIR}/${ua_artifacts_root_output_directory}" -print \
+  find "${TEMP_DATA_DIR}/${ua_artifacts_root_output_directory}" -type f -print \
     | sed -e "s|^${TEMP_DATA_DIR}/||" >>"${TEMP_DATA_DIR}/.output_file.tmp"
 done <"${TEMP_DATA_DIR}/.artifacts.tmp" 2>>"${UAC_STDERR_LOG_FILE}"
 
