@@ -6,4 +6,10 @@ artifacts:
     collector: command
     command: modinfo
     output_file: modinfo.txt
-  
+  -
+    description: Display information about loaded kernel modules.
+    supported_os: [linux]
+    collector: command
+    foreach: lsmod | awk '{print $1}' | tail -n +2
+    command: modinfo %line%
+    output_file: modinfo_%line%.txt
