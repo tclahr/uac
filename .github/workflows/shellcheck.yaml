@@ -1,15 +1,26 @@
 name: ShellCheck
 
 on:
+  push:
+    branches:
+      - develop
+      - main
+      - 'releases/**'
+    paths:
+      - 'lib/**'
+      - 'tools/**'
+      - 'uac'
+
   pull_request:
     branches:
       - develop
       - main
       - 'releases/**'
     paths:
-      - 'uac'
       - 'lib/**'
       - 'tools/**'
+      - 'uac'
+
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
