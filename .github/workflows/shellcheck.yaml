@@ -2,9 +2,10 @@ name: ShellCheck
 
 on:
   pull_request:
-    types:
-      - opened
-      - reopened
+    branches:
+      - develop
+      - main
+      - 'releases/**'
     paths:
       - 'uac'
       - 'lib/**'
