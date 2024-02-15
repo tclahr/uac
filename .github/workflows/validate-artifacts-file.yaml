@@ -1,6 +1,14 @@
 name: Validate Artifacts File
 
 on:
+  push:
+    branches:
+      - develop
+      - main
+      - 'releases/**'
+    paths:
+      - 'artifacts/**'
+
   pull_request:
     branches:
       - develop
