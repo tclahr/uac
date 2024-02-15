@@ -2,6 +2,10 @@ name: Validate Artifacts File
 
 on:
   pull_request:
+    branches:
+      - develop
+      - main
+      - 'releases/**'
     paths:
       - 'artifacts/**'
 
