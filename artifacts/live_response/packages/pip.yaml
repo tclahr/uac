@@ -1,0 +1,9 @@
+version: 1.0
+artifacts:
+  -
+    description: Display installed packages.
+    supported_os: [linux, macos]
+    collector: command
+    command: pip list
+    output_file: pip_list-installed.txt
+    
