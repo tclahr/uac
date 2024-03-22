@@ -1,0 +1,9 @@
+version: 1.0
+artifacts:
+  -
+    description: Display installed packages.
+    supported_os: [linux]
+    collector: command
+    command: nix-env -q --installed
+    output_file: nix-env_-q_--installed.txt
+    
