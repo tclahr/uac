@@ -5,5 +5,5 @@ artifacts:
     supported_os: [linux]
     collector: command
     command: yay -Qq
-    output_file: yay_list-installed.txt
+    output_file: yay_-Qq.txt
     
