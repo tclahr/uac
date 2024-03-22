@@ -1,0 +1,9 @@
+version: 1.0
+artifacts:
+  -
+    description: Display installed packages.
+    supported_os: [linux]
+    collector: command
+    command: equo query list
+    output_file: equo_query_list.txt
+    
