@@ -5,5 +5,5 @@ artifacts:
     supported_os: [linux]
     collector: command
     command: xbps-query -l
-    output_file: xbps_list-installed.txt
+    output_file: xbps-query_-l.txt
     
