@@ -5,5 +5,5 @@ artifacts:
     supported_os: [linux]
     collector: command
     command: equo query list
-    output_file: equo_list-installed.txt
+    output_file: equo_query_list.txt
     
