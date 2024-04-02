@@ -1,0 +1,9 @@
+version: 1.0
+artifacts:
+  -
+    description: Display installed packages.
+    supported_os: [linux]
+    collector: command
+    command: yay -Qq
+    output_file: yay_-Qq.txt
+    
