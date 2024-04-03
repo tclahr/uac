@@ -2,7 +2,13 @@ version: 1.0
 artifacts:
   -
     description: Collect package table of contents files.
-    supported_os: [openbsd]
+    supported_os: [openbsd, netbsd]
     collector: file
     path: /var/db/pkg
+    path_pattern: ["*/+CONTENTS"]
+  -
+    description: Collect package table of contents files (NetBSD 10 and later).
+    supported_os: [netbsd]
+    collector: file
+    path: /usr/pkg/pkgdb
     path_pattern: ["*/+CONTENTS"]
