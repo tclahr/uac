@@ -12,10 +12,3 @@ artifacts:
     collector: command
     command: ls -l -a /%user_home%/Applications
     output_file: ls_-l_-a_%user_home%_Applications.txt
-  -
-    description: Display all applications located at /Users/%user%/Applications directory.
-    supported_os: [macos]
-    collector: command
-    command: brew list
-    output_file: brew_list_%user_home%_Applications.txt
-    
