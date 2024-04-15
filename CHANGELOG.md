@@ -4,6 +4,7 @@
 
 ### Features
 
+- uac.log and uac.log.stderr files were moved to the front of the output archive file (by [rbcrwd](https://github.com/rbcrwd)).
 
 ### Artifacts
 
