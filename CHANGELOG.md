@@ -7,6 +7,9 @@
 
 ### Artifacts
 
+- files/packages/pkg_contents.yaml: Updated collection support for NetBSD 10 [netbsd] (by [Herbert-Karl](https://github.com/Herbert-Karl)).
+- live_response/containers/docker.yaml: Added collection support for resource usage statistics of each container [linux].
+- live_response/containers/podman.yaml: Added collection support for resource usage statistics of each container [linux].
 - live_response/packages/equo.yaml: Added collection support for packages installed through Entropy package manager [linux] (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal)).
 - live_response/packages/nix.yaml: Added collection support for packages installed through Nix package manager [linux] (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal)).
 - live_response/packages/pip.yaml: Added collection support for Python packages installed through pip [linux] (by [sanderu](https://github.com/sanderu)).
