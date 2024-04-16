@@ -1,4 +1,4 @@
-version: 1.0
+version: 2.0
 artifacts:
   -
     description: List all containers.
@@ -91,3 +91,10 @@ artifacts:
     foreach: docker container ps --all | sed 1d | awk '{print $1}'
     command: docker diff %line%
     output_file: docker_diff_%line%.txt
+  -
+    description: Display a live stream of resource usage statistics.
+    supported_os: [linux]
+    collector: command
+    foreach: docker container ps --all | sed 1d | awk '{print $1}'
+    command: docker stats %line%
+    output_file: docker_stats_%line%.txt

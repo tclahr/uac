@@ -40,7 +40,7 @@ export PATH
 . "${UAC_DIR}/lib/load_lib_files.sh"
 
 # global vars
-UAC_VERSION="2.8.0"
+UAC_VERSION="DEVELOPMENT VERSION"
 MOUNT_POINT="/"
 OPERATING_SYSTEM=""
 SYSTEM_ARCH=""
@@ -777,10 +777,10 @@ ua_output_file_hash="-"
 
 # sort and uniq
 sort_uniq_file "${TEMP_DATA_DIR}/.output_file.tmp" 2>>"${UAC_STDERR_LOG_FILE}"
-# add uac.log to the list of files to be archived/copied within the output file
-echo "uac.log" >>"${TEMP_DATA_DIR}/.output_file.tmp"
 # add uac.log.stderr to the list of files to be archived/copied within the output file
-echo "uac.log.stderr" >>"${TEMP_DATA_DIR}/.output_file.tmp"
+echo "uac.log.stderr" | cat - "${TEMP_DATA_DIR}/.output_file.tmp" >"${TEMP_DATA_DIR}/.temp_output_file.tmp"
+# add uac.log to the list of files to be archived/copied within the output file
+echo "uac.log" | cat - "${TEMP_DATA_DIR}/.temp_output_file.tmp" >"${TEMP_DATA_DIR}/.output_file.tmp"
 
 # create output file
 if command_exists "tar"; then

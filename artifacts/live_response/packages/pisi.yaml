@@ -1,0 +1,8 @@
+version: 1.0
+artifacts:
+  -
+    description: Display installed packages.
+    supported_os: [linux]
+    collector: command
+    command: pisi list
+    output_file: pisi_list.txt
