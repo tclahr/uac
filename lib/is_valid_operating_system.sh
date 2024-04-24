@@ -29,7 +29,8 @@ is_valid_operating_system()
     && [ "${io_operating_system}" != "netbsd" ] \
     && [ "${io_operating_system}" != "netscaler" ] \
     && [ "${io_operating_system}" != "openbsd" ] \
-    && [ "${io_operating_system}" != "solaris" ]; then
+    && [ "${io_operating_system}" != "solaris" ] \
+    && [ "${io_operating_system}" != "OS/390" ]; then
     return 2
   fi
 
