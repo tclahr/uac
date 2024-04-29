@@ -5,6 +5,7 @@
 ### Features
 
 - uac.log and uac.log.stderr files were moved to the front of the output archive file (by [rbcrwd](https://github.com/rbcrwd)).
+- UAC will try to collect all artifacts regardless of the operating system if the debugging mode is enabled (--debug).
 
 ### Artifacts
 

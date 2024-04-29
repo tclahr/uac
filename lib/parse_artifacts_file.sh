@@ -29,6 +29,7 @@ parse_artifacts_file()
 {
   pa_artifacts_file="${1:-}"
   pa_root_output_directory="${2:-}"
+  pa_debug_mode="${3:-false}"
 
   # return if artifacts file does not exist
   if [ ! -f "${pa_artifacts_file}" ]; then
@@ -195,8 +196,9 @@ sequence of mappings\n" >&2
 
             # cannot use ! is_element_in_list because it is not accepted by solaris
             # skip if artifact does not apply to the current operating system
+            # run all artifacts if debugging mode is on
             if is_element_in_list "${OPERATING_SYSTEM}" "${pa_supported_os}" \
-              || is_element_in_list "all" "${pa_supported_os}"; then
+              || is_element_in_list "all" "${pa_supported_os}" || ${pa_debug_mode}; then
               # shellcheck disable=SC2034
               pa_do_nothing=true
             else
