@@ -6,4 +6,9 @@ artifacts:
     collector: file
     path: /var/run/log
     max_file_size: 1073741824 # 1GB
-  
+  -
+    description: Collect /var/log logs. (https://kb.vmware.com/s/article/1021806)
+    supported_os: [esxi]
+    collector: file
+    path: /var/log
+    max_file_size: 1073741824 # 1GB
