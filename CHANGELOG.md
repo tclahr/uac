@@ -9,6 +9,7 @@
 
 ### Artifacts
 
+- files/logs/var_log.yaml: Updated collection to support new system [esxi] (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal)).
 - files/packages/pkg_contents.yaml: Updated collection support for NetBSD 10 [netbsd] (by [Herbert-Karl](https://github.com/Herbert-Karl)).
 - live_response/containers/docker.yaml: Added collection support for resource usage statistics of each container [linux].
 - live_response/containers/podman.yaml: Added collection support for resource usage statistics of each container [linux].
