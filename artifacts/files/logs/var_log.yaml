@@ -2,7 +2,7 @@ version: 3.0
 artifacts:
   -
     description: Collect /var/log logs.
-    supported_os: [aix, freebsd, linux, netbsd, netscaler, openbsd, solaris]
+    supported_os: [aix, esxi, freebsd, linux, netbsd, netscaler, openbsd, solaris]
     collector: file
     path: /var/log
     max_file_size: 1073741824 # 1GB
