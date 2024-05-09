@@ -1,4 +1,4 @@
-version: 1.0
+version: 1.1
 artifacts:
   -
     description: Display all systemd system units.
@@ -12,6 +12,12 @@ artifacts:
     collector: command
     command: systemctl list-timers --all
     output_file: systemctl_list-timers_--all.txt
+  -
+    description: Get status from all timers, including logs
+    supported_os: [linux]
+    collector: command
+    command: systemctl status *.timer
+    output_file: systemctl_status_timer.txt
   -
     description: Display unit files installed on the system, in combination with their enablement state (as reported by is-enabled).
     supported_os: [linux]
