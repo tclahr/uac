@@ -1,0 +1,17 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect lastlog log file.
+    supported_os: [solaris]
+    collector: file
+    path: /var/share/adm/lastlog
+  -
+    description: Collect wtmpx log file.
+    supported_os: [solaris]
+    collector: file
+    path: /var/share/adm/wtmpx
+  -
+    description: Collect utmpx log file.
+    supported_os: [solaris]
+    collector: file
+    path: /system/volatile/utmpx
