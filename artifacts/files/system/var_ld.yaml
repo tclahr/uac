@@ -1,0 +1,7 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect ld config files.
+    supported_os: [solaris]
+    collector: file
+    path: /var/ld
