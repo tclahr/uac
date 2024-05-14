@@ -15,3 +15,9 @@ artifacts:
     supported_os: [solaris]
     collector: file
     path: /system/volatile/utmpx
+  -
+    description: Collect svc log files.
+    supported_os: [solaris]
+    collector: file
+    path: /var/svc/log
+    max_file_size: 1073741824 # 1GB
