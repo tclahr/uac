@@ -2,13 +2,13 @@ version: 1.0
 artifacts:
   -
     description: Display kernel's audit rules.
-    supported_os: [linux, macos]
+    supported_os: [linux]
     collector: command
     command: auditctl -l
     output_file: auditctl_-l.txt
   -
     description: Display the kernel's audit subsystem status.
-    supported_os: [linux, macos]
+    supported_os: [linux]
     collector: command
     command: auditctl -s
     output_file: auditctl_-s.txt
