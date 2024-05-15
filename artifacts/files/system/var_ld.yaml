@@ -5,3 +5,4 @@ artifacts:
     supported_os: [solaris]
     collector: file
     path: /var/ld
+    ignore_date_range: true
