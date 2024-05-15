@@ -747,8 +747,7 @@ while read ua_artifact_file || [ -n "${ua_artifact_file}" ]; do
     "${ua_progress_total}" "${ua_progress_timestamp}" "${ua_artifact_file}"
   ua_artifacts_root_output_directory=`dirname "${ua_artifact_file}"`
   parse_artifacts_file "${UAC_DIR}/artifacts/${ua_artifact_file}" \
-    "${ua_artifacts_root_output_directory}" \
-    "${ua_debug_mode}"
+    "${ua_artifacts_root_output_directory}"
   find "${TEMP_DATA_DIR}/${ua_artifacts_root_output_directory}" -type f -print \
     | sed -e "s|^${TEMP_DATA_DIR}/||" >>"${TEMP_DATA_DIR}/.output_file.tmp"
 done <"${TEMP_DATA_DIR}/.artifacts.tmp" 2>>"${UAC_STDERR_LOG_FILE}"

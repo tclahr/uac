@@ -2,14 +2,14 @@ version: 1.0
 artifacts:
   -
     description: Display Python packages installed through pip.
-    supported_os: [linux]
+    supported_os: [all]
     collector: command
     command: pip list
     output_file: pip_list.txt
   -
-    description: Display information about Python pip-packages.
-    supported_os: [linux]
+    description: Display Python packages installed through pip.
+    supported_os: [all]
     collector: command
-    foreach: pip list | awk '{print $1}' | tail -n +3
-    command: pip show %line%
-    output_file: pip_show_%line%.txt
+    command: pip list -v
+    output_file: pip_list_-v.txt
+  
