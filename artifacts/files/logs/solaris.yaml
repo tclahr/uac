@@ -21,3 +21,9 @@ artifacts:
     collector: file
     path: /var/svc/log
     max_file_size: 1073741824 # 1GB
+  -
+    description: Collect webui log files.
+    supported_os: [solaris]
+    collector: file
+    path: /var/webui/logs
+    max_file_size: 1073741824 # 1GB
