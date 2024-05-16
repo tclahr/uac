@@ -370,6 +370,26 @@ Try 'uac --help' for more information.\n" >&2
         exit 1
       fi
       ;;
+      "--http-put-url")
+      if [ -n "${2}" ]; then
+        ua_http_put_url="${2}"
+        shift
+      else
+        printf %b "uac: option '${1}' requires an argument.\n\
+Try 'uac --help' for more information.\n" >&2
+        exit 1
+      fi
+      ;;
+    "--http-put-url-log-file")
+      if [ -n "${2}" ]; then
+        ua_http_put_url_log_file="${2}"
+        shift
+      else
+        printf %b "uac: option '${1}' requires an argument.\n\
+Try 'uac --help' for more information.\n" >&2
+        exit 1
+      fi
+      ;;
     "--delete-local-on-successful-transfer")
       ua_delete_local_on_successful_transfer=true
       ;;
@@ -1001,6 +1021,36 @@ if [ -n "${ua_ibm_cos_url}" ]; then
           && rm -f "${ua_destination_dir}/${ua_acquisition_log}" 2>/dev/null
       else
         printf %b "Could not transfer log file to IBM Cloud Object Storage\n"
+        exit 1
+      fi
+    fi
+  fi
+fi
+
+# transfer output and log file to HTTP PUT service
+if [ -n "${ua_http_put_url}" ]; then
+  if [ -f "${ua_destination_dir}/${ua_output_filename}" ]; then
+    printf %b "Transferring output file to HTTP PUT server. Please wait...\n"
+    if http_put_transfer "${ua_destination_dir}/${ua_output_filename}" \
+      "${ua_http_put_url}"; then
+      printf %b "File transferred successfully\n"
+      # delete output file on success transfer
+      ${ua_delete_local_on_successful_transfer} \
+        && rm -f "${ua_destination_dir}/${ua_output_filename}" 2>/dev/null
+    else
+      printf %b "Could not transfer output file to HTTP PUT Storage\n"
+      exit 1
+    fi
+    if [ -n "${ua_http_put_url_log_file}" ]; then
+      printf %b "Transferring log file to HTTP PUT Storage. Please wait...\n"
+      if http_put_transfer "${ua_destination_dir}/${ua_acquisition_log}" \
+        "${ua_http_put_url_log_file}"; then
+        printf %b "File transferred successfully\n"
+        # delete output file on success transfer
+        ${ua_delete_local_on_successful_transfer} \
+          && rm -f "${ua_destination_dir}/${ua_acquisition_log}" 2>/dev/null
+      else
+        printf %b "Could not transfer log file to HTTP PUT storage\n"
         exit 1
       fi
     fi
