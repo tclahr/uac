@@ -1,10 +1,9 @@
-version: 1.0
+version: 2.0
 artifacts:
   -
     description: Displays information about installed packages.
-    supported_os: [freebsd]
+    supported_os: [freebsd, solaris]
     collector: command
     command: pkg info
     output_file: pkg_info.txt
-  
   

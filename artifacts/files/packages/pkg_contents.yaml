@@ -1,4 +1,4 @@
-version: 1.0
+version: 2.0
 artifacts:
   -
     description: Collect package table of contents files.
@@ -12,3 +12,8 @@ artifacts:
     collector: file
     path: /usr/pkg/pkgdb
     path_pattern: ["*/+CONTENTS"]
+  -
+    description: Collect package table of contents files.
+    supported_os: [solaris]
+    collector: file
+    path: /var/pkg/publisher/*/pkg
