@@ -23,13 +23,13 @@ artifacts:
     supported_os: [linux]
     collector: file
     path: /run/systemd/transient
-    name_pattern: ["*.scope", "*.timer", "*.service"]
+    name_pattern: ["*.scope", "*.service", "*.timer"]
   -
     description: Collect systemd per-user transient timers.
     supported_os: [linux]
     collector: file
     path: /run/user/*/systemd/transient
-    name_pattern: ["*.timer", "*.service"]
+    name_pattern: ["*.service", "*.timer"]
   -
     description: Collect systemd per-user configuration.
     supported_os: [linux]

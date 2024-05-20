@@ -2,7 +2,7 @@ version: 2.0
 artifacts:
   -
     description: Collect package table of contents files.
-    supported_os: [openbsd, netbsd]
+    supported_os: [netbsd, openbsd]
     collector: file
     path: /var/db/pkg
     path_pattern: ["*/+CONTENTS"]
