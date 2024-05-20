@@ -24,4 +24,11 @@ artifacts:
     collector: file
     path: /%user_home%/Library/Logs
     max_file_size: 1073741824 # 1GB
+  -
+    description: Collect auditd logs.
+    # Reference: https://medium.com/@boutnaru/the-macos-process-journey-auditd-audit-log-management-daemon-1addd6698016
+    supported_os: [macos]
+    collector: file
+    path: /var/audit
+    max_file_size: 1073741824 # 1GB
   
