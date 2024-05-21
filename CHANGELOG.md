@@ -26,4 +26,10 @@
 - live_response/packages/pkg.yaml: Updated collection support for information about installed packages [solaris] (by [sec-hbaer](https://github.com/sec-hbaer)).
 - live_response/packages/xbps.yaml: Added collection support for packages installed through XBPS package manager [linux] (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal)).
 - live_response/packages/yay.yaml: Added collection support for packages installed through Yay [linux] (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal)).
+- live_response/process/procfs_information.yaml: Added collection support for entries corresponding to memory-mapped files [linux].
+- live_response/process/procfs_information.yaml: Added collection support for listing the contents of /proc/modules [linux].
+- live_response/process/procfs_information.yaml: Added collection support for listing Unix sockets [linux].
+- live_response/system/ebpf.yaml: Added collection support for listing pinned eBPF progs [linux].
+- live_response/system/kernel_modules.yaml: Added collection support for listing available parameters per kernel module [linux].
+- live_response/system/kernel_modules.yaml: Added collection support for listing loaded kernel modules to compare with /proc/modules [linux].
 - live_response/system/modinfo.yaml: Added collection support for information about loaded kernel modules [linux, solaris] (by [sanderu](https://github.com/sanderu)).
