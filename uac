@@ -786,6 +786,8 @@ echo "uac.log" | cat - "${TEMP_DATA_DIR}/.temp_output_file.tmp" >"${TEMP_DATA_DI
 # create output file
 if command_exists "tar"; then
   if [ -f "${TEMP_DATA_DIR}/.files.tmp" ]; then
+    grep -v -E "${UAC_DIR}|/uac-data.tmp/" "${TEMP_DATA_DIR}/.files.tmp" >"${TEMP_DATA_DIR}/.files_uac-data.tmp_removed.tmp"
+    cp "${TEMP_DATA_DIR}/.files_uac-data.tmp_removed.tmp" "${TEMP_DATA_DIR}/.files.tmp"
     # sort and uniq
     sort_uniq_file "${TEMP_DATA_DIR}/.files.tmp" 2>>"${UAC_STDERR_LOG_FILE}"
     if ${ua_temp_data_dir_symlink_support}; then
@@ -842,6 +844,8 @@ else
   ua_output_filename="${ua_output_base_filename}"
   printf %b "'tar' not found. Copying collected artifacts to '${ua_destination_dir}/${ua_output_filename}'. Please wait...\n"
   if [ -f "${TEMP_DATA_DIR}/.files.tmp" ]; then
+    grep -v -E "${UAC_DIR}|/uac-data.tmp/" "${TEMP_DATA_DIR}/.files.tmp" >"${TEMP_DATA_DIR}/.files_uac-data.tmp_removed.tmp"
+    cp "${TEMP_DATA_DIR}/.files_uac-data.tmp_removed.tmp" "${TEMP_DATA_DIR}/.files.tmp"
     # sort and uniq
     sort_uniq_file "${TEMP_DATA_DIR}/.files.tmp" 2>>"${UAC_STDERR_LOG_FILE}"
     copy_data "${TEMP_DATA_DIR}/.files.tmp" "${ua_destination_dir}/${ua_output_filename}/[root]" \
