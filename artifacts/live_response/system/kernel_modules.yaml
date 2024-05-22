@@ -1,0 +1,19 @@
+version: 1.0
+artifacts:
+  -
+    description: Display the loaded kernel modules (compare with /proc/modules).
+    supported_os: [linux]
+    collector: command
+    command: ls -la /sys/module
+    output_file: ls_-la_sys_module.txt
+  -
+    description: Display available parameters per kernel module.
+    supported_os: [linux]
+    collector: command
+    foreach: for module in /sys/module/* ; do echo ${module} | sed -e 's:/sys/module/::'; done
+    command: ls -la /sys/module/%line%/parameters
+    output_directory: module/%line%
+    output_file: parameters.txt
+  
+# References:
+# https://www.defensive-security.com/storage/uploads/Advanced%20Linux%20Detection%20and%20Forensics%20Cheatsheet%20by%20Defensive%20Security.pdf
