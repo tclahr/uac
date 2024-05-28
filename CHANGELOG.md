@@ -1,6 +1,6 @@
 # Changelog
 
-## DEVELOPMENT VERSION
+## 2.9.0 (2024-05-28)
 
 ### Features
 
