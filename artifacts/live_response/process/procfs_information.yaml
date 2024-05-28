@@ -1,4 +1,4 @@
-version: 1.0
+version: 2.0
 artifacts:
   -
     description: Collect current running processes information.
@@ -8,9 +8,9 @@ artifacts:
     output_file: ls_-l_proc.txt
   -
     description: Collect running processes executable path.
-    supported_os: [freebsd, macos, openbsd]
+    supported_os: [aix]
     collector: command
-    command: ps -eo args | grep ^/ | awk '{print $1}' | sort -u
+    command: ls -l /proc/[0-9]*/object/a.out
     output_file: running_processes_full_paths.txt
   -
     description: Collect running processes executable path.
@@ -20,15 +20,15 @@ artifacts:
     output_file: running_processes_full_paths.txt
   -
     description: Collect running processes executable path.
-    supported_os: [netscaler]
+    supported_os: [freebsd, macos, openbsd]
     collector: command
-    command: ls -l /proc/[0-9]*/file
+    command: ps -eo args | grep ^/ | awk '{print $1}' | sort -u
     output_file: running_processes_full_paths.txt
   -
     description: Collect running processes executable path.
-    supported_os: [aix]
+    supported_os: [netscaler]
     collector: command
-    command: ls -l /proc/[0-9]*/object/a.out
+    command: ls -l /proc/[0-9]*/file
     output_file: running_processes_full_paths.txt
   -
     description: Collect running processes executable path.
@@ -99,6 +99,14 @@ artifacts:
     output_directory: proc/%line%
     output_file: fd.txt
   -
+    description: Collect information about entries corresponding to memory-mapped files.
+    supported_os: [linux]
+    collector: command
+    foreach: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
+    command: ls -la /proc/%line%/map_files
+    output_directory: proc/%line%
+    output_file: map_files.txt
+  -
     description: Collect the initial process' stack trace.
     supported_os: [android, linux]
     collector: command
@@ -115,6 +123,14 @@ artifacts:
     output_directory: proc/%line%
     output_file: status.txt
   -
+    description: Display the list of UNIX sockets.
+    supported_os: [linux]
+    collector: command
+    foreach: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
+    command: cat /proc/%line%/net/unix
+    output_directory: proc/%line%/net
+    output_file: unix.txt
+  -
     description: Collect running process information.
     supported_os: [aix, solaris]
     collector: command
@@ -123,14 +139,6 @@ artifacts:
     output_directory: proc/%line%
     output_file: psinfo.txt
   -
-    description: Collect the list of files which the process has open.
-    supported_os: [solaris]
-    collector: command
-    foreach: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
-    command: pfiles -F %line%
-    output_directory: proc/%line%
-    output_file: pfiles.txt
-  -
     description: Collect information about all file descriptors opened by a process.
     supported_os: [aix]
     collector: command
@@ -138,3 +146,14 @@ artifacts:
     command: procfiles -n -c %line%
     output_directory: proc/%line%
     output_file: procfiles.txt
+  -
+    description: Collect the list of files which the process has open.
+    supported_os: [solaris]
+    collector: command
+    foreach: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
+    command: pfiles -F %line%
+    output_directory: proc/%line%
+    output_file: pfiles.txt
+
+# References:
+# https://www.defensive-security.com/storage/uploads/Advanced%20Linux%20Detection%20and%20Forensics%20Cheatsheet%20by%20Defensive%20Security.pdf

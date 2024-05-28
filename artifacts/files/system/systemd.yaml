@@ -1,4 +1,4 @@
-version: 2.0
+version: 2.1
 artifacts:
   -
     description: Collect systemd configuration files.
@@ -19,8 +19,19 @@ artifacts:
     path: /run/systemd/sessions
     file_type: f
   -
-    description: Collect systemd scope files.
+    description: Collect systemd scope and transient timer files.
     supported_os: [linux]
     collector: file
     path: /run/systemd/transient
-    name_pattern: ["*.scope"]
+    name_pattern: ["*.scope", "*.service", "*.timer"]
+  -
+    description: Collect systemd per-user transient timers.
+    supported_os: [linux]
+    collector: file
+    path: /run/user/*/systemd/transient
+    name_pattern: ["*.service", "*.timer"]
+  -
+    description: Collect systemd per-user configuration.
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.config/systemd

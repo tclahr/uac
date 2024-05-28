@@ -1,0 +1,39 @@
+version: 1.0
+artifacts:
+  -
+    description: Display installed packages.
+    supported_os: [macos]
+    collector: command
+    command: brew list
+    output_file: brew_list.txt
+  -
+    description: Display CLI only installed packages.
+    supported_os: [macos]
+    collector: command
+    command: brew list --formula
+    output_file: brew_list_--formula.txt
+  -
+    description: Display GUI only installed packages.
+    supported_os: [macos]
+    collector: command
+    command: brew list --cask
+    output_file: brew_list_--cask.txt
+  -
+    description: Display installed packages including their version numbers.
+    supported_os: [macos]
+    collector: command
+    command: brew list --versions --multiple
+    output_file: brew_list_--versions_--multiple.txt
+  -
+    description: Display all top-level packages.
+    supported_os: [macos]
+    collector: command
+    command: brew leaves
+    output_file: brew_leaves.txt
+  -
+    description: Display installed packages and their dependencies, in a tree view.
+    supported_os: [macos]
+    collector: command
+    command: brew deps --tree --installed
+    output_file: brew_deps_--tree_--installed.txt
+    

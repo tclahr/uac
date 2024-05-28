@@ -1,0 +1,29 @@
+version: 2.0
+artifacts:
+  -
+    description: Collect lastlog log file.
+    supported_os: [solaris]
+    collector: file
+    path: /var/share/adm/lastlog
+  -
+    description: Collect wtmpx log file.
+    supported_os: [solaris]
+    collector: file
+    path: /var/share/adm/wtmpx
+  -
+    description: Collect utmpx log file.
+    supported_os: [solaris]
+    collector: file
+    path: /system/volatile/utmpx
+  -
+    description: Collect svc log files.
+    supported_os: [solaris]
+    collector: file
+    path: /var/svc/log
+    max_file_size: 1073741824 # 1GB
+  -
+    description: Collect webui log files.
+    supported_os: [solaris]
+    collector: file
+    path: /var/webui/logs
+    max_file_size: 1073741824 # 1GB
