@@ -96,5 +96,5 @@ artifacts:
     supported_os: [linux]
     collector: command
     foreach: podman container ps --all | sed 1d | awk '{print $1}'
-    command: podman stats %line%
+    command: podman stats --no-stream %line%
     output_file: podman_stats_%line%.txt

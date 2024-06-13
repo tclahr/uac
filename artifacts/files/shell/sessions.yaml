@@ -1,10 +1,12 @@
-version: 1.0
+version: 1.1
 artifacts:
   -
     description: Collect shell sessions files.
     supported_os: [all]
     collector: file
     path: /%user_home%
-    name_pattern: ["*.sessions", ".*_sessions"]
+    name_pattern: ["*.session", "*.sessions", ".*_sessions"]
     max_depth: 2
     
+# References:
+# https://dfir.ch/posts/today_i_learned_zsh_sessions/

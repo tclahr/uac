@@ -41,7 +41,7 @@ export PATH
 . "${UAC_DIR}/lib/load_lib_files.sh"
 
 # global vars
-UAC_VERSION="2.9.0"
+UAC_VERSION="2.9.1"
 MOUNT_POINT="/"
 OPERATING_SYSTEM=""
 SYSTEM_ARCH=""
