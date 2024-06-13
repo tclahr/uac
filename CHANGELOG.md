@@ -1,6 +1,6 @@
 # Changelog
 
-## DEVELOPMENT VERSION
+## 2.9.1 (2024-06-12)
 
 ### Fixes
 
