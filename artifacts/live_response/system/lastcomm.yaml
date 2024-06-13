@@ -1,0 +1,16 @@
+version: 1.0
+artifacts:
+  -
+    description: Shows the last commands executed in a reverse order based on the default accounting file.
+    supported_os: [freebsd, netbsd, openbsd]
+    collector: command
+    command: lastcomm
+    output_file: lastcomm.txt
+  -
+    description: Shows the last commands executed in a reverse order from the historic accounting files.
+    supported_os: [freebsd, netbsd, openbsd]
+    collector: command
+    foreach: for acctfile in /var/account/acct.[0123]; do echo ${acctfile} | sed -e 's:/var/account/acct.::'; done
+    command: lastcomm -f /var/account/acct.%line%
+    output_file: lastcomm_%line%.txt
+

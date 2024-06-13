@@ -1,0 +1,10 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect file backups and hashes created by the integrated security script of BSDs.
+    supported_os: [freebsd, netbsd, openbsd]
+    collector: file
+    path: /var/backups
+    name_pattern: ["*.current", "*.backup", "*.current.sha256", "*.backup.sha256"]
+    exclude_name_pattern: ["master.passwd.current", "master.passwd.backup"]
+    ignore_date_range: true
