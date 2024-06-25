@@ -69,10 +69,9 @@ artifacts:
   -
     description: Find open files of (malicious) processes.
     supported_os: [linux]
-    collector: find
-    path: .list_open_file_descriptors.txt
-    is_file_list: true
-    file_type: f
+    collector: command
+    foreach: cat "%destination_directory%/.list_open_file_descriptors.txt"
+    command: find %line% -type f -print
     output_file: .open_file_descriptors.txt
   -
     description: Collect open files of (malicious) processes.
