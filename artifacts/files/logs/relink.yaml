@@ -1,0 +1,8 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect kernel relink log file.
+    supported_os: [openbsd]
+    collector: file
+    path: /usr/share/relink/kernel/relink.log
+    

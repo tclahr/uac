@@ -1,4 +1,6 @@
-version: 1.0
+version: 2.0
+condition: command_exists "chkrootkit"
+output_directory: /chkrootkit
 artifacts:
   -
     description: Locally checks for signs of a rootkit.

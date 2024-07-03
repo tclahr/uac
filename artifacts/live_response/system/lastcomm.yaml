@@ -1,4 +1,6 @@
 version: 1.0
+condition: command_exists "lastcomm"
+output_directory: /live_response/system
 artifacts:
   -
     description: Shows the last commands executed in a reverse order based on the default accounting file.
@@ -10,7 +12,6 @@ artifacts:
     description: Shows the last commands executed in a reverse order from the historic accounting files.
     supported_os: [freebsd, netbsd, openbsd]
     collector: command
-    foreach: for acctfile in /var/account/acct.[0123]; do echo ${acctfile} | sed -e 's:/var/account/acct.::'; done
-    command: lastcomm -f /var/account/acct.%line%
+    foreach: ls /var/account/acct*
+    command: lastcomm -f %line%
     output_file: lastcomm_%line%.txt
-

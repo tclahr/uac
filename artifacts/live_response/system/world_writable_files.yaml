@@ -1,13 +1,13 @@
-version: 1.0
+version: 2.0
+output_directory: /live_response/system
 artifacts:
   -
     description: List all world writable files.
     supported_os: [all]
     collector: find
     path: /
-    file_type: f
-    max_depth: 6
-    permissions: 777
+    file_type: [f]
+    permissions: [777]
     exclude_file_system: [proc, procfs]
     output_file: world_writable_files.txt
   

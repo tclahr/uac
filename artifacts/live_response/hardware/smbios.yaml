@@ -1,4 +1,6 @@
-version: 1.0
+version: 2.0
+condition: command_exists "smbios"
+output_directory: /live_response/hardware
 artifacts:
   -
     description: Display the contents of the System Management BIOS image.

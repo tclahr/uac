@@ -1,62 +1,47 @@
 #!/bin/sh
 # SPDX-License-Identifier: Apache-2.0
-# shellcheck disable=SC2006
 
-###############################################################################
 # Get current operating system.
-# Globals:
-#   None
-# Requires:
-#   None
 # Arguments:
-#   None
-# Outputs:
-#   Write operating system to stdout.
-# Exit Status:
-#   Exit with status 0 on success.
-#   Exit with status greater than 0 if errors occur.
-###############################################################################
-get_operating_system()
+#   none
+# Returns:
+#   string: operating system
+_get_operating_system()
 {
-  gs_kernel_name=`uname -s`
+  # shellcheck disable=SC2006
+  __go_kernel_name=`uname -s`
   
-  case "${gs_kernel_name}" in
+  case "${__go_kernel_name}" in
     "AIX")
-      printf %b "aix"
+      echo "aix"
       ;;
     "FreeBSD")
-      if eval "uname -r | grep -q -E -i \"netscaler\""; then
-        printf %b "netscaler"
+      if uname -r | grep -q -E -i "netscaler"; then
+        echo "netscaler"
       else
-        printf %b "freebsd"
+        echo "freebsd"
       fi
       ;; 
     "Linux")
-      if eval "env | grep -q -E \"ANDROID_ROOT\"" \
-        && eval "env | grep -q -E \"ANDROID_DATA\""; then
-        printf %b "android"
-      else
-        printf %b "linux"
-      fi
+      echo "linux"
       ;;
     "Darwin")
-      printf %b "macos"
+      echo "macos"
       ;;
     "NetBSD")
-      printf %b "netbsd"
+      echo "netbsd"
       ;;
     "OpenBSD")
-      printf %b "openbsd"
+      echo "openbsd"
       ;;
     "SunOS")
-      printf %b "solaris"
+      echo "solaris"
       ;;
     "VMkernel")
-      printf %b "esxi"
+      echo "esxi"
       ;;
     *)
-      printf %b "${gs_kernel_name}"
+      echo "${__go_kernel_name}"
       ;;
   esac
-
 }

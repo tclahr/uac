@@ -1,4 +1,6 @@
-version: 3.0
+version: 4.0
+condition: command_exists "zpool"
+output_directory: /live_response/storage
 artifacts:
   -
     description: Displays the command history of all pools.

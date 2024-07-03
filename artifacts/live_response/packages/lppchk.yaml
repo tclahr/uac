@@ -1,4 +1,6 @@
-version: 1.0
+version: 2.0
+condition: command_exists "lppchk"
+output_directory: /live_response/packages
 artifacts:
   -
     description: Verifies that all software products installed on the / (root) file system are also installed on the /usr file system and, conversely, all the software products installed in the /usr file system are also installed on the / (root) file system. 

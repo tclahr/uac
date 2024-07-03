@@ -1,30 +1,21 @@
 #!/bin/sh
 # SPDX-License-Identifier: Apache-2.0
 
-###############################################################################
-# Get system architecture.
-# Globals:
-#   OPERATING_SYSTEM
-# Requires:
-#   None
+# Get the system's architecture.
 # Arguments:
-#   None
-# Outputs:
-#   Write system architecture to stdout.
-# Exit Status:
-#   Exit with status 0 on success.
-#   Exit with status greater than 0 if errors occur.
-###############################################################################
-get_system_arch()
+#   string os: operating system name
+# Returns:
+#   string: system's architecture
+_get_system_arch()
 {
-  
-  case "${OPERATING_SYSTEM}" in
+  __sa_os="${1:-}"
+
+  case "${__sa_os}" in
     "aix"|"solaris")
       uname -p
       ;;
-    "android"|"esxi"|"freebsd"|"linux"|"macos"|"netbsd"|"netscaler"|"openbsd")
+    "esxi"|"freebsd"|"linux"|"macos"|"netbsd"|"netscaler"|"openbsd")
       uname -m
       ;;
   esac
-
 }

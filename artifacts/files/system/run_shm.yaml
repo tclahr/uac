@@ -1,10 +1,10 @@
-version: 1.0
+version: 3.0
 artifacts:
   -
     description: Collect system temporary files.
     supported_os: [all]
     collector: file
     path: /run/shm
-    file_type: f
-    max_file_size: 5242880 # 5MB
+    file_type: [f]
+    max_file_size: 10485760 # 10MB
 

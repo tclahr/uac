@@ -6,5 +6,5 @@ artifacts:
     collector: file
     path: /
     name_pattern: [".DS_Store"]
-    file_type: f
+    file_type: [f]
   

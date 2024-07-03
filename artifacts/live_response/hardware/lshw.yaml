@@ -1,4 +1,6 @@
-version: 1.0
+version: 2.0
+condition: command_exists "lshw"
+output_directory: /live_response/hardware
 artifacts:
   -
     description: Display hardware information.

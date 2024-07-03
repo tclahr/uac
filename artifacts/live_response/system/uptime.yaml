@@ -1,4 +1,5 @@
-version: 1.0
+version: 2.0
+output_directory: /live_response/system
 artifacts:
   -
     description: Display how long system has been running.
@@ -8,7 +9,7 @@ artifacts:
     output_file: uptime.txt
   -
     description: Display how long system has been running in yyyy-mm-dd HH:MM:SS format.
-    supported_os: [all]
+    supported_os: [aix, esxi, linux, solaris]
     collector: command
     command: uptime -s
     output_file: uptime_-s.txt

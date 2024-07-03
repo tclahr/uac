@@ -1,8 +1,10 @@
-version: 2.0
+version: 3.0
+condition: command_exists "mount"
+output_directory: /live_response/storage
 artifacts:
   -
     description: Lists all mounted filesystems.
-    supported_os: [android, aix, freebsd, linux, openbsd, netbsd, netscaler, openbsd, solaris]
+    supported_os: [aix, freebsd, linux, openbsd, netbsd, netscaler, openbsd, solaris]
     collector: command
     command: mount
     output_file: mount.txt

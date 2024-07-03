@@ -1,4 +1,6 @@
-version: 1.0
+version: 2.0
+condition: command_exists "df"
+output_directory: /live_response/storage
 artifacts:
   -
     description: Report file system disk space usage.
@@ -8,7 +10,7 @@ artifacts:
     output_file: df.txt
   -
     description: Report file system disk space usage.
-    supported_os: [android, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris]
+    supported_os: [freebsd, linux, macos, netbsd, netscaler, openbsd, solaris]
     collector: command
     command: df -h
     output_file: df_-h.txt

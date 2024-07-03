@@ -1,8 +1,10 @@
-version: 1.0
+version: 2.0
+condition: command_exists "cpuinfo"
+output_directory: /live_response/hardware
 artifacts:
   -
     description: Display CPU information.
-    supported_os: [android, linux, netbsd]
+    supported_os: [linux, netbsd]
     collector: command
     command: cat /proc/cpuinfo
     output_file: cpuinfo.txt

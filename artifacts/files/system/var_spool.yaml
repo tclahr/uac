@@ -2,7 +2,7 @@ version: 2.0
 artifacts:
   -
     description: Collect spool files.
-    supported_os: [aix, android, esxi, freebsd, linux, netbsd, netscaler, openbsd, solaris]
+    supported_os: [aix, esxi, freebsd, linux, netbsd, netscaler, openbsd, solaris]
     collector: file
     path: /var/spool
   -

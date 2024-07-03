@@ -1,4 +1,6 @@
-version: 1.0
+version: 2.0
+condition: command_exists "swapctl"
+output_directory: /live_response/system
 artifacts:
   -
     description: List the devices making up	system swap.

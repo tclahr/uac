@@ -1,4 +1,6 @@
-version: 1.0
+version: 2.0
+condition: command_exists "lslpp"
+output_directory: /live_response/packages
 artifacts:
   -
     description: Displays the installation and update history information for the specified fileset.

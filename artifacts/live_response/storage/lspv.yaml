@@ -1,4 +1,6 @@
-version: 1.0
+version: 2.0
+condition: command_exists "lspv"
+output_directory: /live_response/storage
 artifacts:
   -
     description: Displays information about a physical volume within a volume group.

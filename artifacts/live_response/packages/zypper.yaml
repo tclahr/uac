@@ -1,4 +1,6 @@
-version: 1.0
+version: 2.0
+condition: command_exists "zypper"
+output_directory: /live_response/packages
 artifacts:
   -
     description: List installed packages. zypper is a command-line interface to ZYpp system management library (libzypp).

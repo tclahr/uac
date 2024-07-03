@@ -1,12 +1,12 @@
-version: 1.0
+version: 2.0
+output_directory: /live_response/system
 artifacts:
   -
     description: List all socket files.
     supported_os: [all]
     collector: find
     path: /
-    file_type: s
-    max_depth: 6
+    file_type: [s]
     exclude_file_system: [proc, procfs]
     output_file: socket_files.txt
   

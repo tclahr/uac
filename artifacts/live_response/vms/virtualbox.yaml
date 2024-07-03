@@ -1,4 +1,6 @@
-version: 1.0
+version: 2.0
+condition: command_exists "VBoxManage"
+output_directory: /live_response/vms
 artifacts:
   -
     description: List all registered VMs.

@@ -1,4 +1,6 @@
-version: 1.0
+version: 2.0
+condition: command_exists "lssrc"
+output_directory: /live_response/network
 artifacts:
   -
     description: Display status of the subsystem, group of subsystems, or subserver.

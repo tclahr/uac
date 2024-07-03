@@ -1,4 +1,6 @@
-version: 1.0
+version: 2.0
+condition: command_exists "service"
+output_directory: /live_response/system
 artifacts:
   -
     description: Display System V services status information.
@@ -6,10 +8,4 @@ artifacts:
     collector: command
     command: service --status-all
     output_file: service_--status-all.txt
-  -
-    description: Display service names and their package names.
-    supported_os: [android]
-    collector: command
-    command: service list
-    output_file: service_list.txt
   

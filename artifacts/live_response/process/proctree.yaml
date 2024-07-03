@@ -1,4 +1,6 @@
-version: 1.0
+version: 2.0
+condition: command_exists "proctree"
+output_directory: /live_response/process
 artifacts:
   -
     description: Print the process tree containing the specified process IDs or users.

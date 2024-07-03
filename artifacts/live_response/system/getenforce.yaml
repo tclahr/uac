@@ -1,8 +1,10 @@
-version: 1.0
+version: 2.0
+condition: command_exists "getenforce"
+output_directory: /live_response/system
 artifacts:
   -
     description: Display the current mode of SELinux.
-    supported_os: [android, linux]
+    supported_os: [linux]
     collector: command
     command: getenforce
     output_file: getenforce.txt

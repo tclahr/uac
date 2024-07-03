@@ -1,0 +1,31 @@
+name: Validate Artifacts
+
+on:
+  pull_request:
+    branches:
+      - develop
+      - main
+    paths:
+      - 'artifacts/**'
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  validate-artifact-files:
+    name: Validate Artifacts
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clone uac repo
+        uses: actions/checkout@v4
+        with:
+          path: uac
+
+      - name: Validate Artifacts
+        working-directory: uac
+        run: |
+          find artifacts/* -name "*.yaml" -type f \
+            | while read file || [ -n "${file}" ]; do
+                ./uac --validate-artifact "${file}"
+              done

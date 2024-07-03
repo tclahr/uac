@@ -1,0 +1,45 @@
+name: Unit testing
+
+on:
+  pull_request:
+    branches:
+      - develop
+      - main
+    paths:
+      - 'lib/**'
+      - 'uac'
+      
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Unit testing
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clone uac repo
+        uses: actions/checkout@v3
+        with:
+          path: uac
+
+      - name: Clone ushunit repo
+        uses: actions/checkout@v4
+        with:
+          repository: tclahr/ushunit
+          token: ${{ secrets.ACTIONS_SECRET }}
+          ref: main
+          path: ushunit
+
+      - name: Clone uac-tests repo
+        uses: actions/checkout@v4
+        with:
+          repository: tclahr/uac-tests
+          token: ${{ secrets.ACTIONS_SECRET }}
+          ref: main
+          path: uac-tests
+      
+      - name: Run tests
+        working-directory: ushunit
+        run: |
+          UAC_DIR="../uac" ./ushunit -i ../uac-tests/tests/lib/*.sh ../uac-tests/tests/*.sh
