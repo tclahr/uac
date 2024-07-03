@@ -19,8 +19,9 @@ jobs:
 
     steps:
       - name: Clone uac repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
+          repository: tclahr/uac
           path: uac
 
       - name: Clone ushunit repo
