@@ -1,0 +1,20 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect system accounting files.
+    supported_os: [freebsd, netbsd, openbsd]
+    collector: file
+    path: /var/account/acct*
+    ignore_date_range: true
+  -
+    description: Collect system accounting user based summary file.
+    supported_os: [freebsd, netbsd, openbsd]
+    collector: file
+    path: /var/account/usracct
+    ignore_date_range: true
+  -
+    description: Collect system accounting command based summary file.
+    supported_os: [freebsd, netbsd, openbsd]
+    collector: file
+    path: /var/account/savacct
+    ignore_date_range: true

@@ -1,0 +1,7 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect database file used by locate command, representing a snapshot of the virtual file system accessible with minimal permissions.
+    supported_os: [freebsd, netbsd, openbsd]
+    collector: file
+    path: /var/db/locate.database
