@@ -2,89 +2,97 @@
 # SPDX-License-Identifier: Apache-2.0
 # shellcheck disable=SC2006
 
-###############################################################################
 # Get current user list and their home directories.
-# Globals:
-#   MOUNT_POINT
-#   OPERATING_SYSTEM
-#   TEMP_DATA_DIR
-# Requires:
-#   get_current_user
-#   sanitize_path
 # Arguments:
-#   $1: skip users with non-interactive shells (default: false)
-#   $2: passwd file path (default: /etc/passwd)
-# Outputs:
-#   Write user:home list to stdout.
-# Exit Status:
-#   Exit with status 0 on success.
-#   Exit with status greater than 0 if errors occur.
-###############################################################################
-get_user_home_list()
+#   boolean skip_nologin_users: skip users with non-interactive shells (default: false)
+#   string mount_point: mount point
+#   string passwd_file_path: passwd file path (default: /etc/passwd)
+# Returns:
+#   string: user:home list
+_get_user_home_list()
 {
-  gu_skip_nologin_users="${1:-false}"
-  gu_passwd_file_path="${2:-/etc/passwd}"
-  
-  # skip users with non-interactive shells
-  gu_non_interactive_shells_grep="false$|halt$|nologin$|shutdown$|sync$|:$"
+  __gu_skip_nologin_users="${1:-false}"
+  __gu_mount_point="${2:-/}"
+  __gu_passwd_file_path="${3:-/etc/passwd}"
 
-  if [ -f "${TEMP_DATA_DIR}/.user_home_list.tmp" ]; then
-    rm -f "${TEMP_DATA_DIR}/.user_home_list.tmp" >/dev/null
-  fi
+  # skip users with non-interactive shells
+  __gu_non_interactive_shells_grep="false$|halt$|nologin$|shutdown$|sync$|git-shell$|:$"
+
+  __gu_user_home_from_passwd=""
+  __gu_user_home_from_dir=""
+  __gu_user_home_shadow=""
+  __gu_user_home_current_user=""
 
   # extract user:home from passwd file
-  gu_etc_passwd=`sanitize_path "${MOUNT_POINT}/${gu_passwd_file_path}"`
-  if [ -f "${gu_etc_passwd}" ]; then
-    if ${gu_skip_nologin_users}; then
-      sed -e 's/#.*$//g' -e '/^ *$/d' -e '/^$/d' <"${gu_etc_passwd}" \
-        | grep -v -E "${gu_non_interactive_shells_grep}" \
+  if [ -f "${__gu_mount_point}/${__gu_passwd_file_path}" ]; then
+    if ${__gu_skip_nologin_users}; then
+      # remove lines starting with # (comments)
+      # remove inline comments
+      # remove blank lines
+      __gu_user_home_from_passwd=`sed -e 's|#.*$||g' \
+          -e '/^ *$/d' \
+          -e '/^$/d' \
+          <"${__gu_mount_point}/${__gu_passwd_file_path}" \
+        | grep -v -E "${__gu_non_interactive_shells_grep}" \
         | awk 'BEGIN { FS=":"; } {
             printf "%s:%s\n",$1,$6;
-          }' >>"${TEMP_DATA_DIR}/.user_home_list.tmp"
+          }'`
     else
-      sed -e 's/#.*$//g' -e '/^ *$/d' -e '/^$/d' <"${gu_etc_passwd}" \
+      __gu_user_home_from_passwd=`sed -e 's|#.*$||g' \
+          -e '/^ *$/d' \
+          -e '/^$/d' \
+          <"${__gu_mount_point}/${__gu_passwd_file_path}" \
         | awk 'BEGIN { FS=":"; } {
             printf "%s:%s\n",$1,$6;
-          }' >>"${TEMP_DATA_DIR}/.user_home_list.tmp"
+          }'`
     fi
   fi
 
-  # extract user:home from /home | /Users | /export/home
-  gu_user_home_dir="/home"
-  if [ "${OPERATING_SYSTEM}" = "macos" ]; then
-    gu_user_home_dir="/Users"
-  elif [ "${OPERATING_SYSTEM}" = "solaris" ]; then
-    gu_user_home_dir="/export/home"
-  fi
-
-  if [ -d "${MOUNT_POINT}/${gu_user_home_dir}" ]; then
-    for gu_home_dir in "${MOUNT_POINT}/${gu_user_home_dir}"/*; do
-      echo "${gu_home_dir}" \
-        | sed -e "s:${MOUNT_POINT}::" -e 's://*:/:g' \
-        | awk '{
-            split($1, parts, "/");
-            size = 0;
-            for (i in parts) size++;
-            printf "%s:%s\n",parts[size],$1;
-          }'
-    done >>"${TEMP_DATA_DIR}/.user_home_list.tmp"
-  fi
+  # extract user:home from /home | /Users | /export/home | /u
+  for __gu_parent_home_dir in /home /Users /export/home /u; do
+    # let's skip home directories that are symlinks to avoid data dupplication
+    if [ ! -h "${__gu_mount_point}${__gu_parent_home_dir}" ]; then
+      for __gu_user_home_dir in "${__gu_mount_point}${__gu_parent_home_dir}"/*; do
+        __gu_user_home_from_dir_temp=`echo "${__gu_user_home_dir}" \
+        | sed -e "s|^${__gu_mount_point}||" \
+        | awk  '{
+                  split($1, parts, "/");
+                  size = 0;
+                  for (i in parts) size++;
+                  printf "%s:%s\n",parts[size],$1;
+                }'`
+        __gu_user_home_from_dir="${__gu_user_home_from_dir}
+${__gu_user_home_from_dir_temp}"
+      done
+    fi
+  done
 
   # ChomeOS has '/home/.shadow' directory
-  gu_user_home_dir="/home/.shadow"
-  if [ -d "${MOUNT_POINT}/${gu_user_home_dir}" ]; then
-    echo "shadow:${gu_user_home_dir}" >>"${TEMP_DATA_DIR}/.user_home_list.tmp"
+  if [ -d "${__gu_mount_point}/home/.shadow" ]; then
+    __gu_user_home_shadow="shadow:/home/.shadow"
   fi
 
   # extract user:home for current user only if running on a live system
   # useful for systems which do not have a /etc/passwd file
-  if [ "${MOUNT_POINT}" = "/" ] && [ -n "${HOME}" ]; then
-    gu_current_user=`get_current_user`
-    echo "${gu_current_user}:${HOME}" >>"${TEMP_DATA_DIR}/.user_home_list.tmp"
+  if [ "${__gu_mount_point}" = "/" ] && [ -n "${HOME:-}" ]; then
+    __gu_current_user=`_get_current_user`
+    __gu_user_home_current_user="${__gu_current_user}:${HOME}"
   fi
 
-  # remove empty user or home
-  grep -v -E "^:|:$" "${TEMP_DATA_DIR}/.user_home_list.tmp" \
+  # remove blank lines
+  # remove  :/home
+  # remove *:/home
+  # remove user:
+  # sort unique
+  printf "%s\n%s\n%s\n%s\n" \
+    "${__gu_user_home_from_passwd}" \
+    "${__gu_user_home_from_dir}" \
+    "${__gu_user_home_shadow}" \
+    "${__gu_user_home_current_user}" \
+    | sed -e '/^$/d' \
+          -e '/^*/d' \
+          -e '/^:/d' \
+          -e '/:$/d' \
     | sort -u
-  
+
 }

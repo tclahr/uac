@@ -1,8 +1,10 @@
-version: 1.0
+version: 2.0
+condition: command_exists "lsusb"
+output_directory: /live_response/hardware
 artifacts:
   -
     description: Display information about USB devices.
-    supported_os: [android, linux]
+    supported_os: [linux]
     collector: command
     command: lsusb
     output_file: lsusb.txt

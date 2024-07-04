@@ -5,6 +5,6 @@ artifacts:
     supported_os: [freebsd, netbsd, openbsd]
     collector: file
     path: /var/backups
-    name_pattern: ["*.current", "*.backup", "*.current.sha256", "*.backup.sha256"]
+    name_pattern: ["*.backup", "*.backup.sha256", "*.current", "*.current.sha256"]
     exclude_name_pattern: ["master.passwd.current", "master.passwd.backup"]
     ignore_date_range: true

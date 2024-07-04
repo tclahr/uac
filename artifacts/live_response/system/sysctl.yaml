@@ -1,8 +1,10 @@
-version: 1.0
+version: 2.0
+condition: command_exists "sysctl"
+output_directory: /live_response/system
 artifacts:
   -
     description: Display kernel parameters.
-    supported_os: [android, freebsd, linux, macos, netbsd, netscaler, openbsd]
+    supported_os: [freebsd, linux, macos, netbsd, netscaler, openbsd]
     collector: command
     command: sysctl -a
     output_file: sysctl_-a.txt

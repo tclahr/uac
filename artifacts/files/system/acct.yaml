@@ -1,5 +1,7 @@
 version: 1.0
 artifacts:
+  # system accounting files, covering processes that terminated on the system, allowing one to see past program executions
+  # this is deactivated by default, but quite usefull when active
   -
     description: Collect system accounting files.
     supported_os: [freebsd, netbsd, openbsd]

@@ -1,4 +1,6 @@
-version: 1.0
+version: 2.0
+condition: command_exists "lxc" || command_exists "lxc-ls"
+output_directory: /live_response/containers
 artifacts:
   -
     description: List all containers and virtual machines.
@@ -77,4 +79,17 @@ artifacts:
     foreach: lxc storage list --format compact | sed 1d | awk '{print $1}'
     command: lxc storage show %line%
     output_file: lxc_storage_show_%line%.txt
-  
+  -
+    description: List the containers existing on the system..
+    supported_os: [linux]
+    collector: command
+    command: lxc-ls -f
+    output_file: lxc-ls_-f.txt
+  -
+    description: Show information about all containers.
+    supported_os: [linux]
+    collector: command
+    foreach: lxc-ls -1
+    command: lxc-info -i -p -S -s %line% 
+    output_file: lxc-info_-i_-p_-S_-s_%line%.txt
+    

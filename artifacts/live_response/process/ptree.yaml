@@ -1,4 +1,6 @@
-version: 1.0
+version: 2.0
+condition: command_exists "ptree"
+output_directory: /live_response/process
 artifacts:
   -
     description: Display a tree of processes.

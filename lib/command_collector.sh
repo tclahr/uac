@@ -1,237 +1,123 @@
 #!/bin/sh
 # SPDX-License-Identifier: Apache-2.0
-# shellcheck disable=SC2001,SC2006
+# shellcheck disable=SC2006
 
-###############################################################################
-# Collector that runs commands.
-# Globals:
-#   GZIP_TOOL_AVAILABLE
-#   TEMP_DATA_DIR
-# Requires:
-#   log_message
+# Command collector.
 # Arguments:
-#   $1: foreach (optional)
-#   $2: command
-#   $3: root output directory
-#   $4: output directory (optional)
-#   $5: output file
-#   $6: stderr output file (optional)
-#   $7: compress output file (optional) (default: false)
-# Outputs:
-#   Write command output to stdout.
-#   Write command errors to stderr.
-# Exit Status:
-#   Exit with status 0 on success.
-#   Exit with status greater than 0 if errors occur.
-###############################################################################
-command_collector()
+#   string foreach: (optional)
+#   string command: command
+#   string output_directory: ful path to the output directory
+#   string output_file: output file name (optional)
+#   boolean compress_output_file: compress output file (optional) (default: false)
+# Returns:
+#   none
+_command_collector()
 {
-  cc_foreach="${1:-}"
-  cc_command="${2:-}"
-  cc_root_output_directory="${3:-}"
-  cc_output_directory="${4:-}"
-  cc_output_file="${5:-}"
-  cc_stderr_output_file="${6:-}"
-  cc_compress_output_file="${7:-false}"
-  
-  # return if command is empty
-  if [ -z "${cc_command}" ]; then
-    printf %b "command_collector: missing required argument: 'command'\n" >&2
-    return 22
+  __cc_foreach="${1:-}"
+  __cc_command="${2:-}"
+  __cc_output_directory="${3:-}"
+  __cc_output_file="${4:-}"
+  __cc_compress_output_file="${5:-false}"
+
+  if [ -z "${__cc_command}" ]; then
+    _log_msg ERR "_command_collector: empty command parameter"
+    return 1
   fi
 
-  # return if root output directory is empty
-  if [ -z "${cc_root_output_directory}" ]; then
-    printf %b "command_collector: missing required argument: \
-'root_output_directory'\n" >&2
-    return 22
+  if [ -z "${__cc_output_directory}" ]; then
+    _log_msg ERR "_command_collector: empty output_directory parameter"
+    return 1
   fi
 
-  # return if output file is empty
-  if [ -z "${cc_output_file}" ]; then
-    printf %b "command_collector: missing required argument: 'output_file'\n" >&2
-    return 22
-  fi
+  if [ -n "${__cc_foreach}" ]; then
 
-  # loop command
-  if [ -n "${cc_foreach}" ]; then
-
-    # create output directory if it does not exist
-    if [ ! -d  "${TEMP_DATA_DIR}/${cc_root_output_directory}" ]; then
-      mkdir -p "${TEMP_DATA_DIR}/${cc_root_output_directory}" >/dev/null
-    fi
-
-    log_message COMMAND "${cc_foreach}"
-    eval "${cc_foreach}" \
-      >"${TEMP_DATA_DIR}/.foreach.tmp" \
-      2>>"${TEMP_DATA_DIR}/${cc_root_output_directory}/foreach.stderr"
-    
-    if [ ! -s "${TEMP_DATA_DIR}/.foreach.tmp" ]; then
-      printf %b "command_collector: loop command returned zero lines: \
-${cc_foreach}\n" >&2
-      return 61
-    fi
+    _verbose_msg "${__UAC_VERBOSE_CMD_PREFIX}${__cc_foreach}"
+    __cc_foreach_stdout=`_run_command "${__cc_foreach}"`
 
     # shellcheck disable=SC2162
-    sort -u <"${TEMP_DATA_DIR}/.foreach.tmp" \
-      | while read cc_line || [ -n "${cc_line}" ]; do
+    echo "${__cc_foreach_stdout}" \
+      | sort -u \
+      | while IFS= read __cc_line && [ -n "${__cc_line}" ]; do
 
-          cc_line=`echo "${cc_line}" \
-            | sed -e "s/:/#_COLON_#/g"`
-
-          # replace %line% by cc_line value
-          cc_new_command=`echo "${cc_command}" \
-            | sed -e "s:%line%:${cc_line}:g"`
-          cc_new_command=`echo "${cc_new_command}" \
-            | sed -e "s/#_COLON_#/:/g"`
+          # replace %line% by __cc_line value
+          __cc_new_command=`echo "${__cc_command}" | sed -e "s|%line%|${__cc_line}|g"`
+          __cc_new_output_directory=`echo "${__cc_output_directory}" | sed -e "s|%line%|${__cc_line}|g"`
           
-          # replace %line% by cc_line value
-          cc_new_output_directory=`echo "${cc_output_directory}" \
-            | sed -e "s:%line%:${cc_line}:g"`
-          cc_new_output_directory=`echo "${cc_new_output_directory}" \
-            | sed -e "s/#_COLON_#/:/g"`
-          # sanitize output directory
-          cc_new_output_directory=`sanitize_path \
-            "${cc_root_output_directory}/${cc_new_output_directory}"`
-          
-          # replace %line% by cc_line value
-          cc_new_output_file=`echo "${cc_output_file}" \
-            | sed -e "s:%line%:${cc_line}:g"`
-          cc_new_output_file=`echo "${cc_new_output_file}" \
-            | sed -e "s/#_COLON_#/:/g"`
-          # sanitize output file
-          cc_new_output_file=`sanitize_filename \
-            "${cc_new_output_file}"`
+          __cc_new_output_directory=`_sanitize_output_directory "${__cc_new_output_directory}"`
 
-          if [ -n "${cc_stderr_output_file}" ]; then
-            # replace %line% by cc_line value
-            cc_new_stderr_output_file=`echo "${cc_stderr_output_file}" \
-              | sed -e "s:%line%:${cc_line}:g"`
-            cc_new_stderr_output_file=`echo "${cc_new_stderr_output_file}" \
-            | sed -e "s/#_COLON_#/:/g"`
-            # sanitize stderr output file
-            cc_new_stderr_output_file=`sanitize_filename \
-              "${cc_new_stderr_output_file}"`
-          else
-            cc_new_stderr_output_file="${cc_new_output_file}.stderr"
-          fi        
-
-          # create output directory if it does not exist
-          if [ ! -d  "${TEMP_DATA_DIR}/${cc_new_output_directory}" ]; then
-            mkdir -p "${TEMP_DATA_DIR}/${cc_new_output_directory}" >/dev/null
+          if [ ! -d  "${__cc_new_output_directory}" ]; then
+            mkdir -p "${__cc_new_output_directory}" >/dev/null
           fi
 
-          if echo "${cc_new_command}" | grep -q -E "%output_file%"; then
-            # replace %output_file% by ${cc_output_file} in command
-            cc_new_command=`echo "${cc_new_command}" \
-              | sed -e "s:%output_file%:${TEMP_DATA_DIR}/${cc_new_output_directory}/${cc_new_output_file}:g"`
-            # run command and append output to existing file
-            log_message COMMAND "${cc_new_command}"
-            eval "${cc_new_command}" \
-              >>"${TEMP_DATA_DIR}/${cc_new_output_directory}/${cc_new_stderr_output_file}" \
-              2>>"${TEMP_DATA_DIR}/${cc_new_output_directory}/${cc_new_stderr_output_file}"
+          if [ -n "${__cc_output_file}" ]; then
+            __cc_new_output_file=`echo "${__cc_output_file}" | sed -e "s|%line%|${__cc_line}|g"`
+            __cc_new_output_file=`_sanitize_output_file "${__cc_new_output_file}"`
+            
+            if ${__cc_compress_output_file} && command_exists "gzip"; then
+              __cc_new_output_file="${__cc_new_output_file}.gz"
+              __cc_new_command="${__cc_new_command} | gzip - | cat -"
+            fi
+
+            _verbose_msg "${__UAC_VERBOSE_CMD_PREFIX}${__cc_new_command}"
+            _run_command "${__cc_new_command}" \
+              >>"${__cc_new_output_directory}/${__cc_new_output_file}"
+
             # remove output file if it is empty
-            if [ ! -s "${TEMP_DATA_DIR}/${cc_new_output_directory}/${cc_new_output_file}" ]; then
-              rm -f "${TEMP_DATA_DIR}/${cc_new_output_directory}/${cc_new_output_file}" \
-                >/dev/null
+            if ${__cc_compress_output_file} && command_exists "gzip"; then
+              __cc_compressed_file_size=`wc -c "${__cc_new_output_directory}/${__cc_new_output_file}" | awk '{print $1}'`
+              if [ "${__cc_compressed_file_size}" -lt 21 ]; then
+                rm -f "${__cc_new_output_directory}/${__cc_new_output_file}" >/dev/null
+                _log_msg DBG "Empty compressed output file '${__cc_new_output_file}'"
+              fi
+            elif [ ! -s "${__cc_new_output_directory}/${__cc_new_output_file}" ]; then
+              rm -f "${__cc_new_output_directory}/${__cc_new_output_file}" >/dev/null
+              _log_msg DBG "Empty output file '${__cc_new_output_file}'"
             fi
           else
-            if "${cc_compress_output_file}" && ${GZIP_TOOL_AVAILABLE}; then
-              # run command and append output to compressed file
-              log_message COMMAND "${cc_new_command} | gzip - | cat -"
-              eval "${cc_new_command} | gzip - | cat -" \
-                >>"${TEMP_DATA_DIR}/${cc_new_output_directory}/${cc_new_output_file}.gz" \
-                2>>"${TEMP_DATA_DIR}/${cc_new_output_directory}/${cc_new_stderr_output_file}"
-            else
-              # run command and append output to existing file
-              log_message COMMAND "${cc_new_command}"
-              eval "${cc_new_command}" \
-                >>"${TEMP_DATA_DIR}/${cc_new_output_directory}/${cc_new_output_file}" \
-                2>>"${TEMP_DATA_DIR}/${cc_new_output_directory}/${cc_new_stderr_output_file}"
-              # remove output file if it is empty
-              if [ ! -s "${TEMP_DATA_DIR}/${cc_new_output_directory}/${cc_new_output_file}" ]; then
-                rm -f "${TEMP_DATA_DIR}/${cc_new_output_directory}/${cc_new_output_file}" \
-                  >/dev/null
-              fi
-            fi
+            _verbose_msg "${__UAC_VERBOSE_CMD_PREFIX}${__cc_new_command}"
+            (
+              cd "${__cc_new_output_directory}" \
+              && _run_command "${__cc_new_command}"
+            )
           fi
-
-          # remove stderr output file if it is empty
-          if [ ! -s "${TEMP_DATA_DIR}/${cc_new_output_directory}/${cc_new_stderr_output_file}" ]; then
-            rm -f "${TEMP_DATA_DIR}/${cc_new_output_directory}/${cc_new_stderr_output_file}" \
-              >/dev/null
-          fi
-
         done
 
-    # remove foreach.stderr file if it is empty
-    if [ ! -s "${TEMP_DATA_DIR}/${cc_root_output_directory}/foreach.stderr" ]; then
-      rm -f "${TEMP_DATA_DIR}/${cc_root_output_directory}/foreach.stderr"  \
-        >/dev/null
-    fi
- 
   else
+    __cc_output_directory=`_sanitize_output_directory "${__cc_output_directory}"`
 
-    # sanitize output file name
-    cc_output_file=`sanitize_filename "${cc_output_file}"`
-    
-    if [ -n "${cc_stderr_output_file}" ]; then
-      # sanitize stderr output file name
-      cc_stderr_output_file=`sanitize_filename "${cc_stderr_output_file}"`
-    else
-      cc_stderr_output_file="${cc_output_file}.stderr"
+    if [ ! -d  "${__cc_output_directory}" ]; then
+      mkdir -p "${__cc_output_directory}" >/dev/null
     fi
 
-    # sanitize output directory
-    cc_output_directory=`sanitize_path \
-      "${cc_root_output_directory}/${cc_output_directory}"`
+    if [ -n "${__cc_output_file}" ]; then
+      __cc_output_file=`_sanitize_output_file "${__cc_output_file}"`
+      if ${__cc_compress_output_file} && command_exists "gzip"; then
+        __cc_output_file="${__cc_output_file}.gz"
+        __cc_command="${__cc_command} | gzip - | cat -"
+      fi
+      _verbose_msg "${__UAC_VERBOSE_CMD_PREFIX}${__cc_command}"
+      _run_command "${__cc_command}" \
+        >>"${__cc_output_directory}/${__cc_output_file}"
 
-    # create output directory if it does not exist
-    if [ ! -d  "${TEMP_DATA_DIR}/${cc_output_directory}" ]; then
-      mkdir -p "${TEMP_DATA_DIR}/${cc_output_directory}" >/dev/null
-    fi
-
-    if echo "${cc_command}" | grep -q -E "%output_file%"; then
-      # replace %output_file% by ${cc_output_file} in command
-      cc_command=`echo "${cc_command}" \
-        | sed -e "s:%output_file%:${TEMP_DATA_DIR}/${cc_output_directory}/${cc_output_file}:g"`
-      # run command and append output to existing file
-      log_message COMMAND "${cc_command}"
-      eval "${cc_command}" \
-        >>"${TEMP_DATA_DIR}/${cc_output_directory}/${cc_stderr_output_file}" \
-        2>>"${TEMP_DATA_DIR}/${cc_output_directory}/${cc_stderr_output_file}"
       # remove output file if it is empty
-      if [ ! -s "${TEMP_DATA_DIR}/${cc_output_directory}/${cc_output_file}" ]; then
-        rm -f "${TEMP_DATA_DIR}/${cc_output_directory}/${cc_output_file}" \
-          >/dev/null
+      if ${__cc_compress_output_file} && command_exists "gzip"; then
+        __cc_compressed_file_size=`wc -c "${__cc_output_directory}/${__cc_output_file}" | awk '{print $1}'`
+        if [ "${__cc_compressed_file_size}" -lt 21 ]; then
+          rm -f "${__cc_output_directory}/${__cc_output_file}" >/dev/null
+          _log_msg DBG "Empty compressed output file '${__cc_output_file}'"
+        fi
+      elif [ ! -s "${__cc_output_directory}/${__cc_output_file}" ]; then
+        rm -f "${__cc_output_directory}/${__cc_output_file}" >/dev/null
+        _log_msg DBG "Empty output file '${__cc_output_file}'"
       fi
     else
-      if "${cc_compress_output_file}" && ${GZIP_TOOL_AVAILABLE}; then
-        # run command and append output to compressed file
-        log_message COMMAND "${cc_command} | gzip - | cat -"
-        eval "${cc_command} | gzip - | cat -" \
-          >>"${TEMP_DATA_DIR}/${cc_output_directory}/${cc_output_file}.gz" \
-          2>>"${TEMP_DATA_DIR}/${cc_output_directory}/${cc_stderr_output_file}"
-      else
-        # run command and append output to existing file
-        log_message COMMAND "${cc_command}"
-        eval "${cc_command}" \
-          >>"${TEMP_DATA_DIR}/${cc_output_directory}/${cc_output_file}" \
-          2>>"${TEMP_DATA_DIR}/${cc_output_directory}/${cc_stderr_output_file}"
-        # remove output file if it is empty
-        if [ ! -s "${TEMP_DATA_DIR}/${cc_output_directory}/${cc_output_file}" ]; then
-          rm -f "${TEMP_DATA_DIR}/${cc_output_directory}/${cc_output_file}" \
-            >/dev/null
-        fi
-      fi
+      _verbose_msg "${__UAC_VERBOSE_CMD_PREFIX}${__cc_command}"
+      ( 
+        cd "${__cc_output_directory}" \
+        && _run_command "${__cc_command}"
+      )
     fi
 
-    # remove stderr output file if it is empty
-    if [ ! -s "${TEMP_DATA_DIR}/${cc_output_directory}/${cc_stderr_output_file}" ]; then
-      rm -f "${TEMP_DATA_DIR}/${cc_output_directory}/${cc_stderr_output_file}" \
-        >/dev/null
-    fi
-
-  fi
-
+  fi  
+  
 }

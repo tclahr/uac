@@ -17,7 +17,7 @@ artifacts:
     supported_os: [linux]
     collector: file
     path: /run/systemd/sessions
-    file_type: f
+    file_type: [f]
   -
     description: Collect systemd scope and transient timer files.
     supported_os: [linux]

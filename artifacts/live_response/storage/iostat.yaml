@@ -1,4 +1,6 @@
-version: 2.0
+version: 3.0
+condition: command_exists "iostat"
+output_directory: /live_response/storage
 artifacts:
   -
     description: Report device I/O statistics.

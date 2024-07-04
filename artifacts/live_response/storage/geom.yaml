@@ -1,4 +1,6 @@
-version: 1.0
+version: 2.0
+condition: command_exists "geom"
+output_directory: /live_response/storage
 artifacts:
   -
     description: Print the list of all providers from the DISK class.
@@ -7,7 +9,7 @@ artifacts:
     command: geom disk list
     output_file: geom_disk_list.txt
   -
-    description: Display geoms hierarchy as	a tree.
+    description: Display geoms hierarchy as a tree.
     supported_os: [freebsd]
     collector: command
     command: geom -t

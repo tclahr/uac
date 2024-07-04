@@ -1,4 +1,6 @@
-version: 1.0
+version: 2.0
+condition: command_exists "instfix"
+output_directory: /live_response/packages
 artifacts:
   -
     description: Displays information about each fileset associated with a fix or keyword. Also display filesets that are not installed.

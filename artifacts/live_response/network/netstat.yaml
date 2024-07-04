@@ -1,32 +1,34 @@
-version: 2.0
+version: 3.0
+condition: command_exists "netstat"
+output_directory: /live_response/network
 artifacts:
   -
     description: Collect both listening and non-listening (for TCP this means established connections) sockets.
-    supported_os: [android, aix, freebsd, linux, netbsd, netscaler, openbsd, solaris]
+    supported_os: [aix, freebsd, linux, netbsd, netscaler, openbsd, solaris]
     collector: command
     command: netstat -a
     output_file: netstat_-a.txt
   -
     description: Collect both listening and non-listening (for TCP this means established connections) sockets with numerical addresses instead of trying to determine symbolic host, port or user names.
-    supported_os: [android, aix, freebsd, linux, netbsd, netscaler, openbsd, solaris]
+    supported_os: [aix, freebsd, linux, netbsd, netscaler, openbsd, solaris]
     collector: command
     command: netstat -an
     output_file: netstat_-an.txt
   -
     description: Collect a table of all network interfaces.
-    supported_os: [android, aix, freebsd, linux, netbsd, netscaler, openbsd, solaris]
+    supported_os: [aix, freebsd, linux, netbsd, netscaler, openbsd, solaris]
     collector: command
     command: netstat -i
     output_file: netstat_-i.txt
   -
     description: Collect the kernel routing tables.
-    supported_os: [android, aix, freebsd, linux, netbsd, netscaler, openbsd, solaris]
+    supported_os: [aix, freebsd, linux, netbsd, netscaler, openbsd, solaris]
     collector: command
     command: netstat -r
     output_file: netstat_-r.txt
   -
     description: Collect the kernel routing tables with numerical addresses instead of trying to determine symbolic host, port or user names.
-    supported_os: [android, aix, freebsd, linux, netbsd, netscaler, openbsd, solaris]
+    supported_os: [aix, freebsd, linux, netbsd, netscaler, openbsd, solaris]
     collector: command
     command: netstat -rn
     output_file: netstat_-rn.txt
@@ -50,13 +52,13 @@ artifacts:
     output_file: netstat_-v.txt
   -
     description: Collect both listening and non-listening (for TCP this means established connections) sockets with numerical addresses instead of trying to determine symbolic host, port or user names, and show the PID and name of the program to which each socket belongs.
-    supported_os: [android, linux, solaris]
+    supported_os: [linux, solaris]
     collector: command
     command: netstat -anp
     output_file: netstat_-anp.txt
   -
     description: Collect extended information about listening and non-listening (for TCP this means established connections) sockets, the PID and name of the program to which each socket belongs with numerical addresses instead of trying to determine symbolic host, port or user names.
-    supported_os: [android, linux]
+    supported_os: [linux]
     collector: command
     command: netstat -lpeanut
     output_file: netstat_-lpeanut.txt

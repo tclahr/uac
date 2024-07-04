@@ -1,17 +1,13 @@
-version: 1.0
+version: 2.0
+condition: command_exists "lspci"
+output_directory: /live_response/hardware
 artifacts:
   -
     description: List all PCI devices.
-    supported_os: [android, linux]
+    supported_os: [linux]
     collector: command
     command: lspci
     output_file: lspci.txt
-  -
-    description: List all PCI devices including the kernel driver.
-    supported_os: [android]
-    collector: command
-    command: lspci -e -k
-    output_file: lspci_-e_-k.txt
   -
     description: List all PCI devices.
     supported_os: [linux]

@@ -1,79 +1,67 @@
 #!/bin/sh
 # SPDX-License-Identifier: Apache-2.0
+# shellcheck disable=SC2006
 
-###############################################################################
 # Create the acquisition log.
-# Globals:
-#   MOUNT_POINT
-#   OPERATING_SYSTEM
-#   SYSTEM_ARCH
-#   UAC_VERSION
-# Requires:
-#   None
 # Arguments:
-#   $1: case number
-#   $2: evidence number
-#   $3: description
-#   $4: examiner name
-#   $5: notes
-#   $6: hostname
-#   $7: acquisition start date
-#   $8: acquisition end date
-#   $9: output file computed hash
-#   $10: destination directory
-#   $11: output file
-# Outputs:
-#   None
-# Exit Status:
-#   Exit with status 0 on success.
-#   Exit with status greater than 0 if errors occur.
-###############################################################################
-create_acquisition_log()
+#   string file: full path to the acquisition file
+#   string start_date: acquisition start date
+#   string end_date: acquisition end date
+#   string computed_hashes: computed hashes
+# Returns:
+#   none
+_create_acquisition_log()
 {
-  cl_case_number="${1:-}"
-  shift
-  cl_evidence_number="${1:-}"
-  shift
-  cl_description="${1:-}"
-  shift
-  cl_examiner="${1:-}"
-  shift
-  cl_notes="${1:-}"
-  shift
-  cl_hostname="${1:-}"
-  shift
-  cl_acquisition_start_date="${1:-}"
-  shift
-  cl_acquisition_end_date="${1:-}"
-  shift
-  cl_output_file_hash="${1:-}"
-  shift
-  cl_destination_directory="${1:-}"
-  shift
-  cl_output_file="${1:-}"
+  __cl_file="${1:-}"
+  __cl_start_date="${2:-}"
+  __cl_end_date="${3:-}"
+  __cl_computed_hashes="${4:-}"
 
-  cat >"${cl_destination_directory}/${cl_output_file}" << EOF
-Created by UAC (Unix-like Artifacts Collector) ${UAC_VERSION}
+  cat >"${__cl_file}" << EOF
+Created by UAC (Unix-like Artifacts Collector) ${__UAC_VERSION}
 
 [Case Information]
-Case Number: ${cl_case_number}
-Evidence Number: ${cl_evidence_number}
-Description: ${cl_description}
-Examiner: ${cl_examiner}
-Notes: ${cl_notes}
+Case Number: ${__UAC_CASE_NUMBER}
+Evidence Number: ${__UAC_EVIDENCE_NUMBER}
+Description: ${__UAC_EVIDENCE_DESCRIPTION}
+Examiner: ${__UAC_EXAMINER}
+Notes: ${__UAC_EVIDENCE_NOTES}
 
 [System Information]
-Operating System: ${OPERATING_SYSTEM}
-System Architecture: ${SYSTEM_ARCH}
-Hostname: ${cl_hostname}
+Operating System: ${__UAC_OPERATING_SYSTEM}
+System Architecture: ${__UAC_SYSTEM_ARCH}
+Hostname: ${__UAC_HOSTNAME}
 
 [Acquisition Information]
-Mount Point: ${MOUNT_POINT}
-Acquisition started at: ${cl_acquisition_start_date}
-Acquisition finished at: ${cl_acquisition_end_date}
+Mount Point: ${__UAC_MOUNT_POINT}
+Acquisition Started: ${__cl_start_date}
+Acquisition Finished: ${__cl_end_date}
 
-[Output File MD5 Computed Hash]
-${cl_output_file_hash}
+[Output Information]
 EOF
+
+if [ "${__UAC_OUTPUT_FORMAT}" = "none" ]; then
+  cat >>"${__cl_file}" << EOF
+Directory: ${__UAC_OUTPUT_BASE_NAME}
+Format: ${__UAC_OUTPUT_FORMAT}
+EOF
+else
+  cat >>"${__cl_file}" << EOF
+File: ${__UAC_OUTPUT_BASE_NAME}.${__UAC_OUTPUT_EXTENSION}
+Format: ${__UAC_OUTPUT_FORMAT}
+EOF
+  if [ "${__UAC_OUTPUT_FORMAT}" = "zip" ] && [ -n "${__UAC_OUTPUT_PASSWORD}" ]; then
+    cat >>"${__cl_file}" << EOF
+Password: "${__UAC_OUTPUT_PASSWORD}"
+EOF
+  fi
+
+  cat >>"${__cl_file}" << EOF
+
+[Computed Hashes]
+${__cl_computed_hashes}
+EOF
+
+fi
 
 }

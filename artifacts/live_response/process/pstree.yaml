@@ -1,20 +1,22 @@
-version: 2.0
+version: 3.0
+condition: command_exists "pstree"
+output_directory: /live_response/process
 artifacts:
   -
     description: Display a tree of processes.
-    supported_os: [android, linux]
+    supported_os: [linux]
     collector: command
     command: pstree
     output_file: pstree.txt
   -
     description: Display a tree of processes including command line arguments.
-    supported_os: [android, linux]
+    supported_os: [linux]
     collector: command
     command: pstree -a
     output_file: pstree_-a.txt
   -
     description: Display a tree of processes with the same parent sorted by PID instead of by name (numeric sort).
-    supported_os: [android, linux]
+    supported_os: [linux]
     collector: command
     command: pstree -p -n
     output_file: pstree_-p_-n.txt

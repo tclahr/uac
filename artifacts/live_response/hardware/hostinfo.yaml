@@ -1,4 +1,6 @@
-version: 1.0
+version: 2.0
+condition: command_exists "hostinfo"
+output_directory: /live_response/hardware
 artifacts:
   -
     description: Display kernel version description, processor configuration data, available physical memory, and various scheduling statistics.

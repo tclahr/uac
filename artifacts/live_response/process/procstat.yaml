@@ -1,42 +1,43 @@
-version: 1.0
+version: 2.0
+condition: command_exists "procstat"
 artifacts:
   -
     description: Collect command line arguments for a process.
     supported_os: [freebsd]
     collector: command
-    foreach: ps -eo pid | sed -e 's:^  *::' | grep ^[0-9]
+    foreach: ps -axo pid | sed -e 's:^  *::' | grep ^[0-9]
     command: procstat arguments %line%
-    output_directory: procstat/%line%
+    output_directory: /live_response/process/proc/%line%
     output_file: arguments.txt
   -
     description: Collect binary information for a process.
     supported_os: [freebsd]
     collector: command
-    foreach: ps -eo pid | sed -e 's:^  *::' | grep ^[0-9]
+    foreach: ps -axo pid | sed -e 's:^  *::' | grep ^[0-9]
     command: procstat binary %line%
-    output_directory: procstat/%line%
+    output_directory: /live_response/process/proc/%line%
     output_file: binary.txt
   -
     description: Collect environment variables for a process.
     supported_os: [freebsd]
     collector: command
-    foreach: ps -eo pid | sed -e 's:^  *::' | grep ^[0-9]
+    foreach: ps -axo pid | sed -e 's:^  *::' | grep ^[0-9]
     command: procstat environment %line%
-    output_directory: procstat/%line%
+    output_directory: /live_response/process/proc/%line%
     output_file: environment.txt
   -
     description: Collect file descriptor information for a process.
     supported_os: [freebsd]
     collector: command
-    foreach: ps -eo pid | sed -e 's:^  *::' | grep ^[0-9]
+    foreach: ps -axo pid | sed -e 's:^  *::' | grep ^[0-9]
     command: procstat files %line%
-    output_directory: procstat/%line%
+    output_directory: /live_response/process/proc/%line%
     output_file: files.txt
   -
     description: Collect virtual memory mappings for a process.
     supported_os: [freebsd]
     collector: command
-    foreach: ps -eo pid | sed -e 's:^  *::' | grep ^[0-9]
+    foreach: ps -axo pid | sed -e 's:^  *::' | grep ^[0-9]
     command: procstat vm %line%
-    output_directory: procstat/%line%
+    output_directory: /live_response/process/proc/%line%
     output_file: vm.txt

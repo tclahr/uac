@@ -1,14 +1,16 @@
-version: 1.0
+version: 2.0
+condition: command_exists "ip6table"
+output_directory: /live_response/network
 artifacts:
   -
     description: Collect firewall rules from all chains with numerical addresses instead of trying to determine symbolic host, port or user names.
-    supported_os: [android, linux]
+    supported_os: [linux]
     collector: command
     command: ip6tables -L -v -n
     output_file: iptables_-L_-v_-n.txt
   -
     description: Collect firewall rules from nat chain with numerical addresses instead of trying to determine symbolic host, port or user names.
-    supported_os: [android, linux]
+    supported_os: [linux]
     collector: command
     command: ip6tables -t nat -L -v -n
     output_file: iptables_-t_nat_-L_-v_-n.txt

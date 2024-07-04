@@ -1,47 +1,48 @@
 #!/bin/sh
 # SPDX-License-Identifier: Apache-2.0
 
-###############################################################################
 # Transfer file to SFTP server.
-# Globals:
-#   None
-# Requires:
-#   None
 # Arguments:
-#   $1: source file or directory
-#   $2: remote destination
-#   $3: remote port (default: 22)
-#   $4: identity file
-# Outputs:
-#   None.
-# Exit Status:
-#   Exit with status 0 on success.
-#   Exit with status greater than 0 if errors occur.
-###############################################################################
-sftp_transfer()
+#   string source: source file name
+#                  leave it blank for connection test only
+#   string destination: destination in the form [user@]host:[path]
+#   integer port: port number
+#   string identity_file: identity file path
+#   string ssh_options: comma separated ssh options
+# Returns:
+#   boolean: true on success
+#            false on fail
+_sftp_transfer()
 {
-  sr_source="${1:-}"
-  sr_destination="${2:-}"
-  sr_port="${3:-22}"
-  sr_identity_file="${4:-}"
+  __sr_source="${1:-}"
+  __sr_destination="${2:-}"
+  __sr_port="${3:-22}"
+  __sr_identity_file="${4:-}"
+  __sr_ssh_options="${5:-}"
 
-  if [ -n "${sr_identity_file}" ]; then
-    sftp -r \
-      -P "${sr_port}" \
-      -o StrictHostKeyChecking=no \
-      -o UserKnownHostsFile=/dev/null \
-      -i "${sr_identity_file}" \
-      "${sr_destination}" >/dev/null << EOF
-mput "${sr_source}"
-EOF
+  __sr_port_param="-P ${__sr_port}"
+  __sr_ssh_options_param="-o StrictHostKeyChecking=no,UserKnownHostsFile=/dev/null${__sr_ssh_options:+,}${__sr_ssh_options}"
+  __sr_identity_file_param="${__sr_identity_file:+-i }\"${__sr_identity_file}\""
+
+  if [ -n "${__sr_source}" ]; then
+    __sr_command="sftp -r \
+${__sr_port_param} \
+${__sr_identity_file_param} \
+${__sr_ssh_options_param} \
+\"${__sr_destination}\" >/dev/null << EOF
+mput \"${__sr_source}\"
+EOF"
   else
-    sftp -r \
-      -P "${sr_port}" \
-      -o StrictHostKeyChecking=no \
-      -o UserKnownHostsFile=/dev/null \
-      "${sr_destination}" >/dev/null << EOF
-mput "${sr_source}"
-EOF
-  fi 
+    __sr_command="sftp -r \
+${__sr_port_param} \
+${__sr_identity_file_param} \
+${__sr_ssh_options_param} \
+\"${__sr_destination}\" >/dev/null << EOF
+pwd
+EOF"
+  fi
+
+  _verbose_msg "${__UAC_VERBOSE_CMD_PREFIX}${__sr_command}"
+	eval "${__sr_command}" >/dev/null
 
 }

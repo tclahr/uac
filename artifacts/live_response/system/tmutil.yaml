@@ -1,4 +1,6 @@
-version: 1.0
+version: 2.0
+condition: command_exists "tmutil"
+output_directory: /live_response/system
 artifacts:
   -
     description: Print paths for all of this computer's completed snapshots.

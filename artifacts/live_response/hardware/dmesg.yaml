@@ -1,20 +1,23 @@
-version: 1.1
+version: 3.0
+condition: command_exists "dmesg"
+output_directory: /live_response/hardware
 artifacts:
   -
     description: Display the system/kernel message buffer.
-    supported_os: [android, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris]
+    supported_os: [freebsd, linux, macos, netbsd, netscaler, openbsd, solaris]
     collector: command
     command: dmesg
     output_file: dmesg.txt
   -
-    description: Display the console message buffer.
-    supported_os: [openbsd]
-    collector: command
-    command: dmesg -s
-    output_file: dmesg_-s.txt
-  -
     description: Display all data from the message buffer, including syslog records and console output.
-    supported_os: [freebsd]
+    supported_os: [esxi, freebsd, netscaler, solaris]
     collector: command
     command: dmesg -a
     output_file: dmesg_-a.txt
+  -
+    description: Display the console message buffer.
+    supported_os: [esxi, openbsd, solaris]
+    collector: command
+    command: dmesg -s
+    output_file: dmesg_-s.txt
+  

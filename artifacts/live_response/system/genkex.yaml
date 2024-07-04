@@ -1,4 +1,6 @@
-version: 1.0
+version: 2.0
+condition: command_exists "genkex"
+output_directory: /live_response/system
 artifacts:
   -
     description: Display the list of kernel extensions currently loaded onto the system and displays the address, size, and path name for each kernel extension in the list.

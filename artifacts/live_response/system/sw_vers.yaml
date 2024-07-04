@@ -1,4 +1,6 @@
-version: 1.0
+version: 2.0
+condition: command_exists "sw_vers"
+output_directory: /live_response/system
 artifacts:
   -
     description: Display macOS operating system version.

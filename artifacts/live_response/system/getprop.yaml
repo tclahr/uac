@@ -1,9 +1,0 @@
-version: 1.0
-artifacts:
-  -
-    description: Display all properties and values from Android propery service.
-    supported_os: [android]
-    collector: command
-    command: getprop
-    output_file: getprop.txt
-  

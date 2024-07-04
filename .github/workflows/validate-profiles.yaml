@@ -1,0 +1,32 @@
+name: Validate Profiles
+
+on:
+  pull_request:
+    branches:
+      - develop
+      - main
+    paths:
+      - 'profiles/**'
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  validate-profile-files:
+    name: Validate Profiles
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clone uac repo
+        uses: actions/checkout@v4
+        with:
+          path: uac
+
+      - name: Validate Profiles
+        working-directory: uac
+        run: |
+          find profiles/* -name "*.yaml" -type f \
+            | while read file || [ -n "${file}" ]; do
+                ./uac --validate-profile "${file}"
+              done
+      

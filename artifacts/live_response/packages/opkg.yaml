@@ -1,4 +1,6 @@
-version: 1.0
+version: 2.0
+condition: command_exists "opkg"
+output_directory: /live_response/packages
 artifacts:
   -
     description: Display installed packages.

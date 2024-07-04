@@ -1,4 +1,6 @@
-version: 1.0
+version: 2.0
+condition: command_exists "prtconf"
+output_directory: /live_response/hardware
 artifacts:
   -
     description: Display system configuration information.

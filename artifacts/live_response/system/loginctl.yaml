@@ -1,4 +1,6 @@
-version: 1.0
+version: 2.0
+condition: command_exists "loginctl"
+output_directory: /live_response/system
 artifacts:
   -
     description: Show terse runtime status information about one or more logged in users, followed by the most recent log data from the journal.

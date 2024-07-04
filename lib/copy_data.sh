@@ -1,40 +1,28 @@
 #!/bin/sh
 # SPDX-License-Identifier: Apache-2.0
-# shellcheck disable=SC2006
 
-###############################################################################
 # Copy files and directories.
-# Globals:
-#   None
-# Requires:
-#   None
 # Arguments:
-#   $1: file containing the list of files to be copied
-#   $2: destination directory
-# Outputs:
-#   None
-# Exit Status:
-#   Exit with status 0 on success.
-#   Exit with status greater than 0 if errors occur.
-###############################################################################
-copy_data()
+#   string from_file: file containing the list of files to be copied
+#   string destination_file: destination directory
+# Returns:
+#   none
+_copy_data()
 {
-  cp_source_file="${1:-}"
-  cp_destination="${2:-}"
-
-  # exit if source file does not exist
-  if [ ! -f "${cp_source_file}" ]; then
-    printf %b "copy data: no such file or directory: '${cp_source_file}'\n" >&2
-    return 2
+  __cd_from_file="${1:-}"
+  __cd_destination_directory="${2:-}"
+  
+  if [ ! -f "${__cd_from_file}" ]; then
+    _error_msg "_copy_data: no such file or directory: '${__cd_from_file}'"
+    return 1
   fi
 
-  # shellcheck disable=SC2162
-  while read cp_line || [ -n "${cp_line}" ]; do
-    cp_dirname=`dirname "${cp_line}"`
-    if [ -n "${cp_dirname}" ] && [ -d "${cp_dirname}" ]; then
-      mkdir -p "${cp_destination}/${cp_dirname}"
-      cp -r "${cp_line}" "${cp_destination}/${cp_dirname}"
-    fi
-  done <"${cp_source_file}"
+  # shellcheck disable=SC2162  
+  while read __cd_line && [ -n "${__cd_line}" ]; do
+    # shellcheck disable=SC2006
+    __cd_dirname=`dirname "${__cd_line}" | sed -e "s|^${__UAC_MOUNT_POINT}|/|" -e "s|^${__UAC_TEMP_DATA_DIR}/collected|/|"`
+    mkdir -p "${__cd_destination_directory}/${__cd_dirname}"
+    cp -r "${__cd_line}" "${__cd_destination_directory}/${__cd_dirname}"
+  done <"${__cd_from_file}"
 
 }
