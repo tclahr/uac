@@ -28,7 +28,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: tclahr/ushunit
-          token: ${{ secrets.ACTIONS_SECRET }}
           ref: main
           path: ushunit
 
@@ -36,7 +35,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: tclahr/uac-tests
-          token: ${{ secrets.ACTIONS_SECRET }}
           ref: main
           path: uac-tests
       
