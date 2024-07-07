@@ -1,0 +1,22 @@
+version: 1.0
+condition: command_exists "jls"
+output_directory: /live_response/containers
+artifacts:
+  -
+    description: List all jails, including dying ones
+    supported_os: [freebsd]
+    collector: command
+    command: jls -q -d
+    output_file: jls_-q_-d.txt
+  -
+    description: List all jails, including dying ones, with all parameters.
+    supported_os: [freebsd]
+    collector: command
+    command: jls -q -d -h
+    output_file: jls_-q_-d_-h.txt
+  -
+    description: List all jails, including dying ones, with all parameters with parameter names included.
+    supported_os: [freebsd]
+    collector: command
+    command: jls -q -d -n
+    output_file: jls_-q_-d_-n.txt
