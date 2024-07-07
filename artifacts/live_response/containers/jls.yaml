@@ -1,4 +1,4 @@
-version: 1.0
+version: 2.0
 condition: command_exists "jls"
 output_directory: /live_response/containers
 artifacts:
@@ -20,3 +20,18 @@ artifacts:
     collector: command
     command: jls -q -d -n
     output_file: jls_-q_-d_-n.txt
+  -
+    description: Report a snapshot of the current processes in each running jail, including dying jails.
+    supported_os: [freebsd]
+    collector: command
+    foreach: jls -d jid
+    command: ps -J %line%
+    output_file: ps_-J_%line%.txt
+  -
+    description: Report a snapshot of the current processes in each running jail, including dying jails.
+    supported_os: [freebsd]
+    collector: command
+    foreach: jls -d jid
+    command: ps auxwww -J %line%
+    output_file: ps_auxwww_-J_%line%.txt
+
