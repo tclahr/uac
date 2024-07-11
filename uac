@@ -169,7 +169,7 @@ _load_config_file "${__UAC_CONFIG_FILE}" || _exit_fatal
 
 # set tar as the default output format if none has been set via command line
 if [ -z "${__UAC_OUTPUT_FORMAT}" ]; then
-    __UAC_OUTPUT_FORMAT="tar"
+  __UAC_OUTPUT_FORMAT="tar"
 fi
 __UAC_OUTPUT_EXTENSION=`_is_output_format_supported "${__UAC_OUTPUT_FORMAT}" "${__UAC_OUTPUT_PASSWORD}"` || _exit_fatal
 
@@ -190,7 +190,7 @@ PATH="${__ua_bin_path}:${PATH}"
 PATH="${__UAC_DIR}/tools/date_to_epoch_pl:${__UAC_DIR}/tools/find_pl:${__UAC_DIR}/tools/stat_pl:${PATH}"
 export PATH
 
-# check if start and end dates are valid
+# check whether start and end dates are valid
 if [ -n "${__UAC_START_DATE}" ]; then
   __UAC_START_DATE_EPOCH=`_get_epoch_date "${__UAC_START_DATE}"` || _exit_fatal "invalid date '${__UAC_START_DATE}'."
   __UAC_START_DATE_DAYS=`_get_days_since_date_until_now "${__UAC_START_DATE}"` || _exit_fatal
@@ -364,7 +364,6 @@ fi
 
 # check whether temp data dir's file system supports symlink creation.
 if ln -s "${__UAC_DIR}/uac" "${__UAC_TEMP_DATA_DIR}/uac-symlink-support-test.tmp" >/dev/null; then
-  rm "${__UAC_TEMP_DATA_DIR}/uac-symlink-support-test.tmp" >/dev/null
   __UAC_TEMP_DATA_DIR_NO_SYMLINK_SUPPORT=false
 fi
 
@@ -431,7 +430,6 @@ __ua_artifact_list=`_build_artifact_list "${__ua_artifact_list}" "${__UAC_OPERAT
 
 # acquisition start date
 __ua_acquisition_start_date=`date "+%a %b %d %H:%M:%S %Y %z"`
-# acquisition start epoch date
 __ua_acquisition_start_date_epoch=`_get_epoch_date`
 
 __ua_collection_progress=0
@@ -458,7 +456,6 @@ done <"${__UAC_TEMP_DATA_DIR}/artifact_list.tmp"
 
 # acquisition start date
 __ua_acquisition_end_date=`date "+%a %b %d %H:%M:%S %Y %z"`
-# acquisition start epoch date
 __ua_acquisition_end_date_epoch=`_get_epoch_date`
 
 # calculate running time
