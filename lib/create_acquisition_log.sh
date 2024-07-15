@@ -15,7 +15,9 @@ _create_acquisition_log()
   __cl_file="${1:-}"
   __cl_start_date="${2:-}"
   __cl_end_date="${3:-}"
-  __cl_computed_hashes="${4:-}"
+  __cl_output_file_md5_hash="${4:-}"
+  __cl_output_file_sha1_hash="${5:-}"
+  __cl_output_file_sha256_hash="${6:-}"
 
   cat >"${__cl_file}" << EOF
 Created by UAC (Unix-like Artifacts Collector) ${__UAC_VERSION}
@@ -59,8 +61,17 @@ EOF
   cat >>"${__cl_file}" << EOF
 
 [Computed Hashes]
-${__cl_computed_hashes}
 EOF
+
+  if [ -n "${__cl_output_file_md5_hash}" ]; then
+    printf "MD5 checksum: %s\n" "${__cl_output_file_md5_hash}" >>"${__cl_file}"
+  fi
+  if [ -n "${__cl_output_file_sha1_hash}" ]; then
+    printf "SHA1 checksum: %s\n" "${__cl_output_file_sha1_hash}" >>"${__cl_file}"
+  fi
+  if [ -n "${__cl_output_file_sha256_hash}" ]; then
+    printf "SHA256 checksum: %s\n" "${__cl_output_file_sha256_hash}" >>"${__cl_file}"
+  fi
 
 fi
 
