@@ -79,4 +79,4 @@ To report incidents or to appeal reports of incidents, send email to iplsdk@linu
 
 ## Credits
 
-This code is based on the [Hyperledger Project's CoC](https://github.com/hyperledger/hyperledger/wiki/Hyperledger-Project-Code-of-Conduct), [W3C’s Code of Ethics and Professional Conduct](https://www.w3.org/Consortium/cepc) with some additions from the [Cloud Foundry](https://www.cloudfoundry.org/)‘s Code of Conduct.
+This code is based on the [Hyperledger Project's CoC](https://github.com/hyperledger/hyperledger/wiki/Hyperledger-Project-Code-of-Conduct), [W3C's Code of Ethics and Professional Conduct](https://www.w3.org/Consortium/cepc) with some additions from the [Cloud Foundry](https://www.cloudfoundry.org/)‘s Code of Conduct.
