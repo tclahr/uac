@@ -12,7 +12,7 @@ _output_exists()
   __of_output_file="${1:-}"
 
   if [ -d "${__of_output_file}" ]; then
-    _error_msg "cannot create output directory ‘${__of_output_file}’: Directory exists"
+    _error_msg "cannot create output directory '${__of_output_file}': Directory exists"
     return 0
   elif [ -f "${__of_output_file}" ]; then
     _error_msg "cannot create output file '${__of_output_file}': File exists"

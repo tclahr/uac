@@ -169,7 +169,7 @@ _load_config_file "${__UAC_CONFIG_FILE}" || _exit_fatal
 
 # set tar as the default output format if none has been set via command line
 if [ -z "${__UAC_OUTPUT_FORMAT}" ]; then
-    __UAC_OUTPUT_FORMAT="tar"
+  __UAC_OUTPUT_FORMAT="tar"
 fi
 __UAC_OUTPUT_EXTENSION=`_is_output_format_supported "${__UAC_OUTPUT_FORMAT}" "${__UAC_OUTPUT_PASSWORD}"` || _exit_fatal
 
@@ -190,7 +190,7 @@ PATH="${__ua_bin_path}:${PATH}"
 PATH="${__UAC_DIR}/tools/date_to_epoch_pl:${__UAC_DIR}/tools/find_pl:${__UAC_DIR}/tools/stat_pl:${PATH}"
 export PATH
 
-# check if start and end dates are valid
+# check whether start and end dates are valid
 if [ -n "${__UAC_START_DATE}" ]; then
   __UAC_START_DATE_EPOCH=`_get_epoch_date "${__UAC_START_DATE}"` || _exit_fatal "invalid date '${__UAC_START_DATE}'."
   __UAC_START_DATE_DAYS=`_get_days_since_date_until_now "${__UAC_START_DATE}"` || _exit_fatal
@@ -364,7 +364,6 @@ fi
 
 # check whether temp data dir's file system supports symlink creation.
 if ln -s "${__UAC_DIR}/uac" "${__UAC_TEMP_DATA_DIR}/uac-symlink-support-test.tmp" >/dev/null; then
-  rm "${__UAC_TEMP_DATA_DIR}/uac-symlink-support-test.tmp" >/dev/null
   __UAC_TEMP_DATA_DIR_NO_SYMLINK_SUPPORT=false
 fi
 
@@ -431,7 +430,6 @@ __ua_artifact_list=`_build_artifact_list "${__ua_artifact_list}" "${__UAC_OPERAT
 
 # acquisition start date
 __ua_acquisition_start_date=`date "+%a %b %d %H:%M:%S %Y %z"`
-# acquisition start epoch date
 __ua_acquisition_start_date_epoch=`_get_epoch_date`
 
 __ua_collection_progress=0
@@ -458,7 +456,6 @@ done <"${__UAC_TEMP_DATA_DIR}/artifact_list.tmp"
 
 # acquisition start date
 __ua_acquisition_end_date=`date "+%a %b %d %H:%M:%S %Y %z"`
-# acquisition start epoch date
 __ua_acquisition_end_date_epoch=`_get_epoch_date`
 
 # calculate running time
@@ -474,29 +471,16 @@ printf "Filtering out non-regular files. Please wait...\n"
 
 # get a list of all files and directories whithin __UAC_TEMP_DATA_DIR/collected directory
 find "${__UAC_TEMP_DATA_DIR}/collected" -print >"${__UAC_TEMP_DATA_DIR}/find_collected.tmp" 2>/dev/null
-_remove_non_regular_files "${__UAC_TEMP_DATA_DIR}/find_collected.tmp"
 
-mv "${__UAC_TEMP_DATA_DIR}/${__UAC_LOG_FILE}" "${__UAC_TEMP_DATA_DIR}/collected" 2>/dev/null
-# add files to the beginning of the archive file
-{
-  echo "${__UAC_TEMP_DATA_DIR}/collected/${__UAC_LOG_FILE}";
-  echo "${__UAC_TEMP_DATA_DIR}/collected/hash_list.md5";
-  echo "${__UAC_TEMP_DATA_DIR}/collected/hash_list.sha1";
-  echo "${__UAC_TEMP_DATA_DIR}/collected/hash_list.sha256";
-} >"${__UAC_TEMP_DATA_DIR}/collected.tmp"
-cat "${__UAC_TEMP_DATA_DIR}/find_collected.tmp" >>"${__UAC_TEMP_DATA_DIR}/collected.tmp"
+_remove_non_regular_files "${__UAC_TEMP_DATA_DIR}/find_collected.tmp"
+_remove_non_regular_files "${__UAC_TEMP_DATA_DIR}/file_collector.tmp"
 
 # remove ${__UAC_TEMP_DATA_DIR}/collected from the beginning of any entry
-# remove entries that match ${__UAC_DIR}, /uac-data.tmp/, uac-x-x-x, and uac-%os%-%hostname%-%timestamp%
 sed -e "s|^${__UAC_TEMP_DATA_DIR}/collected||" \
     -e 's|//*|/|g' \
     -e 's|^/||' \
-    "${__UAC_TEMP_DATA_DIR}/collected.tmp" \
-  | grep -v -E "${__UAC_DIR}|/uac-data.tmp/|uac-[0-9]+.[0-9]+.[0-9]+-?|uac-[[:print:]]+-[[:print:]]+[0-9]{14}" \
-    >"${__UAC_TEMP_DATA_DIR}/output.tmp"
-
-_remove_non_regular_files "${__UAC_TEMP_DATA_DIR}/file_collector.tmp"
-
+    "${__UAC_TEMP_DATA_DIR}/find_collected.tmp" \
+    >"${__UAC_TEMP_DATA_DIR}/pre_output.tmp"
 # remove ${__UAC_MOUNT_POINT}|\[root\]/ from the beginning of any entry
 # remove entries that match ${__UAC_DIR}, /uac-data.tmp/, uac-x-x-x, and uac-%os%-%hostname%-%timestamp%
 sed -e "s|^${__UAC_MOUNT_POINT}|\[root\]/|" \
@@ -504,7 +488,9 @@ sed -e "s|^${__UAC_MOUNT_POINT}|\[root\]/|" \
     -e 's|^/||' \
     "${__UAC_TEMP_DATA_DIR}/file_collector.tmp" \
   | grep -v -E "${__UAC_DIR}|/uac-data.tmp/|uac-[0-9]+.[0-9]+.[0-9]+-?|uac-[[:print:]]+-[[:print:]]+[0-9]{14}" \
-    >>"${__UAC_TEMP_DATA_DIR}/output.tmp"
+    >>"${__UAC_TEMP_DATA_DIR}/pre_output.tmp"
+
+mv "${__UAC_TEMP_DATA_DIR}/${__UAC_LOG_FILE}" "${__UAC_TEMP_DATA_DIR}/collected" 2>/dev/null
 
 if [ "${__UAC_OUTPUT_FORMAT}" = "none" ] || ${__UAC_HASH_COLLECTED} || ${__UAC_TEMP_DATA_DIR_NO_SYMLINK_SUPPORT} || ${__UAC_TOOL_TAR_NO_FROM_FILE_SUPPORT}; then
   printf "Copying files to '%s'. Please wait...\n" "${__UAC_TEMP_DATA_DIR}/collected/[root]"
@@ -515,24 +501,24 @@ if [ "${__UAC_OUTPUT_FORMAT}" = "none" ] || ${__UAC_HASH_COLLECTED} || ${__UAC_T
     printf "Hashing collected files. Please wait...\n"
     cd "${__UAC_TEMP_DATA_DIR}/collected" || _exit_fatal "cd: ${__UAC_TEMP_DATA_DIR}/collected: No such file or directory"
 
-    for __hc_algorithm in `echo "${__UAC_CONF_HASH_ALGORITHM}" | sed -e 's:|: :g'`; do
-      __hc_hashing_tool=""
-      if [ "${__hc_algorithm}" = "md5" ]; then
-        __hc_hashing_tool="${__UAC_TOOL_MD5_BIN}"
-      elif [ "${__hc_algorithm}" = "sha1" ]; then
-        __hc_hashing_tool="${__UAC_TOOL_SHA1_BIN}"
-      elif [ "${__hc_algorithm}" = "sha256" ]; then
-        __hc_hashing_tool="${__UAC_TOOL_SHA256_BIN}"
-      fi
+    _find_based_collector \
+      "hash" \
+      "${__UAC_TEMP_DATA_DIR}/pre_output.tmp" \
+      true \
+      "" \
+      "" \
+      "" \
+      "" \
+      "" \
+      "" \
+      "" \
+      "" \
+      "" \
+      "" \
+      "" \
+      "${__UAC_TEMP_DATA_DIR}/collected" \
+      "hash_list"
 
-      if [ -n "${__hc_hashing_tool}" ]; then
-        __hc_hash_command="sed 's|.|\\\\&|g' \"${__UAC_TEMP_DATA_DIR}/output.tmp\" | xargs ${__UAC_TOOL_XARGS_MAX_PROCS_PARAM}${__UAC_TOOL_XARGS_MAX_PROCS_PARAM:+ }${__hc_hashing_tool}"
-        _verbose_msg "${__UAC_VERBOSE_CMD_PREFIX}${__hc_hash_command}"
-        eval "${__hc_hash_command}" \
-          >"${__UAC_TEMP_DATA_DIR}/collected/hash_list.${__hc_algorithm}" \
-          2>>"${__UAC_TEMP_DATA_DIR}/hash_collected.stderr.txt"
-      fi
-    done
     cd "${__UAC_DIR}" || _exit_fatal "cd: ${__UAC_DIR}: No such file or directory"
   fi
 else
@@ -552,6 +538,16 @@ if [ "${__UAC_OUTPUT_FORMAT}" = "none" ]; then
 else
   printf "Creating output file. Please wait...\n"
   cd "${__UAC_TEMP_DATA_DIR}/collected" || _exit_fatal "cd: ${__UAC_DIR}: No such file or directory"
+
+  # add files to the beginning of the archive file
+  {
+    echo "${__UAC_LOG_FILE}";
+    echo "hash_list.md5";
+    echo "hash_list.sha1";
+    echo "hash_list.sha256";
+  } >"${__UAC_TEMP_DATA_DIR}/output.tmp"
+  cat "${__UAC_TEMP_DATA_DIR}/pre_output.tmp" >>"${__UAC_TEMP_DATA_DIR}/output.tmp"
+
   case "${__UAC_OUTPUT_EXTENSION}" in
     "tar")
       _tar_data "${__UAC_TEMP_DATA_DIR}/output.tmp" \
@@ -578,27 +574,26 @@ else
 fi
 
 # hash output file
-__ua_output_file_computed_hashes=""
+__ua_output_file_md5_hash=""
+__ua_output_file_sha1_hash=""
+__ua_output_file_sha256_hash=""
 if [ "${__UAC_OUTPUT_FORMAT}" != "none" ]; then
   printf "Hashing output file. Please wait...\n"
-  for __ua_algorithm in `echo "${__UAC_CONF_HASH_ALGORITHM}" | sed -e 's:|: :g'`; do
-    __ua_hash=""
-    if [ "${__ua_algorithm}" = "md5" ] && [ -n "${__UAC_TOOL_MD5_BIN}" ]; then
-      __ua_hash_command="${__UAC_TOOL_MD5_BIN} \"${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}.${__UAC_OUTPUT_EXTENSION}\""
-      _verbose_msg "${__UAC_VERBOSE_CMD_PREFIX}${__ua_hash_command}"
-      __ua_hash=`eval "${__ua_hash_command}" | _grep_o "[0-9a-fA-F]\{32\}"`
-    elif [ "${__ua_algorithm}" = "sha1" ] && [ -n "${__UAC_TOOL_SHA1_BIN}" ]; then
-      __ua_hash_command="${__UAC_TOOL_SHA1_BIN} \"${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}.${__UAC_OUTPUT_EXTENSION}\""
-      _verbose_msg "${__UAC_VERBOSE_CMD_PREFIX}${__ua_hash_command}"
-      __ua_hash=`eval "${__ua_hash_command}" | _grep_o "[0-9a-fA-F]\{40\}"`
-    elif [ "${__ua_algorithm}" = "sha256" ] && [ -n "${__UAC_TOOL_SHA256_BIN}" ]; then
-      __ua_hash_command="${__UAC_TOOL_SHA256_BIN} \"${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}.${__UAC_OUTPUT_EXTENSION}\""
-      _verbose_msg "${__UAC_VERBOSE_CMD_PREFIX}${__ua_hash_command}"
-      __ua_hash=`eval "${__ua_hash_command}" | _grep_o "[0-9a-fA-F]\{64\}"`
-    fi
-    __ua_output_file_computed_hashes="${__ua_output_file_computed_hashes}${__ua_output_file_computed_hashes:+
-}${__ua_algorithm} checksum: ${__ua_hash}"
-  done
+  if _is_in_list "md5" "${__UAC_CONF_HASH_ALGORITHM}" && [ -n "${__UAC_TOOL_MD5_BIN}" ]; then
+    __ua_hash_command="${__UAC_TOOL_MD5_BIN} \"${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}.${__UAC_OUTPUT_EXTENSION}\""
+    _verbose_msg "${__UAC_VERBOSE_CMD_PREFIX}${__ua_hash_command}"
+    __ua_output_file_md5_hash=`eval "${__ua_hash_command}" | _grep_o "[0-9a-fA-F]\{32\}"`
+  fi
+  if _is_in_list "sha1" "${__UAC_CONF_HASH_ALGORITHM}" && [ -n "${__UAC_TOOL_SHA1_BIN}" ]; then
+    __ua_hash_command="${__UAC_TOOL_SHA1_BIN} \"${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}.${__UAC_OUTPUT_EXTENSION}\""
+    _verbose_msg "${__UAC_VERBOSE_CMD_PREFIX}${__ua_hash_command}"
+    __ua_output_file_sha1_hash=`eval "${__ua_hash_command}" | _grep_o "[0-9a-fA-F]\{40\}"`
+  fi
+  if _is_in_list "sha256" "${__UAC_CONF_HASH_ALGORITHM}" && [ -n "${__UAC_TOOL_SHA256_BIN}" ]; then
+    __ua_hash_command="${__UAC_TOOL_SHA256_BIN} \"${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}.${__UAC_OUTPUT_EXTENSION}\""
+    _verbose_msg "${__UAC_VERBOSE_CMD_PREFIX}${__ua_hash_command}"
+    __ua_output_file_sha256_hash=`eval "${__ua_hash_command}" | _grep_o "[0-9a-fA-F]\{64\}"`
+  fi
 fi
 
 # create acquisition log file
@@ -606,7 +601,9 @@ if _create_acquisition_log \
   "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}.log" \
   "${__ua_acquisition_start_date}" \
   "${__ua_acquisition_end_date}" \
-  "${__ua_output_file_computed_hashes}"; then
+  "${__ua_output_file_md5_hash}" \
+  "${__ua_output_file_sha1_hash}" \
+  "${__ua_output_file_sha256_hash}"; then
   printf "Acquisition log created '%s'\n" "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}.log"
 else
   _error_msg "cannot create acquisition log\n"

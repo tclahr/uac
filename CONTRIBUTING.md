@@ -86,7 +86,7 @@ git checkout -b my-feature-branch develop
 
 1. Test your code against as many systems as you can. For instance, your code can fully work on a Linux but not on a FreeBSD system.
 
-1. Commit your changes using a descriptive commit message that follows our [commit message guidelines](#commit-message-guidelines). *Don’t commit code as an unrecognized author. Having commits with unrecognized authors makes it more difficult to track who wrote which part of the code. Ensure your Git client is configured with the correct email address and linked to your GitHub user.*
+1. Commit your changes using a descriptive commit message that follows our [commit message guidelines](#commit-message-guidelines). *Don't commit code as an unrecognized author. Having commits with unrecognized authors makes it more difficult to track who wrote which part of the code. Ensure your Git client is configured with the correct email address and linked to your GitHub user.*
 
   ```shell
   git commit -s
