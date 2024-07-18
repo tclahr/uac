@@ -38,6 +38,7 @@
 - files/system/tmp.yaml: Updated to increase max_file_size to 10MB.
 - files/system/var_tmp.yaml: Updated to increase max_file_size to 10MB.
 - hash_executables/hash_executables.yaml: Updated to remove max_depth and max_file_size properties.
+- live_response/containers/jls.yaml: Added collection of jails used on FreeBSD systems [freebsd] [Herbert-Karl](https://github.com/Herbert-Karl)).
 - live_response/hardware/dmesg.yaml: Updated collection of console message bufffer [esxi, freebsd, netscaler, openbsd, solaris] [Herbert-Karl](https://github.com/Herbert-Karl)).
 - live_response/process/deleted.yaml: Collection of deleted processes will no longer use dd conv=swab. The binary file will be collected in its raw format now [linux].
 - live_response/process/deleted.yaml: Updated to fix the collection of open files of (malicious) processes [linux] [mnrkbys](https://github.com/mnrkbys)).
@@ -54,6 +55,7 @@
 - live_response/system/suid.yaml: Updated to remove max_depth limit.
 - live_response/system/world_writable_directories.yaml: Updated to remove max_depth limit.
 - live_response/system/world_writable_files.yaml: Updated to remove max_depth limit.
+- live_response/system/zoneadm.yaml: Artifact was moved to live_response/containers directory [Herbert-Karl](https://github.com/Herbert-Karl)).
 
 ### Command Line Option Changes
 
