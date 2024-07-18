@@ -255,7 +255,7 @@ _find_based_collector()
                 -e 's:"|:|:g' \
                 -e 's:" -> ": -> :' \
                 -e "s:\`::g" \
-                -e "s:|.$:|0:" \
+                -e "s:|.\{1,4\}$:|0:" \
           >>"${__fc_output_directory}/${__fc_output_file}"
       else
         _log_msg ERR "_find_based_collector: cannot run stat collector. Target system has neither 'stat', 'statx' nor 'perl' tool available"
