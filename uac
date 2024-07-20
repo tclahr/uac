@@ -167,6 +167,12 @@ __ua_artifact_list=`_validate_artifact_list "${__UAC_ARTIFACT_LIST}"` || _exit_f
 _verbose_msg "Loading config file..."
 _load_config_file "${__UAC_CONFIG_FILE}" || _exit_fatal
 
+# add proper local 'bin' and 'tools' directory to path
+__ua_bin_path=`_get_bin_path "${__UAC_OPERATING_SYSTEM}" "${__UAC_SYSTEM_ARCH}"`
+PATH="${__ua_bin_path}:${PATH}"
+PATH="${__UAC_DIR}/tools/date_to_epoch_pl:${__UAC_DIR}/tools/find_pl:${__UAC_DIR}/tools/stat_pl:${PATH}"
+export PATH
+
 # set tar as the default output format if none has been set via command line
 if [ -z "${__UAC_OUTPUT_FORMAT}" ]; then
   __UAC_OUTPUT_FORMAT="tar"
@@ -183,12 +189,6 @@ __UAC_OUTPUT_BASE_NAME=`echo "${__UAC_OUTPUT_BASE_NAME}" \
 __UAC_OUTPUT_BASE_NAME=`_sanitize_output_file "${__UAC_OUTPUT_BASE_NAME}"`
 
 _output_exists "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}${__UAC_OUTPUT_EXTENSION:+.}${__UAC_OUTPUT_EXTENSION}" && _exit_fatal
-
-# add proper local 'bin' and 'tools' directory to path
-__ua_bin_path=`_get_bin_path "${__UAC_OPERATING_SYSTEM}" "${__UAC_SYSTEM_ARCH}"`
-PATH="${__ua_bin_path}:${PATH}"
-PATH="${__UAC_DIR}/tools/date_to_epoch_pl:${__UAC_DIR}/tools/find_pl:${__UAC_DIR}/tools/stat_pl:${PATH}"
-export PATH
 
 # check whether start and end dates are valid
 if [ -n "${__UAC_START_DATE}" ]; then
@@ -279,9 +279,6 @@ if [ -n "${__UAC_AZURE_STORAGE_SAS_URL}" ]; then
     "${__UAC_AZURE_STORAGE_SAS_URL}" \
     || _exit_fatal "error connecting to Azure Storage SAS URL"
 fi
-
-# use a safe umask for created files
-umask 027
 
 # check whether temp-dir exists
 if [ -n "${__UAC_TEMP_DIR}" ]; then
