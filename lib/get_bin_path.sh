@@ -61,13 +61,21 @@ _get_bin_path()
   __gb_correct_arch=`_get_system_arch_bin_path "${__gb_arch}"`
   __gb_path=""
 
-  # tools directory
-  for __gb_tool in statx zip; do
-    for __gb_dir in "${__UAC_DIR}"/tools/"${__gb_tool}"/*; do
-      if echo "${__gb_dir}" | grep -q -E "${__gb_os}"; then
+  # zip tool
+  # test whether zip can run in the target system before adding it to PATH
+  for __gb_dir in "${__UAC_DIR}"/tools/zip/*; do
+    if echo "${__gb_dir}" | grep -q -E "${__gb_os}"; then
+      if eval "${__gb_dir}/${__gb_correct_arch}/zip" - "${__UAC_DIR}/uac" >/dev/null 2>/dev/null; then
         __gb_path="${__gb_path}${__gb_path:+:}${__gb_dir}/${__gb_correct_arch}"
       fi
-    done
+    fi
+  done
+
+  # statx tool
+  for __gb_dir in "${__UAC_DIR}"/tools/statx/*; do
+    if echo "${__gb_dir}" | grep -q -E "${__gb_os}"; then
+      __gb_path="${__gb_path}${__gb_path:+:}${__gb_dir}/${__gb_correct_arch}"
+    fi
   done
 
   # bin directory
