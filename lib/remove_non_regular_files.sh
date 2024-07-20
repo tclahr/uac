@@ -14,9 +14,11 @@ _remove_non_regular_files()
     _log_msg ERR "_remove_non_regular_files: no such file or directory '${__rn_file}'"
     return 1
   fi
+ 
+  __rn_command="sed 's|.|\\\\&|g' \"${__rn_file}\" | xargs ${__UAC_TOOL_XARGS_MAX_PROCS_PARAM}${__UAC_TOOL_XARGS_MAX_PROCS_PARAM:+ }find"
 
-  sed 's|.|\\&|g' "${__rn_file}" \
-    | xargs "${__UAC_TOOL_XARGS_MAX_PROCS_PARAM}"${__UAC_TOOL_XARGS_MAX_PROCS_PARAM:+ }find \
+  _verbose_msg "${__UAC_VERBOSE_CMD_PREFIX}${__rn_command}"
+  eval "${__rn_command}" \
     >"${__UAC_TEMP_DATA_DIR}/remove_non_regular_files_xargs.tmp" \
     2>>"${__UAC_TEMP_DATA_DIR}/remove_non_regular_files.stderr.txt"
 
