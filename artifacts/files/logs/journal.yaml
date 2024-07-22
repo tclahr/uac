@@ -3,5 +3,6 @@ artifacts:
   -
     description: Collect journal log files.
     supported_os: [linux]
+    collector: file
     path: /
     name_pattern: ["*.journal"]
