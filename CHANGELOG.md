@@ -28,6 +28,7 @@
 - files/applications/whatsapp.yaml: Added collection of WhatsApp Desktop files [macos].
 - files/logs/additional_logs.yaml: Artifact was renamed to advanced_log_search.yaml.
 - files/logs/relink.yaml: Added collection of the kernel relink log file [openbsd] [Herbert-Karl](https://github.com/Herbert-Karl)).
+- files/logs/run_log.yaml: Added collection of /run/log directory.
 - files/system/acct.yaml: Added collection of system accounting files [freebsd, netbsd, openbsd] [Herbert-Karl](https://github.com/Herbert-Karl)).
 - files/system/dev_db.yaml: Added collection of the database file used for device lookups [netbsd, openbsd] [Herbert-Karl](https://github.com/Herbert-Karl)).
 - files/system/dev_shm.yaml: Updated to increase max_file_size to 10MB.
@@ -35,6 +36,7 @@
 - files/system/netscaler.yaml: Updated to increase max_file_size to 10MB.
 - files/system/run_shm.yaml: Updated to increase max_file_size to 10MB.
 - files/system/security_backups.yaml: Added collection of file backups and hashes created by the integrated security script [freebsd, netbsd, openbsd] [Herbert-Karl](https://github.com/Herbert-Karl)).
+- files/system/systemd.yaml: Updated to add new locations for configuration files.
 - files/system/tmp.yaml: Updated to increase max_file_size to 10MB.
 - files/system/var_tmp.yaml: Updated to increase max_file_size to 10MB.
 - hash_executables/hash_executables.yaml: Updated to remove max_depth and max_file_size properties.
@@ -66,10 +68,12 @@
 - '--s3-presigned-url-log-file' was renamed to '--aws-s3-presigned-url-log-file'.
 - '--ibm-cos-url', '--ibm-cos-url-log-file' and '--ibm-cloud-api-key' were removed and now transfers to IBM cloud should be done using '--s3-provider', '--s3-region', '--s3-bucket' and '--s3-token' options.
 
-### Artifacts Properties
+### Artifacts Properties Changes
 
-- The 'output_directory' property is now mandatory for the following collectors: command, find, hash and stat.
 - Introduced a new 'condition' property that ensures the collection runs only if the specified condition returns true.
+- The 'output_directory' property is now mandatory for the following collectors: command, find, hash and stat.
+- The 'file_type' property is now an array.
+- The 'permissions' property is now an array.
 
 ### uac.conf
 

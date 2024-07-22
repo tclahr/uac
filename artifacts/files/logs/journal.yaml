@@ -1,0 +1,7 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect journal log files.
+    supported_os: [linux]
+    path: /
+    name_pattern: ["*.journal"]
