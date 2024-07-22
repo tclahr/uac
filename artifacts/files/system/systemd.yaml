@@ -1,16 +1,15 @@
-version: 2.1
+version: 3.0
 artifacts:
   -
     description: Collect systemd configuration files.
     supported_os: [linux]
     collector: file
-    path: /lib/systemd/system
-    ignore_date_range: true
+    path: /etc/systemd
   -
     description: Collect systemd configuration files.
     supported_os: [linux]
     collector: file
-    path: /usr/lib/systemd/system
+    path: /lib/systemd/system
     ignore_date_range: true
   -
     description: Collect systemd sessions files.
@@ -19,19 +18,56 @@ artifacts:
     path: /run/systemd/sessions
     file_type: [f]
   -
+    description: Collect systemd files.
+    supported_os: [linux]
+    collector: file
+    path: /run/systemd/system
+  -
     description: Collect systemd scope and transient timer files.
     supported_os: [linux]
     collector: file
     path: /run/systemd/transient
     name_pattern: ["*.scope", "*.service", "*.timer"]
   -
-    description: Collect systemd per-user transient timers.
+    description: Collect systemd configuration files.
     supported_os: [linux]
     collector: file
-    path: /run/user/*/systemd/transient
-    name_pattern: ["*.service", "*.timer"]
+    path: /usr/lib/systemd
+    ignore_date_range: true
+  -
+    description: Collect systemd configuration files.
+    supported_os: [linux]
+    collector: file
+    path: /usr/local/lib/systemd/system
+  -
+    description: Collect systemd configuration files.
+    supported_os: [linux]
+    collector: file
+    path: /usr/local/lib/systemd/user
+  -
+    description: Collect systemd configuration files.
+    supported_os: [linux]
+    collector: file
+    path: /usr/local/share/systemd/user
+  -
+    description: Collect systemd configuration files.
+    supported_os: [linux]
+    collector: file
+    path: /usr/share/systemd/user
   -
     description: Collect systemd per-user configuration.
     supported_os: [linux]
     collector: file
     path: /%user_home%/.config/systemd
+  -
+    description: Collect systemd per-user configuration.
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.local/share/systemd
+  -
+    description: Collect systemd per-user transient timers.
+    supported_os: [linux]
+    collector: file
+    path: /run/user/*/systemd/transient
+    name_pattern: ["*.scope", "*.service", "*.timer"]
+  
