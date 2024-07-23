@@ -1,6 +1,6 @@
 # Changelog
 
-## DEVELOPMENT VERSION
+## 3.0.0-rc1 (2024-07-23)
 
 ### Features
 
