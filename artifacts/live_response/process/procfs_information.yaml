@@ -203,6 +203,14 @@ artifacts:
     output_directory: /live_response/process/proc/%line%
     output_file: status.txt
   -
+    description: Collect mounts information from each process
+    supported_os: [linux]
+    collector: command
+    foreach: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
+    command: cat /proc/%line%/mounts
+    output_directory: /live_response/process/proc/%line%
+    output_file: mounts.txt
+  -
     description: Display the list of UNIX sockets.
     supported_os: [linux]
     collector: command
