@@ -41,7 +41,7 @@ UAC is a Live Response collection script for Incident Response that makes use of
 
 UAC reads YAML files on the fly and, based on their contents, collects relevant artifacts. This makes UAC very customizable and extensible.
 
-[![uac_collection](https://tclahr.github.io/uac-docs/img/uac_collection.gif)](#)
+[![uac_collection](https://tclahr.github.io/uac-docs/img/uac_3_collection.gif)](#)
 
 ## 📘 Documentation
 
