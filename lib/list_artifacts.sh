@@ -40,16 +40,13 @@ _list_artifacts()
       find "${__oa_artifacts_dir}"/* -name "*.yaml" -print 2>/dev/null \
         | sed -e "s|^${__oa_artifacts_dir}/||" 2>/dev/null
     else
-      __oa_OIFS="${IFS}"
-      IFS="
-"
-      __oa_artifacts_tmp=`find "${__oa_artifacts_dir}"/* -name "*.yaml" -print 2>/dev/null`
-      for __oa_item in ${__oa_artifacts_tmp}; do
-        if grep -q -E "supported_os:.*all|${__oa_os}" "${__oa_item}" 2>/dev/null; then
-          echo "${__oa_item}" | sed -e "s|^${__oa_artifacts_dir}/||" 2>/dev/null
-        fi
-      done
-      IFS="${__oa_OIFS}"
+      # shellcheck disable=SC2162
+      find "${__oa_artifacts_dir}"/* -name "*.yaml" -print 2>/dev/null \
+        | while read __oa_item || [ -n "${__oa_item}" ]; do
+            if grep -q -E "supported_os:.*all|${__oa_os}" "${__oa_item}" 2>/dev/null; then
+              echo "${__oa_item}" | sed -e "s|^${__oa_artifacts_dir}/||" 2>/dev/null
+            fi
+          done
     fi
   }
 
