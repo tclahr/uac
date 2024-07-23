@@ -15,14 +15,13 @@ _build_artifact_list()
 
   # some systems use busybox's find that not always support '-type f'
   # skip artifacts that are not applicable to the target operating system
-  __ba_OIFS="${IFS}"; IFS="
-";
-  for __ba_item in ${__ba_artifact_list}; do
-    if [ -f "${__ba_item}" ] \
-      && { grep -q -E "supported_os:.*all|${__ba_operating_system}" "${__ba_item}" 2>/dev/null || [ "${__UAC_IGNORE_OPERATING_SYSTEM:-false}" = true ]; }; then
-      echo "${__ba_item}"
-    fi
-  done
-  IFS="${__ba_OIFS}"
+  # shellcheck disable=SC2162
+  echo "${__ba_artifact_list}" \
+    | while read __ba_item || [ -n "${__ba_item}" ]; do
+        if [ -f "${__ba_item}" ] \
+          && { grep -q -E "supported_os:.*all|${__ba_operating_system}" "${__ba_item}" 2>/dev/null || [ "${__UAC_IGNORE_OPERATING_SYSTEM:-false}" = true ]; }; then
+          echo "${__ba_item}"
+        fi
+      done
 
 }
