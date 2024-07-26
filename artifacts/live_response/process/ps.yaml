@@ -48,23 +48,22 @@ artifacts:
     supported_os: [freebsd, linux, macos, netbsd, netscaler, openbsd]
     collector: command
     command: ps -axo pid,user,etime,args
-    output_file: ps_-eo_pid_user_etime_args.txt
+    output_file: ps_-axo_pid_user_etime_args.txt
   -
     description: Report a snapshot of the current processes including time the command started.
     supported_os: [freebsd, linux, macos, netbsd, netscaler, openbsd]
     collector: command
     command: ps -axo pid,user,lstart,args
-    output_file: ps_-eo_pid_user_lstart_args.txt
+    output_file: ps_-axo_pid_user_lstart_args.txt
   -
     description: Report a snapshot of the current processes including the control groups to which the process belongs.
     supported_os: [linux]
     collector: command
     command: ps -axo pid,user,cgroup
-    output_file: ps_-eo_pid_user_cgroup.txt
+    output_file: ps_-axo_pid_user_cgroup.txt
   -
     description: Report a snapshot of the current processes including used time, verbose, session ID and process group, state and type.
     supported_os: [esxi]
     collector: command
     command: ps -P -T -c -g -s -t -J
     output_file: ps_-P_-T_-c_-g_-s_-t_-J.txt
-    
