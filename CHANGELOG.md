@@ -42,6 +42,7 @@
 - hash_executables/hash_executables.yaml: Updated to remove max_depth and max_file_size properties.
 - live_response/containers/jls.yaml: Added collection of jails used on FreeBSD systems [freebsd] [Herbert-Karl](https://github.com/Herbert-Karl)).
 - live_response/hardware/dmesg.yaml: Updated collection of console message bufffer [esxi, freebsd, netscaler, openbsd, solaris] [Herbert-Karl](https://github.com/Herbert-Karl)).
+- live_response/network/procfs_information.yaml: Added collection of TCP and UDP network details from /proc/net [linux]. 
 - live_response/process/deleted.yaml: Collection of deleted processes will no longer use dd conv=swab. The binary file will be collected in its raw format now [linux].
 - live_response/process/deleted.yaml: Updated to fix the collection of open files of (malicious) processes [linux] [mnrkbys](https://github.com/mnrkbys)).
 - live_response/process/hash_running_processes.yaml: Updated to add support to hash running processes on FreeBSD systems that are using procfs (/proc) [freebsd].
@@ -55,6 +56,7 @@
 - live_response/system/sgid.yaml: Updated to remove max_depth limit.
 - live_response/system/socket_files.yaml: Updated to remove max_depth limit.
 - live_response/system/suid.yaml: Updated to remove max_depth limit.
+- live_response/system/sys_modules.yaml: Removed as it is was duplicate artifact with kernel_modules.yaml.
 - live_response/system/world_writable_directories.yaml: Updated to remove max_depth limit.
 - live_response/system/world_writable_files.yaml: Updated to remove max_depth limit.
 - live_response/system/zoneadm.yaml: Artifact was moved to live_response/containers directory [Herbert-Karl](https://github.com/Herbert-Karl)).
