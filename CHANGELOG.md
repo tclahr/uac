@@ -52,6 +52,7 @@
 - live_response/process/strings_running_processes.yaml: Added support for collecting strings even when the strings command is unavailable. In such cases, the built-in astrings command will be used instead [all].
 - live_response/system/hidden_directories.yaml: Updated to remove max_depth limit.
 - live_response/system/hidden_files.yaml: Updated to remove max_depth limit.
+- live_response/system/kernel_tainted_state.yaml: Added collection of dmesg messages showing modules tainting the kernel [linux].
 - live_response/system/lastcomm.yaml: Added collection of the last commands executed in a reverse order based on the default and historic accounting file [freebsd, netbsd, openbsd] [Herbert-Karl](https://github.com/Herbert-Karl)).
 - live_response/system/sgid.yaml: Updated to remove max_depth limit.
 - live_response/system/socket_files.yaml: Updated to remove max_depth limit.
