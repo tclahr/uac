@@ -61,7 +61,6 @@ __UAC_HASH_COLLECTED=false
 __UAC_CONFIG_FILE="${__UAC_DIR}/config/uac.conf"
 __UAC_MOUNT_POINT="/"
 __UAC_OPERATING_SYSTEM=""
-__UAC_MAX_THREADS="2"
 __UAC_RUN_AS_NON_ROOT=false
 __UAC_PROCESSING_UNITS=""
 __UAC_HOSTNAME=""
@@ -143,13 +142,6 @@ __UAC_MOUNT_POINT=`_get_absolute_path "${__UAC_MOUNT_POINT}" 2>/dev/null`
 # useful when running UAC against a mounted image file/disk
 if [ -z "${__UAC_HOSTNAME}" ]; then
   __UAC_HOSTNAME=`_get_hostname "${__UAC_MOUNT_POINT}"`
-fi
-
-# check if max-threads is a positive integer (greater than zero)
-if _is_digit "${__UAC_MAX_THREADS}" && [ "${__UAC_MAX_THREADS}" -ge 1 ]; then
-    true
-else
-  _exit_fatal "'max-threads' must be a positive integer."
 fi
 
 # check whether is running as root
@@ -401,11 +393,6 @@ else
   _log_msg INF "perl command exists: false"
 fi
 _log_msg INF "xargs -0 support: ${__UAC_TOOL_XARGS_NULL_DELIMITER_SUPPORT}"
-if [ -n "${__UAC_TOOL_XARGS_MAX_PROCS_PARAM}" ]; then
-  _log_msg INF "xargs -P support: true"
-else
-  _log_msg INF "xargs -P support: false"
-fi
 _log_msg INF "MD5 hashing tool: ${__UAC_TOOL_MD5_BIN}"
 _log_msg INF "SHA1 hashing tool: ${__UAC_TOOL_SHA1_BIN}"
 _log_msg INF "SHA256 hashing tool: ${__UAC_TOOL_SHA256_BIN}"
