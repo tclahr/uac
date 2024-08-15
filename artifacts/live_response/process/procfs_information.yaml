@@ -98,15 +98,6 @@ artifacts:
     command: ps -axo args | grep ^/ | awk '{print $1}' | sort -u
     output_file: running_processes_full_paths.txt
   -
-    description: Collect command line arguments for a process.
-    supported_os: [freebsd]
-    collector: command
-    condition: ls /proc/$$
-    foreach: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
-    command: cat /proc/%line%/cmdline
-    output_directory: /live_response/process/proc/%line%
-    output_file: cmdline.txt
-  -
     description: Collect mapped memory regions and their access permissions.
     supported_os: [freebsd]
     collector: command
@@ -124,6 +115,28 @@ artifacts:
     command: cat /proc/%line%/status
     output_directory: /live_response/process/proc/%line%
     output_file: status.txt
+  # freebsd: strings available
+  -
+    description: Collect command line arguments for a process.
+    supported_os: [freebsd]
+    collector: command
+    condition: command_exists "strings"
+    condition: ls /proc/$$
+    foreach: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
+    command: strings /proc/%line%/cmdline
+    output_directory: /live_response/process/proc/%line%
+    output_file: cmdline.txt
+  # freebsd: no strings available
+  -
+    description: Collect command line arguments for a process.
+    supported_os: [freebsd]
+    collector: command
+    condition: ! command_exists "strings"
+    condition: ls /proc/$$
+    foreach: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
+    command: astrings /proc/%line%/cmdline
+    output_directory: /live_response/process/proc/%line%
+    output_file: cmdline.txt
 
   # linux
   -
@@ -154,14 +167,6 @@ artifacts:
     command: ls -la /proc/%line%/map_files
     output_directory: /live_response/process/proc/%line%
     output_file: map_files.txt
-  -
-    description: Collect command line arguments for a process.
-    supported_os: [linux]
-    collector: command
-    foreach: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
-    command: cat /proc/%line%/cmdline
-    output_directory: /live_response/process/proc/%line%
-    output_file: cmdline.txt
   -
     description: Collect the list of child tasks of a process.
     supported_os: [linux]
@@ -220,6 +225,15 @@ artifacts:
     command: strings /proc/%line%/environ
     output_directory: /live_response/process/proc/%line%
     output_file: environ.txt
+  -
+    description: Collect command line arguments for a process.
+    supported_os: [linux]
+    collector: command
+    condition: command_exists "strings"
+    foreach: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
+    command: strings /proc/%line%/cmdline
+    output_directory: /live_response/process/proc/%line%
+    output_file: cmdline.txt
   # linux: no strings available
   -
     description: Collect initial environment that was set when the process was started.
@@ -230,7 +244,16 @@ artifacts:
     command: astrings /proc/%line%/environ
     output_directory: /live_response/process/proc/%line%
     output_file: environ.txt
-  
+  -
+    description: Collect command line arguments for a process.
+    supported_os: [linux]
+    collector: command
+    condition: ! command_exists "strings"
+    foreach: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
+    command: astrings /proc/%line%/cmdline
+    output_directory: /live_response/process/proc/%line%
+    output_file: cmdline.txt
+
   # macos
   -
     description: Collect running processes executable path.
@@ -260,14 +283,6 @@ artifacts:
     command: ls -la /proc/%line%/fd
     output_directory: /live_response/process/proc/%line%
     output_file: fd.txt
-  -
-    description: Collect command line arguments for a process.
-    supported_os: [netbsd]
-    collector: command
-    foreach: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
-    command: cat /proc/%line%/cmdline
-    output_directory: /live_response/process/proc/%line%
-    output_file: cmdline.txt
   -
     description: Collect mapped memory regions and their access permissions.
     supported_os: [netbsd]
@@ -302,6 +317,15 @@ artifacts:
     command: strings /proc/%line%/environ
     output_directory: /live_response/process/proc/%line%
     output_file: environ.txt
+  -
+    description: Collect command line arguments for a process.
+    supported_os: [netbsd]
+    collector: command
+    condition: command_exists "strings"
+    foreach: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
+    command: strings /proc/%line%/cmdline
+    output_directory: /live_response/process/proc/%line%
+    output_file: cmdline.txt
   # netbsd: no strings available
   -
     description: Collect initial environment that was set when the process was started.
@@ -312,6 +336,15 @@ artifacts:
     command: astrings /proc/%line%/environ
     output_directory: /live_response/process/proc/%line%
     output_file: environ.txt
+  -
+    description: Collect command line arguments for a process.
+    supported_os: [netbsd]
+    collector: command
+    condition: ! command_exists "strings"
+    foreach: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
+    command: astrings /proc/%line%/cmdline
+    output_directory: /live_response/process/proc/%line%
+    output_file: cmdline.txt
 
   # netscaler
   -
@@ -383,14 +416,6 @@ artifacts:
     command: pfiles -F %line%
     output_directory: /live_response/process/proc/%line%
     output_file: pfiles.txt
-  -
-    description: Collect command line arguments for a process.
-    supported_os: [solaris]
-    collector: command
-    foreach: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
-    command: cat /proc/%line%/cmdline
-    output_directory: /live_response/process/proc/%line%
-    output_file: cmdline.txt
 
   # solaris: strings available
   -
@@ -429,7 +454,16 @@ artifacts:
     command: strings /proc/%line%/status
     output_directory: /live_response/process/proc/%line%
     output_file: status.txt
-  
+  -
+    description: Collect command line arguments for a process.
+    supported_os: [solaris]
+    collector: command
+    condition: command_exists "strings"
+    foreach: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
+    command: strings /proc/%line%/cmdline
+    output_directory: /live_response/process/proc/%line%
+    output_file: cmdline.txt
+
   # solaris: no strings available
   -
     description: Collect initial environment that was set when the process was started.
@@ -467,4 +501,12 @@ artifacts:
     command: astrings /proc/%line%/status
     output_directory: /live_response/process/proc/%line%
     output_file: status.txt
-    
+  -
+    description: Collect command line arguments for a process.
+    supported_os: [solaris]
+    collector: command
+    condition: ! command_exists "strings"
+    foreach: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
+    command: astrings /proc/%line%/cmdline
+    output_directory: /live_response/process/proc/%line%
+    output_file: cmdline.txt
