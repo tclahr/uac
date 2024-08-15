@@ -46,6 +46,8 @@
 - live_response/process/deleted.yaml: Updated to fix the collection of open files of (malicious) processes [linux] [mnrkbys](https://github.com/mnrkbys)).
 - live_response/process/hash_running_processes.yaml: Updated to add support to hash running processes on FreeBSD systems that are using procfs (/proc) [freebsd].
 - live_response/process/procfs_information.yaml: Added artifact collection using cat when strings is not available.
+- live_response/process/procfs_information.yaml: Updated to collect /proc/*/mount [linux] [halpomeranz](https://github.com/halpomeranz)).
+- live_response/process/procfs_information.yaml: Updated to collect /proc/*/stat [linux] [mnrkbys](https://github.com/mnrkbys)).
 - live_response/process/strings_running_processes.yaml: Added collection of strings from running processes for ESXi systems [esxi].
 - live_response/process/strings_running_processes.yaml: Added condition to check whether developer tools are installed before running strings on macOS [macos].
 - live_response/process/strings_running_processes.yaml: Added support for collecting strings even when the strings command is unavailable. In such cases, the built-in astrings command will be used instead [all].
