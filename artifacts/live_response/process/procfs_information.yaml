@@ -187,6 +187,14 @@ artifacts:
     output_directory: /live_response/process/proc/%line%
     output_file: maps.txt
   -
+    description: Collect mounts information from each process
+    supported_os: [linux]
+    collector: command
+    foreach: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
+    command: cat /proc/%line%/mounts
+    output_directory: /live_response/process/proc/%line%
+    output_file: mounts.txt
+  -
     description: Collect the initial process' stack trace.
     supported_os: [linux]
     collector: command
@@ -195,14 +203,6 @@ artifacts:
     output_directory: /live_response/process/proc/%line%
     output_file: stack.txt
   -
-    description: Collect status information about the process.
-    supported_os: [linux]
-    collector: command
-    foreach: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
-    command: cat /proc/%line%/status
-    output_directory: /live_response/process/proc/%line%
-    output_file: status.txt
-  -
     description: Collect stat of each process.
     supported_os: [linux]
     collector: command
@@ -210,6 +210,14 @@ artifacts:
     command: cat /proc/%line%/stat
     output_directory: /live_response/process/proc/%line%
     output_file: stat.txt
+  -
+    description: Collect status information about the process.
+    supported_os: [linux]
+    collector: command
+    foreach: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
+    command: cat /proc/%line%/status
+    output_directory: /live_response/process/proc/%line%
+    output_file: status.txt
   -
     description: Display the list of UNIX sockets.
     supported_os: [linux]
