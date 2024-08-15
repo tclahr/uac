@@ -21,7 +21,6 @@ _setup_tools()
   __UAC_TOOL_FIND_CTIME_SUPPORT=false
   __UAC_TOOL_FIND_PRINT0_SUPPORT=false
   __UAC_TOOL_XARGS_NULL_DELIMITER_SUPPORT=false
-  __UAC_TOOL_XARGS_MAX_PROCS_PARAM=""
   __UAC_TOOL_STAT_BIN=""
   __UAC_TOOL_STAT_PARAMS=""
   __UAC_TOOL_STAT_BTIME=false
@@ -67,9 +66,6 @@ _setup_tools()
   
   if echo "uac" | xargs -0 echo >/dev/null; then
     __UAC_TOOL_XARGS_NULL_DELIMITER_SUPPORT=true
-  fi
-  if echo "uac" | xargs -P 2 echo >/dev/null; then
-    __UAC_TOOL_XARGS_MAX_PROCS_PARAM="-P ${__UAC_MAX_THREADS}"
   fi
   
   # check which stat tool and options are available for the target system

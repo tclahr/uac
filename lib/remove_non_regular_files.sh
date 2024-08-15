@@ -15,7 +15,12 @@ _remove_non_regular_files()
     return 1
   fi
  
-  __rn_command="sed 's|.|\\\\&|g' \"${__rn_file}\" | xargs ${__UAC_TOOL_XARGS_MAX_PROCS_PARAM}${__UAC_TOOL_XARGS_MAX_PROCS_PARAM:+ }find"
+  if [ ! -s "${__rn_file}" ]; then
+    _log_msg DBG "_remove_non_regular_files: skipping empty file '${__rn_file}'"
+    return 1
+  fi
+
+  __rn_command="sed 's|.|\\\\&|g' \"${__rn_file}\" | xargs find"
 
   _verbose_msg "${__UAC_VERBOSE_CMD_PREFIX}${__rn_command}"
   eval "${__rn_command}" \
