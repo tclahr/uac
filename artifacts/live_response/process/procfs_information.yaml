@@ -203,6 +203,14 @@ artifacts:
     output_directory: /live_response/process/proc/%line%
     output_file: status.txt
   -
+    description: Collect stat of each process.
+    supported_os: [linux]
+    collector: command
+    foreach: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
+    command: cat /proc/%line%/stat
+    output_directory: /live_response/process/proc/%line%
+    output_file: stat.txt
+  -
     description: Display the list of UNIX sockets.
     supported_os: [linux]
     collector: command
@@ -230,7 +238,7 @@ artifacts:
     command: astrings /proc/%line%/environ
     output_directory: /live_response/process/proc/%line%
     output_file: environ.txt
-  
+
   # macos
   -
     description: Collect running processes executable path.
