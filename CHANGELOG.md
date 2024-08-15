@@ -26,35 +26,35 @@
 - bodyfile/bodyfile.yaml: Updated to remove max_depth limit.
 - files/applications/whatsapp.yaml: Added collection of WhatsApp Desktop files [macos].
 - files/logs/additional_logs.yaml: Artifact was renamed to advanced_log_search.yaml.
-- files/logs/relink.yaml: Added collection of the kernel relink log file [openbsd] [Herbert-Karl](https://github.com/Herbert-Karl)).
+- files/logs/relink.yaml: Added collection of the kernel relink log file [openbsd] ([Herbert-Karl](https://github.com/Herbert-Karl)).
 - files/logs/run_log.yaml: Added collection of /run/log directory.
-- files/system/acct.yaml: Added collection of system accounting files [freebsd, netbsd, openbsd] [Herbert-Karl](https://github.com/Herbert-Karl)).
-- files/system/dev_db.yaml: Added collection of the database file used for device lookups [netbsd, openbsd] [Herbert-Karl](https://github.com/Herbert-Karl)).
+- files/system/acct.yaml: Added collection of system accounting files [freebsd, netbsd, openbsd] ([Herbert-Karl](https://github.com/Herbert-Karl)).
+- files/system/dev_db.yaml: Added collection of the database file used for device lookups [netbsd, openbsd] ([Herbert-Karl](https://github.com/Herbert-Karl)).
 - files/system/dev_shm.yaml: Updated to increase max_file_size to 10MB.
-- files/system/locate_db.yaml: Added collection of the database file used by locate command, representing a snapshot of the virtual file system accessible with minimal permissions [freebsd, netbsd, openbsd] [Herbert-Karl](https://github.com/Herbert-Karl)).
+- files/system/locate_db.yaml: Added collection of the database file used by locate command, representing a snapshot of the virtual file system accessible with minimal permissions [freebsd, netbsd, openbsd] ([Herbert-Karl](https://github.com/Herbert-Karl)).
 - files/system/netscaler.yaml: Updated to increase max_file_size to 10MB.
 - files/system/run_shm.yaml: Updated to increase max_file_size to 10MB.
-- files/system/security_backups.yaml: Added collection of file backups and hashes created by the integrated security script [freebsd, netbsd, openbsd] [Herbert-Karl](https://github.com/Herbert-Karl)).
+- files/system/security_backups.yaml: Added collection of file backups and hashes created by the integrated security script [freebsd, netbsd, openbsd] ([Herbert-Karl](https://github.com/Herbert-Karl)).
 - files/system/systemd.yaml: Updated to add new locations for configuration files.
 - files/system/tmp.yaml: Updated to increase max_file_size to 10MB.
 - files/system/var_tmp.yaml: Updated to increase max_file_size to 10MB.
 - hash_executables/hash_executables.yaml: Updated to remove max_depth and max_file_size properties.
-- live_response/containers/jls.yaml: Added collection of jails used on FreeBSD systems [freebsd] [Herbert-Karl](https://github.com/Herbert-Karl)).
-- live_response/hardware/dmesg.yaml: Updated collection of console message bufffer [esxi, freebsd, netscaler, openbsd, solaris] [Herbert-Karl](https://github.com/Herbert-Karl)).
+- live_response/containers/jls.yaml: Added collection of jails used on FreeBSD systems [freebsd] ([Herbert-Karl](https://github.com/Herbert-Karl)).
+- live_response/hardware/dmesg.yaml: Updated collection of console message bufffer [esxi, freebsd, netscaler, openbsd, solaris] ([Herbert-Karl](https://github.com/Herbert-Karl)).
 - live_response/network/procfs_information.yaml: Added collection of TCP and UDP network details from /proc/net [linux]. 
 - live_response/process/deleted.yaml: Collection of deleted processes will no longer use dd conv=swab. The binary file will be collected in its raw format now [linux].
-- live_response/process/deleted.yaml: Updated to fix the collection of open files of (malicious) processes [linux] [mnrkbys](https://github.com/mnrkbys)).
+- live_response/process/deleted.yaml: Updated to fix the collection of open files of (malicious) processes [linux] ([mnrkbys](https://github.com/mnrkbys)).
 - live_response/process/hash_running_processes.yaml: Updated to add support to hash running processes on FreeBSD systems that are using procfs (/proc) [freebsd].
 - live_response/process/procfs_information.yaml: Added artifact collection using cat when strings is not available.
-- live_response/process/procfs_information.yaml: Updated to collect /proc/*/mount [linux] [halpomeranz](https://github.com/halpomeranz)).
-- live_response/process/procfs_information.yaml: Updated to collect /proc/*/stat [linux] [mnrkbys](https://github.com/mnrkbys)).
+- live_response/process/procfs_information.yaml: Updated to collect /proc/*/mount [linux] ([halpomeranz](https://github.com/halpomeranz)).
+- live_response/process/procfs_information.yaml: Updated to collect /proc/*/stat [linux] ([mnrkbys](https://github.com/mnrkbys)).
 - live_response/process/strings_running_processes.yaml: Added collection of strings from running processes for ESXi systems [esxi].
 - live_response/process/strings_running_processes.yaml: Added condition to check whether developer tools are installed before running strings on macOS [macos].
 - live_response/process/strings_running_processes.yaml: Added support for collecting strings even when the strings command is unavailable. In such cases, the built-in astrings command will be used instead [all].
 - live_response/system/hidden_directories.yaml: Updated to remove max_depth limit.
 - live_response/system/hidden_files.yaml: Updated to remove max_depth limit.
 - live_response/system/kernel_tainted_state.yaml: Added collection of dmesg messages showing modules tainting the kernel [linux].
-- live_response/system/lastcomm.yaml: Added collection of the last commands executed in a reverse order based on the default and historic accounting file [freebsd, netbsd, openbsd] [Herbert-Karl](https://github.com/Herbert-Karl)).
+- live_response/system/lastcomm.yaml: Added collection of the last commands executed in a reverse order based on the default and historic accounting file [freebsd, netbsd, openbsd] ([Herbert-Karl](https://github.com/Herbert-Karl)).
 - live_response/system/sgid.yaml: Updated to remove max_depth limit.
 - live_response/system/socket_files.yaml: Updated to remove max_depth limit.
 - live_response/system/suid.yaml: Updated to remove max_depth limit.
