@@ -18,24 +18,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Clone uac repo
+      - name: Checkout uac repository
         uses: actions/checkout@v4
         with:
           repository: tclahr/uac
           path: uac
 
-      - name: Clone ushunit repo
+      - name: Checkout ushunit repository
         uses: actions/checkout@v4
         with:
           repository: tclahr/ushunit
           ref: main
           path: ushunit
 
-      - name: Clone uac-tests repo
+      - name: Checkout uac-tests repository
         uses: actions/checkout@v4
         with:
           repository: tclahr/uac-tests
-          ref: main
+          ref: ${{ github.event.pull_request.base.ref }}
           path: uac-tests
       
       - name: Run tests
