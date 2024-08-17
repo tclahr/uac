@@ -18,25 +18,39 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Clone uac repo
+      - name: Checkout uac repository
         uses: actions/checkout@v4
         with:
           repository: tclahr/uac
           path: uac
 
-      - name: Clone ushunit repo
+      - name: Checkout ushunit repository
         uses: actions/checkout@v4
         with:
           repository: tclahr/ushunit
           ref: main
           path: ushunit
 
-      - name: Clone uac-tests repo
+      - name: Check if branch exists in uac-tests
+        id: check_branch
+        run: |
+          branch_exists=$(git ls-remote --heads https://github.com/tclahr/uac-tests.git ${{ github.ref }} | wc -l)
+          echo "branch_exists=$branch_exists" >> $GITHUB_ENV
+
+      - name: Checkout uac-tests repository
+        if: env.branch_exists == '1'
+        uses: actions/checkout@v4
+        with:
+          repository: tclahr/uac-tests
+          ref: ${{ github.ref }}
+          path: uac-tests
+
+      - name: Checkout main branch of uac-tests if branch does not exist
+        if: env.branch_exists != '1'
         uses: actions/checkout@v4
         with:
           repository: tclahr/uac-tests
           ref: main
-          path: uac-tests
       
       - name: Run tests
         working-directory: ushunit
