@@ -31,26 +31,12 @@ jobs:
           ref: main
           path: ushunit
 
-      - name: Check if branch exists in uac-tests
-        id: check_branch
-        run: |
-          branch_exists=$(git ls-remote --heads https://github.com/tclahr/uac-tests.git ${{ github.ref }} | wc -l)
-          echo "branch_exists=$branch_exists" >> $GITHUB_ENV
-
       - name: Checkout uac-tests repository
-        if: env.branch_exists == '1'
         uses: actions/checkout@v4
         with:
           repository: tclahr/uac-tests
-          ref: ${{ github.ref }}
+          ref: ${{ github.event.pull_request.base.ref }}
           path: uac-tests
-
-      - name: Checkout main branch of uac-tests if branch does not exist
-        if: env.branch_exists != '1'
-        uses: actions/checkout@v4
-        with:
-          repository: tclahr/uac-tests
-          ref: main
       
       - name: Run tests
         working-directory: ushunit
