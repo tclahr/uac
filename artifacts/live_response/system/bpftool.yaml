@@ -1,6 +1,7 @@
 version: 1.0
 condition: command_exists "bpftool"
 output_directory: /live_response/system
+artifacts:
   -
     description: List loaded eBPF programs.
     supported_os: [linux]
