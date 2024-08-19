@@ -61,7 +61,7 @@
 - live_response/system/sys_modules.yaml: Removed as it is was duplicate artifact with kernel_modules.yaml.
 - live_response/system/world_writable_directories.yaml: Updated to remove max_depth limit.
 - live_response/system/world_writable_files.yaml: Updated to remove max_depth limit.
-- live_response/system/zoneadm.yaml: Artifact was moved to live_response/containers directory [Herbert-Karl](https://github.com/Herbert-Karl)).
+- live_response/system/zoneadm.yaml: Artifact was moved to live_response/containers directory ([Herbert-Karl](https://github.com/Herbert-Karl)).
 
 ### Command Line Option Changes
 
