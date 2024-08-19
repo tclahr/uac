@@ -1,4 +1,4 @@
-version: 2.1
+version: 2.0
 output_directory: /live_response/system
 artifacts:
   -
@@ -7,41 +7,6 @@ artifacts:
     collector: command
     command: ls -la /sys/fs/bpf
     output_file: ls_-la_sys_fs_bpf.txt
-
+  
 # References:
 # https://www.defensive-security.com/storage/uploads/Advanced%20Linux%20Detection%20and%20Forensics%20Cheatsheet%20by%20Defensive%20Security.pdf
-
-  -
-    description: List loaded eBPF progs.
-    supported_os: [linux]
-    condition: command_exists "bpftool"
-    collector: command
-    command: bpftool prog list
-    output_file: bpftool_prog_list.txt
-  -
-    description: Show information of pinned eBPF progs.
-    supported_os: [linux]
-    condition: command_exists "bpftool"
-    collector: command
-    foreach: ls -A /sys/fs/bpf | cut -c1-8
-    command: bpftool prog show name "%line%"
-    output_directory: /live_response/system/ebpf/%line%
-    output_file: show.txt
-  -
-    description: Dump xlated eBPF progs.
-    supported_os: [linux]
-    condition: command_exists "bpftool"
-    collector: command
-    foreach: ls -A /sys/fs/bpf | cut -c1-8
-    command: bpftool prog dump xlated name "%line%"
-    output_directory: /live_response/system/ebpf/%line%
-    output_file: xlated.txt
-  -
-    description: Dump jited eBPF progs.
-    supported_os: [linux]
-    condition: command_exists "bpftool"
-    collector: command
-    foreach: ls -A /sys/fs/bpf | cut -c1-8
-    command: bpftool prog dump jited name "%line%"
-    output_directory: /live_response/system/ebpf/%line%
-    output_file: jited.txt
