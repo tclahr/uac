@@ -169,7 +169,7 @@ _find_based_collector()
 
         if [ -n "${__fc_hashing_tool}" ]; then
           if ${__fc_is_file_list}; then
-            __fc_hash_command="sed 's|.|\\\\&|g' \"${__fc_path}\" | xargs ${__UAC_TOOL_XARGS_MAX_PROCS_PARAM}${__UAC_TOOL_XARGS_MAX_PROCS_PARAM:+ }${__fc_hashing_tool}"
+            __fc_hash_command="sed 's|.|\\\\&|g' \"${__fc_path}\" | xargs ${__fc_hashing_tool}"
           elif ${__UAC_TOOL_FIND_PRINT0_SUPPORT} && ${__UAC_TOOL_XARGS_NULL_DELIMITER_SUPPORT}; then
             __fc_find_command=`_build_find_command \
               "${__fc_path}" \
@@ -185,7 +185,7 @@ _find_based_collector()
               "true" \
               "${__fc_start_date_days}" \
               "${__fc_end_date_days}"`
-            __fc_hash_command="${__fc_find_command} | xargs -0 ${__UAC_TOOL_XARGS_MAX_PROCS_PARAM}${__UAC_TOOL_XARGS_MAX_PROCS_PARAM:+ }${__fc_hashing_tool}"
+            __fc_hash_command="${__fc_find_command} | xargs -0 ${__fc_hashing_tool}"
           else
             __fc_find_command=`_build_find_command \
               "${__fc_path}" \
@@ -201,7 +201,7 @@ _find_based_collector()
               "" \
               "${__fc_start_date_days}" \
               "${__fc_end_date_days}"`
-            __fc_hash_command="${__fc_find_command} | sed 's|.|\\\\&|g' | xargs ${__UAC_TOOL_XARGS_MAX_PROCS_PARAM}${__UAC_TOOL_XARGS_MAX_PROCS_PARAM:+ }${__fc_hashing_tool}"
+            __fc_hash_command="${__fc_find_command} | sed 's|.|\\\\&|g' | xargs ${__fc_hashing_tool}"
           fi
           _verbose_msg "${__UAC_VERBOSE_CMD_PREFIX}${__fc_hash_command}"
           _run_command "${__fc_hash_command}" \
@@ -212,7 +212,7 @@ _find_based_collector()
     "stat")
       if [ -n "${__UAC_TOOL_STAT_BIN}" ]; then
         if ${__fc_is_file_list}; then
-            __fc_stat_command="sed 's|.|\\\\&|g' \"${__fc_path}\" | xargs ${__UAC_TOOL_XARGS_MAX_PROCS_PARAM}${__UAC_TOOL_XARGS_MAX_PROCS_PARAM:+ }${__UAC_TOOL_STAT_BIN}${__UAC_TOOL_STAT_PARAMS:+ }${__UAC_TOOL_STAT_PARAMS}"
+            __fc_stat_command="sed 's|.|\\\\&|g' \"${__fc_path}\" | xargs ${__UAC_TOOL_STAT_BIN}${__UAC_TOOL_STAT_PARAMS:+ }${__UAC_TOOL_STAT_PARAMS}"
         elif ${__UAC_TOOL_FIND_PRINT0_SUPPORT} && ${__UAC_TOOL_XARGS_NULL_DELIMITER_SUPPORT}; then
           __fc_find_command=`_build_find_command \
             "${__fc_path}" \
@@ -228,7 +228,7 @@ _find_based_collector()
             "true" \
             "${__fc_start_date_days}" \
             "${__fc_end_date_days}"`
-          __fc_stat_command="${__fc_find_command} | xargs -0 ${__UAC_TOOL_XARGS_MAX_PROCS_PARAM}${__UAC_TOOL_XARGS_MAX_PROCS_PARAM:+ }${__UAC_TOOL_STAT_BIN}${__UAC_TOOL_STAT_PARAMS:+ }${__UAC_TOOL_STAT_PARAMS}"
+          __fc_stat_command="${__fc_find_command} | xargs -0 ${__UAC_TOOL_STAT_BIN}${__UAC_TOOL_STAT_PARAMS:+ }${__UAC_TOOL_STAT_PARAMS}"
         else
           __fc_find_command=`_build_find_command \
             "${__fc_path}" \
@@ -244,7 +244,7 @@ _find_based_collector()
             "" \
             "${__fc_start_date_days}" \
             "${__fc_end_date_days}"`
-          __fc_stat_command="${__fc_find_command} | sed 's|.|\\\\&|g' | xargs ${__UAC_TOOL_XARGS_MAX_PROCS_PARAM}${__UAC_TOOL_XARGS_MAX_PROCS_PARAM:+ }${__UAC_TOOL_STAT_BIN}${__UAC_TOOL_STAT_PARAMS:+ }${__UAC_TOOL_STAT_PARAMS}"
+          __fc_stat_command="${__fc_find_command} | sed 's|.|\\\\&|g' | xargs ${__UAC_TOOL_STAT_BIN}${__UAC_TOOL_STAT_PARAMS:+ }${__UAC_TOOL_STAT_PARAMS}"
         fi
         _verbose_msg "${__UAC_VERBOSE_CMD_PREFIX}${__fc_stat_command}"
         _run_command "${__fc_stat_command}" \
