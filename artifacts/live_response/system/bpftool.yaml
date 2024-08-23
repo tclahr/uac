@@ -12,7 +12,7 @@ artifacts:
     description: Show information of pinned eBPF programs.
     supported_os: [linux]
     collector: command
-    foreach: ls -A /sys/fs/bpf | cut -c1-8
+    foreach: ls /sys/fs/bpf | cut -c1-8
     command: bpftool prog show name "%line%"
     output_directory: /live_response/system/ebpf/%line%
     output_file: show.txt
@@ -20,7 +20,7 @@ artifacts:
     description: Dump xlated eBPF programs.
     supported_os: [linux]
     collector: command
-    foreach: ls -A /sys/fs/bpf | cut -c1-8
+    foreach: ls /sys/fs/bpf | cut -c1-8
     command: bpftool prog dump xlated name "%line%"
     output_directory: /live_response/system/ebpf/%line%
     output_file: xlated.txt
@@ -28,7 +28,7 @@ artifacts:
     description: Dump jited eBPF programs.
     supported_os: [linux]
     collector: command
-    foreach: ls -A /sys/fs/bpf | cut -c1-8
+    foreach: ls /sys/fs/bpf | cut -c1-8
     command: bpftool prog dump jited name "%line%"
     output_directory: /live_response/system/ebpf/%line%
     output_file: jited.txt
