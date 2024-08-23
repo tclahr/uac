@@ -6,7 +6,7 @@ artifacts:
     description: Collect the list of all Btrfs mountpoints.
     supported_os: [linux]
     collector: command
-    command: mount | grep btrfs | awk '{print $3}'
+    command: mount -t btrfs | awk '{print $3}'
     output_directory: /%temp_directory%/storage
     output_file: list_of_btrfs_mountpoints.txt
   -
