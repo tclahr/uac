@@ -229,6 +229,13 @@ artifacts:
     command: cat /proc/%line%/net/unix
     output_directory: /live_response/process/proc/%line%/net
     output_file: unix.txt
+  -
+    description: List all PIDs with a directory in /proc but hidden for ps command.
+    supported_os: [linux]
+    collector: command
+    foreach: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
+    command: if ps ax | awk '{print $1}' | grep -q %line%; then true; else echo %line%; fi
+    output_file: hidden_pids_for_ps_command.txt
   # linux: strings available
   -
     description: Collect command line arguments for a process.

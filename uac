@@ -61,6 +61,7 @@ __UAC_HASH_COLLECTED=false
 __UAC_CONFIG_FILE="${__UAC_DIR}/config/uac.conf"
 __UAC_MOUNT_POINT="/"
 __UAC_OPERATING_SYSTEM=""
+__UAC_ENABLE_MODS=false
 __UAC_RUN_AS_NON_ROOT=false
 __UAC_PROCESSING_UNITS=""
 __UAC_HOSTNAME=""
@@ -320,7 +321,6 @@ _log_msg INF "UAC directory: ${__UAC_DIR}"
 _log_msg INF "Command line: ${__ua_command_line}"
 _log_msg INF "Operating system: ${__UAC_OPERATING_SYSTEM}"
 _log_msg INF "System architecture: ${__UAC_SYSTEM_ARCH}"
-_log_msg INF "Processing units: ${__UAC_PROCESSING_UNITS}"
 _log_msg INF "Hostname: ${__UAC_HOSTNAME}"
 _log_msg INF "Mount point: ${__UAC_MOUNT_POINT}"
 _log_msg INF "Running as: ${__ua_current_user}"
@@ -409,6 +409,7 @@ _log_msg INF "Exclude mount points: ${__UAC_EXCLUDE_MOUNT_POINTS}"
 
 _verbose_msg "Building artifact list..."
 _log_msg INF "Building artifact list"
+_log_msg INF "Enable modifiers: ${__UAC_ENABLE_MODS}"
 
 # build artifact list based on the operating system
 # skip artifacts that are not applicable to the target operating system

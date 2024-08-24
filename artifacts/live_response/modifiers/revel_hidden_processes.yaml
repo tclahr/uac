@@ -1,0 +1,49 @@
+version: 1.0
+modifier: true
+output_directory: /live_response/modifiers
+artifacts:
+  -
+    description: Lists all mounted filesystems before changing the system state.
+    supported_os: [linux]
+    collector: command
+    command: mount
+    output_file: mount.txt
+  -
+    description: Report a snapshot of the current processes before changing the system state.
+    supported_os: [linux]
+    collector: command
+    command: ps
+    output_file: ps.txt
+  -
+    description: Report a snapshot of the current processes before changing the system state.
+    supported_os: [linux]
+    collector: command
+    command: ps auxwww
+    output_file: ps_auxwww.txt
+  -
+    description: Report a snapshot of the current processes before changing the system state.
+    supported_os: [linux]
+    collector: command
+    command: ps auxwwwf
+    output_file: ps_auxwwwf.txt
+  -
+    description: Report a snapshot of the current processes before changing the system state.
+    supported_os: [linux]
+    collector: command
+    command: ps -ef
+    output_file: ps_-ef.txt
+  -
+    description: List all PIDs with a directory in /proc but hidden for ps command.
+    supported_os: [linux]
+    collector: command
+    foreach: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
+    command: if ps ax | awk '{print $1}' | grep -q %line%; then true; else echo %line%; fi
+    output_file: hidden_pids_for_ps_command.txt
+  -
+    description: Umount all bind mounted directories to /proc/PID.
+    supported_os: [linux]
+    collector: command
+    foreach: mount | awk 'BEGIN { FS=" on "; } { print $2; }' | grep "/proc/[0-9]" | awk '{print $1}'
+    command: umount "%line%"
+    output_file: umount_%line%.txt
+    

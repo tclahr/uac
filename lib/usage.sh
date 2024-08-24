@@ -65,6 +65,8 @@ Collection Arguments:
   -u, --run-as-non-root
                     Disable root user check.
                     Note that data collection may be limited.
+      --enable-mods
+                    Enable artifacts that change the system state.
       --hostname  HOSTNAME
                     Specify the target system hostname.
       --temp-dir  PATH   
