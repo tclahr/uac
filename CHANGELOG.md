@@ -28,6 +28,7 @@
 - files/logs/additional_logs.yaml: Artifact was renamed to advanced_log_search.yaml.
 - files/logs/relink.yaml: Added collection of the kernel relink log file [openbsd] ([Herbert-Karl](https://github.com/Herbert-Karl)).
 - files/logs/run_log.yaml: Added collection of /run/log directory.
+- files/packages/pkg_contents.yaml: Updated to collect FreeBSD installed packages database [freebsd] ([Herbert-Karl](https://github.com/Herbert-Karl)).
 - files/system/acct.yaml: Added collection of system accounting files [freebsd, netbsd, openbsd] ([Herbert-Karl](https://github.com/Herbert-Karl)).
 - files/system/dev_db.yaml: Added collection of the database file used for device lookups [netbsd, openbsd] ([Herbert-Karl](https://github.com/Herbert-Karl)).
 - files/system/dev_shm.yaml: Updated to increase max_file_size to 10MB.
@@ -51,6 +52,8 @@
 - live_response/process/strings_running_processes.yaml: Added collection of strings from running processes for ESXi systems [esxi].
 - live_response/process/strings_running_processes.yaml: Added condition to check whether developer tools are installed before running strings on macOS [macos].
 - live_response/process/strings_running_processes.yaml: Added support for collecting strings even when the strings command is unavailable. In such cases, the built-in astrings command will be used instead [all].
+- live_response/storage/btrfs.yaml: Added collection of btrfs mountpoints, subvolumes and snapshots information [linux] ([mnrkbys](https://github.com/mnrkbys)).
+- live_response/system/bpftool.yaml: Added eBPF programs information collection using bpftool [linux] ([mnrkbys](https://github.com/mnrkbys)).
 - live_response/system/hidden_directories.yaml: Updated to remove max_depth limit.
 - live_response/system/hidden_files.yaml: Updated to remove max_depth limit.
 - live_response/system/kernel_tainted_state.yaml: Added collection of dmesg messages showing modules tainting the kernel [linux].

@@ -37,14 +37,6 @@ artifacts:
     foreach: cat "/%temp_directory%/storage/list_of_btrfs_mountpoints.txt"
     command: btrfs subvolume list -a -p -c -u -q -R -d %line%
     output_file: btrfs_subvolumes_list_-a_-p_-c_-u_-q_-R_-d.txt
-  # -
-  #   description: Collect the list of all Btrfs subvolumes.
-  #   supported_os: [linux]
-  #   collector: command
-  #   foreach: cat "/%temp_directory%/storage/list_of_btrfs_mountpoints.txt"
-  #   command: btrfs subvolume list -a %line% | grep -v '<FS_TREE>' | awk -v mp="%line%/" 'NF{print mp$NF; found=1} END{if (!found) print mp}'
-  #   output_directory: /%temp_directory%/storage
-  #   output_file: list_of_btrfs_subvolumes.txt
   -
     description: Show information about mounted Btrfs subvolumes.
     supported_os: [linux]
