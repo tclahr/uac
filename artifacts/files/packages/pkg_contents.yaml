@@ -1,4 +1,4 @@
-version: 2.0
+version: 2.1
 artifacts:
   -
     description: Collect package table of contents files.
@@ -17,3 +17,8 @@ artifacts:
     supported_os: [solaris]
     collector: file
     path: /var/pkg/publisher/*/pkg
+  -
+    description: Collect installed packages database.
+    supported_os: [freebsd]
+    collector: file
+    path: /var/db/pkg/local.sqlite
