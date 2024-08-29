@@ -38,13 +38,23 @@ _list_artifacts()
 
     if [ "${__oa_os}" = "all" ]; then
       find "${__oa_artifacts_dir}"/* -name "*.yaml" -print 2>/dev/null \
-        | sed -e "s|^${__oa_artifacts_dir}/||" 2>/dev/null
+        | while read __oa_item || [ -n "${__oa_item}" ]; do
+            if grep -q -E "modifier:.*true" "${__oa_item}" 2>/dev/null; then
+              echo "${__oa_item} (modifier)" | sed -e "s|^${__oa_artifacts_dir}/||" 2>/dev/null
+            else
+              echo "${__oa_item}" | sed -e "s|^${__oa_artifacts_dir}/||" 2>/dev/null
+            fi
+          done
     else
       # shellcheck disable=SC2162
       find "${__oa_artifacts_dir}"/* -name "*.yaml" -print 2>/dev/null \
         | while read __oa_item || [ -n "${__oa_item}" ]; do
             if grep -q -E "supported_os:.*all|${__oa_os}" "${__oa_item}" 2>/dev/null; then
-              echo "${__oa_item}" | sed -e "s|^${__oa_artifacts_dir}/||" 2>/dev/null
+              if grep -q -E "modifier:.*true" "${__oa_item}" 2>/dev/null; then
+                echo "${__oa_item} (modifier)" | sed -e "s|^${__oa_artifacts_dir}/||" 2>/dev/null
+              else
+                echo "${__oa_item}" | sed -e "s|^${__oa_artifacts_dir}/||" 2>/dev/null
+              fi
             fi
           done
     fi

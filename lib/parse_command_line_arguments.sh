@@ -134,8 +134,8 @@ _parse_command_line_arguments()
       "-u"|"--run-as-non-root")
         __UAC_RUN_AS_NON_ROOT=true
         ;;
-      "--enable-mods")
-        __UAC_ENABLE_MODS=true
+      "--enable-modifiers")
+        __UAC_ENABLE_MODIFIERS=true
         ;;
       "--hostname")
         if [ -n "${2:-}" ]; then

@@ -4,6 +4,7 @@
 
 ### Features
 
+- New '--enable-modifiers' command line option. Enabling this option will case UAC to run artifacts that change the current system state ([#272](https://github.com/tclahr/uac/issues/272)).
 - UAC now completely skips an artifact file (YAML) that has no artifacts to be collected for the target operating system. You can use '--artifacts list [OPERATING_SYSTEM]' to display artifacts for a specific operating system only.
 - New output file formats:
   - none: Collected data will not be archived or compressed. Instead, it will be copied directly to an output directory ([#188](https://github.com/tclahr/uac/issues/188)).
@@ -42,6 +43,7 @@
 - hash_executables/hash_executables.yaml: Updated to remove max_depth and max_file_size properties.
 - live_response/containers/jls.yaml: Added collection of jails used on FreeBSD systems [freebsd] ([Herbert-Karl](https://github.com/Herbert-Karl)).
 - live_response/hardware/dmesg.yaml: Updated collection of console message bufffer [esxi, freebsd, netscaler, openbsd, solaris] ([Herbert-Karl](https://github.com/Herbert-Karl)).
+- live_response/modifiers/revel_hidden_processes.yaml: Added command to umount filesystems mounted onto a directory that tipically corresponds to a process ID (PID) [linux] ([halpomeranz](https://github.com/halpomeranz)).
 - live_response/network/procfs_information.yaml: Added collection of TCP and UDP network details from /proc/net [linux]. 
 - live_response/process/deleted.yaml: Collection of deleted processes will no longer use dd conv=swab. The binary file will be collected in its raw format now [linux].
 - live_response/process/deleted.yaml: Updated to fix the collection of open files of (malicious) processes [linux] ([mnrkbys](https://github.com/mnrkbys)).
@@ -77,6 +79,7 @@
 
 ### Artifacts Properties Changes
 
+- Introduced a new global 'modifier' property that ensures the artifact runs only if '--enable-modifiers' command line option is used.
 - Introduced a new 'condition' property that ensures the collection runs only if the specified condition returns true.
 - The 'output_directory' property is now mandatory for the following collectors: command, find, hash and stat.
 - The 'file_type' property is now an array.

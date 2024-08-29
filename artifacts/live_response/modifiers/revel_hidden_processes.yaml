@@ -47,3 +47,5 @@ artifacts:
     command: umount "%line%"
     output_file: umount_%line%.txt
     
+# References:
+# https://dfir.ch/posts/slash-proc/

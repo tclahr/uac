@@ -21,7 +21,7 @@ _build_artifact_list()
         if [ -f "${__ba_item}" ] \
           && { grep -q -E "supported_os:.*all|${__ba_operating_system}" "${__ba_item}" 2>/dev/null || [ "${__UAC_IGNORE_OPERATING_SYSTEM:-false}" = true ]; }; then
           if grep -q -E "modifier:.*true" "${__ba_item}" 2>/dev/null; then
-            ${__UAC_ENABLE_MODS} && echo "${__ba_item}"
+            ${__UAC_ENABLE_MODIFIERS} && echo "${__ba_item}"
           else
             echo "${__ba_item}"
           fi
