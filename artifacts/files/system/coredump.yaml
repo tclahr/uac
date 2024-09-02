@@ -1,0 +1,29 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect core dump files.
+    supported_os: [aix, esxi, freebsd, linux, netbsd, openbsd, solaris]
+    collector: file
+    path: /
+    name_pattern: ["core", "core.*", "*.core"]
+    file_type: [f]
+  -
+    description: Collect ABRT files.
+    supported_os: [linux]
+    collector: file
+    path: /var/spool/abrt
+  -
+    description: Collect ABRT files.
+    supported_os: [linux]
+    collector: file
+    path: /var/spool/abrt-upload
+  -
+    description: Collect ABRT files.
+    supported_os: [linux]
+    collector: file
+    path: /var/tmp/abrt
+  -
+    description: Collect Apport or kdump files.
+    supported_os: [linux]
+    collector: file
+    path: /var/crash
