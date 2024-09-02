@@ -1,0 +1,26 @@
+version: 1.0
+artifacts:
+# https://wiki.archlinux.org/title/XDG_Base_Directory
+# https://github.com/gwsw/less/issues/153
+# https://www.greenwoodsoftware.com/less/news.590.html
+# https://www.greenwoodsoftware.com/less/news.600.html
+  -
+    description: Collect less history file. This file is used to store search string.
+    supported_os: [aix, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris]
+    collector: file
+    path: /%user_home%/.lesshst
+    exclude_nologin_users: true
+  -
+    description: Collect less history file. This file is used to store search string.
+    supported_os: [aix, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris]
+    collector: file
+    # $XDG_STATE_HOME/lesshst
+    path: /%user_home%/.local/state/lesshst
+    exclude_nologin_users: true
+  -
+    description: Collect less history file. This file is used to store search string.
+    supported_os: [aix, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris]
+    collector: file
+    # $XDG_DATA_HOME/lesshst
+    path: /%user_home%/.local/share/lesshst
+    exclude_nologin_users: true

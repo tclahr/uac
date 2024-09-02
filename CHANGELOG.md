@@ -25,6 +25,7 @@
 ### Artifacts
 
 - bodyfile/bodyfile.yaml: Updated to remove max_depth limit.
+- files/applications/lesshst.yaml: Added less history file (.lesshst) collection [aix, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris] ([mnrkbys](https://github.com/mnrkbys)).
 - files/applications/whatsapp.yaml: Added collection of WhatsApp Desktop files [macos].
 - files/logs/additional_logs.yaml: Artifact was renamed to advanced_log_search.yaml.
 - files/logs/relink.yaml: Added collection of the kernel relink log file [openbsd] ([Herbert-Karl](https://github.com/Herbert-Karl)).
@@ -67,6 +68,10 @@
 - live_response/system/world_writable_directories.yaml: Updated to remove max_depth limit.
 - live_response/system/world_writable_files.yaml: Updated to remove max_depth limit.
 - live_response/system/zoneadm.yaml: Artifact was moved to live_response/containers directory ([Herbert-Karl](https://github.com/Herbert-Karl)).
+
+### Profiles
+
+- files/applications/lesshst.yaml, files/applications/viminfo.yaml, and files/applications/wget.yaml artifacts were added to the 'ir_triage' profile.
 
 ### Command Line Option Changes
 
