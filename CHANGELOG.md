@@ -67,6 +67,10 @@
 - live_response/system/world_writable_files.yaml: Updated to remove max_depth limit.
 - live_response/system/zoneadm.yaml: Artifact was moved to live_response/containers directory ([Herbert-Karl](https://github.com/Herbert-Karl)).
 
+### Profiles
+
+- files/applications/lesshst.yaml, files/applications/viminfo.yaml, and files/applications/wget.yaml artifacts were added to the 'ir_triage' profile.
+
 ### Command Line Option Changes
 
 - '--date-range-start' was renamed to '--start-date' ([#186](https://github.com/tclahr/uac/issues/186)).
