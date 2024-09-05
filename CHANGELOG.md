@@ -2,7 +2,7 @@
 
 ## DEVELOPMENT VERSION
 
-### Features
+### 3.0.0-rc2 (2024-09-05)
 
 - New '--enable-modifiers' command line option. Enabling this option will case UAC to run artifacts that change the current system state ([#272](https://github.com/tclahr/uac/issues/272)).
 - UAC now completely skips an artifact file (YAML) that has no artifacts to be collected for the target operating system. You can use '--artifacts list [OPERATING_SYSTEM]' to display artifacts for a specific operating system only.
