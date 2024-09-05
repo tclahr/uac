@@ -37,6 +37,7 @@ _list_artifacts()
     __oa_os="${2:-all}"
 
     if [ "${__oa_os}" = "all" ]; then
+      # shellcheck disable=SC2162
       find "${__oa_artifacts_dir}"/* -name "*.yaml" -print 2>/dev/null \
         | while read __oa_item || [ -n "${__oa_item}" ]; do
             if grep -q -E "modifier:.*true" "${__oa_item}" 2>/dev/null; then
