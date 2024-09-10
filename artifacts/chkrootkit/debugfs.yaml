@@ -1,0 +1,13 @@
+version: 1.0
+condition: command_exists "debugfs"
+output_directory: /live_response/storage
+# Collect /etc/ld.so.preload even if it is hidden by LD_PRELOAD Rootkits.
+# ref 1: https://www.youtube.com/watch?v=3UrEJzqqPYQ
+# ref 2: https://righteousit.com/wp-content/uploads/2024/04/ld_preload-rootkits.pdf
+artifacts:
+  -
+    description: Collect ld.so.preload.
+    supported_os: [linux]
+    collector: command
+    command: [ -f /etc/ld.so.preload ] && debugfs -R 'cat /etc/ld.so.preload' `df -T /etc | awk '$2 == "ext4" {print $1}'`
+    output_file: debugfs_-R_cat_etc_ld.so.preload.txt
