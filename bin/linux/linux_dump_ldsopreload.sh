@@ -23,6 +23,7 @@ Dump /etc/ld.so.preload (first sector only) via xfs_db
 Usage: $0 [-d dumpdir]
 
     -d dumpdir   Specify the output directory
+    -v device    Specify the device which has /etc directory
 EOM
     exit 1;
 }
@@ -56,9 +57,11 @@ find_ldsopreload_inumber() {
 }
 
 
-while getopts "d:" opts; do
+while getopts "d:v:" opts; do
     case ${opts} in
         d) outputdir=${OPTARG}
+           ;;
+        v) etc_dev=${OPTARG}
            ;;
         *) usage
            ;;
@@ -66,7 +69,18 @@ while getopts "d:" opts; do
 done
 
 # Which device has /etc directory?
-etc_dev=`df -T /etc | awk '$2 == "xfs" {print $1}'`
+if [ -z "${etc_dev}" ]; then
+    etc_dev=`df -T /etc | awk '$2 == "xfs" {print $1}'`
+    if [ -z "${etc_dev}" ]; then
+        echo "/etc is not on XFS filesystem."
+        exit 1
+    fi
+else
+    if [ `df -T "${etc_dev}" | awk '$2 != "Type" {print $2}'` != "xfs" ]; then
+        echo "${etc_dev} is not XFS filesystem."
+        exit 1
+    fi
+fi
 # echo "etc_dev: ${etc_dev}"
 
 # Get inode number of /etc directory itself.

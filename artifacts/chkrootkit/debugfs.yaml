@@ -9,5 +9,5 @@ artifacts:
     description: Dump /etc/ld.so.preload with debugfs.
     supported_os: [linux]
     collector: command
-    command: debugfs -R 'cat /etc/ld.so.preload' `df -T /etc | awk '$2 == "ext4" {print $1}'`
+    command: dev=$(df -T /etc | awk '$2 == "ext4" {print $1}') && [ -n "${dev}" ] && debugfs -R 'cat /etc/ld.so.preload' "${dev}"
     output_file: debugfs_-R_cat_etc_ld.so.preload.txt
