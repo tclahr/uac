@@ -1,13 +1,14 @@
 version: 1.0
-condition: command_exists "debugfs"
+condition: command_exists "xfs_db"
 output_directory: /live_response/chkrootkit
 # Collect /etc/ld.so.preload even if it is hidden by LD_PRELOAD Rootkits.
 # ref 1: https://www.youtube.com/watch?v=3UrEJzqqPYQ
 # ref 2: https://righteousit.com/wp-content/uploads/2024/04/ld_preload-rootkits.pdf
+# ref 3: https://www.youtube.com/watch?v=-K9hhqv21P8
 artifacts:
   -
-    description: Dump /etc/ld.so.preload with debugfs.
+    description: Dump /etc/ld.so.preload with xfs_db.
     supported_os: [linux]
     collector: command
-    command: debugfs -R 'cat /etc/ld.so.preload' `df -T /etc | awk '$2 == "ext4" {print $1}'`
-    output_file: debugfs_-R_cat_etc_ld.so.preload.txt
+    command: linux_dump_ldsopreload.sh
+    output_file: xfs_db_etc_ld.so.preload.txt
