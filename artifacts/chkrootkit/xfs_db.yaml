@@ -10,5 +10,5 @@ artifacts:
     description: Dump /etc/ld.so.preload with xfs_db.
     supported_os: [linux]
     collector: command
-    command: dev=$(df -T /etc | awk '$2 == "xfs" {print $1}') && [ -n "${dev}" ] && linux_dump_ldsopreload.sh -v "${dev}"
+    command: dev=$(df -T /etc | awk '$2 == "xfs" {print $1}') && [ -n "${dev}" ] && linux_dump_ldsopreload.sh -d "${dev}"
     output_file: xfs_db_etc_ld.so.preload.txt
