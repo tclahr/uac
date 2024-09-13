@@ -131,7 +131,7 @@ ldsopreload_daddr=`xfs_db -r ${etc_dev} -c "convert fsblock ${ldsopreload_fsbloc
 # I believe that /etc/ld.so.preload is not so large.
 sector_size=`xfs_db -r /dev/mapper/rl-root -c "sb 0" -c "print" | grep -E "^sectsize" | awk '{print $3}'`
 if [ -z "${outputfile}" ]; then
-    dd if="${etc_dev}" bs="${sector_size}" skip="${ldsopreload_daddr}" count="${sector_count}"
+    dd if="${etc_dev}" bs="${sector_size}" skip="${ldsopreload_daddr}" count="${sector_count}" status=none
 else
-    dd if="${etc_dev}" of="${outputfile}" bs="${sector_size}" skip="${ldsopreload_daddr}" count="${sector_count}"
+    dd if="${etc_dev}" of="${outputfile}" bs="${sector_size}" skip="${ldsopreload_daddr}" count="${sector_count}" status=none
 fi
