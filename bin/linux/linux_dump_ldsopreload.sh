@@ -14,7 +14,10 @@
 # limitations under the License.
 #
 
-# reference: https://www.youtube.com/watch?v=-K9hhqv21P8
+# ref 1: https://www.youtube.com/watch?v=3UrEJzqqPYQ
+# ref 2: https://righteousit.com/wp-content/uploads/2024/04/ld_preload-rootkits.pdf
+# ref 3: https://www.youtube.com/watch?v=-K9hhqv21P8
+# ref 4: https://righteousit.com/wp-content/uploads/2024/04/xfs_db-ftw.pdf
 
 usage() {
     cat <<"EOM"
@@ -41,25 +44,30 @@ print_msg() {
 
 find_xfs_ldsopreload_inumber() {
     xfs_db -r $1 -c "daddr $2" -c "type dir3" -c "print" | awk '
+    BEGIN {
+        found_filename = 0;
+        found_entry = 0;
+    }
+
     {
-        if ($0 ~ /du\[([0-9]+)\].inumber = ([0-9]+)/) {
-            match($0, /du\[([0-9]+)\].inumber = ([0-9]+)/, arr);
-            inumber[arr[1]] = arr[2];  # arr[1] = NUM, arr[2] = inumber
+        if ($0 ~ /du\[[0-9]+\].inumber = [0-9]+/) {
+            match($0, /du\[[0-9]+\].inumber = ([0-9]+)/, arr);
+            inumber = arr[1];
         }
 
-        if ($0 ~ /du\[([0-9]+)\].name = "ld.so.preload"/) {
-            match($0, /du\[([0-9]+)\].name = "ld.so.preload"/, arr);
-            num = arr[1];  # arr[1] = NUM
-            if (num in inumber) {
-                # print "name: " $0 ", inumber: " inumber[num];
-                print inumber[num];
-                found = 1;
-            }
+        if ($0 ~ /du\[[0-9]+\].name = "ld.so.preload"/) {
+            found_filename = 1;
+        }
+
+        if (found_filename && $0 ~ /du\[[0-9]+\].filetype = (1|7)/) {
+            print inumber;
+            found_entry = 1;
+            exit;
         }
     }
 
     END {
-        if (!found) {
+        if (!found_entry) {
             print 0;
         }
     }
