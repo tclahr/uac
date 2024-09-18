@@ -25,11 +25,11 @@ Dump /etc/ld.so.preload on XFS or EXT-based filesystem.
 
 Usage: $0 [-d device] [-h] [-l sector_count] [-o outputfile] [-v]
 
-    -d device         Specify the device which has /etc directory
-    -h                Show this help message
-    -l sector_count   Specify the sector count to dump (only for XFS, default: 1)
-    -o outputfile     Specify the output file
-    -v                Enable verbose mode
+    -d device        Specify the device which has /etc directory
+    -h               Show this help message
+    -l block_count   Specify the block count to dump (only for XFS, default: 1)
+    -o outputfile    Specify the output file
+    -v               Enable verbose mode
 EOM
     exit 1;
 }
@@ -78,7 +78,7 @@ find_xfs_ldsopreload_inumber() {
 dump_xfs_ldsopreload() {
     etc_dev_l=$1
     outputfile_l=$2
-    sector_count_l=$3
+    block_count_l=$3
     # Get inode number of /etc directory itself.
     etc_inumber=$(ls -id /etc | awk '{print $1}')
 
@@ -103,16 +103,20 @@ dump_xfs_ldsopreload() {
     # In many cases, there is only one fsblock.
     ldsopreload_fsblocks=$(xfs_db -r ${etc_dev_l} -c "inode ${ldsopreload_inumber}" -c "bmap" | awk '{print $5}')
 
-    # Convert fsblock numbers to daddr.
-    ldsopreload_daddr=$(xfs_db -r ${etc_dev_l} -c "convert fsblock ${ldsopreload_fsblocks} daddr" | sed -n 's/.*(\([0-9]*\)).*/\1/p')
+    # Convert fsblock to agno.
+    ldsopreload_agno=$(xfs_db -r ${etc_dev_l} -c "convert fsblock ${ldsopreload_fsblocks} agno" | sed -n 's/.*(\([0-9]*\)).*/\1/p')
+
+    # Convert fsblock to agblock.
+    ldsopreload_agblock=$(xfs_db -r ${etc_dev_l} -c "convert fsblock ${ldsopreload_fsblocks} agblock" | sed -n 's/.*(\([0-9]*\)).*/\1/p')
 
     # Dump /etc/ld.so.preload file.
     # I believe that /etc/ld.so.preload is not so large.
-    sector_size=$(xfs_db -r /dev/mapper/rl-root -c "sb 0" -c "print" | grep -E "^sectsize" | awk '{print $3}')
+    eval $(xfs_db -r /dev/mapper/rl-root -c "sb 0" -c "print" | awk -F " = " '$1 == "blocksize" {print "block_size="$2} $1 == "agblocks" {print "agblocks="$2}')
+    skip_len=$(("${ldsopreload_agno}"*"${agblocks}"+"${ldsopreload_agblock}"))
     if [ -z "${outputfile_l}" ]; then
-        dd if="${etc_dev_l}" bs="${sector_size}" skip="${ldsopreload_daddr}" count="${sector_count_l}" status=none
+        dd if="${etc_dev_l}" bs="${block_size}" skip="${skip_len}" count="${block_count_l}" status=none
     else
-        dd if="${etc_dev_l}" of="${outputfile_l}" bs="${sector_size}" skip="${ldsopreload_daddr}" count="${sector_count_l}" status=none
+        dd if="${etc_dev_l}" of="${outputfile_l}" bs="${block_size}" skip="${skip_len}" count="${block_count_l}" status=none
     fi
 }
 
@@ -120,7 +124,6 @@ dump_xfs_ldsopreload() {
 dump_ext_ldsopreload() {
     etc_dev_l=$1
     outputfile_l=$2
-    # debugfs -R 'cat /etc/ld.so.preload' "${etc_dev_l}"
     if [ -z "${outputfile_l}" ]; then
         debugfs -R 'cat /etc/ld.so.preload' "${etc_dev_l}"
     else
@@ -129,7 +132,7 @@ dump_ext_ldsopreload() {
 }
 
 
-sector_count=1
+block_count=1
 verbose_mode=0
 while getopts "d:hl:o:v" opts; do
     case ${opts} in
@@ -137,7 +140,7 @@ while getopts "d:hl:o:v" opts; do
            ;;
         h) usage
            ;;
-        l) sector_count=${OPTARG}
+        l) block_count=${OPTARG}
            ;;
         o) outputfile=${OPTARG}
            ;;
@@ -157,7 +160,7 @@ fi
 
 # Check filesystem type and dump /etc/ld.so.preload
 if [ "${fs_type}" = "xfs" ]; then
-    dump_xfs_ldsopreload "${etc_dev}" "${outputfile}" "${sector_count}"
+    dump_xfs_ldsopreload "${etc_dev}" "${outputfile}" "${block_count}"
 elif [[ "${fs_type}" =~ ^ext ]]; then
     dump_ext_ldsopreload "${etc_dev}" "${outputfile}"
 else
