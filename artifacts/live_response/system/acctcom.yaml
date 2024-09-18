@@ -6,7 +6,7 @@ artifacts:
     description: Shows the last commands executed in a reverse order based on the default accounting file.
     supported_os: [solaris]
     collector: command
-    command: acctcom -f -i -t
+    command: acctcom -f -i -t /var/adm/pacct
     output_file: acctcom_-f_-i_-t.txt
   -
     description: Shows the last commands executed in a reverse order from the historic accounting files.
