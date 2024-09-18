@@ -1,4 +1,4 @@
-version: 1.0
+version: 2.0
 condition: command_exists "lastcomm"
 output_directory: /live_response/system
 artifacts:
