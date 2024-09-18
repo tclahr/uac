@@ -4,7 +4,7 @@ output_directory: /live_response/system
 artifacts:
   -
     description: Shows the last commands executed in a reverse order based on the default accounting file.
-    supported_os: [freebsd, netbsd, openbsd]
+    supported_os: [freebsd, netbsd, openbsd, solaris]
     collector: command
     command: lastcomm
     output_file: lastcomm.txt
@@ -15,3 +15,9 @@ artifacts:
     foreach: ls /var/account/acct*
     command: lastcomm -f %line%
     output_file: lastcomm_%line%.txt
+  -
+    description: Shows the last commands executed in a reverse order based on the extended accounting file.
+    supported_os: [solaris]
+    collector: command
+    command: lastcomm -x
+    output_file: lastcomm_-x.txt
