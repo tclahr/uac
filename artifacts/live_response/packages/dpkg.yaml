@@ -47,6 +47,70 @@ artifacts:
     output_directory: /%temp_directory%/live_response/packages
     output_file: binary_files.txt
   -
+    description: List filenames under /lib/.
+    supported_os: [linux]
+    collector: find
+    path: /lib/*
+    file_type: [f, l]
+    output_directory: /%temp_directory%/live_response/packages
+    output_file: binary_files.txt
+  -
+    description: List filenames under /usr/lib/.
+    supported_os: [linux]
+    collector: find
+    path: /usr/lib/*
+    file_type: [f, l]
+    output_directory: /%temp_directory%/live_response/packages
+    output_file: binary_files.txt
+  -
+    description: List filenames under /lib32/.
+    supported_os: [linux]
+    collector: find
+    path: /lib32/*
+    file_type: [f, l]
+    output_directory: /%temp_directory%/live_response/packages
+    output_file: binary_files.txt
+  -
+    description: List filenames under /usr/lib32/.
+    supported_os: [linux]
+    collector: find
+    path: /usr/lib32/*
+    file_type: [f, l]
+    output_directory: /%temp_directory%/live_response/packages
+    output_file: binary_files.txt
+  -
+    description: List filenames under /lib64/.
+    supported_os: [linux]
+    collector: find
+    path: /lib64/*
+    file_type: [f, l]
+    output_directory: /%temp_directory%/live_response/packages
+    output_file: binary_files.txt
+  -
+    description: List filenames under /usr/lib64/.
+    supported_os: [linux]
+    collector: find
+    path: /usr/lib64/*
+    file_type: [f, l]
+    output_directory: /%temp_directory%/live_response/packages
+    output_file: binary_files.txt
+  -
+    description: List filenames under /libx32/.
+    supported_os: [linux]
+    collector: find
+    path: /libx32/*
+    file_type: [f, l]
+    output_directory: /%temp_directory%/live_response/packages
+    output_file: binary_files.txt
+  -
+    description: List filenames under /usr/libx32/.
+    supported_os: [linux]
+    collector: find
+    path: /usr/libx32/*
+    file_type: [f, l]
+    output_directory: /%temp_directory%/live_response/packages
+    output_file: binary_files.txt
+  -
     description: List filenames under /opt/.
     supported_os: [linux]
     collector: find
