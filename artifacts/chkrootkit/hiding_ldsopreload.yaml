@@ -11,12 +11,12 @@ artifacts:
     supported_os: [linux]
     collector: command
     condition: command_exists "debugfs"
-    command: dev=$(df -T /etc | awk '$2 ~ "^ext" {print $1}') && [ -n "${dev}" ] && linux_dump_ldsopreload.sh -d "${dev}"
+    command: dev=$(df -T /etc | awk '$2 ~ "^ext" {print $1}') && [ -n "${dev}" ] && linux_dump_ldsopreload.sh
     output_file: etc_ld.so.preload.txt
   -
     description: Dump /etc/ld.so.preload with xfs_db.
     supported_os: [linux]
     collector: command
     condition: command_exists "xfs_db"
-    command: dev=$(df -T /etc | awk '$2 == "xfs" {print $1}') && [ -n "${dev}" ] && linux_dump_ldsopreload.sh -d "${dev}"
+    command: dev=$(df -T /etc | awk '$2 == "xfs" {print $1}') && [ -n "${dev}" ] && linux_dump_ldsopreload.sh
     output_file: etc_ld.so.preload.txt

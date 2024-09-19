@@ -27,7 +27,6 @@ Usage: $0 [-d device] [-h] [-l sector_count] [-o outputfile] [-v]
 
     -d device        Specify the device which has /etc directory
     -h               Show this help message
-    -l block_count   Specify the block count to dump (only for XFS, default: 1)
     -o outputfile    Specify the output file
     -v               Enable verbose mode
 EOM
@@ -36,111 +35,254 @@ EOM
 
 
 print_msg() {
+    local msg=$1
     if [ ${verbose_mode} -eq 1 ]; then
-        echo $1
+        echo "${msg}" >&2
     fi
 }
 
 
-find_xfs_ldsopreload_inumber() {
-    xfs_db -r $1 -c "daddr $2" -c "type dir3" -c "print" | awk '
-    BEGIN {
-        found_filename = 0;
-        found_entry = 0;
-    }
+get_device_fstype() {
+    local file=$1
+    local device
+    local fs_type
 
-    {
-        if ($0 ~ /du\[[0-9]+\].inumber = [0-9]+/) {
-            match($0, /du\[[0-9]+\].inumber = ([0-9]+)/, arr);
-            inumber = arr[1];
+    read device fs_type <<< $(df -T "${file}" | awk 'NR==2 {print $1, $2}')
+    echo "${device}" "${fs_type}"
+}
+
+
+get_xfs_inumber_local() {
+    local device=$1
+    local root_inumber=$2
+    local path=$3
+
+    xfs_db -r ${device} -c "inode ${root_inumber}" -c "print" | awk -v path="${path}" '
+        BEGIN {
+            found_filename = 0;
+            found_entry = 0;
+            filetype = 0;
         }
 
-        if ($0 ~ /du\[[0-9]+\].name = "ld.so.preload"/) {
-            found_filename = 1;
+        {
+            if ($0 ~ "u3.sfdir3.list\\[[0-9]+\\].name = \"" path "\"") {
+                found_filename = 1;
+            }
+
+            if (found_filename && $0 ~ /u3.sfdir3.list\[[0-9]+\].inumber.i4 = [0-9]+/) {
+                match($0, /u3.sfdir3.list\[[0-9]+\].inumber.i4 = ([0-9]+)/, arr);
+                inumber = arr[1];
+            }
+
+            # filetype: 1 (regular file), 2 (directory), 7 (symlink)
+            if (found_filename && $0 ~ /u3.sfdir3.list\[[0-9]+\].filetype = (1|2|7)/) {
+                match($0, /u3.sfdir3.list\[[0-9]+\].filetype = ([0-9]+)/, arr);
+                filetype = arr[1];
+                found_entry = 1;
+                exit;
+            }
         }
 
-        if (found_filename && $0 ~ /du\[[0-9]+\].filetype = (1|7)/) {
-            print inumber;
-            found_entry = 1;
-            exit;
+        END {
+            if (!found_entry) {
+                inumber = 0;
+            }
+            print inumber, filetype;
         }
-    }
-
-    END {
-        if (!found_entry) {
-            print 0;
-        }
-    }
     '
 }
 
 
-dump_xfs_ldsopreload() {
-    etc_dev_l=$1
-    outputfile_l=$2
-    block_count_l=$3
-    # Get inode number of /etc directory itself.
-    etc_inumber=$(ls -id /etc | awk '{print $1}')
+get_xfs_inumber_extents() {
+    local device=$1
+    local fsblocks=$2
+    local path=$3
+    local fsblock
 
-    # Get fsblock numbers of /etc directory.
-    etc_fsblocks=$(xfs_db -r ${etc_dev_l} -c "inode ${etc_inumber}" -c "bmap" | awk '{print $5}')
+    for fsblock in ${fsblocks}; do
+        local result=$(xfs_db -r ${device} -c "fsblock ${fsblock}" -c "type dir3" -c "print" | awk -v path="${path}" '
+            BEGIN {
+                found_name = 0;
+                found_entry = 0;
+            }
 
-    # Find inode number of /etc/ld.so.preload file.
-    for etc_fsblock in ${etc_fsblocks}; do
-        etc_daddr=$(xfs_db -r ${etc_dev_l} -c "convert fsblock ${etc_fsblock} daddr" | sed -n 's/.*(\([0-9]*\)).*/\1/p')
-        ldsopreload_inumber=$(find_xfs_ldsopreload_inumber ${etc_dev_l} ${etc_daddr})
-        if [ ${ldsopreload_inumber} -ne 0 ]; then
-            break
+            {
+                if ($0 ~ /(du|bu)\[[0-9]+\].inumber = [0-9]+/) {
+                    match($0, /(du|bu)\[[0-9]+\].inumber = ([0-9]+)/, arr);
+                    inumber = arr[2];
+                }
+
+                if ($0 ~ "(du|bu)\\[[0-9]+\\].name = \"" path "\"") {
+                    found_name = 1;
+                }
+
+                if (found_name && $0 ~ /(du|bu)\[[0-9]+\].filetype = (1|2|7)/) {
+                    match($0, /(du|bu)\[[0-9]+\].filetype = ([0-9]+)/, arr);
+                    filetype = arr[2];
+                    found_entry = 1;
+                    exit;
+                }
+            }
+
+            END {
+                if (!found_entry) {
+                    inumber = 0;
+                }
+                print inumber, filetype;
+            }
+        ')
+        if [ "$(echo ${result} | awk '{print $1}')" -ne 0 ]; then
+            echo ${result}
+            return
+        fi
+    done
+    echo 0 0
+}
+
+
+get_xfs_child_inumber() {
+    local device=$1
+    local parent_inumber=$2
+    local path=$3
+    local fsblocks=$(xfs_db -r ${device} -c "inode ${parent_inumber}" -c "bmap" | awk '{print $5}')
+    local fsblock
+
+    if [ -z "${fsblocks}" ]; then
+        read inumber filetype <<< $(get_xfs_inumber_local "${device}" "${parent_inumber}" "${path}")
+        echo "${inumber} ${filetype}"
+        return
+    else
+        read inumber filetype <<< $(get_xfs_inumber_extents "${device}" "${fsblocks}" "${path}")
+        echo "${inumber} ${filetype}"
+        return
+    fi
+}
+
+
+get_xfs_inumber_from_path() {
+    local full_path=$(realpath -s $1)
+    local device
+    local fs_type
+    read device fs_type <<< $(get_device_fstype "${full_path}")
+
+    local root_inumber=$(xfs_db -r ${device} -c "sb 0" -c "print" | awk -F " = " '$1 == "rootino" {print $2}')
+    local parent_inumber=${root_inumber}
+    local inumber=0
+    local filetype=0
+
+    IFS='/' read -a path_array <<< "${full_path}"
+    for idx in "${!path_array[@]}"; do
+        if [ ${idx} -eq 0 ]; then
+            continue
+        elif [ ${idx} -ge 1 ]; then
+            read inumber filetype <<< $(get_xfs_child_inumber "${device}" "${parent_inumber}" "${path_array[$idx]}")
+            if [ ${inumber} -eq 0 ]; then
+                print_msg "${path_array[$idx]} not found."
+                break
+            elif [ ${filetype} -eq 7 ]; then # If the file is a symlink, get the target file's inode number.
+                local symlink_target=$(xfs_db -r ${device} -c "inode ${inumber}" -c "print" | sed -n 's/u3.symlink = "\(.*\)"/\1/p')
+                print_msg "symlink target: ${symlink_target}"
+                symlink_target=$(realpath -s "${symlink_target}")
+                read inumber filetype <<< $(get_xfs_inumber_from_path "${symlink_target}")
+                echo ${inumber} ${filetype}
+                return
+            fi
+            parent_inumber=${inumber}
         fi
     done
 
-    if [ ${ldsopreload_inumber} -eq 0 ]; then
-        print_msg "/etc/ld.so.preload not found."
+    echo ${inumber} ${filetype}
+}
+
+
+dump_xfs_ldsopreload() {
+    local file=$1
+    local outputfile=$2
+    local device=$3
+    local fs_type
+    local block_count
+    local inumber
+    local filetype
+    local fsblock_item
+    local fsblock
+
+    if [ -z "${device}" ]; then
+        read device fs_type <<< $(get_device_fstype "${file}")
+    fi
+
+    # Get an inode number of the file.
+    read inumber filetype <<< $(get_xfs_inumber_from_path "${file}")
+
+    if [ ${inumber} -eq 0 ]; then
+        print_msg "${file} not found."
         exit 3
     fi
 
-    # Get fsblock numbers of /etc/ld.so.preload file.
+    # Get fsblock numbers of the file.
     # In many cases, there is only one fsblock.
-    ldsopreload_fsblocks=$(xfs_db -r ${etc_dev_l} -c "inode ${ldsopreload_inumber}" -c "bmap" | awk '{print $5}')
+    local fsblock_items=$(xfs_db -r ${device} -c "inode ${inumber}" -c "bmap" | awk '{print $5, $8}')
 
-    # Convert fsblock to agno.
-    ldsopreload_agno=$(xfs_db -r ${etc_dev_l} -c "convert fsblock ${ldsopreload_fsblocks} agno" | sed -n 's/.*(\([0-9]*\)).*/\1/p')
-
-    # Convert fsblock to agblock.
-    ldsopreload_agblock=$(xfs_db -r ${etc_dev_l} -c "convert fsblock ${ldsopreload_fsblocks} agblock" | sed -n 's/.*(\([0-9]*\)).*/\1/p')
-
-    # Dump /etc/ld.so.preload file.
-    # I believe that /etc/ld.so.preload is not so large.
-    eval $(xfs_db -r /dev/mapper/rl-root -c "sb 0" -c "print" | awk -F " = " '$1 == "blocksize" {print "block_size="$2} $1 == "agblocks" {print "agblocks="$2}')
-    skip_len=$(("${ldsopreload_agno}"*"${agblocks}"+"${ldsopreload_agblock}"))
-    if [ -z "${outputfile_l}" ]; then
-        dd if="${etc_dev_l}" bs="${block_size}" skip="${skip_len}" count="${block_count_l}" status=none
-    else
-        dd if="${etc_dev_l}" of="${outputfile_l}" bs="${block_size}" skip="${skip_len}" count="${block_count_l}" status=none
+    if [ -z "${fsblock_items}" ]; then
+        print_msg "${file}: bmap not found."
+        exit 4
     fi
+
+    for fsblock_item in "${fsblock_items}"; do
+        read fsblock block_count <<< "${fsblock_item}"
+
+        # Convert fsblock to agno.
+        local agno=$(xfs_db -r ${device} -c "convert fsblock ${fsblock} agno" | sed -n 's/.*(\([0-9]*\)).*/\1/p')
+
+        if [ -z "${agno}" ]; then
+            print_msg "${file}: agno not found."
+            exit 5
+        fi
+
+        # Convert fsblock to agblock.
+        local agblock=$(xfs_db -r ${device} -c "convert fsblock ${fsblock} agblock" | sed -n 's/.*(\([0-9]*\)).*/\1/p')
+
+        if [ -z "${agblock}" ]; then
+            print_msg "${file}: agblock not found."
+            exit 6
+        fi
+
+        # Dump file data.
+        eval $(xfs_db -r /dev/mapper/rl-root -c "sb 0" -c "print" | awk -F " = " '$1 == "blocksize" {print "block_size="$2} $1 == "agblocks" {print "agblocks="$2}')
+        skip_len=$(("${agno}"*"${agblocks}"+"${agblock}"))
+        if [ -z "${outputfile}" ]; then
+            dd if="${device}" bs="${block_size}" skip="${skip_len}" count="${block_count}" status=none
+        else
+            dd if="${device}" of="${outputfile}" bs="${block_size}" skip="${skip_len}" count="${block_count}" status=none
+        fi
+    done
 }
 
 
 dump_ext_ldsopreload() {
-    etc_dev_l=$1
-    outputfile_l=$2
-    if [ -z "${outputfile_l}" ]; then
-        debugfs -R 'cat /etc/ld.so.preload' "${etc_dev_l}"
+    local file=$1
+    local outputfile=$2
+    local device=$3
+    local fs_type
+
+    if [ -z "${device}" ]; then
+        read device fs_type <<< $(get_device_fstype "${file}")
+    fi
+
+    if [ -z "${outputfile}" ]; then
+        debugfs -R "cat \"${file}\"" "${device}"
     else
-        debugfs -R "dump /etc/ld.so.preload \"${outputfile_l}\"" "${etc_dev_l}"
+        debugfs -R "dump \"${file}\" \"${outputfile}\"" "${device}"
     fi
 }
 
 
-block_count=1
+file="/etc/ld.so.preload"
 verbose_mode=0
-while getopts "d:hl:o:v" opts; do
+while getopts "f:ho:v" opts; do
     case ${opts} in
-        d) etc_dev=${OPTARG}
+        f) file=${OPTARG}
            ;;
         h) usage
-           ;;
-        l) block_count=${OPTARG}
            ;;
         o) outputfile=${OPTARG}
            ;;
@@ -151,18 +293,14 @@ while getopts "d:hl:o:v" opts; do
     esac
 done
 
-# Which device has /etc directory?
-if [ -z "${etc_dev}" ]; then
-    read etc_dev fs_type <<< $(df -T /etc | awk 'NR==2 {print $1, $2}')
-else
-    fs_type=$(df -T "${etc_dev}" | awk 'NR==2 {print $2}')
-fi
+# # Which device has /etc/ld.so.preload directory?
+read device fs_type <<< $(get_device_fstype "${file}")
 
 # Check filesystem type and dump /etc/ld.so.preload
 if [ "${fs_type}" = "xfs" ]; then
-    dump_xfs_ldsopreload "${etc_dev}" "${outputfile}" "${block_count}"
+    dump_xfs_ldsopreload "${file}" "${outputfile}" "${device}"
 elif [[ "${fs_type}" =~ ^ext ]]; then
-    dump_ext_ldsopreload "${etc_dev}" "${outputfile}"
+    dump_ext_ldsopreload "${file}" "${outputfile}" "${device}"
 else
     print_msg "/etc is not on XFS or EXT filesystem."
     exit 2
