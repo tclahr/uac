@@ -19,16 +19,18 @@
 # ref 3: https://www.youtube.com/watch?v=-K9hhqv21P8
 # ref 4: https://righteousit.com/wp-content/uploads/2024/04/xfs_db-ftw.pdf
 
+set -euo pipefail
+
 usage() {
-    cat <<"EOM"
+    cat <<EOM
 Dump /etc/ld.so.preload on XFS or EXT-based filesystem.
 
-Usage: $0 [-d device] [-h] [-l sector_count] [-o outputfile] [-v]
+Usage: $0 [-f file] [-h] [-o outputfile] [-v]
 
-    -d device        Specify the device which has /etc directory
-    -h               Show this help message
-    -o outputfile    Specify the output file
-    -v               Enable verbose mode
+    -f file         Specify a file to dump
+    -h              Show this help message
+    -o outputfile   Specify the output file
+    -v              Enable verbose mode
 EOM
     exit 1;
 }
@@ -42,13 +44,45 @@ print_msg() {
 }
 
 
+get_real_path() {
+    local path
+    local processed_path
+
+    path=$1
+    processed_path=$2
+
+    if [[ ! "$path" =~ ^(/|./|../) ]]; then
+        if [[ "${processed_path}" == "/" ]]; then
+            path="/${path}"
+        else
+            path="${processed_path}/${path}"
+        fi
+    fi
+    realpath -s "${path}"
+}
+
+
+join_remain_path() {
+    local index=$1
+    local path_array=("${@:2}")
+    local sub_path
+    local old_IFS
+
+    old_IFS="${IFS}"
+    IFS='/'
+    sub_path="${path_array[*]:${index}}"
+    IFS="${old_IFS}"
+    echo "${sub_path}"
+}
+
+
 get_device_fstype() {
     local file=$1
     local device
     local fs_type
 
-    read device fs_type <<< $(df -T "${file}" | awk 'NR==2 {print $1, $2}')
-    echo "${device}" "${fs_type}"
+    read -r device fs_type mount_point <<< "$(df -T "${file}" | awk 'NR==2 {print $1, $2, $NF}')"
+    echo "${device}" "${fs_type}" "${mount_point}"
 }
 
 
@@ -57,7 +91,7 @@ get_xfs_inumber_local() {
     local root_inumber=$2
     local path=$3
 
-    xfs_db -r ${device} -c "inode ${root_inumber}" -c "print" | awk -v path="${path}" '
+    xfs_db -r "${device}" -c "inode ${root_inumber}" -c "print" | awk -v path="${path}" '
         BEGIN {
             found_filename = 0;
             found_entry = 0;
@@ -98,9 +132,10 @@ get_xfs_inumber_extents() {
     local fsblocks=$2
     local path=$3
     local fsblock
+    local result
 
     for fsblock in ${fsblocks}; do
-        local result=$(xfs_db -r ${device} -c "fsblock ${fsblock}" -c "type dir3" -c "print" | awk -v path="${path}" '
+        result=$(xfs_db -r "${device}" -c "fsblock ${fsblock}" -c "type dir3" -c "print" | awk -v path="${path}" '
             BEGIN {
                 found_name = 0;
                 found_entry = 0;
@@ -131,8 +166,8 @@ get_xfs_inumber_extents() {
                 print inumber, filetype;
             }
         ')
-        if [ "$(echo ${result} | awk '{print $1}')" -ne 0 ]; then
-            echo ${result}
+        if [ "$(echo "${result}" | awk '{print $1}')" -ne 0 ]; then
+            echo "${result}"
             return
         fi
     done
@@ -144,15 +179,16 @@ get_xfs_child_inumber() {
     local device=$1
     local parent_inumber=$2
     local path=$3
-    local fsblocks=$(xfs_db -r ${device} -c "inode ${parent_inumber}" -c "bmap" | awk '{print $5}')
+    local fsblocks
     local fsblock
 
+    fsblocks=$(xfs_db -r "${device}" -c "inode ${parent_inumber}" -c "bmap" | awk '{print $5}')
     if [ -z "${fsblocks}" ]; then
-        read inumber filetype <<< $(get_xfs_inumber_local "${device}" "${parent_inumber}" "${path}")
+        read -r inumber filetype <<< "$(get_xfs_inumber_local "${device}" "${parent_inumber}" "${path}")"
         echo "${inumber} ${filetype}"
         return
     else
-        read inumber filetype <<< $(get_xfs_inumber_extents "${device}" "${fsblocks}" "${path}")
+        read -r inumber filetype <<< "$(get_xfs_inumber_extents "${device}" "${fsblocks}" "${path}")"
         echo "${inumber} ${filetype}"
         return
     fi
@@ -160,38 +196,63 @@ get_xfs_child_inumber() {
 
 
 get_xfs_inumber_from_path() {
-    local full_path=$(realpath -s $1)
+    local processed_path=""
+    local full_path
     local device
     local fs_type
-    read device fs_type <<< $(get_device_fstype "${full_path}")
+    local mount_point
 
-    local root_inumber=$(xfs_db -r ${device} -c "sb 0" -c "print" | awk -F " = " '$1 == "rootino" {print $2}')
-    local parent_inumber=${root_inumber}
+    full_path=$(get_real_path "$1" "${processed_path}")
+    read -r device fs_type mount_point <<< "$(get_device_fstype "${full_path}")"
+    # Remove mount_point from full_path if it starts with mount_point
+    if [[ "${mount_point}" != "/" && "$full_path" == "$mount_point"* ]]; then
+        full_path="${full_path/#${mount_point}/}"
+    fi
+    local root_inumber
+    local parent_inumber
     local inumber=0
     local filetype=0
+    local symlink_target
+    local sub_path
+    local idx
+    local path_array
+    local old_IFS
 
-    IFS='/' read -a path_array <<< "${full_path}"
+    root_inumber=$(xfs_db -r "${device}" -c "sb 0" -c "print" | awk -F " = " '$1 == "rootino" {print $2}')
+    parent_inumber=${root_inumber}
+
+    old_IFS="${IFS}"
+    IFS='/'
+    read -r -a path_array <<< "${full_path}"
+    IFS="${old_IFS}"
+
     for idx in "${!path_array[@]}"; do
-        if [ ${idx} -eq 0 ]; then
+        if [ "${idx}" -eq 0 ]; then
+            processed_path="/"
             continue
-        elif [ ${idx} -ge 1 ]; then
-            read inumber filetype <<< $(get_xfs_child_inumber "${device}" "${parent_inumber}" "${path_array[$idx]}")
-            if [ ${inumber} -eq 0 ]; then
+        elif [ "${idx}" -ge 1 ]; then
+            read -r inumber filetype <<< "$(get_xfs_child_inumber "${device}" "${parent_inumber}" "${path_array[$idx]}")"
+            if [ "${inumber}" -eq 0 ]; then
                 print_msg "${path_array[$idx]} not found."
                 break
-            elif [ ${filetype} -eq 7 ]; then # If the file is a symlink, get the target file's inode number.
-                local symlink_target=$(xfs_db -r ${device} -c "inode ${inumber}" -c "print" | sed -n 's/u3.symlink = "\(.*\)"/\1/p')
+            elif [ "${filetype}" -eq 7 ]; then # If the file is a symlink, get the target file's inode number.
+                symlink_target=$(xfs_db -r "${device}" -c "inode ${inumber}" -c "print" | sed -n 's/u3.symlink = "\(.*\)"/\1/p')
                 print_msg "symlink target: ${symlink_target}"
-                symlink_target=$(realpath -s "${symlink_target}")
-                read inumber filetype <<< $(get_xfs_inumber_from_path "${symlink_target}")
-                echo ${inumber} ${filetype}
+                symlink_target=$(get_real_path "${symlink_target}" "${processed_path}")
+                sub_path=$(join_remain_path $((idx+1)) "${path_array[@]}")
+                if [ -n "${sub_path}" ]; then
+                    symlink_target="${symlink_target}/${sub_path}"
+                fi
+                read -r inumber filetype <<< "$(get_xfs_inumber_from_path "${symlink_target}")"
+                echo "${inumber}" "${filetype}"
                 return
             fi
+            processed_path="${processed_path}/${path_array[$idx]}"
             parent_inumber=${inumber}
         fi
     done
 
-    echo ${inumber} ${filetype}
+    echo "${inumber}" "${filetype}"
 }
 
 
@@ -200,38 +261,38 @@ dump_xfs_ldsopreload() {
     local outputfile=$2
     local device=$3
     local fs_type
+    local mount_point
     local block_count
     local inumber
     local filetype
-    local fsblock_item
+    local fsblock_items
     local fsblock
+    local agno
+    local agblock
 
     if [ -z "${device}" ]; then
-        read device fs_type <<< $(get_device_fstype "${file}")
+        read -r device fs_type mount_point <<< "$(get_device_fstype "${file}")"
     fi
 
     # Get an inode number of the file.
-    read inumber filetype <<< $(get_xfs_inumber_from_path "${file}")
+    read -r inumber filetype <<< "$(get_xfs_inumber_from_path "${file}")"
 
-    if [ ${inumber} -eq 0 ]; then
+    if [ "${inumber}" -eq 0 ]; then
         print_msg "${file} not found."
         exit 3
     fi
 
     # Get fsblock numbers of the file.
-    # In many cases, there is only one fsblock.
-    local fsblock_items=$(xfs_db -r ${device} -c "inode ${inumber}" -c "bmap" | awk '{print $5, $8}')
+    fsblock_items=$(xfs_db -r "${device}" -c "inode ${inumber}" -c "bmap" | awk '{print $5, $8}')
 
     if [ -z "${fsblock_items}" ]; then
         print_msg "${file}: bmap not found."
         exit 4
     fi
 
-    for fsblock_item in "${fsblock_items}"; do
-        read fsblock block_count <<< "${fsblock_item}"
-
+    while read -r fsblock block_count; do
         # Convert fsblock to agno.
-        local agno=$(xfs_db -r ${device} -c "convert fsblock ${fsblock} agno" | sed -n 's/.*(\([0-9]*\)).*/\1/p')
+        agno=$(xfs_db -r "${device}" -c "convert fsblock ${fsblock} agno" | sed -n 's/.*(\([0-9]*\)).*/\1/p')
 
         if [ -z "${agno}" ]; then
             print_msg "${file}: agno not found."
@@ -239,7 +300,7 @@ dump_xfs_ldsopreload() {
         fi
 
         # Convert fsblock to agblock.
-        local agblock=$(xfs_db -r ${device} -c "convert fsblock ${fsblock} agblock" | sed -n 's/.*(\([0-9]*\)).*/\1/p')
+        agblock=$(xfs_db -r "${device}" -c "convert fsblock ${fsblock} agblock" | sed -n 's/.*(\([0-9]*\)).*/\1/p')
 
         if [ -z "${agblock}" ]; then
             print_msg "${file}: agblock not found."
@@ -247,14 +308,17 @@ dump_xfs_ldsopreload() {
         fi
 
         # Dump file data.
-        eval $(xfs_db -r /dev/mapper/rl-root -c "sb 0" -c "print" | awk -F " = " '$1 == "blocksize" {print "block_size="$2} $1 == "agblocks" {print "agblocks="$2}')
-        skip_len=$(("${agno}"*"${agblocks}"+"${agblock}"))
+        sb0_output=$(xfs_db -r "${device}" -c "sb 0" -c "print")
+        block_size=$(echo "${sb0_output}" | awk -F " = " '$1 == "blocksize" {print $2}')
+        agblocks=$(echo "${sb0_output}" | awk -F " = " '$1 == "agblocks" {print $2}')
+        skip_len=$((agno * agblocks + agblock))
+
         if [ -z "${outputfile}" ]; then
             dd if="${device}" bs="${block_size}" skip="${skip_len}" count="${block_count}" status=none
         else
             dd if="${device}" of="${outputfile}" bs="${block_size}" skip="${skip_len}" count="${block_count}" status=none
         fi
-    done
+    done <<< "${fsblock_items}"
 }
 
 
@@ -263,9 +327,10 @@ dump_ext_ldsopreload() {
     local outputfile=$2
     local device=$3
     local fs_type
+    local mount_point
 
     if [ -z "${device}" ]; then
-        read device fs_type <<< $(get_device_fstype "${file}")
+        read -r device fs_type mount_point <<< "$(get_device_fstype "${file}")"
     fi
 
     if [ -z "${outputfile}" ]; then
@@ -293,14 +358,15 @@ while getopts "f:ho:v" opts; do
     esac
 done
 
-# # Which device has /etc/ld.so.preload directory?
-read device fs_type <<< $(get_device_fstype "${file}")
+# Which device has /etc/ld.so.preload?
+file=$(realpath -s "${file}")
+read -r device fs_type mount_point <<< "$(get_device_fstype "${file}")"
 
 # Check filesystem type and dump /etc/ld.so.preload
 if [ "${fs_type}" = "xfs" ]; then
-    dump_xfs_ldsopreload "${file}" "${outputfile}" "${device}"
+    dump_xfs_ldsopreload "${file}" "${outputfile:-}" "${device}"
 elif [[ "${fs_type}" =~ ^ext ]]; then
-    dump_ext_ldsopreload "${file}" "${outputfile}" "${device}"
+    dump_ext_ldsopreload "${file}" "${outputfile:-}" "${device}"
 else
     print_msg "/etc is not on XFS or EXT filesystem."
     exit 2
