@@ -45,11 +45,8 @@ print_msg() {
 
 
 get_real_path() {
-    local path
-    local processed_path
-
-    path=$1
-    processed_path=$2
+    local path=$1
+    local processed_path=$2
 
     if [[ ! "$path" =~ ^(/|./|../) ]]; then
         if [[ "${processed_path}" == "/" ]]; then
@@ -77,11 +74,12 @@ join_remain_path() {
 
 
 get_device_fstype() {
-    local file=$1
+    local path=$1
     local device
     local fs_type
+    local mount_point
 
-    read -r device fs_type mount_point <<< "$(df -T "${file}" | awk 'NR==2 {print $1, $2, $NF}')"
+    read -r device fs_type mount_point <<< "$(df -T "$(dirname "${path}")" | awk 'NR==2 {print $1, $2, $NF}')"
     echo "${device}" "${fs_type}" "${mount_point}"
 }
 
@@ -201,13 +199,6 @@ get_xfs_inumber_from_path() {
     local device
     local fs_type
     local mount_point
-
-    full_path=$(get_real_path "$1" "${processed_path}")
-    read -r device fs_type mount_point <<< "$(get_device_fstype "${full_path}")"
-    # Remove mount_point from full_path if it starts with mount_point
-    if [[ "${mount_point}" != "/" && "$full_path" == "$mount_point"* ]]; then
-        full_path="${full_path/#${mount_point}/}"
-    fi
     local root_inumber
     local parent_inumber
     local inumber=0
@@ -217,6 +208,13 @@ get_xfs_inumber_from_path() {
     local idx
     local path_array
     local old_IFS
+
+    full_path=$(get_real_path "$1" "${processed_path}")
+    read -r device fs_type mount_point <<< "$(get_device_fstype "${full_path}")"
+    # Remove mount_point from full_path if it starts with mount_point
+    if [[ "${mount_point}" != "/" && "$full_path" == "$mount_point"* ]]; then
+        full_path="${full_path/#${mount_point}/}"
+    fi
 
     root_inumber=$(xfs_db -r "${device}" -c "sb 0" -c "print" | awk -F " = " '$1 == "rootino" {print $2}')
     parent_inumber=${root_inumber}
@@ -243,7 +241,13 @@ get_xfs_inumber_from_path() {
                 if [ -n "${sub_path}" ]; then
                     symlink_target="${symlink_target}/${sub_path}"
                 fi
+
                 read -r inumber filetype <<< "$(get_xfs_inumber_from_path "${symlink_target}")"
+                if [[ ! "${inumber}" =~ ^[0-9]+$ ]]; then
+                    print_msg "${symlink_target} not found."
+                    return 3
+                fi
+
                 echo "${inumber}" "${filetype}"
                 return
             fi
@@ -260,8 +264,6 @@ dump_xfs_ldsopreload() {
     local file=$1
     local outputfile=$2
     local device=$3
-    local fs_type
-    local mount_point
     local block_count
     local inumber
     local filetype
@@ -269,10 +271,6 @@ dump_xfs_ldsopreload() {
     local fsblock
     local agno
     local agblock
-
-    if [ -z "${device}" ]; then
-        read -r device fs_type mount_point <<< "$(get_device_fstype "${file}")"
-    fi
 
     # Get an inode number of the file.
     read -r inumber filetype <<< "$(get_xfs_inumber_from_path "${file}")"
@@ -323,20 +321,23 @@ dump_xfs_ldsopreload() {
 
 
 dump_ext_ldsopreload() {
-    local file=$1
+    local full_path=$1
     local outputfile=$2
     local device=$3
     local fs_type
     local mount_point
 
-    if [ -z "${device}" ]; then
-        read -r device fs_type mount_point <<< "$(get_device_fstype "${file}")"
+    read -r device fs_type mount_point <<< "$(get_device_fstype "${full_path}")"
+
+    # Remove mount_point from full_path if it starts with mount_point
+    if [[ "${mount_point}" != "/" && "$full_path" == "$mount_point"* ]]; then
+        full_path="${full_path/#${mount_point}/}"
     fi
 
     if [ -z "${outputfile}" ]; then
-        debugfs -R "cat \"${file}\"" "${device}"
+        debugfs -R "cat \"${full_path}\"" "${device}"
     else
-        debugfs -R "dump \"${file}\" \"${outputfile}\"" "${device}"
+        debugfs -R "dump \"${full_path}\" \"${outputfile}\"" "${device}"
     fi
 }
 
@@ -368,6 +369,6 @@ if [ "${fs_type}" = "xfs" ]; then
 elif [[ "${fs_type}" =~ ^ext ]]; then
     dump_ext_ldsopreload "${file}" "${outputfile:-}" "${device}"
 else
-    print_msg "/etc is not on XFS or EXT filesystem."
+    print_msg "${file} is not on XFS or EXT filesystem."
     exit 2
 fi
