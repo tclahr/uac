@@ -3,7 +3,7 @@ version: 1.0
 # ref: https://www.elastic.co/security-labs/sequel-on-persistence-mechanisms
 artifacts:
   -
-    description: Collect script files under /etc/apt/apt.conf.d/ .
+    description: Collect script files under /etc/apt/apt.conf.d/ directory.
     supported_os: [linux]
     collector: file
     path: /etc/apt/apt.conf.d
