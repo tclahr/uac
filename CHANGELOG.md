@@ -30,7 +30,10 @@
 - files/logs/additional_logs.yaml: Artifact was renamed to advanced_log_search.yaml.
 - files/logs/relink.yaml: Added collection of the kernel relink log file [openbsd] ([Herbert-Karl](https://github.com/Herbert-Karl)).
 - files/logs/run_log.yaml: Added collection of /run/log directory.
+- files/packages/apt.yaml: Add artifacts to collect package manager plugins/scripts [linux] ([mnrkbys](https://github.com/mnrkbys)).
+- files/packages/dnf.yaml: Add artifacts to collect package manager plugins/scripts [linux] ([mnrkbys](https://github.com/mnrkbys)).
 - files/packages/pkg_contents.yaml: Updated to collect FreeBSD installed packages database [freebsd] ([Herbert-Karl](https://github.com/Herbert-Karl)).
+- files/packages/yum.yaml: Add artifacts to collect package manager plugins/scripts [linux] ([mnrkbys](https://github.com/mnrkbys)).
 - files/system/acct.yaml: Added collection of system accounting files [freebsd, netbsd, openbsd] ([Herbert-Karl](https://github.com/Herbert-Karl)).
 - files/system/dev_db.yaml: Added collection of the database file used for device lookups [netbsd, openbsd] ([Herbert-Karl](https://github.com/Herbert-Karl)).
 - files/system/dev_shm.yaml: Updated to increase max_file_size to 10MB.
