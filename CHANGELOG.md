@@ -35,6 +35,7 @@
 - files/packages/pkg_contents.yaml: Updated to collect FreeBSD installed packages database [freebsd] ([Herbert-Karl](https://github.com/Herbert-Karl)).
 - files/packages/yum.yaml: Add artifacts to collect package manager plugins/scripts [linux] ([mnrkbys](https://github.com/mnrkbys)).
 - files/system/acct.yaml: Added collection of system accounting files [freebsd, netbsd, openbsd] ([Herbert-Karl](https://github.com/Herbert-Karl)).
+- files/system/acct.yaml: Updated to collect system accounting files [solaris] ([sec-hbaer](https://github.com/sec-hbaer)).
 - files/system/dev_db.yaml: Added collection of the database file used for device lookups [netbsd, openbsd] ([Herbert-Karl](https://github.com/Herbert-Karl)).
 - files/system/dev_shm.yaml: Updated to increase max_file_size to 10MB.
 - files/system/locate_db.yaml: Added collection of the database file used by locate command, representing a snapshot of the virtual file system accessible with minimal permissions [freebsd, netbsd, openbsd] ([Herbert-Karl](https://github.com/Herbert-Karl)).
@@ -59,11 +60,14 @@
 - live_response/process/strings_running_processes.yaml: Added condition to check whether developer tools are installed before running strings on macOS [macos].
 - live_response/process/strings_running_processes.yaml: Added support for collecting strings even when the strings command is unavailable. In such cases, the built-in astrings command will be used instead [all].
 - live_response/storage/btrfs.yaml: Added collection of btrfs mountpoints, subvolumes and snapshots information [linux] ([mnrkbys](https://github.com/mnrkbys)).
+- live_response/system/acctadm.yaml: Added collection of configuration for extended accounting [solaris] ([sec-hbaer](https://github.com/sec-hbaer)).
+- live_response/system/acctcom.yaml: Added collection of the last commands executed in a reverse order based on the default and historic accounting files [solaris] ([sec-hbaer](https://github.com/sec-hbaer)).
 - live_response/system/bpftool.yaml: Added eBPF programs information collection using bpftool [linux] ([mnrkbys](https://github.com/mnrkbys)).
 - live_response/system/hidden_directories.yaml: Updated to remove max_depth limit.
 - live_response/system/hidden_files.yaml: Updated to remove max_depth limit.
 - live_response/system/kernel_tainted_state.yaml: Added collection of dmesg messages showing modules tainting the kernel [linux].
 - live_response/system/lastcomm.yaml: Added collection of the last commands executed in a reverse order based on the default and historic accounting file [freebsd, netbsd, openbsd] ([Herbert-Karl](https://github.com/Herbert-Karl)).
+- live_response/system/lastcomm.yaml: Updated to collect the last commands executed in a reverse order based on the extended accounting file [solaris] ([sec-hbaer](https://github.com/sec-hbaer)).
 - live_response/system/sgid.yaml: Updated to remove max_depth limit.
 - live_response/system/socket_files.yaml: Updated to remove max_depth limit.
 - live_response/system/suid.yaml: Updated to remove max_depth limit.
