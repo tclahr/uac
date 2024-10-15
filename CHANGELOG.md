@@ -25,6 +25,7 @@
 ### Artifacts
 
 - bodyfile/bodyfile.yaml: Updated to remove max_depth limit.
+- files/applications/git.yaml: Added collection of files that can be used to run persistence [linux, macos] ([mnrkbys](https://github.com/mnrkbys)).
 - files/applications/lesshst.yaml: Added less history file (.lesshst) collection [aix, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris] ([mnrkbys](https://github.com/mnrkbys)).
 - files/applications/whatsapp.yaml: Added collection of WhatsApp Desktop files [macos].
 - files/logs/additional_logs.yaml: Artifact was renamed to advanced_log_search.yaml.
@@ -44,6 +45,7 @@
 - files/system/security_backups.yaml: Added collection of file backups and hashes created by the integrated security script [freebsd, netbsd, openbsd] ([Herbert-Karl](https://github.com/Herbert-Karl)).
 - files/system/systemd.yaml: Updated to add new locations for configuration files.
 - files/system/tmp.yaml: Updated to increase max_file_size to 10MB.
+- files/system/udev.yaml: Added collection of udev rule files ([mnrkbys](https://github.com/mnrkbys)).
 - files/system/var_tmp.yaml: Updated to increase max_file_size to 10MB.
 - hash_executables/hash_executables.yaml: Updated to remove max_depth and max_file_size properties.
 - live_response/containers/jls.yaml: Added collection of jails used on FreeBSD systems [freebsd] ([Herbert-Karl](https://github.com/Herbert-Karl)).
@@ -78,7 +80,7 @@
 
 ### Profiles
 
-- files/applications/lesshst.yaml, files/applications/viminfo.yaml, and files/applications/wget.yaml artifacts were added to the 'ir_triage' profile.
+- files/applications/git.yaml, files/applications/lesshst.yaml, files/applications/viminfo.yaml, and files/applications/wget.yaml artifacts were added to the 'ir_triage' profile.
 
 ### Command Line Option Changes
 
