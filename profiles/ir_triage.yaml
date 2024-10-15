@@ -25,6 +25,7 @@ artifacts:
   - live_response/vms/*
   - chkrootkit/chkrootkit.yaml
   - hash_executables/hash_executables.yaml
+  - files/applications/git.yaml
   - files/applications/lesshst.yaml
   - files/applications/viminfo.yaml
   - files/applications/wget.yaml
@@ -33,4 +34,3 @@ artifacts:
   - files/shell/*
   - files/ssh/*
   - files/system/*
-  

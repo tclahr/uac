@@ -1,0 +1,28 @@
+version: 1.0
+artifacts:
+# Git hooks/Git pager can be used to run persistence.
+# ref: https://www.elastic.co/security-labs/sequel-on-persistence-mechanisms
+  -
+    description: Collect Git hooks under .git/hooks directory.
+    supported_os: [linux]
+    collector: file
+    path: /
+    path_pattern: ["*/.git/hooks/*"]
+    file_type: [f]
+  -
+    description: Collect /etc/gitconfig file.
+    supported_os: [linux]
+    collector: file
+    path: /etc/gitconfig
+  -
+    description: Collect ~/.gitconfig file.
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.gitconfig
+    exclude_nologin_users: true
+  -
+    description: Collect ~/.config/git/gitconfig file.
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.config/git/config
+    exclude_nologin_users: true
