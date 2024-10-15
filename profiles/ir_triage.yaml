@@ -25,10 +25,10 @@ artifacts:
   - live_response/vms/*
   - chkrootkit/chkrootkit.yaml
   - hash_executables/hash_executables.yaml
+  - files/applications/git.yaml
   - files/applications/lesshst.yaml
   - files/applications/viminfo.yaml
   - files/applications/wget.yaml
-  - files/applications/git.yaml
   - files/logs/*
   - files/packages/*
   - files/shell/*
