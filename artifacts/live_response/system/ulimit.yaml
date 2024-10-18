@@ -1,0 +1,10 @@
+version: 1.0
+output_directory: /live_response/system
+artifacts:
+  -
+    description: Display all resource limits.
+    supported_os: [aix, esxi, freebsd, linux, netbsd, openbsd, solaris]
+    collector: command
+    condition: command_exists "ulimit"
+    command: ulimit -a
+    output_file: ulimit.txt
