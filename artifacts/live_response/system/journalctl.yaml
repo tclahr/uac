@@ -1,0 +1,16 @@
+version: 1.0
+condition: command_exists "journalctl"
+output_directory: /live_response/system
+artifacts:
+  -
+    description: Verify the integrity of journal log files.
+    supported_os: [linux]
+    collector: command
+    command: journalctl --verify
+    output_file: journalctl_--verify.txt
+  -
+    description: Show a listing of time periods between boots.
+    supported_os: [linux]
+    collector: command
+    command: journalctl --list-boots
+    output_file: journalctl_--list-boots.txt
