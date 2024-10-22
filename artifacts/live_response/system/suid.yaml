@@ -1,4 +1,5 @@
-version: 1.0
+version: 2.0
+output_directory: /live_response/system
 artifacts:
   -
     description: Search for files that have SUID bit set.
@@ -6,8 +7,7 @@ artifacts:
     collector: find
     path: /
     exclude_file_system: [proc, procfs]
-    file_type: f
-    max_depth: 6
-    permissions: -4000
+    file_type: [f]
+    permissions: [-4000]
     output_file: suid.txt
   

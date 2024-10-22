@@ -1,13 +1,33 @@
-Place your validated binary files in the '[uac_directory]\bin' directory if you want them to be executed instead of the built-in ones provided by the target operating system.
+Place your validated executables (binary files and scripts) here!
 
-UAC will detect and run CPU architecture specific executable files, so they need to be placed within the following directory structure: '[uac_directory]\bin\[operating_system]\[architecture]'.
+In most cases, the executables should be placed in the '[UAC_DIRECTORY]/bin' directory,
+along with any additional support files it needs to run.
 
-Operating system must be one of the following options (in lowercase): android, aix, freebsd, linux, macos, netbsd, netscaler, openbsd or solaris.
+For example, if you have an artifact that uses an executable named 'my_script.sh', you should place
+this binary in the '[UAC_DIRECTORY]/bin' directory.
 
-Architecture is the kernel architecture (in lowercase). It can be retrieved using 'uname' tool.
+In the case where you have executables with the same name, but for multiple operating systems,
+they should be placed in the '[UAC_DIRECTORY]/bin/[OS]' directory.
 
-For example:
+For example, if you have an artifact that uses an executable named 'lsof', but you
+have two binary files, one for Linux and one for FreeBSD, you should place the binaries
+in the '[UAC_DIRECTORY]/bin/linux' and '[UAC_DIRECTORY]/bin/freebsd' directories.
+Note that the operating system name must be in lowercase.
 
-- if you have a 'ss' binary for Linux x86_64, it needs to be placed in the '[uac_directory]\bin\linux\x86_64' directory.
-- if you have a 'lsof' binary for AIX powerpc, it needs to be placed in the '[uac_directory]\bin\aix\powerpc' directory.
-- if you have a 'netstat' binary for Android aarch64, it needs to be placed in the '[uac_directory]\bin\android\aarch64' directory.
+In the case where you have executables that can be run on multiple operating systems, they
+should be placed in the '[UAC_DIRECTORY]/bin/[OS1_OS2_OS3]' directory. Note that you
+can have multiple operating systems separated by an underscore '_'.
+
+For example, if you have an artifact that uses an executable named 'netstat' that
+runs on both Linux and ESXi systems, you should place the binary either in the
+'[UAC_DIRECTORY]/bin/linux_esxi' directory, or place the binary in the '[UAC_DIRECTORY]/bin/linux' and
+'[UAC_DIRECTORY]/bin/esxi' directories.
+
+In the case where you have executables with the same name, but for multiple operating systems
+and multiple architectures, they should be placed in the '[UAC_DIRECTORY]/bin/[OS]/[ARCH]' directory.
+
+For example, if you have an artifact that uses an executable named 'ss', but you
+have binary files for Linux arm64 and ppc64, FreeBSD i386, and Solaris x86_64 and sparc64,
+you should place the binary files in the '[UAC_DIRECTORY]/bin/linux/arm64',
+'[UAC_DIRECTORY]/bin/linux/ppc64', '[UAC_DIRECTORY]/bin/freebsd/i386',
+'[UAC_DIRECTORY]/bin/solaris/x86_64' and '[UAC_DIRECTORY]/bin/solaris/sparc64' directories.

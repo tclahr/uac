@@ -1,0 +1,10 @@
+version: 1.0
+artifacts:
+  # snapshot of file system paths that can be queried with "locate".
+  # can be used to compare file system structure at the time of database update against current file system structure.
+  -
+    description: Collect database file used by locate command, representing a snapshot of the virtual file system accessible with minimal permissions.
+    supported_os: [freebsd, netbsd, openbsd]
+    collector: file
+    path: /var/db/locate.database
+    

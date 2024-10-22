@@ -1,0 +1,10 @@
+version: 1.0
+condition: command_exists "acctadm"
+output_directory: /live_response/system
+artifacts:
+  -
+    description: Shows the configuration for extended accounting.
+    supported_os: [solaris]
+    collector: command
+    command: acctadm
+    output_file: acctadm.txt

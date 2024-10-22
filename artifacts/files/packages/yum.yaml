@@ -1,0 +1,14 @@
+version: 1.0
+# YUM can be used to run persistence.
+# ref: https://www.elastic.co/security-labs/sequel-on-persistence-mechanisms
+artifacts:
+  -
+    description: Collect configuration files under /etc/yum/pluginconf.d/ directory.
+    supported_os: [linux]
+    collector: file
+    path: /etc/yum/pluginconf.d
+  -
+    description: Collect script files under /usr/lib/yum-plugins/ directory.
+    supported_os: [linux]
+    collector: file
+    path: /usr/lib/yum-plugins

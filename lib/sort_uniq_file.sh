@@ -1,34 +1,22 @@
 #!/bin/sh
 # SPDX-License-Identifier: Apache-2.0
 
-###############################################################################
 # Sort and uniq files.
-# Globals:
-#   None
-# Requires:
-#   None
 # Arguments:
-#   $1: file
-# Outputs:
-#   Sorted and unique file.
-# Exit Status:
-#   Exit with status 0 on success.
-#   Exit with status greater than 0 if errors occur.
-###############################################################################
-sort_uniq_file()
+#   string file: input file
+# Returns:
+#   none
+_sort_uniq_file()
 {
-  su_file="${1:-}"
+  __su_file="${1:-}"
 
-  # sort and uniq file, and store data into a temporary file
-  if eval "sort -u \"${su_file}\"" >"${su_file}.sort_uniq_file.tmp"; then
-    # remove original file
-    if eval "rm -f \"${su_file}\""; then
-      # rename temporary to original file
-      mv "${su_file}.sort_uniq_file.tmp" "${su_file}"
-    fi
-  else
-    printf %b "sort_uniq_file: no such file or directory: '${su_file}'\n" >&2
-    return 2
+  if [ ! -f "${__su_file}" ]; then
+    _log_msg ERR "_sort_uniq_file: no such file or directory '${__su_file}'"
+    return 1
   fi
+
+  # sort, uniq and remove empty lines
+  sort -u <"${__su_file}" 2>/dev/null | sed -e '/^$/d' 2>/dev/null >"${__UAC_TEMP_DATA_DIR}/sort_uniq_file.tmp"
+  cp "${__UAC_TEMP_DATA_DIR}/sort_uniq_file.tmp" "${__su_file}" 2>/dev/null
 
 }

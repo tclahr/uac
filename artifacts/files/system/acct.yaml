@@ -1,0 +1,42 @@
+version: 2.0
+artifacts:
+  # system accounting files, covering processes that terminated on the system, allowing one to see past program executions
+  # this is deactivated by default, but quite useful when active
+  -
+    description: Collect system accounting files.
+    supported_os: [freebsd, netbsd, openbsd]
+    collector: file
+    path: /var/account/acct*
+    ignore_date_range: true
+  -
+    description: Collect system accounting user based summary file.
+    supported_os: [freebsd, netbsd, openbsd]
+    collector: file
+    path: /var/account/usracct
+    ignore_date_range: true
+  -
+    description: Collect system accounting command based summary file.
+    supported_os: [freebsd, netbsd, openbsd]
+    collector: file
+    path: /var/account/savacct
+    ignore_date_range: true
+  -
+    description: Collect system accounting files.
+    supported_os: [solaris]
+    collector: file
+    path: /var/adm/pacct*
+    ignore_date_range: true
+  -
+    description: Collect system accounting summary files.
+    supported_os: [solaris]
+    collector: file
+    path: /var/adm/acct
+    max_file_size: 1073741824 # 1GB
+    ignore_date_range: true
+  -
+    description: Collect extended system accounting files from default location.
+    supported_os: [solaris]
+    collector: file
+    path: /var/adm/exacct
+    max_file_size: 1073741824 # 1GB
+    ignore_date_range: true

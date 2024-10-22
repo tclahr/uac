@@ -1,4 +1,6 @@
-version: 2.1
+version: 2.0
+condition: command_exists "docker"
+output_directory: /live_response/containers
 artifacts:
   -
     description: List all containers.
@@ -98,4 +100,3 @@ artifacts:
     foreach: docker container ps --all | sed 1d | awk '{print $1}'
     command: docker stats --no-stream --no-trunc %line%
     output_file: docker_stats_%line%.txt
-  

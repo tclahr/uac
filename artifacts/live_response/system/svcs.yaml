@@ -1,4 +1,6 @@
-version: 1.0
+version: 2.0
+condition: command_exists "svcs"
+output_directory: /live_response/system
 artifacts:
   -
     description: Display information about service instances as recorded in the service configuration repository.

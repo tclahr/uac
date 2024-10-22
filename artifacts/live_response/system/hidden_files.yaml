@@ -1,4 +1,5 @@
-version: 1.0
+version: 2.0
+output_directory: /live_response/system
 artifacts:
   -
     description: List all hidden files outside of user home directory.
@@ -7,7 +8,6 @@ artifacts:
     path: /
     name_pattern: [".*"]
     exclude_path_pattern: ["/root", "/home", "/export/home", "/Users"]
-    file_type: f
-    max_depth: 6
+    file_type: [f]
     output_file: hidden_files.txt
   

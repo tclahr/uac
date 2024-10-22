@@ -1,4 +1,5 @@
-version: 1.0
+version: 2.0
+output_directory: /live_response/system
 artifacts:
   -
     description: Display the loaded kernel modules (compare with /proc/modules).
@@ -12,7 +13,7 @@ artifacts:
     collector: command
     foreach: for module in /sys/module/* ; do echo ${module} | sed -e 's:/sys/module/::'; done
     command: ls -la /sys/module/%line%/parameters
-    output_directory: module/%line%
+    output_directory: /live_response/system/module/%line%
     output_file: parameters.txt
   
 # References:

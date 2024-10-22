@@ -1,26 +1,28 @@
-version: 1.0
+version: 2.0
+condition: command_exists "ip"
+output_directory: /live_response/network
 artifacts:
   -
     description: Collect addresses assigned to all network interfaces.
-    supported_os: [android, linux]
+    supported_os: [linux]
     collector: command
     command: ip addr show
     output_file: ip_addr_show.txt
   -
     description: Collect information about network devices.
-    supported_os: [android, linux]
+    supported_os: [linux]
     collector: command
     command: ip link show
     output_file: ip_link_show.txt
   -
     description: Collect neightbour entries.
-    supported_os: [android, linux]
+    supported_os: [linux]
     collector: command
     command: ip neighbor show
     output_file: ip_neighbor_show.txt
   -
     description: Collect the kernel routing tables.
-    supported_os: [android, linux]
+    supported_os: [linux]
     collector: command
     command: ip route show
     output_file: ip_route_show.txt

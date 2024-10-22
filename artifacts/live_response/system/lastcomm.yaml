@@ -1,0 +1,23 @@
+version: 2.0
+condition: command_exists "lastcomm"
+output_directory: /live_response/system
+artifacts:
+  -
+    description: Shows the last commands executed in a reverse order based on the default accounting file.
+    supported_os: [freebsd, netbsd, openbsd, solaris]
+    collector: command
+    command: lastcomm
+    output_file: lastcomm.txt
+  -
+    description: Shows the last commands executed in a reverse order from the historic accounting files.
+    supported_os: [freebsd, netbsd, openbsd]
+    collector: command
+    foreach: ls /var/account/acct*
+    command: lastcomm -f %line%
+    output_file: lastcomm_%line%.txt
+  -
+    description: Shows the last commands executed in a reverse order based on the extended accounting file.
+    supported_os: [solaris]
+    collector: command
+    command: lastcomm -x
+    output_file: lastcomm_-x.txt

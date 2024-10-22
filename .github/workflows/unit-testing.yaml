@@ -1,0 +1,44 @@
+name: Unit testing
+
+on:
+  pull_request:
+    branches:
+      - develop
+      - main
+    paths:
+      - 'lib/**'
+      - 'uac'
+      
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Unit testing
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout uac repository
+        uses: actions/checkout@v4
+        with:
+          repository: tclahr/uac
+          path: uac
+
+      - name: Checkout ushunit repository
+        uses: actions/checkout@v4
+        with:
+          repository: tclahr/ushunit
+          ref: main
+          path: ushunit
+
+      - name: Checkout uac-tests repository
+        uses: actions/checkout@v4
+        with:
+          repository: tclahr/uac-tests
+          ref: ${{ github.event.pull_request.base.ref }}
+          path: uac-tests
+      
+      - name: Run tests
+        working-directory: ushunit
+        run: |
+          UAC_DIR="../uac" ./ushunit -i ../uac-tests/tests/lib/*.sh ../uac-tests/tests/*.sh

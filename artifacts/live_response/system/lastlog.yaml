@@ -1,4 +1,6 @@
-version: 1.0
+version: 2.0
+condition: command_exists "lastlog"
+output_directory: /live_response/system
 artifacts:
   -
     description: Display the contents of the last login log /var/log/lastlog file.

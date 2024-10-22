@@ -52,7 +52,7 @@ artifacts:
     collector: file
     path: /%user_home%/.local/share/Steam/config/htmlcache
     name_pattern: ["Extensions", "File System", "Sessions"]
-    file_type: d
+    file_type: [d]
     ignore_date_range: true
     exclude_nologin_users: true
   -
@@ -100,7 +100,7 @@ artifacts:
     collector: file
     path: /%user_home%/Library/"Application Support"/Steam/config/htmlcache
     name_pattern: ["Extensions", "File System", "Sessions"]
-    file_type: d
+    file_type: [d]
     ignore_date_range: true
     exclude_nologin_users: true
 

@@ -1,4 +1,6 @@
-version: 1.0
+version: 2.0
+condition: command_exists "ipfw"
+output_directory: /live_response/network
 artifacts:
   -
     description: List all firewall entries.

@@ -1,4 +1,5 @@
-version: 1.0
+version: 2.0
+output_directory: /live_response/process
 artifacts:
   -
     description: Hash running processes.
@@ -8,9 +9,16 @@ artifacts:
     output_file: hash_running_processes
   -
     description: Hash running processes.
-    supported_os: [android, linux, netbsd]
+    supported_os: [linux, netbsd]
     collector: hash
     path: /proc/[0-9]*/exe
+    output_file: hash_running_processes
+  -
+    description: Hash running processes.
+    supported_os: [freebsd]
+    collector: hash
+    condition: ls /proc/$$
+    path: /proc/[0-9]*/file
     output_file: hash_running_processes
   -
     description: Hash running processes.
@@ -26,20 +34,38 @@ artifacts:
     output_file: hash_running_processes
   -
     description: Collect running processes executable path.
-    supported_os: [freebsd, macos, openbsd]
+    supported_os: [esxi]
     collector: command
-    command: ps -eo args | grep "^/" | awk '{print $1}' | sort -u
+    command: ps -c | awk '{print $4}' | grep "^/" | sort -u
+    output_directory: /%temp_directory%/process
     output_file: hash_running_processes_full_paths.txt
   -
     description: Collect running processes executable path.
-    supported_os: [esxi]
+    supported_os: [freebsd]
     collector: command
-    command: ps -c | awk '{print $4}' | sort -u | grep "^/"
+    condition: ! ls /proc/$$
+    command: ps -axo args | grep "^/" | awk '{print $1}' | sort -u
+    output_directory: /%temp_directory%/process
+    output_file: hash_running_processes_full_paths.txt
+  -
+    description: Collect running processes executable path.
+    supported_os: [macos]
+    collector: command
+    command: ps -axo comm | grep "^/" | sort -u
+    output_directory: /%temp_directory%/process
+    output_file: hash_running_processes_full_paths.txt
+  -
+    description: Collect running processes executable path.
+    supported_os: [openbsd]
+    collector: command
+    command: ps -axo args | grep "^/" | awk '{print $1}' | sort -u
+    output_directory: /%temp_directory%/process
     output_file: hash_running_processes_full_paths.txt
   -
     description: Hash running processes.
     supported_os: [esxi, freebsd, macos, openbsd]
     collector: hash
-    path: hash_running_processes_full_paths.txt
+    condition: ! ls /proc/$$
+    path: /%temp_directory%/process/hash_running_processes_full_paths.txt
     is_file_list: true
     output_file: hash_running_processes

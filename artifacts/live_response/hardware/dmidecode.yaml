@@ -1,4 +1,6 @@
-version: 1.0
+version: 2.0
+condition: command_exists "dmidecode"
+output_directory: /live_response/hardware
 artifacts:
   -
     description: Display the computer's DMI (some say SMBIOS) table contents in a human-readable format.

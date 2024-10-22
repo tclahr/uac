@@ -8,13 +8,13 @@ Here are a couple of things we are looking for help with:
 
 ## New artifacts
 
-Have you identified a new artifact that is still not collected by UAC? Please create a new artifact file and submit it via a new Pull Request.
+Have you identified a new artifact that is still not collected by UAC? Please create a new artifact and submit it via a new Pull Request.
 
-Please see [Artifacts file definition](https://tclahr.github.io/uac-docs/latest/artifacts_file/) docs for more information.
+Please see [Artifacts definition](https://tclahr.github.io/uac-docs/artifacts/) docs for more information.
 
 ## New features
 
-You can request a new feature by submitting an issue to our GitHub Repository. If you would like to implement a new feature, please submit an issue with a proposal for your work first, to be sure that we can use it. This will also allow us to better coordinate our efforts, prevent duplication of work, and help you to craft the change so that it is successfully accepted into the project.
+You can request a new feature by submitting an issue to our GitHub Repository. If you would like to implement a new feature, please submit an issue with a proposal for your work first, to be sure that we can use it. This will also allow us to better coordinate our efforts, prevent duplication of work, and help you craft the change so that it is successfully accepted into the project.
 
 ## Found a bug?
 
@@ -84,9 +84,9 @@ git checkout -b my-feature-branch develop
 
 1. Create your code following our [Coding Rules](#coding-rules).
 
-1. Test your code against as many systems as you can using the [uac-unit-test](https://github.com/tclahr/uac-unit-test). For instance, your code can fully work on a Linux but not on a FreeBSD system.
+1. Test your code against as many systems as you can. For instance, your code can fully work on a Linux but not on a FreeBSD system.
 
-1. Commit your changes using a descriptive commit message that follows our [commit message guidelines](#commit-message-guidelines). *Don’t commit code as an unrecognized author. Having commits with unrecognized authors makes it more difficult to track who wrote which part of the code. Ensure your Git client is configured with the correct email address and linked to your GitHub user.*
+1. Commit your changes using a descriptive commit message that follows our [commit message guidelines](#commit-message-guidelines). *Don't commit code as an unrecognized author. Having commits with unrecognized authors makes it more difficult to track who wrote which part of the code. Ensure your Git client is configured with the correct email address and linked to your GitHub user.*
 
   ```shell
   git commit -s

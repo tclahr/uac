@@ -1,15 +1,19 @@
-version: 1.0
+version: 3.0
+condition: command_exists "modinfo"
 artifacts:
-  -
-    description: Display information about loaded kernel modules.
-    supported_os: [solaris]
-    collector: command
-    command: modinfo
-    output_file: modinfo.txt
   -
     description: Display information about loaded kernel modules.
     supported_os: [linux]
     collector: command
     foreach: lsmod | awk '{print $1}' | tail -n +2
     command: modinfo %line%
+    output_directory: /live_response/system/modinfo
     output_file: modinfo_%line%.txt
+  -
+    description: Display information about loaded kernel modules.
+    supported_os: [solaris]
+    collector: command
+    command: modinfo
+    output_directory: /live_response/system
+    output_file: modinfo.txt
+  

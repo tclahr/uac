@@ -1,44 +1,45 @@
 #!/bin/sh
 # SPDX-License-Identifier: Apache-2.0
 
-###############################################################################
-# Get the current system hostname.
-# Globals:
-#   HOSTNAME
-#   MOUNT_POINT
-# Requires:
-#   None
+# Get the system's hostname.
 # Arguments:
-#   None
-# Outputs:
-#   Write the hostname to stdout.
-#   Write "unknown" to stdout if not able to get current hostname.
-# Exit Status:
-#   Exit with status 0 on success.
-#   Exit with status greater than 0 if errors occur.
-###############################################################################
-get_hostname()
+#   string mount_point: mount point
+# Returns:
+#   string: system's hostname or "unknown" if not able to get it
+_get_hostname()
 {
+  __gh_mount_point="${1:-/}"
 
-  if [ "${MOUNT_POINT}" = "/" ]; then
+  if [ "${__gh_mount_point}" = "/" ]; then
     # some systems do not have hostname tool installed
-    if eval "hostname" 2>/dev/null; then
+    if hostname 2>/dev/null; then
       true
-    elif eval "uname -n"; then
+    elif uname -n 2>/dev/null; then
       true
-    elif [ -n "${HOSTNAME}" ]; then
-      printf %b "${HOSTNAME}"
+    elif [ -n "${HOSTNAME:-}" ]; then
+      echo "${HOSTNAME}"
     elif [ -r "/etc/hostname" ]; then
-      head -1 "/etc/hostname"
+      head -1 "/etc/hostname" 2>/dev/null
+    elif [ -r "/etc/rc.conf" ]; then
+      sed -n -e 's|^hostname="\(.*\)"|\1|p' <"/etc/rc.conf" 2>/dev/null
+    elif [ -r "/etc/myname" ]; then
+      head -1 "/etc/myname" 2>/dev/null
+    elif [ -r "/etc/nodename" ]; then
+      head -1 "/etc/nodename" 2>/dev/null
     else
-      printf %b "unknown"
+      echo "unknown"
     fi
   else
-    if [ -r "${MOUNT_POINT}/etc/hostname" ]; then
-      head -1 "${MOUNT_POINT}/etc/hostname"
+    if [ -r "${__gh_mount_point}/etc/hostname" ]; then
+      head -1 "${__gh_mount_point}/etc/hostname" 2>/dev/null
+    elif [ -r "${__gh_mount_point}/etc/rc.conf" ]; then
+      sed -n -e 's|^hostname="\(.*\)"|\1|p' <"${__gh_mount_point}/etc/rc.conf" 2>/dev/null
+    elif [ -r "${__gh_mount_point}/etc/myname" ]; then
+      head -1 "${__gh_mount_point}/etc/myname" 2>/dev/null
+    elif [ -r "${__gh_mount_point}/etc/nodename" ]; then
+      head -1 "${__gh_mount_point}/etc/nodename" 2>/dev/null
     else
-      printf %b "unknown"
+      echo "unknown"
     fi
   fi
-
 }

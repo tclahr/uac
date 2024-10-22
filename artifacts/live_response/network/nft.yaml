@@ -1,4 +1,6 @@
-version: 1.0
+version: 2.0
+condition: command_exists "nft"
+output_directory: /live_response/network
 artifacts:
   -
     description: Collect complete nftables ruleset.

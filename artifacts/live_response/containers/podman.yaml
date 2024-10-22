@@ -1,4 +1,6 @@
 version: 2.0
+condition: command_exists "podman"
+output_directory: /live_response/containers
 artifacts:
   -
     description: List all containers.
@@ -25,7 +27,7 @@ artifacts:
     command: podman version
     output_file: podman_version.txt
   -
-    description: Display a live stream of one or more container’s resource usage statistics.
+    description: Display a live stream of one or more container's resource usage statistics.
     supported_os: [linux]
     collector: command
     command: podman stats --all --no-stream

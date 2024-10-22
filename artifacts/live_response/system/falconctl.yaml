@@ -1,4 +1,6 @@
-version: 1.0
+version: 2.0
+condition: ls "/opt/CrowdStrike/falconctl" || ls /Applications/Falcon.app/Contents/Resources/falconctl
+output_directory: /live_response/system
 artifacts:
   -
     description: Display the AgentId

@@ -1,0 +1,46 @@
+version: 1.0
+condition: command_exists "btrfs"
+output_directory: /live_response/storage
+artifacts:
+  -
+    description: Collect the list of all Btrfs mountpoints.
+    supported_os: [linux]
+    collector: command
+    command: mount -t btrfs | awk '{print $3}'
+    output_directory: /%temp_directory%/storage
+    output_file: list_of_btrfs_mountpoints.txt
+  -
+    description: List all subvolumes of mounted Btrfs filesystems.
+    supported_os: [linux]
+    collector: command
+    foreach: cat "/%temp_directory%/storage/list_of_btrfs_mountpoints.txt"
+    command: btrfs subvolume list -a -p -c -u -q -R %line%
+    output_file: btrfs_subvolumes_list_-a_-p_-c_-u_-q_-R.txt
+  -
+    description: List only snapshot subvolumes of mounted Btrfs filesystems.
+    supported_os: [linux]
+    collector: command
+    foreach: cat "/%temp_directory%/storage/list_of_btrfs_mountpoints.txt"
+    command: btrfs subvolume list -a -p -c -u -q -R -s %line%
+    output_file: btrfs_subvolumes_list_-a_-p_-c_-u_-q_-R_-s.txt
+  -
+    description: List only readonly subvolumes of mounted Btrfs filesystems.
+    supported_os: [linux]
+    collector: command
+    foreach: cat "/%temp_directory%/storage/list_of_btrfs_mountpoints.txt"
+    command: btrfs subvolume list -a -p -c -u -q -R -r %line%
+    output_file: btrfs_subvolumes_list_-a_-p_-c_-u_-q_-R_-r.txt
+  -
+    description: List deleted subvolumes of mounted Btrfs filesystems.
+    supported_os: [linux]
+    collector: command
+    foreach: cat "/%temp_directory%/storage/list_of_btrfs_mountpoints.txt"
+    command: btrfs subvolume list -a -p -c -u -q -R -d %line%
+    output_file: btrfs_subvolumes_list_-a_-p_-c_-u_-q_-R_-d.txt
+  -
+    description: Show information about mounted Btrfs subvolumes.
+    supported_os: [linux]
+    collector: command
+    foreach: cat "/%temp_directory%/storage/list_of_btrfs_mountpoints.txt"
+    command: btrfs subvolume show %line%
+    output_file: btrfs_subvolumes_show.txt

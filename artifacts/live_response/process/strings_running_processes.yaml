@@ -1,48 +1,190 @@
-version: 1.0
+version: 2.0
 artifacts:
+  # aix
   -
     description: Extract strings from running processes.
     supported_os: [aix]
     collector: command
+    condition: command_exists "strings"
     foreach: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
     command: strings -a /proc/%line%/object/a.out
-    output_directory: proc/%line%
+    output_directory: /live_response/process/proc/%line%
     output_file: strings.txt
     compress_output_file: true
   -
     description: Extract strings from running processes.
-    supported_os: [freebsd, macos, openbsd]
+    supported_os: [aix]
     collector: command
-    foreach: ps -eo args | grep ^/ | awk '{print $1}' | sort -u
+    condition: ! command_exists "strings"
+    foreach: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
+    command: astrings /proc/%line%/object/a.out
+    output_directory: /live_response/process/proc/%line%
+    output_file: strings.txt
+    compress_output_file: true
+  # esxi
+  -
+    description: Extract strings from running processes.
+    supported_os: [esxi]
+    collector: command
+    condition: command_exists "strings"
+    foreach: ps -c | awk '{print $4}' | grep "^/" | sort -u
     command: strings -a %line%
-    output_directory: strings
+    output_directory: /live_response/process/strings
     output_file: %line%.txt
     compress_output_file: true
   -
     description: Extract strings from running processes.
-    supported_os: [android, linux, netbsd]
+    supported_os: [esxi]
     collector: command
+    condition: ! command_exists "strings"
+    foreach: ps -c | awk '{print $4}' | grep "^/" | sort -u
+    command: astrings %line%
+    output_directory: /live_response/process/strings
+    output_file: %line%.txt
+    compress_output_file: true
+  # freebsd
+  -
+    description: Extract strings from running processes if procfs and strings are available.
+    supported_os: [freebsd]
+    collector: command
+    condition: ls /proc/$$ && command_exists "strings"
+    foreach: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
+    command: strings -a /proc/%line%/file
+    output_directory: /live_response/process/proc/%line%
+    output_file: strings.txt
+    compress_output_file: true
+  -
+    description: Extract strings from running processes if procfs is not available and strings is available.
+    supported_os: [freebsd]
+    collector: command
+    condition: if ls /proc/$$; then false; else true; fi && command_exists "strings"
+    foreach: ps -axo args | grep "^/" | awk '{print $1}' | sort -u
+    command: strings -a %line%
+    output_directory: /live_response/process/strings
+    output_file: %line%.txt
+    compress_output_file: true
+  -
+    description: Extract strings from running processes if procfs is available and strings is not available.
+    supported_os: [freebsd]
+    collector: command
+    condition: ls /proc/$$ && if command_exists "strings"; then false; else true; fi
+    foreach: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
+    command: astrings /proc/%line%/file
+    output_directory: /live_response/process/proc/%line%
+    output_file: strings.txt
+    compress_output_file: true
+  -
+    description: Extract strings from running processes if neither procfs nor strings are available.
+    supported_os: [freebsd]
+    collector: command
+    condition: if ls /proc/$$; then false; else true; fi && if command_exists "strings"; then false; else true; fi
+    foreach: ps -axo args | grep "^/" | awk '{print $1}' | sort -u
+    command: astrings %line%
+    output_directory: /live_response/process/strings
+    output_file: %line%.txt
+    compress_output_file: true
+  # linux, netbsd
+  -
+    description: Extract strings from running processes.
+    supported_os: [linux, netbsd]
+    collector: command
+    condition: command_exists "strings"
     foreach: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
     command: strings -a /proc/%line%/exe
-    output_directory: proc/%line%
+    output_directory: /live_response/process/proc/%line%
+    output_file: strings.txt
+    compress_output_file: true
+  -
+    description: Extract strings from running processes.
+    supported_os: [linux, netbsd]
+    collector: command
+    condition: ! command_exists "strings"
+    foreach: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
+    command: astrings /proc/%line%/exe
+    output_directory: /live_response/process/proc/%line%
+    output_file: strings.txt
+    compress_output_file: true
+  # macos
+  -
+    description: Extract strings from running processes.
+    supported_os: [macos]
+    collector: command
+    condition: xcode-select -p
+    foreach: ps -axo comm | grep "^/" | sort -u
+    command: strings -a %line%
+    output_directory: /live_response/process/strings
+    output_file: %line%.txt
+    compress_output_file: true
+  -
+    description: Extract strings from running processes.
+    supported_os: [macos]
+    collector: command
+    condition: ! xcode-select -p
+    foreach: ps -axo comm | grep "^/" | sort -u
+    command: astrings %line%
+    output_directory: /live_response/process/strings
+    output_file: %line%.txt
+    compress_output_file: true
+  # netscaler
+  -
+    description: Extract strings from running processes.
+    supported_os: [netscaler]
+    collector: command
+    condition: command_exists "strings"
+    foreach: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
+    command: strings -a /proc/%line%/file
+    output_directory: /live_response/process/proc/%line%
     output_file: strings.txt
     compress_output_file: true
   -
     description: Extract strings from running processes.
     supported_os: [netscaler]
     collector: command
+    condition: ! command_exists "strings"
     foreach: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
-    command: strings -a /proc/%line%/file
-    output_directory: proc/%line%
+    command: astrings /proc/%line%/file
+    output_directory: /live_response/process/proc/%line%
+    output_file: strings.txt
+    compress_output_file: true
+  # openbsd
+  -
+    description: Extract strings from running processes.
+    supported_os: [openbsd]
+    collector: command
+    condition: command_exists "strings"
+    foreach: ps -axo args | grep "^/" | awk '{print $1}' | sort -u
+    command: strings -a %line%
+    output_directory: /live_response/process/strings
+    output_file: %line%.txt
+    compress_output_file: true
+  -
+    description: Extract strings from running processes.
+    supported_os: [openbsd]
+    collector: command
+    condition: ! command_exists "strings"
+    foreach: ps -axo args | grep "^/" | awk '{print $1}' | sort -u
+    command: astrings %line%
+    output_directory: /live_response/process/strings
+    output_file: %line%.txt
+    compress_output_file: true
+  # solaris
+  -
+    description: Extract strings from running processes.
+    supported_os: [solaris]
+    collector: command
+    condition: command_exists "strings"
+    foreach: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
+    command: strings -a /proc/%line%/path/a.out
+    output_directory: /live_response/process/proc/%line%
     output_file: strings.txt
     compress_output_file: true
   -
     description: Extract strings from running processes.
     supported_os: [solaris]
     collector: command
+    condition: ! command_exists "strings"
     foreach: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
-    command: strings -a /proc/%line%/path/a.out
-    output_directory: proc/%line%
+    command: astrings /proc/%line%/path/a.out
+    output_directory: /live_response/process/proc/%line%
     output_file: strings.txt
     compress_output_file: true
-  

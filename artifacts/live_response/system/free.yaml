@@ -1,8 +1,10 @@
-version: 1.0
+version: 2.0
+condition: command_exists "free"
+output_directory: /live_response/system
 artifacts:
   -
     description: Display amount of free and used memory in the system.
-    supported_os: [android, linux]
+    supported_os: [linux]
     collector: command
     command: free
     output_file: free.txt

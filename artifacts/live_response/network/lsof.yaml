@@ -1,4 +1,6 @@
-version: 3.0
+version: 4.0
+condition: command_exists "lsof"
+output_directory: /live_response/network
 artifacts:
   -
     description: Collect the listing of all Internet network files.

@@ -1,0 +1,12 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect database file used for device lookups.
+    supported_os: [openbsd]
+    collector: file
+    path: /var/run/dev.db
+  -
+    description: Collect database file used for device lookups.
+    supported_os: [netbsd]
+    collector: file
+    path: /var/run/dev.cdb

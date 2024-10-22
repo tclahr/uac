@@ -1,4 +1,4 @@
-version: 1.0
+version: 2.0
 artifacts:
   -
     description: Collect WhatsApp cache files.
@@ -11,6 +11,12 @@ artifacts:
     supported_os: [macos]
     collector: file
     path: /%user_home%/Library/"Application Support"/WhatsApp/"Local Storage"/leveldb
+    exclude_nologin_users: true
+  -
+    description: Collect WhatsApp Desktop files.
+    supported_os: [macos]
+    collector: file
+    path: /%user_home%/Library/"Group Containers"/group.net.whatsapp.WhatsApp.shared
     exclude_nologin_users: true
 
 # WhatsApp is a cloud-based application. All chats are in the cloud. In part, chats can be found on mobile devices.

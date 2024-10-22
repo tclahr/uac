@@ -1,4 +1,6 @@
-version: 3.0
+version: 4.0
+condition: command_exists "who"
+output_directory: /live_response/system
 artifacts:
   -
     description: Display the current run-level of the process.

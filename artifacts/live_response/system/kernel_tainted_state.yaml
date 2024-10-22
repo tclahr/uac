@@ -1,4 +1,5 @@
-version: 1.0
+version: 3.0
+output_directory: /live_response/system
 artifacts:
   -
     description: Display the kernel tainted state.
@@ -6,6 +7,12 @@ artifacts:
     collector: command
     command: cat /proc/sys/kernel/tainted
     output_file: cat_proc_sys_kernel_tainted.txt
+  -
+    description: Display dmesg messages related to loaded modules tainting the kernel.
+    supported_os: [linux]
+    collector: command
+    command: dmesg | grep -i taint
+    output_file: modules_tainting_the_kernel_dmesg.txt
   -
     description: Display what modules are marked at tainting the kernel.
     supported_os: [linux]

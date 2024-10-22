@@ -14,7 +14,7 @@ artifacts:
     collector: file
     path: /%user_home%/.config/microsoft-edge
     name_pattern: ["Extensions", "File System", "Sessions"]
-    file_type: d
+    file_type: [d]
     ignore_date_range: true
     exclude_nologin_users: true
   -
@@ -31,7 +31,7 @@ artifacts:
     collector: file
     path: /%user_home%/.var/app/com.microsoft.Edge
     name_pattern: ["Extensions", "File System", "Sessions"]
-    file_type: d
+    file_type: [d]
     ignore_date_range: true
     exclude_nologin_users: true
   -
@@ -48,7 +48,7 @@ artifacts:
     collector: file
     path: /%user_home%/Library/"Application Support"/"Microsoft Edge"
     name_pattern: ["Extensions", "File System", "Sessions"]
-    file_type: d
+    file_type: [d]
     ignore_date_range: true
     exclude_nologin_users: true
     

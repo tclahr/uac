@@ -1,4 +1,6 @@
-version: 1.0
+version: 2.0
+condition: command_exists "vim-cmd"
+output_directory: /live_response/vms
 artifacts:
   -
     description: Get the list of virtual machines on the host.

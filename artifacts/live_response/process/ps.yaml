@@ -1,4 +1,5 @@
-version: 2.0
+version: 3.0
+output_directory: /live_response/process
 artifacts:
   -
     description: Report a snapshot of the current processes.
@@ -20,40 +21,46 @@ artifacts:
     output_file: ps_auxwwwf.txt
   -
     description: Report a snapshot of the current processes.
-    supported_os: [aix, android, freebsd, linux, macos, netscaler, solaris]
+    supported_os: [aix, freebsd, linux, macos, netscaler, solaris]
     collector: command
     command: ps -deaf
     output_file: ps_-deaf.txt
   -
     description: Report a snapshot of the current processes.
-    supported_os: [aix, android, freebsd, linux, macos, netscaler, solaris]
+    supported_os: [aix, freebsd, linux, macos, netscaler, solaris]
     collector: command
     command: ps -ef
     output_file: ps_-ef.txt
   -
     description: Report a snapshot of the current processes.
-    supported_os: [aix, android, freebsd, linux, macos, netscaler, solaris]
+    supported_os: [aix, freebsd, linux, macos, netscaler, solaris]
     collector: command
     command: ps -efl
     output_file: ps_-efl.txt
   -
     description: Report a snapshot of the current processes including elapsed time since the process was started.
-    supported_os: [aix, android, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris]
+    supported_os: [aix, solaris]
     collector: command
     command: ps -eo pid,user,etime,args
     output_file: ps_-eo_pid_user_etime_args.txt
   -
+    description: Report a snapshot of the current processes including elapsed time since the process was started.
+    supported_os: [freebsd, linux, macos, netbsd, netscaler, openbsd]
+    collector: command
+    command: ps -axo pid,user,etime,args
+    output_file: ps_-axo_pid_user_etime_args.txt
+  -
     description: Report a snapshot of the current processes including time the command started.
     supported_os: [freebsd, linux, macos, netbsd, netscaler, openbsd]
     collector: command
-    command: ps -eo pid,user,lstart,args
-    output_file: ps_-eo_pid_user_lstart_args.txt
+    command: ps -axo pid,user,lstart,args
+    output_file: ps_-axo_pid_user_lstart_args.txt
   -
     description: Report a snapshot of the current processes including the control groups to which the process belongs.
     supported_os: [linux]
     collector: command
-    command: ps -eo pid,user,cgroup
-    output_file: ps_-eo_pid_user_cgroup.txt
+    command: ps -axo pid,user,cgroup
+    output_file: ps_-axo_pid_user_cgroup.txt
   -
     description: Report a snapshot of the current processes including used time, verbose, session ID and process group, state and type.
     supported_os: [esxi]

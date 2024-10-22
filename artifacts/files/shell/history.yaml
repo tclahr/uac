@@ -1,4 +1,4 @@
-version: 2.1
+version: 3.0
 artifacts:
   -
     description: Collect shell history files.
@@ -8,6 +8,3 @@ artifacts:
     # lesshst: less command history file
     name_pattern: [".*_history", ".*history", "*.historynew", ".lesshst", ".zhistory", "fish_history"]
     max_depth: 4
-
-# References:
-# https://dfir.ch/posts/today_i_learned_zsh_sessions/
