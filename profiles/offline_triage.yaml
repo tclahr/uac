@@ -1,0 +1,15 @@
+name: ir_triage
+description: Incident response triage collection.
+artifacts:
+  - bodyfile/bodyfile.yaml
+  - chkrootkit/chkrootkit.yaml
+  - hash_executables/hash_executables.yaml
+  - files/applications/git.yaml
+  - files/applications/lesshst.yaml
+  - files/applications/viminfo.yaml
+  - files/applications/wget.yaml
+  - files/logs/*
+  - files/packages/*
+  - files/shell/*
+  - files/ssh/*
+  - files/system/*
