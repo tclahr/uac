@@ -1,0 +1,27 @@
+version: 1.0
+output_directory: /live_response/network
+artifacts:
+  -
+    description: Display TCP network details from /proc/net.
+    supported_os: [linux]
+    collector: command
+    command: cat /proc/net/tcp
+    output_file: proc_net_tcp.txt
+  -
+    description: Display TCP network details from /proc/net.
+    supported_os: [linux]
+    collector: command
+    command: cat /proc/net/tcp6
+    output_file: proc_net_tcp6.txt
+  -
+    description: Display UDP network details from /proc/net.
+    supported_os: [linux]
+    collector: command
+    command: cat /proc/net/udp
+    output_file: proc_net_udp.txt
+  -
+    description: Display UDP network details from /proc/net.
+    supported_os: [linux]
+    collector: command
+    command: cat /proc/net/udp6
+    output_file: proc_net_udp6.txt

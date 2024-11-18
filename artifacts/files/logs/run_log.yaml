@@ -1,0 +1,9 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect /run/log files.
+    supported_os: [linux]
+    collector: file
+    path: /run/log
+    max_file_size: 1073741824 # 1GB
+  

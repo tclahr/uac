@@ -1,0 +1,34 @@
+version: 1.0
+condition: command_exists "bpftool"
+output_directory: /live_response/system
+artifacts:
+  -
+    description: List loaded eBPF programs.
+    supported_os: [linux]
+    collector: command
+    command: bpftool prog list
+    output_file: bpftool_prog_list.txt
+  -
+    description: Show information of pinned eBPF programs.
+    supported_os: [linux]
+    collector: command
+    foreach: ls /sys/fs/bpf | cut -c1-8
+    command: bpftool prog show name "%line%"
+    output_directory: /live_response/system/ebpf/%line%
+    output_file: show.txt
+  -
+    description: Dump xlated eBPF programs.
+    supported_os: [linux]
+    collector: command
+    foreach: ls /sys/fs/bpf | cut -c1-8
+    command: bpftool prog dump xlated name "%line%"
+    output_directory: /live_response/system/ebpf/%line%
+    output_file: xlated.txt
+  -
+    description: Dump jited eBPF programs.
+    supported_os: [linux]
+    collector: command
+    foreach: ls /sys/fs/bpf | cut -c1-8
+    command: bpftool prog dump jited name "%line%"
+    output_directory: /live_response/system/ebpf/%line%
+    output_file: jited.txt

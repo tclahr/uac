@@ -61,7 +61,7 @@ __UAC_HASH_COLLECTED=false
 __UAC_CONFIG_FILE="${__UAC_DIR}/config/uac.conf"
 __UAC_MOUNT_POINT="/"
 __UAC_OPERATING_SYSTEM=""
-__UAC_MAX_THREADS="2"
+__UAC_ENABLE_MODIFIERS=false
 __UAC_RUN_AS_NON_ROOT=false
 __UAC_PROCESSING_UNITS=""
 __UAC_HOSTNAME=""
@@ -145,13 +145,6 @@ if [ -z "${__UAC_HOSTNAME}" ]; then
   __UAC_HOSTNAME=`_get_hostname "${__UAC_MOUNT_POINT}"`
 fi
 
-# check if max-threads is a positive integer (greater than zero)
-if _is_digit "${__UAC_MAX_THREADS}" && [ "${__UAC_MAX_THREADS}" -ge 1 ]; then
-    true
-else
-  _exit_fatal "'max-threads' must be a positive integer."
-fi
-
 # check whether is running as root
 if _is_root || ${__UAC_RUN_AS_NON_ROOT}; then
   true
@@ -170,6 +163,8 @@ _load_config_file "${__UAC_CONFIG_FILE}" || _exit_fatal
 # add proper local 'bin' and 'tools' directory to path
 __ua_bin_path=`_get_bin_path "${__UAC_OPERATING_SYSTEM}" "${__UAC_SYSTEM_ARCH}"`
 PATH="${__ua_bin_path}:${PATH}"
+__ua_tools_path=`_get_tools_path "${__UAC_OPERATING_SYSTEM}" "${__UAC_SYSTEM_ARCH}"`
+PATH="${__ua_tools_path}:${PATH}"
 PATH="${__UAC_DIR}/tools/date_to_epoch_pl:${__UAC_DIR}/tools/find_pl:${__UAC_DIR}/tools/stat_pl:${PATH}"
 export PATH
 
@@ -326,7 +321,6 @@ _log_msg INF "UAC directory: ${__UAC_DIR}"
 _log_msg INF "Command line: ${__ua_command_line}"
 _log_msg INF "Operating system: ${__UAC_OPERATING_SYSTEM}"
 _log_msg INF "System architecture: ${__UAC_SYSTEM_ARCH}"
-_log_msg INF "Processing units: ${__UAC_PROCESSING_UNITS}"
 _log_msg INF "Hostname: ${__UAC_HOSTNAME}"
 _log_msg INF "Mount point: ${__UAC_MOUNT_POINT}"
 _log_msg INF "Running as: ${__ua_current_user}"
@@ -401,11 +395,6 @@ else
   _log_msg INF "perl command exists: false"
 fi
 _log_msg INF "xargs -0 support: ${__UAC_TOOL_XARGS_NULL_DELIMITER_SUPPORT}"
-if [ -n "${__UAC_TOOL_XARGS_MAX_PROCS_PARAM}" ]; then
-  _log_msg INF "xargs -P support: true"
-else
-  _log_msg INF "xargs -P support: false"
-fi
 _log_msg INF "MD5 hashing tool: ${__UAC_TOOL_MD5_BIN}"
 _log_msg INF "SHA1 hashing tool: ${__UAC_TOOL_SHA1_BIN}"
 _log_msg INF "SHA256 hashing tool: ${__UAC_TOOL_SHA256_BIN}"
@@ -420,6 +409,7 @@ _log_msg INF "Exclude mount points: ${__UAC_EXCLUDE_MOUNT_POINTS}"
 
 _verbose_msg "Building artifact list..."
 _log_msg INF "Building artifact list"
+_log_msg INF "Enable modifiers: ${__UAC_ENABLE_MODIFIERS}"
 
 # build artifact list based on the operating system
 # skip artifacts that are not applicable to the target operating system

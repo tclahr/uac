@@ -1,8 +1,8 @@
-version: 1.0
+version: 2.0
 artifacts:
   -
     description: Collect Apache Tomcat logs.
-    supported_os: [aix, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris]
+    supported_os: [all]
     collector: file
     path: /
     name_pattern: ["access_log*", "error_log*", "httpd-access.log*", "httpd-error.log*", "catalina.out"]

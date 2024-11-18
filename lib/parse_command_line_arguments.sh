@@ -129,24 +129,13 @@ _parse_command_line_arguments()
         fi
         ;;
       "-H"|"--hash-collected")
-          __UAC_HASH_COLLECTED=true
-          ;;
-      "-t"|"--max-threads")
-        if [ -n "${2:-}" ]; then
-          if [ "${2}" = "list" ]; then
-            __ua_nproc=`_get_nproc`
-            printf "Number of processing units: %s\n" "${__ua_nproc}"
-            _exit_success
-          fi
-          __UAC_MAX_THREADS="${2}"
-          shift
-        else
-          _error_msg "option '${1}' requires an argument.\nTry 'uac --help' for more information."
-          return 1
-        fi
+        __UAC_HASH_COLLECTED=true
         ;;
       "-u"|"--run-as-non-root")
         __UAC_RUN_AS_NON_ROOT=true
+        ;;
+      "--enable-modifiers")
+        __UAC_ENABLE_MODIFIERS=true
         ;;
       "--hostname")
         if [ -n "${2:-}" ]; then

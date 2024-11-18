@@ -62,14 +62,11 @@ Collection Arguments:
                              netscaler, openbsd, solaris
   -H, --hash-collected
                     Hash all collected files.
-  -t, --max-threads THREADS
-                    Specify the number of files that will be processed in
-                    parallel by the hash and stat collectors (default: 2).
-                    Use '--max-threads list' to list the number of processing
-                    units available on the system.
   -u, --run-as-non-root
                     Disable root user check.
                     Note that data collection may be limited.
+      --enable-modifiers
+                    Enable artifacts that change the system state.
       --hostname  HOSTNAME
                     Specify the target system hostname.
       --temp-dir  PATH   

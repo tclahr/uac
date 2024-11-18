@@ -169,7 +169,7 @@ _find_based_collector()
 
         if [ -n "${__fc_hashing_tool}" ]; then
           if ${__fc_is_file_list}; then
-            __fc_hash_command="sed 's|.|\\\\&|g' \"${__fc_path}\" | xargs ${__UAC_TOOL_XARGS_MAX_PROCS_PARAM}${__UAC_TOOL_XARGS_MAX_PROCS_PARAM:+ }${__fc_hashing_tool}"
+            __fc_hash_command="sed 's|.|\\\\&|g' \"${__fc_path}\" | xargs ${__fc_hashing_tool}"
           elif ${__UAC_TOOL_FIND_PRINT0_SUPPORT} && ${__UAC_TOOL_XARGS_NULL_DELIMITER_SUPPORT}; then
             __fc_find_command=`_build_find_command \
               "${__fc_path}" \
@@ -185,7 +185,10 @@ _find_based_collector()
               "true" \
               "${__fc_start_date_days}" \
               "${__fc_end_date_days}"`
-            __fc_hash_command="${__fc_find_command} | xargs -0 ${__UAC_TOOL_XARGS_MAX_PROCS_PARAM}${__UAC_TOOL_XARGS_MAX_PROCS_PARAM:+ }${__fc_hashing_tool}"
+            if echo "${__fc_find_command}" | grep -q -E "; $"; then
+              __fc_find_command="{ ${__fc_find_command} }"
+            fi
+            __fc_hash_command="${__fc_find_command} | xargs -0 ${__fc_hashing_tool}"
           else
             __fc_find_command=`_build_find_command \
               "${__fc_path}" \
@@ -201,18 +204,25 @@ _find_based_collector()
               "" \
               "${__fc_start_date_days}" \
               "${__fc_end_date_days}"`
-            __fc_hash_command="${__fc_find_command} | sed 's|.|\\\\&|g' | xargs ${__UAC_TOOL_XARGS_MAX_PROCS_PARAM}${__UAC_TOOL_XARGS_MAX_PROCS_PARAM:+ }${__fc_hashing_tool}"
+            if echo "${__fc_find_command}" | grep -q -E "; $"; then
+              __fc_find_command="{ ${__fc_find_command} }"
+            fi
+            __fc_hash_command="${__fc_find_command} | sed 's|.|\\\\&|g' | xargs ${__fc_hashing_tool}"
           fi
           _verbose_msg "${__UAC_VERBOSE_CMD_PREFIX}${__fc_hash_command}"
           _run_command "${__fc_hash_command}" \
             >>"${__fc_output_directory}/${__fc_output_file}.${__fc_algorithm}"
+          if [ ! -s "${__fc_output_directory}/${__fc_output_file}.${__fc_algorithm}" ]; then
+            rm -f "${__fc_output_directory}/${__fc_output_file}.${__fc_algorithm}" >/dev/null
+            _log_msg DBG "Empty output file '${__fc_output_file}.${__fc_algorithm}'"
+          fi
         fi
       done
       ;;
     "stat")
       if [ -n "${__UAC_TOOL_STAT_BIN}" ]; then
         if ${__fc_is_file_list}; then
-            __fc_stat_command="sed 's|.|\\\\&|g' \"${__fc_path}\" | xargs ${__UAC_TOOL_XARGS_MAX_PROCS_PARAM}${__UAC_TOOL_XARGS_MAX_PROCS_PARAM:+ }${__UAC_TOOL_STAT_BIN}${__UAC_TOOL_STAT_PARAMS:+ }${__UAC_TOOL_STAT_PARAMS}"
+            __fc_stat_command="sed 's|.|\\\\&|g' \"${__fc_path}\" | xargs ${__UAC_TOOL_STAT_BIN}${__UAC_TOOL_STAT_PARAMS:+ }${__UAC_TOOL_STAT_PARAMS}"
         elif ${__UAC_TOOL_FIND_PRINT0_SUPPORT} && ${__UAC_TOOL_XARGS_NULL_DELIMITER_SUPPORT}; then
           __fc_find_command=`_build_find_command \
             "${__fc_path}" \
@@ -228,7 +238,10 @@ _find_based_collector()
             "true" \
             "${__fc_start_date_days}" \
             "${__fc_end_date_days}"`
-          __fc_stat_command="${__fc_find_command} | xargs -0 ${__UAC_TOOL_XARGS_MAX_PROCS_PARAM}${__UAC_TOOL_XARGS_MAX_PROCS_PARAM:+ }${__UAC_TOOL_STAT_BIN}${__UAC_TOOL_STAT_PARAMS:+ }${__UAC_TOOL_STAT_PARAMS}"
+          if echo "${__fc_find_command}" | grep -q -E "; $"; then
+            __fc_find_command="{ ${__fc_find_command} }"
+          fi
+          __fc_stat_command="${__fc_find_command} | xargs -0 ${__UAC_TOOL_STAT_BIN}${__UAC_TOOL_STAT_PARAMS:+ }${__UAC_TOOL_STAT_PARAMS}"
         else
           __fc_find_command=`_build_find_command \
             "${__fc_path}" \
@@ -244,7 +257,10 @@ _find_based_collector()
             "" \
             "${__fc_start_date_days}" \
             "${__fc_end_date_days}"`
-          __fc_stat_command="${__fc_find_command} | sed 's|.|\\\\&|g' | xargs ${__UAC_TOOL_XARGS_MAX_PROCS_PARAM}${__UAC_TOOL_XARGS_MAX_PROCS_PARAM:+ }${__UAC_TOOL_STAT_BIN}${__UAC_TOOL_STAT_PARAMS:+ }${__UAC_TOOL_STAT_PARAMS}"
+          if echo "${__fc_find_command}" | grep -q -E "; $"; then
+            __fc_find_command="{ ${__fc_find_command} }"
+          fi
+          __fc_stat_command="${__fc_find_command} | sed 's|.|\\\\&|g' | xargs ${__UAC_TOOL_STAT_BIN}${__UAC_TOOL_STAT_PARAMS:+ }${__UAC_TOOL_STAT_PARAMS}"
         fi
         _verbose_msg "${__UAC_VERBOSE_CMD_PREFIX}${__fc_stat_command}"
         _run_command "${__fc_stat_command}" \
@@ -257,6 +273,10 @@ _find_based_collector()
                 -e "s:\`::g" \
                 -e "s:|.\{1,4\}$:|0:" \
           >>"${__fc_output_directory}/${__fc_output_file}"
+        if [ ! -s "${__fc_output_directory}/${__fc_output_file}" ]; then
+          rm -f "${__fc_output_directory}/${__fc_output_file}" >/dev/null
+          _log_msg DBG "Empty output file '${__fc_output_file}'"
+        fi
       else
         _log_msg ERR "_find_based_collector: cannot run stat collector. Target system has neither 'stat', 'statx' nor 'perl' tool available"
         return 1
