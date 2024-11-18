@@ -364,7 +364,7 @@ _parse_artifact()
                         "${__pa_new_output_directory}" \
                         "${__pa_new_output_file}"
                     elif [ "${__pa_collector}" = "hash" ]; then
-                      _file_collector \
+                      _find_based_collector \
                         "hash" \
                         "${__pa_new_path}" \
                         "${__pa_is_file_list}" \
@@ -382,7 +382,7 @@ _parse_artifact()
                         "${__pa_new_output_directory}" \
                         "${__pa_new_output_file}"
                     elif [ "${__pa_collector}" = "stat" ]; then
-                      _file_collector \
+                      _find_based_collector \
                         "stat" \
                         "${__pa_new_path}" \
                         "${__pa_is_file_list}" \
