@@ -42,6 +42,7 @@ _validate_artifact()
     __va_path_pattern=""
     __va_path=""
     __va_permissions=""
+    __va_redirect_stderr_to_stdout=""
     __va_supported_os=""
   }
   _cleanup_local_vars
@@ -336,6 +337,13 @@ _validate_artifact()
             done
             __va_permissions="${__va_value}"
             ;;
+          "redirect_stderr_to_stdout:")
+            if [ "${__va_value}" != true ] && [ "${__va_value}" != false ]; then
+              _error_msg "artifact: 'redirect_stderr_to_stdout' must be 'true' or 'false'."
+              return 1
+            fi
+            __va_redirect_stderr_to_stdout="${__va_value}"
+            ;;
           "supported_os:")
             if echo "${__va_value}" | grep -q -v -E "^\[.*\]$"; then
               _error_msg "artifact: 'supported_os' must be an array/list."
@@ -463,6 +471,10 @@ _validate_artifact()
               fi
               if [ -n "${__va_compress_output_file}" ]; then
                 _error_msg "artifact: invalid 'compress_output_file' property for '${__va_collector}' collector."
+                return 1
+              fi
+              if [ -n "${__va_redirect_stderr_to_stdout}" ]; then
+                _error_msg "artifact: invalid 'redirect_stderr_to_stdout' property for '${__va_collector}' collector."
                 return 1
               fi
               if [ -n "${__va_foreach}" ]; then

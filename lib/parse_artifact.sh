@@ -40,6 +40,7 @@ _parse_artifact()
     __pa_path_pattern=""
     __pa_path=""
     __pa_permissions=""
+    __pa_redirect_stderr_to_stdout=false
     __pa_supported_os=""
   }
   _cleanup_local_vars
@@ -93,14 +94,14 @@ _parse_artifact()
               # run global condition command and skip collection if exit code is greater than 0
               if echo "${__pa_condition}" | grep -q -E "^!"; then
                 __pa_condition=`echo "${__pa_condition}" | sed -e 's|^! *||' 2>/dev/null`
-                if _run_command "${__pa_condition}" >/dev/null; then
+                if _run_command "${__pa_condition}" true >/dev/null; then
                   _log_msg DBG "Global condition '${__pa_condition}' not satisfied. Skipping..."
                   return 1
                 else
                   _log_msg DBG "Global condition '${__pa_condition}' satisfied"
                 fi
               else
-                if _run_command "${__pa_condition}" >/dev/null; then
+                if _run_command "${__pa_condition}" true >/dev/null; then
                   _log_msg DBG "Global condition '${__pa_condition}' satisfied"
                 else
                   _log_msg DBG "Global condition '${__pa_condition}' not satisfied. Skipping..."
@@ -201,6 +202,9 @@ _parse_artifact()
           "permissions:")
             __pa_permissions=`echo "${__pa_value}" | _array_to_psv 2>/dev/null`
             ;;
+          "redirect_stderr_to_stdout:")
+            __pa_redirect_stderr_to_stdout="${__pa_value}"
+            ;;
           "supported_os:")
             __pa_supported_os=`echo "${__pa_value}" | _array_to_psv 2>/dev/null`
             ;;
@@ -232,7 +236,7 @@ _parse_artifact()
               # run local condition command and skip collection if exit code greater than 0
               if echo "${__pa_condition}" | grep -q -E "^!"; then
                 __pa_condition=`echo "${__pa_condition}" | sed -e 's|^! *||' 2>/dev/null`
-                if _run_command "${__pa_condition}" false >/dev/null; then
+                if _run_command "${__pa_condition}" true >/dev/null; then
                   _log_msg DBG "Condition '${__pa_condition}' not satisfied. Skipping..."
                   _cleanup_local_vars
                   continue
@@ -240,7 +244,7 @@ _parse_artifact()
                   _log_msg DBG "Condition '${__pa_condition}' satisfied"
                 fi
               else
-                if _run_command "${__pa_condition}" false >/dev/null; then
+                if _run_command "${__pa_condition}" true >/dev/null; then
                   _log_msg DBG "Condition '${__pa_condition}' satisfied"
                 else
                   _log_msg DBG "Condition '${__pa_condition}' not satisfied. Skipping..."
@@ -326,7 +330,8 @@ _parse_artifact()
                         "${__pa_new_command}" \
                         "${__pa_new_output_directory}" \
                         "${__pa_new_output_file}" \
-                        "${__pa_compress_output_file}"
+                        "${__pa_compress_output_file}" \
+                        "${__pa_redirect_stderr_to_stdout}"
                     elif [ "${__pa_collector}" = "file" ]; then
                       _find_based_collector \
                         "file" \
@@ -408,7 +413,8 @@ _parse_artifact()
                   "${__pa_command}" \
                   "${__pa_output_directory}" \
                   "${__pa_output_file}" \
-                  "${__pa_compress_output_file}"
+                  "${__pa_compress_output_file}" \
+                  "${__pa_redirect_stderr_to_stdout}"
               elif [ "${__pa_collector}" = "file" ]; then
                 _find_based_collector \
                   "file" \
