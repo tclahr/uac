@@ -1,4 +1,4 @@
-version: 3.1
+version: 3.0
 condition: command_exists "rpm"
 output_directory: /live_response/packages
 artifacts:
@@ -20,75 +20,3 @@ artifacts:
     collector: command
     command: rpm -V -a
     output_file: rpm_-V_-a.txt
-  -
-    description: List filenames under /usr/sbin/.
-    supported_os: [aix, linux]
-    collector: find
-    path: /usr/sbin/*
-    file_type: [f, l]
-    output_directory: /%temp_directory%/live_response/packages
-    output_file: binary_files.txt
-  -
-    description: List filenames under /usr/bin/.
-    supported_os: [aix, linux]
-    collector: find
-    path: /usr/bin/*
-    file_type: [f, l]
-    output_directory: /%temp_directory%/live_response/packages
-    output_file: binary_files.txt
-  -
-    description: List filenames under /usr/lib/.
-    supported_os: [aix, linux]
-    collector: find
-    path: /usr/lib/*
-    file_type: [f, l]
-    output_directory: /%temp_directory%/live_response/packages
-    output_file: binary_files.txt
-  -
-    description: List filenames under /usr/lib32/.
-    supported_os: [aix, linux]
-    collector: find
-    path: /usr/lib32/*
-    file_type: [f, l]
-    output_directory: /%temp_directory%/live_response/packages
-    output_file: binary_files.txt
-  -
-    description: List filenames under /usr/lib64/.
-    supported_os: [aix, linux]
-    collector: find
-    path: /usr/lib64/*
-    file_type: [f, l]
-    output_directory: /%temp_directory%/live_response/packages
-    output_file: binary_files.txt
-  -
-    description: List filenames under /usr/libx32/.
-    supported_os: [aix, linux]
-    collector: find
-    path: /usr/libx32/*
-    file_type: [f, l]
-    output_directory: /%temp_directory%/live_response/packages
-    output_file: binary_files.txt
-  -
-    description: List filenames under /opt/.
-    supported_os: [aix, linux]
-    collector: find
-    path: /opt/*
-    file_type: [f, l]
-    output_directory: /%temp_directory%/live_response/packages
-    output_file: binary_files.txt
-  -
-    description: List filenames under /usr/local/.
-    supported_os: [aix, linux]
-    collector: find
-    path: /usr/local/*
-    file_type: [f, l]
-    output_directory: /%temp_directory%/live_response/packages
-    output_file: binary_files.txt
-  -
-    description: Search for a filename from installed packages.
-    supported_os: [aix, linux]
-    collector: command
-    foreach: cat /%temp_directory%/live_response/packages/binary_files.txt
-    command: rpm -q -f "%line%" | sed 's|$|: %line%|'
-    output_directory: /live_response/packages
-    output_file: rpm_-q_-f.txt
