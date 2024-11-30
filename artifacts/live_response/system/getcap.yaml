@@ -9,5 +9,5 @@ artifacts:
     supported_os: [linux]
     collector: command
     foreach: ls -d /* | grep -vE '^/(proc|sys|dev|boot|run|swapfile)$'
-    command: getcap -r %line%
+    command: getcap -r "%line%"/*
     output_file: getcap_-r.txt
