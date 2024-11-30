@@ -1,0 +1,12 @@
+version: 1.0
+# udev rules can be abused to run persistence.
+# ref 1: https://www.elastic.co/security-labs/sequel-on-persistence-mechanisms
+# ref 2: https://ch4ik0.github.io/en/posts/leveraging-Linux-udev-for-persistence/
+artifacts:
+  -
+    description: Collect udev rule files.
+    supported_os: [linux]
+    collector: file
+    path: /
+    path_pattern: ["*/udev/rules.d/*"]
+    file_type: [f]
