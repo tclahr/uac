@@ -9,6 +9,7 @@
 #   string output_directory: ful path to the output directory
 #   string output_file: output file name (optional)
 #   boolean compress_output_file: compress output file (optional) (default: false)
+#   boolean redirect_stderr_to_stdout: redirect stderr to stdout (optional) (default: false)
 # Returns:
 #   none
 _command_collector()
@@ -18,6 +19,7 @@ _command_collector()
   __cc_output_directory="${3:-}"
   __cc_output_file="${4:-}"
   __cc_compress_output_file="${5:-false}"
+  __cc_redirect_stderr_to_stdout="${6:-false}"
 
   if [ -z "${__cc_command}" ]; then
     _log_msg ERR "_command_collector: empty command parameter"
@@ -59,7 +61,7 @@ _command_collector()
             fi
 
             _verbose_msg "${__UAC_VERBOSE_CMD_PREFIX}${__cc_new_command}"
-            _run_command "${__cc_new_command}" \
+            _run_command "${__cc_new_command}" "${__cc_redirect_stderr_to_stdout}" \
               >>"${__cc_new_output_directory}/${__cc_new_output_file}"
 
             # remove output file if it is empty
@@ -77,7 +79,7 @@ _command_collector()
             _verbose_msg "${__UAC_VERBOSE_CMD_PREFIX}${__cc_new_command}"
             (
               cd "${__cc_new_output_directory}" \
-              && _run_command "${__cc_new_command}"
+              && _run_command "${__cc_new_command}" "${__cc_redirect_stderr_to_stdout}"
             )
           fi
         done
@@ -96,7 +98,7 @@ _command_collector()
         __cc_command="${__cc_command} | gzip - | cat -"
       fi
       _verbose_msg "${__UAC_VERBOSE_CMD_PREFIX}${__cc_command}"
-      _run_command "${__cc_command}" \
+      _run_command "${__cc_command}" "${__cc_redirect_stderr_to_stdout}" \
         >>"${__cc_output_directory}/${__cc_output_file}"
 
       # remove output file if it is empty
@@ -114,7 +116,7 @@ _command_collector()
       _verbose_msg "${__UAC_VERBOSE_CMD_PREFIX}${__cc_command}"
       ( 
         cd "${__cc_output_directory}" \
-        && _run_command "${__cc_command}"
+        && _run_command "${__cc_command}" "${__cc_redirect_stderr_to_stdout}"
       )
     fi
 

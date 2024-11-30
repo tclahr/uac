@@ -1,0 +1,16 @@
+version: 1.0
+# DNF can be used to run persistence.
+# ref: https://www.elastic.co/security-labs/sequel-on-persistence-mechanisms
+artifacts:
+  -
+    description: Collect configuration files under /etc/dnf/pluginconf.d/ directory.
+    supported_os: [linux]
+    collector: file
+    path: /etc/dnf/pluginconf.d
+  -
+    description: Collect script files under dnf-plugins directories.
+    supported_os: [linux]
+    collector: file
+    path: /
+    name_pattern: ["dnf-plugins"]
+    file_type: [d]
