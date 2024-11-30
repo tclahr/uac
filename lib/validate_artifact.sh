@@ -35,12 +35,14 @@ _validate_artifact()
     __va_max_depth=""
     __va_max_file_size=""
     __va_min_file_size=""
+    __va_modifier=""
     __va_name_pattern=""
     __va_output_directory=""
     __va_output_file=""
     __va_path_pattern=""
     __va_path=""
     __va_permissions=""
+    __va_redirect_stderr_to_stdout=""
     __va_supported_os=""
   }
   _cleanup_local_vars
@@ -74,6 +76,7 @@ _validate_artifact()
             if [ -n "${__va_output_directory}" ]; then
               __va_global_output_directory="${__va_output_directory}"
             fi
+            __va_modifier=""
             ;;
           "collector:")
             if [ -z "${__va_value}" ]; then
@@ -257,6 +260,13 @@ _validate_artifact()
             fi
             __va_min_file_size="${__va_value}"
             ;;
+          "modifier:")
+            if [ "${__va_value}" != true ] && [ "${__va_value}" != false ]; then
+              _error_msg "artifact: 'modifier' must be 'true' or 'false'."
+              return 1
+            fi
+            __va_modifier="${__va_value}"
+            ;;
           "name_pattern:")
             if echo "${__va_value}" | grep -q -v -E "^\[.*\]$"; then
               _error_msg "artifact: 'name_pattern' must be an array/list."
@@ -326,6 +336,13 @@ _validate_artifact()
               fi
             done
             __va_permissions="${__va_value}"
+            ;;
+          "redirect_stderr_to_stdout:")
+            if [ "${__va_value}" != true ] && [ "${__va_value}" != false ]; then
+              _error_msg "artifact: 'redirect_stderr_to_stdout' must be 'true' or 'false'."
+              return 1
+            fi
+            __va_redirect_stderr_to_stdout="${__va_value}"
             ;;
           "supported_os:")
             if echo "${__va_value}" | grep -q -v -E "^\[.*\]$"; then
@@ -420,6 +437,10 @@ _validate_artifact()
                 _error_msg "artifact: invalid 'min_file_size' property for 'command' collector."
                 return 1
               fi
+              if [ -n "${__va_modifier}" ]; then
+                _error_msg "artifact: invalid 'modifier' property for 'command' collector."
+                return 1
+              fi
               if [ -n "${__va_name_pattern}" ]; then
                 _error_msg "artifact: invalid 'name_pattern' property for 'command' collector."
                 return 1
@@ -452,8 +473,16 @@ _validate_artifact()
                 _error_msg "artifact: invalid 'compress_output_file' property for '${__va_collector}' collector."
                 return 1
               fi
+              if [ -n "${__va_redirect_stderr_to_stdout}" ]; then
+                _error_msg "artifact: invalid 'redirect_stderr_to_stdout' property for '${__va_collector}' collector."
+                return 1
+              fi
               if [ -n "${__va_foreach}" ]; then
                 _error_msg "artifact: invalid 'foreach' property for '${__va_collector}' collector."
+                return 1
+              fi
+              if [ -n "${__va_modifier}" ]; then
+                _error_msg "artifact: invalid 'modifier' property for '${__va_collector}' collector."
                 return 1
               fi
               if [ "${__va_collector}" = "find" ] \

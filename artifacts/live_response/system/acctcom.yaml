@@ -1,0 +1,17 @@
+version: 1.0
+condition: command_exists "acctcom"
+output_directory: /live_response/system
+artifacts:
+  -
+    description: Shows the last commands executed in a reverse order based on the default accounting file.
+    supported_os: [solaris]
+    collector: command
+    command: acctcom -f -i -t /var/adm/pacct
+    output_file: acctcom_-f_-i_-t.txt
+  -
+    description: Shows the last commands executed in a reverse order from the historic accounting files.
+    supported_os: [solaris]
+    collector: command
+    foreach: ls /var/adm/pacct*
+    command: acctcom -f -i -t %line%
+    output_file: acctcom_-f_-i_-t_%line%.txt
