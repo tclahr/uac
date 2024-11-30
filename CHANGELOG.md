@@ -4,6 +4,8 @@
 
 ### Artifacts
 
+- files/system/upstart.yaml: Added collection of system-wide and user-session Upstart configuration files [linux].
+- files/system/xdg_autostart.yaml: Added collection of system-wide and user-specific XDG autostart files [linux].
 - live_response/system/getcap.yaml: Added functionality to collect the list of files with associated process capabilities [linux] ([mnrkbys](https://github.com/mnrkbys)).
 
 ### New Artifacts Properties

@@ -1,0 +1,25 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect system-wide Upstart configuration files.
+    supported_os: [linux]
+    collector: file
+    path: /etc/init
+  -
+    description: Collect system-wide Upstart configuration files.
+    supported_os: [linux]
+    collector: file
+    path: /etc/xdg/upstart
+  -
+    description: Collect system-wide Upstart configuration files.
+    supported_os: [linux]
+    collector: file
+    path: /usr/share/upstart/sessions
+  -
+    description: Collect user-session Upstart configuration files.
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.config/upstart
+
+# References:
+# https://www.elastic.co/security-labs/sequel-on-persistence-mechanisms
