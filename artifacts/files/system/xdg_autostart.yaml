@@ -1,0 +1,30 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect system-wide XDG autostart files.
+    supported_os: [linux]
+    collector: file
+    path: /etc/xdg/autostart
+  -
+    description: Collect system-wide XDG autostart files.
+    supported_os: [linux]
+    collector: file
+    path: /usr/share/autostart
+  -
+    description: Collect user-specific XDG autostart files.
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.config/autostart
+  -
+    description: Collect user-specific XDG autostart files.
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.local/share/autostart
+  -
+    description: Collect user-specific XDG autostart files (not part of XDG standard, but used by KDE).
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.config/autostart-scripts
+
+# References:
+# https://www.elastic.co/security-labs/primer-on-persistence-mechanisms
