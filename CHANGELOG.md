@@ -6,6 +6,7 @@
 
 - live_response/packages/dpkg.yaml: Updated to verify all packages to compare information about the installed files in the package with information about the files taken from the package metadata stored in the dpkg database [linux] ([mnrkbys](https://github.com/mnrkbys)).
 - live_response/packages/package_owns_file.yaml: Added collection of which installed package owns a specific file or command. Note that this artifact is resource-intensive and time-consuming to execute, so it is disabled by default in all profiles [linux] ([mnrkbys](https://github.com/mnrkbys)).
+- live_response/system/getcap.yaml: Added functionality to collect the list of files with associated process capabilities [linux] ([mnrkbys](https://github.com/mnrkbys)).
 
 ### New Artifacts Properties
 
