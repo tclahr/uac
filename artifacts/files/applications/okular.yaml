@@ -27,7 +27,7 @@ artifacts:
     exclude_nologin_users: true
   -
     description: Collect Okular configuration file (Flatpak version).
-    supported_os: [linuxsd]
+    supported_os: [linux]
     collector: file
     path: /%user_home%/.var/app
     name_pattern: ["okularrc"]
@@ -44,7 +44,7 @@ artifacts:
     exclude_nologin_users: true
   -
     description: Collect Okular configuration file (Snap version).
-    supported_os: [linuxsd]
+    supported_os: [linux]
     collector: file
     path: /%user_home%/snap
     name_pattern: ["okularrc"]
