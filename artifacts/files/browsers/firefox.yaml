@@ -13,7 +13,7 @@ artifacts:
     supported_os: [freebsd, linux]
     collector: file
     path: /%user_home%/.mozilla/firefox
-    name_pattern: ["bookmarkbackups", "sessionstore*"]
+    name_pattern: ["bookmarkbackups", "sessionstore*", "downloads.rdf"]
     file_type: [d]
     ignore_date_range: true
     exclude_nologin_users: true
