@@ -30,7 +30,7 @@ artifacts:
     supported_os: [linux]
     collector: file
     path: /%user_home%/.var/app/org.mozilla.firefox
-    name_pattern: ["bookmarkbackups", "sessionstore*"]
+    name_pattern: ["bookmarkbackups", "sessionstore*", "downloads.rdf"]
     file_type: [d]
     ignore_date_range: true
     exclude_nologin_users: true
