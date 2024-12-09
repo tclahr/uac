@@ -1,0 +1,24 @@
+version: 1.0
+condition: command_exists "utmpdump"
+output_directory: /live_response/system
+artifacts:
+# utmpdump might be useful for detecting log file tampering.
+# Reference: https://sandflysecurity.com/blog/using-linux-utmpdump-for-forensics-and-detecting-log-file-tampering/
+  -
+    description: Dump wtmp file in raw format.
+    supported_os: [linux]
+    collector: command
+    command: utmpdump /var/log/wtmp
+    output_file: utmpdump_wtmp.txt
+  -
+    description: Dump btmp file in raw format.
+    supported_os: [linux]
+    collector: command
+    command: utmpdump /var/log/btmp
+    output_file: utmpdump_btmp.txt
+  -
+    description: Dump utmp file in raw format.
+    supported_os: [linux]
+    collector: command
+    command: utmpdump /var/run/utmp
+    output_file: utmpdump_utmp.txt
