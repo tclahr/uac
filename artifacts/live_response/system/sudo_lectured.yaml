@@ -1,0 +1,17 @@
+version: 1.0
+output_directory: /live_response/system
+artifacts:
+  -
+    description: Timestamps of users who saw the sudo lecture message.
+    supported_os: [all]
+    collector: command
+    foreach: ls /var/db/sudo/lectured
+    command: stat /var/db/sudo/lectured/"%line%"
+    output_file: sudo_lectured_timestamps.txt
+  -
+    description: Timestamps of users who saw the sudo lecture message in JSON format.
+    supported_os: [all]
+    collector: command
+    foreach: ls /var/db/sudo/lectured
+    command: stat --format='{"File": "%n", "Size": %s, "Blocks": %b, "IOBlock": %o, "Type": "%F", "Device": "%D", "Inode": %i, "Permissions": "%a", "Links": %h, "UID": %u, "GID": %g, "Access": "%x", "Modify": "%y", "Change": "%z"}' /var/db/sudo/lectured/"%line%"
+    output_file: sudo_lectured_timestamps_json.txt
