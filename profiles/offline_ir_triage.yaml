@@ -1,4 +1,4 @@
-name: ir_triage
+name: offline_ir_triage
 description: Incident response triage collection.
 artifacts:
   - bodyfile/bodyfile.yaml
