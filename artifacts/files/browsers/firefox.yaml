@@ -22,7 +22,7 @@ artifacts:
     supported_os: [linux]
     collector: file
     path: /%user_home%/.var/app/org.mozilla.firefox
-    name_pattern: ["addons.*", "bookmarks.sqlite*", "cookies.sqlite*", "downloads.sqlite*", "extensions.json", "favicons.sqlite*", "firefox_cookies.sqlite*", "formhistory.sqlite*", "key*.db", "logins.json", "permissions.sqlite*", "places.sqlite*", "prefs.js", "protections.sqlite*", "search.sqlite*", "signon*.*", "signons.sqlite*", "storage-sync*.sqlite*", "webappstore.sqlite*"]
+    name_pattern: ["addons.*", "bookmarks.sqlite*", "cookies.sqlite*", "downloads.rdf", "downloads.sqlite*", "extensions.json", "favicons.sqlite*", "firefox_cookies.sqlite*", "formhistory.sqlite*", "key*.db", "logins.json", "permissions.sqlite*", "places.sqlite*", "prefs.js", "protections.sqlite*", "search.sqlite*", "signon*.*", "signons.sqlite*", "storage-sync*.sqlite*", "webappstore.sqlite*"]
     ignore_date_range: true
     exclude_nologin_users: true
   -
@@ -30,7 +30,7 @@ artifacts:
     supported_os: [linux]
     collector: file
     path: /%user_home%/.var/app/org.mozilla.firefox
-    name_pattern: ["bookmarkbackups", "sessionstore*", "downloads.rdf"]
+    name_pattern: ["bookmarkbackups", "sessionstore*"]
     file_type: [d]
     ignore_date_range: true
     exclude_nologin_users: true
