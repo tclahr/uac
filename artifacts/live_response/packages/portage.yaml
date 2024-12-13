@@ -1,0 +1,11 @@
+version: 2.0
+condition: command_exists "equery"
+output_directory: /live_response/packages
+artifacts:
+  -
+    description: Display installed packages.
+    supported_os: [linux]
+    collector: command
+    command: equery list '*'
+    output_file: portage_query_list.txt
+  
