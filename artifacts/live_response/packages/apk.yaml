@@ -1,0 +1,10 @@
+version: 2.0
+condition: command_exists "apk"
+output_directory: /live_response/packages
+artifacts:
+  -
+    description: Display installed packages.
+    supported_os: [linux]
+    collector: command
+    command: apk info -vv
+    output_file: apk_query_list.txt
