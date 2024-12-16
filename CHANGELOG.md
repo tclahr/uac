@@ -16,6 +16,7 @@
 - files/system/kactivitymanagerd.yaml: Added collection of activity tracking data used by KActivityManager (part of KDE) to track and manage user activities, such as recently opened files, applications, and other resources [freebsd, linux, netbsd, openbsd].
 - files/system/upstart.yaml: Added collection of system-wide and user-session Upstart configuration files [linux].
 - files/system/xdg_autostart.yaml: Added collection of system-wide and user-specific XDG autostart files [linux].
+- live_response/packages/conary.yaml: Added collection of the list of installed packages managed by the Conary package manager [linux] (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal)).
 - live_response/packages/dpkg.yaml: Updated to verify all packages to compare information about the installed files in the package with information about the files taken from the package metadata stored in the dpkg database [linux] ([mnrkbys](https://github.com/mnrkbys)).
 - live_response/packages/package_owns_file.yaml: Added collection of which installed package owns a specific file or command. Note that this artifact is resource-intensive and time-consuming to execute, so it is disabled by default in all profiles [linux] ([mnrkbys](https://github.com/mnrkbys)).
 - live_response/system/coredump.yaml: Added collection of core dump files information [linux] ([mnrkbys](https://github.com/mnrkbys)).
