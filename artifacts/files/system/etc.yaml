@@ -23,3 +23,7 @@ artifacts:
     exclude_name_pattern: ["shadow", "shadow-"]
     file_type: [f]
     ignore_date_range: true
+
+# References:
+# https://www.elastic.co/security-labs/primer-on-persistence-mechanisms
+# https://www.elastic.co/security-labs/sequel-on-persistence-mechanisms

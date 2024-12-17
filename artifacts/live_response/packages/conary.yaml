@@ -1,0 +1,11 @@
+version: 1.0
+condition: command_exists "conary"
+output_directory: /live_response/packages
+artifacts:
+  -
+    description: Display installed packages.
+    supported_os: [linux]
+    collector: command
+    command: conary query
+    output_file: conary_query.txt
+    

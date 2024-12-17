@@ -20,4 +20,3 @@ artifacts:
     collector: command
     command: rpm -V -a
     output_file: rpm_-V_-a.txt
-  

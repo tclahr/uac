@@ -1,0 +1,27 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect the paths to recently opened video files using the Dragon Player.
+    supported_os: [freebsd, linux, netbsd, openbsd]
+    collector: file
+    path: /%user_home%/.config
+    name_pattern: ["dragonplayerrc"]
+    file_type: [f]
+    exclude_nologin_users: true
+  -
+    description: Collect the paths to recently opened video files using the Dragon Player (Flatpak version).
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.var/app
+    name_pattern: ["dragonplayerrc"]
+    file_type: [f]
+    exclude_nologin_users: true
+  -
+    description: Collect the paths to recently opened video files using the Dragon Player (Snap version).
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/snap
+    name_pattern: ["dragonplayerrc"]
+    file_type: [f]
+    exclude_nologin_users: true
+  

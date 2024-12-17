@@ -8,6 +8,13 @@ artifacts:
     name_pattern: ["*.kml"]
     exclude_nologin_users: true
   -
+    description: Collect Google Earth KML files (Flatpak version).
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.var/app
+    name_pattern: ["*.kml"]
+    exclude_nologin_users: true
+  -
     description: Collect Google Earth KML files.
     supported_os: [macos]
     collector: file
