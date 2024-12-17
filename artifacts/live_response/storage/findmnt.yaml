@@ -1,4 +1,4 @@
-version: 2.0
+version: 2.1
 condition: command_exists "findmnt"
 output_directory: /live_response/storage
 artifacts:
@@ -8,4 +8,9 @@ artifacts:
     collector: command
     command: findmnt --ascii
     output_file: findmnt.txt
-    
+  -
+    description: Displays all mounted file systems in the tree-like format as JSON.
+    supported_os: [linux]
+    collector: command
+    command: findmnt -J
+    output_file: findmnt_-J.txt
