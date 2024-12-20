@@ -1,0 +1,10 @@
+version: 1.0
+condition: command_exists "cave"
+output_directory: /live_response/packages
+artifacts:
+  -
+    description: Display installed packages.
+    supported_os: [linux]
+    collector: command
+    command: cave show installed-packages
+    output_file: cave_show_installed-packages.txt
