@@ -25,6 +25,7 @@
 - live_response/storage/lsblk.yaml: Added JSON output format for listing block devices [linux] ([mnrkbys](https://github.com/mnrkbys)).
 - live_response/system/coredump.yaml: Added collection of core dump files information [linux] ([mnrkbys](https://github.com/mnrkbys)).
 - live_response/system/getcap.yaml: Added functionality to collect the list of files with associated process capabilities [linux] ([mnrkbys](https://github.com/mnrkbys)).
+- live_response/system/journalctl.yaml: Added collection of listing of time periods between boots [linux] ([mnrkbys](https://github.com/mnrkbys)).
 - live_response/system/ulimit.yaml: Added collection of all resource limits information [all] ([mnrkbys](https://github.com/mnrkbys)).
 - memory_dump/coredump.yaml: Added collection of core dump, ABRT, Apport, and kdump files [esxi, linux, netbsd] ([mnrkbys](https://github.com/mnrkbys)).
 
