@@ -20,6 +20,7 @@ artifacts:
   - live_response/system/*
   - live_response/hardware/*
   - live_response/packages/*
+  - !live_response/packages/package_owns_file.yaml
   - live_response/storage/*
   - live_response/containers/*
   - live_response/vms/*

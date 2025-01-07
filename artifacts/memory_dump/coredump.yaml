@@ -1,0 +1,39 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect core dump files from /var/core/.
+    supported_os: [esxi]
+    collector: file
+    path: /var/core/*
+  -
+    description: Collect core dump files from /var/lib/systemd/.
+    supported_os: [linux]
+    collector: file
+    path: /var/lib/systemd/coredump
+    name_pattern: ["core.*"]
+    file_type: [f]
+  -
+    description: Collect ABRT files.
+    supported_os: [linux]
+    collector: file
+    path: /var/spool/abrt
+  -
+    description: Collect ABRT files.
+    supported_os: [linux]
+    collector: file
+    path: /var/spool/abrt-upload
+  -
+    description: Collect ABRT files.
+    supported_os: [linux]
+    collector: file
+    path: /var/tmp/abrt
+  -
+    description: Collect Apport or kdump files.
+    supported_os: [linux]
+    collector: file
+    path: /var/crash
+  -
+    description: Collect core dump files from /stand/*/*/modules/coredump/.
+    supported_os: [netbsd]
+    collector: file
+    path: /stand/*/*/modules/coredump/*
