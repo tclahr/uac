@@ -29,6 +29,10 @@
 - live_response/system/ulimit.yaml: Added collection of all resource limits information [all] ([mnrkbys](https://github.com/mnrkbys)).
 - memory_dump/coredump.yaml: Added collection of core dump, ABRT, Apport, and kdump files [esxi, linux, netbsd] ([mnrkbys](https://github.com/mnrkbys)).
 
+### Profiles
+
+- profiles/offline_ir_triage.yaml: New 'offline_ir_triage' profile that can be used during offline triage collections ([clausing](https://github.com/clausing)).
+
 ### New Artifacts Properties
 
 - Added the new 'redirect_stderr_to_stdout' property, an optional feature available exclusively for the command collector. When set to true, this property redirects all error messages (stderr) to standard output (stdout), ensuring they are written to the output file.
