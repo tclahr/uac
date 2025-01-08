@@ -1,11 +1,11 @@
-version: 4.0
+version: 4.1
 artifacts:
   -
     description: Collect Firefox browser files.
     supported_os: [freebsd, linux]
     collector: file
     path: /%user_home%/.mozilla/firefox
-    name_pattern: ["addons.*", "bookmarks.sqlite*", "cookies.sqlite*", "downloads.sqlite*", "extensions.json", "favicons.sqlite*", "firefox_cookies.sqlite*", "formhistory.sqlite*", "key*.db", "logins.json", "permissions.sqlite*", "places.sqlite*", "prefs.js", "protections.sqlite*", "search.sqlite*", "signon*.*", "signons.sqlite*", "storage-sync*.sqlite*", "webappstore.sqlite*"]
+    name_pattern: ["addons.*", "bookmarks.sqlite*", "cookies.sqlite*", "downloads.rdf", "downloads.sqlite*", "extensions.json", "favicons.sqlite*", "firefox_cookies.sqlite*", "formhistory.sqlite*", "key*.db", "logins.json", "permissions.sqlite*", "places.sqlite*", "prefs.js", "protections.sqlite*", "search.sqlite*", "signon*.*", "signons.sqlite*", "storage-sync*.sqlite*", "webappstore.sqlite*"]
     ignore_date_range: true
     exclude_nologin_users: true
   -

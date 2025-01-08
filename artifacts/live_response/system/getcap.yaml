@@ -1,0 +1,13 @@
+version: 1.0
+condition: command_exists "getcap"
+output_directory: /live_response/system
+# abuse process capabilities
+# ref: https://www.elastic.co/security-labs/sequel-on-persistence-mechanisms
+artifacts:
+  -
+    description: List files that have process capabilities.
+    supported_os: [linux]
+    collector: command
+    foreach: ls -d /* | grep -vE '^/(proc|sys|dev|boot|run|swapfile)$'
+    command: getcap -r "%line%"/*
+    output_file: getcap_-r.txt
