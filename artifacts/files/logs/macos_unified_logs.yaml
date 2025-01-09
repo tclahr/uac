@@ -1,4 +1,4 @@
-version: 4.0
+version: 4.1
 artifacts:
   -
     description: Collect macOS Unified Logs tracev3 files.
@@ -16,4 +16,22 @@ artifacts:
     supported_os: [macos]
     collector: file
     path: /private/var/db/diagnostics/timesync
-  
+  -
+    description: Collect macOS Apple System Logs (ASL) files.
+    supported_os: [macos]
+    collector: file
+    path: /private/var/log/asl.db
+    max_file_size: 1073741824 # 1GB
+  -
+    description: Collect macOS Apple System Logs (ASL) files.
+    supported_os: [macos]
+    collector: file
+    path: /private/var/log/asl.log
+    max_file_size: 1073741824 # 1GB
+  -
+    description: Collect macOS Apple System Logs (ASL) files.
+    supported_os: [macos]
+    collector: file
+    path: /private/var/log/asl/*
+    max_file_size: 1073741824 # 1GB
+    
