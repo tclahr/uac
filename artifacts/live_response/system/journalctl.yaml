@@ -1,0 +1,10 @@
+version: 1.0
+condition: command_exists "journalctl"
+output_directory: /live_response/system
+artifacts:
+  -
+    description: Show a listing of time periods between boots.
+    supported_os: [linux]
+    collector: command
+    command: journalctl --list-boots
+    output_file: journalctl_--list-boots.txt

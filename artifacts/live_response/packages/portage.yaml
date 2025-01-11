@@ -1,0 +1,17 @@
+version: 1.0
+condition: command_exists "equery"
+output_directory: /live_response/packages
+artifacts:
+  -
+    description: Display installed packages.
+    supported_os: [linux]
+    collector: command
+    command: equery list '*'
+    output_file: equery_list.txt
+  -
+    description: Display installed packages.
+    supported_os: [linux]
+    collector: command
+    command: cat /var/lib/portage/world
+    output_file: cat_var_lib_portage_world.txt
+  
