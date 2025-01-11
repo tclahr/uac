@@ -11,14 +11,14 @@ artifacts:
     supported_os: [linux]
     collector: command
     condition: command_exists "debugfs" && df -T %mount_point%/etc | tail -n +2 | awk '{print $2}' | grep -q "ext"
-    command: linux_dump_ldsopreload.sh -f %mount_point%/etc/ld.so.preload
+    command: linux_dump_etc_ld_so_preload.sh -f %mount_point%/etc/ld.so.preload
     output_file: etc_ld_so_preload.txt
   -
     description: Dump /etc/ld.so.preload with xfs_db.
     supported_os: [linux]
     collector: command
     condition: command_exists "xfs_db" && df -T %mount_point%/etc | tail -n +2 | awk '{print $2}' | grep -q "xfs"
-    command: linux_dump_ldsopreload.sh -f %mount_point%/etc/ld.so.preload
+    command: linux_dump_etc_ld_so_preload.sh -f %mount_point%/etc/ld.so.preload
     output_file: etc_ld_so_preload.txt
   -
     description: Collect file stats for /etc/ld.so.preload even if it is hidden.
