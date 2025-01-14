@@ -9,9 +9,8 @@ artifacts:
     command: snap list
     output_file: snap_list.txt
   -
-    description: Display installed Snap packages.
+    description: Display installed Snap packages including all revisions.
     supported_os: [linux]
     collector: command
     command: snap list --all
     output_file: snap_list_--all.txt
-    
