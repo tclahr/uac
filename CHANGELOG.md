@@ -16,17 +16,24 @@
 - files/system/kactivitymanagerd.yaml: Added collection of activity tracking data used by KActivityManager (part of KDE) to track and manage user activities, such as recently opened files, applications, and other resources [freebsd, linux, netbsd, openbsd].
 - files/system/upstart.yaml: Added collection of system-wide and user-session Upstart configuration files [linux].
 - files/system/xdg_autostart.yaml: Added collection of system-wide and user-specific XDG autostart files [linux].
+- live_response/packages/0install.yaml: Added collection of the list of installed packages managed by Zero Install package manager [linux] (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal)).
 - live_response/packages/conary.yaml: Added collection of the list of installed packages managed by the Conary package manager [linux] (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal)).
 - live_response/packages/dpkg.yaml: Updated to verify all packages to compare information about the installed files in the package with information about the files taken from the package metadata stored in the dpkg database [linux] ([mnrkbys](https://github.com/mnrkbys)).
 - live_response/packages/package_owns_file.yaml: Added collection of which installed package owns a specific file or command. Note that this artifact is resource-intensive and time-consuming to execute, so it is disabled by default in all profiles [linux] ([mnrkbys](https://github.com/mnrkbys)).
 - live_response/packages/paludis.yaml: Added collection of the list of installed packages managed by the Paludis package manager [linux] (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal)).
 - live_response/packages/portage.yaml: Added the collection of installed package lists using the Portage package management system [linux] (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal)).
+- live_response/packages/snap.yaml: Updated collection to display installed packages including all revisions [linux] (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal)).
 - live_response/storage/findmnt.yaml: Added JSON output format for listing all mounted file systems [linux] ([mnrkbys](https://github.com/mnrkbys)).
 - live_response/storage/lsblk.yaml: Added JSON output format for listing block devices [linux] ([mnrkbys](https://github.com/mnrkbys)).
 - live_response/system/coredump.yaml: Added collection of core dump files information [linux] ([mnrkbys](https://github.com/mnrkbys)).
 - live_response/system/getcap.yaml: Added functionality to collect the list of files with associated process capabilities [linux] ([mnrkbys](https://github.com/mnrkbys)).
+- live_response/system/journalctl.yaml: Added collection of listing of time periods between boots [linux] ([mnrkbys](https://github.com/mnrkbys)).
 - live_response/system/ulimit.yaml: Added collection of all resource limits information [all] ([mnrkbys](https://github.com/mnrkbys)).
 - memory_dump/coredump.yaml: Added collection of core dump, ABRT, Apport, and kdump files [esxi, linux, netbsd] ([mnrkbys](https://github.com/mnrkbys)).
+
+### Profiles
+
+- profiles/offline_ir_triage.yaml: New 'offline_ir_triage' profile that can be used during offline triage collections ([clausing](https://github.com/clausing)).
 
 ### New Artifacts Properties
 
