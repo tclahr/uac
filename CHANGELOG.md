@@ -4,6 +4,7 @@
 
 ### Artifacts
 
+- chkrootkit/hidden_etc_ld_so_preload.yaml: Added collection of hidden /etc/ld.so.preload using debugfs and xfs_db tools [linux] ([mnrkbys](https://github.com/mnrkbys)).
 - files/applications/ark.yaml: Added collection of metadata about recently opened archive files in Ark, the KDE archive manager [freebsd, linux, netbsd, openbsd].
 - files/applications/dolphin.yaml: Added collection of session data for the Dolphin file manager in the KDE desktop environment. This file contains information about the state of the Dolphin application, such as the currently open directories and their paths and the last accessed locations [freebsd, linux, netbsd, openbsd].
 - files/applications/dragon_player.yaml: Added collection of paths to recently opened video files using the Dragon Player [freebsd, linux, netbsd, openbsd].

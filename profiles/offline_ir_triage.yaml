@@ -2,7 +2,7 @@ name: offline_ir_triage
 description: Offline incident response triage collection.
 artifacts:
   - bodyfile/bodyfile.yaml
-  - chkrootkit/chkrootkit.yaml
+  - chkrootkit/*
   - hash_executables/hash_executables.yaml
   - files/applications/git.yaml
   - files/applications/lesshst.yaml

@@ -24,7 +24,7 @@ artifacts:
   - live_response/storage/*
   - live_response/containers/*
   - live_response/vms/*
-  - chkrootkit/chkrootkit.yaml
+  - chkrootkit/*
   - hash_executables/hash_executables.yaml
   - files/applications/git.yaml
   - files/applications/lesshst.yaml
