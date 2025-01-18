@@ -1,6 +1,13 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Hal Pomeranz (hrpomeranz@gmail.com) -- 2022-11-26
 # Distributed under the Creative Commons Attribution-ShareAlike 4.0 license (CC BY-SA 4.0)
+set -o errexit
+set -o errtrace
+set -o nounset
+set -o pipefail
+# set -o xtrace
+# nosemgrep: ifs-tampering
+IFS=$'\n\t'
 
 # shellcheck disable=SC2004
 
@@ -23,6 +30,7 @@ swap_bytes=0
 outputdir=""
 user_pid=""
 uac_path=""
+
 while getopts "bd:p:su" opts; do
     case ${opts} in
         b) swap_bytes=1
@@ -94,3 +102,12 @@ done
 
 # Get rid of the FIFO now that we're done
 [[ -e "${fifo_path}" ]] && rm -f "${fifo_path}"
+
+# Add a trap to ensure FIFO is removed on exit
+trap '[[ -e "${fifo_path}" ]] && rm -f "${fifo_path}"' EXIT
+
+# Error handling for dd and gzip
+if ! dd if="/proc/${pid}/mem" bs=4096 skip=${start_page} count=$((16#${end} / 4096 - ${start_page})) | tee "${fifo_path}"; then
+    printf "Error reading memory for PID %d\n" "${pid}" >&2
+    continue
+fi
