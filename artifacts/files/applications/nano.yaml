@@ -7,4 +7,3 @@ artifacts:
     path: /%user_home%
     name_pattern: [".nano_history"]
     max_depth: 4
-    
