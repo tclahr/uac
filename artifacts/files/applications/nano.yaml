@@ -1,0 +1,9 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect nano history files.
+    supported_os: [all]
+    collector: file
+    path: /%user_home%
+    name_pattern: [".nano_history"]
+    max_depth: 4
