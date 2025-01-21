@@ -7,5 +7,5 @@ artifacts:
     supported_os: [all]
     collector: command
     command: cargo install --list
-    output_file: cargo_install_list.txt
+    output_file: cargo_install_--list.txt
     
