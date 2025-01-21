@@ -1,0 +1,28 @@
+version: 1.0
+output_directory: /chkrootkit
+# Collect /etc/ld.so.preload even if it is hidden by LD_PRELOAD Rootkits.
+# ref 1: https://www.youtube.com/watch?v=3UrEJzqqPYQ
+# ref 2: https://righteousit.com/wp-content/uploads/2024/04/ld_preload-rootkits.pdf
+# ref 3: https://www.youtube.com/watch?v=-K9hhqv21P8
+# ref 4: https://righteousit.com/wp-content/uploads/2024/04/xfs_db-ftw.pdf
+artifacts:
+  -
+    description: Dump /etc/ld.so.preload with debugfs.
+    supported_os: [linux]
+    collector: command
+    condition: command_exists "debugfs" && df -T %mount_point%/etc | tail -n +2 | awk '{print $2}' | grep -q "ext"
+    command: linux_dump_etc_ld_so_preload.sh -f %mount_point%/etc/ld.so.preload
+    output_file: etc_ld_so_preload.txt
+  -
+    description: Dump /etc/ld.so.preload with xfs_db.
+    supported_os: [linux]
+    collector: command
+    condition: command_exists "xfs_db" && df -T %mount_point%/etc | tail -n +2 | awk '{print $2}' | grep -q "xfs"
+    command: linux_dump_etc_ld_so_preload.sh -f %mount_point%/etc/ld.so.preload
+    output_file: etc_ld_so_preload.txt
+  -
+    description: Collect file stats for /etc/ld.so.preload even if it is hidden.
+    supported_os: [linux]
+    collector: stat
+    path: /etc/ld.so.preload
+    output_file: stat_etc_ld_so_preload.txt
