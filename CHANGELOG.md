@@ -15,6 +15,7 @@
 - files/applications/katesession.yaml: Added colleection of metadata about recently opened files in Kwrite and Kate text editors [freebsd, linux, netbsd, openbsd].
 - files/applications/nano.yaml: Added collection of nano history file [all] (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal)).
 - files/applications/okular.yaml: Added collection of metadata related to documents that have been opened or interacted with using Okular, a document viewer for KDE [freebsd, linux, netbsd, openbsd].
+- files/logs/macos_unified_logs.yaml: Updated to include the collection of ASL logs [macos] (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal)).
 - files/system/gvfs_metadata.yaml: Added collection of data from the gvfs-metadata directory to retrieve user-specific metadata, such as file access details, custom properties, and interaction history [freebsd, linux, netbsd, openbsd].
 - files/system/kactivitymanagerd.yaml: Added collection of activity tracking data used by KActivityManager (part of KDE) to track and manage user activities, such as recently opened files, applications, and other resources [freebsd, linux, netbsd, openbsd].
 - files/system/upstart.yaml: Added collection of system-wide and user-session Upstart configuration files [linux].

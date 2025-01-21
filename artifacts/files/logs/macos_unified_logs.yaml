@@ -35,3 +35,5 @@ artifacts:
     path: /private/var/log/asl/*
     max_file_size: 1073741824 # 1GB
     
+# References:
+# https://darkdefender.medium.com/brief-introduction-to-macos-forensics-f817c9c83609
