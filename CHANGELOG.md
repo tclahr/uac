@@ -6,18 +6,24 @@
 
 - chkrootkit/hidden_etc_ld_so_preload.yaml: Added collection of hidden /etc/ld.so.preload using debugfs and xfs_db tools [linux] ([mnrkbys](https://github.com/mnrkbys)).
 - files/applications/ark.yaml: Added collection of metadata about recently opened archive files in Ark, the KDE archive manager [freebsd, linux, netbsd, openbsd].
+- files/applications/atftp.yaml: Added collection of atftp history files [all] (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal)).
 - files/applications/dolphin.yaml: Added collection of session data for the Dolphin file manager in the KDE desktop environment. This file contains information about the state of the Dolphin application, such as the currently open directories and their paths and the last accessed locations [freebsd, linux, netbsd, openbsd].
 - files/applications/dragon_player.yaml: Added collection of paths to recently opened video files using the Dragon Player [freebsd, linux, netbsd, openbsd].
 - files/applications/geany.yaml: Added collection of metadata about recently opened files in Geany text editor [freebsd, linux, netbsd, openbsd].
 - files/applications/gedit.yaml: Added collection of metadata about recently opened files in Gedit text editor [freebsd, linux, netbsd, openbsd].
 - files/applications/gnome_text_editor.yaml: Added collection of metadata about recently opened files in Gnome Text Editor [freebsd, linux, netbsd, openbsd].
 - files/applications/katesession.yaml: Added colleection of metadata about recently opened files in Kwrite and Kate text editors [freebsd, linux, netbsd, openbsd].
+- files/applications/nano.yaml: Added collection of nano history file [all] (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal)).
 - files/applications/okular.yaml: Added collection of metadata related to documents that have been opened or interacted with using Okular, a document viewer for KDE [freebsd, linux, netbsd, openbsd].
+- files/applications/php.yaml: Added collection of PHP history files [all] (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal)).
+- files/logs/macos_unified_logs.yaml: Updated to include the collection of ASL logs [macos] (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal)).
 - files/system/gvfs_metadata.yaml: Added collection of data from the gvfs-metadata directory to retrieve user-specific metadata, such as file access details, custom properties, and interaction history [freebsd, linux, netbsd, openbsd].
 - files/system/kactivitymanagerd.yaml: Added collection of activity tracking data used by KActivityManager (part of KDE) to track and manage user activities, such as recently opened files, applications, and other resources [freebsd, linux, netbsd, openbsd].
 - files/system/upstart.yaml: Added collection of system-wide and user-session Upstart configuration files [linux].
 - files/system/xdg_autostart.yaml: Added collection of system-wide and user-specific XDG autostart files [linux].
 - live_response/packages/0install.yaml: Added collection of the list of installed packages managed by Zero Install package manager [linux] (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal)).
+- live_response/packages/apk.yaml: Added collection of the list of installed packages managed by the apk package manager [linux] (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal)).
+- live_response/packages/cargo.yaml: Added collection of the list of installed packages managed by the cargo package manager [all] (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal)).
 - live_response/packages/conary.yaml: Added collection of the list of installed packages managed by the Conary package manager [linux] (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal)).
 - live_response/packages/dpkg.yaml: Updated to verify all packages to compare information about the installed files in the package with information about the files taken from the package metadata stored in the dpkg database [linux] ([mnrkbys](https://github.com/mnrkbys)).
 - live_response/packages/package_owns_file.yaml: Added collection of which installed package owns a specific file or command. Note that this artifact is resource-intensive and time-consuming to execute, so it is disabled by default in all profiles [linux] ([mnrkbys](https://github.com/mnrkbys)).
