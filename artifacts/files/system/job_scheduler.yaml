@@ -11,22 +11,27 @@ artifacts:
     collector: file
     path: /var/adm/cron
   -
+    description: Collect anacron files.
+    supported_os: [aix, freebsd, linux, netbsd, netscaler, openbsd, solaris]
+    collector: file
+    path: /var/spool/anacron
+  -
     description: Collect at files.
     supported_os: [aix, freebsd, linux, netbsd, netscaler, openbsd, solaris]
     collector: file
     path: /var/spool/at
   -
-    description: Collect at files.
+    description: Collect cron files.
     supported_os: [aix, freebsd, linux, netbsd, netscaler, openbsd, solaris]
     collector: file
     path: /var/spool/cron
   -
-    description: Collect at files.
+    description: Collect tabs files.
     supported_os: [aix, freebsd, linux, netbsd, netscaler, openbsd, solaris]
     collector: file
     path: /var/at/tabs
   -
-    description: Collect at and cron files.
+    description: Collect at files.
     supported_os: [macos]
     collector: file
     path: /private/var/at
