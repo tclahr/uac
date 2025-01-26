@@ -1,22 +1,11 @@
-version: 1.1
+version: 1.0
 condition: command_exists "slackpkg"
 output_directory: /live_response/packages
 artifacts:
   -
-    description: Display installed packages.
+    description: Display installed and upgradable packages.
     supported_os: [linux]
-    collector: command
-    command: slackpkg info *
-    output_file: slackpkg_info.txt
-  -
-    description: Display installed packages.
-    supported_os: [linux]
-    collector: command
-    command: find /var/log/packages -type f
-    output_file: slackpkg_find_-type-f.txt
-  -
-    description: Display installed packages.
-    supported_os: [linux]
-    collector: command
-    command: slackpkg search * | grep -v "uninstalled"
-    output_file: slackpkg_search.txt
+    collector: find
+    path: /var/log/packages/*
+    file_type: [f]
+    output_file: var_log_packages.txt
