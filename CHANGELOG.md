@@ -29,6 +29,7 @@
 - live_response/packages/package_owns_file.yaml: Added collection support for which installed package owns a specific file or command. Note that this artifact is resource-intensive and time-consuming to execute, so it is disabled by default in all profiles [linux] ([mnrkbys](https://github.com/mnrkbys)).
 - live_response/packages/paludis.yaml: Added collection support for listing installed packages managed by the Paludis package manager [linux] (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal)).
 - live_response/packages/portage.yaml: Added collection support for listing installed packages managed by the Portage package management system [linux] (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal)).
+- live_response/packages/slackpkg.yaml: Added collection support for listing installed and upgradable packages managed by slackpkg package manager [linux] (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal)).
 - live_response/packages/snap.yaml: Updated to display installed packages including all revisions [linux] (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal)).
 - live_response/storage/findmnt.yaml: Added JSON output format for listing all mounted file systems [linux] ([mnrkbys](https://github.com/mnrkbys)).
 - live_response/storage/lsblk.yaml: Added JSON output format for listing block devices [linux] ([mnrkbys](https://github.com/mnrkbys)).
