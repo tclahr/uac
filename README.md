@@ -39,7 +39,7 @@
 
 ## 🔎 About UAC
 
-**UAC (Unix-like Artifacts Collector)** is a powerful and extensible incident response tool designed for forensic investigators, security analysts, and IT professionals. It automates the collection of artifacts from a wide range of Unix-like systems, including AIX, Linux, macOS, FreeBSD, Solaris, and more.
+**UAC (Unix-like Artifacts Collector)** is a powerful and extensible incident response tool designed for forensic investigators, security analysts, and IT professionals. It automates the collection of artifacts from a wide range of Unix-like systems, including AIX, ESXi, FreeBSD, Linux, macOS, NetBSD, NetScaler, OpenBSD and Solaris.
 
 Whether you're handling an intrusion, conducting forensic investigations, or performing compliance checks, UAC simplifies and accelerates data collection while minimizing reliance on external support during critical incidents.
 
@@ -70,15 +70,15 @@ Full documentation is available at the [project documentation page](https://tcla
 
 UAC runs on any Unix-like system, regardless of the processor architecture. All UAC needs is shell :)
 
-[![AIX](https://img.shields.io/static/v1?label=&message=AIX&color=brightgreen&style=flat-square)](#-supported-operating-systems)
-[![ESXi](https://img.shields.io/static/v1?label=&message=ESXi&color=blue&style=flat-square)](#-supported-operating-systems)
-[![FreeBSD](https://img.shields.io/static/v1?label=&message=FreeBSD&color=red&style=flat-square)](#-supported-operating-systems)
-[![Linux](https://img.shields.io/static/v1?label=&message=Linux&color=lightgray&style=flat-square)](#-supported-operating-systems)
-[![macOS](https://img.shields.io/static/v1?label=&message=macOS&color=blueviolet&style=flat-square)](#-supported-operating-systems)
-[![NetBSD](https://img.shields.io/static/v1?label=&message=NetBSD&color=orange&style=flat-square)](#-supported-operating-systems)
-[![NetScaler](https://img.shields.io/static/v1?label=&message=NetScaler&color=blue&style=flat-square)](#-supported-operating-systems)
-[![OpenBSD](https://img.shields.io/static/v1?label=&message=OpenBSD&color=yellow&style=flat-square)](#-supported-operating-systems)
-[![Solaris](https://img.shields.io/static/v1?label=&message=Solaris&color=lightblue&style=flat-square)](#-supported-operating-systems)
+[![AIX](https://img.shields.io/static/v1?label=&message=AIX&color=brightgreen&style=for-the-badge)](#-supported-operating-systems)
+[![ESXi](https://img.shields.io/static/v1?label=&message=ESXi&color=blue&style=for-the-badge)](#-supported-operating-systems)
+[![FreeBSD](https://img.shields.io/static/v1?label=&message=FreeBSD&color=red&style=for-the-badge)](#-supported-operating-systems)
+[![Linux](https://img.shields.io/static/v1?label=&message=Linux&color=lightgray&style=for-the-badge)](#-supported-operating-systems)
+[![macOS](https://img.shields.io/static/v1?label=&message=macOS&color=blueviolet&style=for-the-badge)](#-supported-operating-systems)
+[![NetBSD](https://img.shields.io/static/v1?label=&message=NetBSD&color=orange&style=for-the-badge)](#-supported-operating-systems)
+[![NetScaler](https://img.shields.io/static/v1?label=&message=NetScaler&color=blue&style=for-the-badge)](#-supported-operating-systems)
+[![OpenBSD](https://img.shields.io/static/v1?label=&message=OpenBSD&color=yellow&style=for-the-badge)](#-supported-operating-systems)
+[![Solaris](https://img.shields.io/static/v1?label=&message=Solaris&color=lightblue&style=for-the-badge)](#-supported-operating-systems)
 
 *Note: UAC even runs on systems like Network Attached Storage (NAS) devices, Network devices such as OpenWrt, and IoT devices.*
 
