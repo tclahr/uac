@@ -1,4 +1,4 @@
-version: 2.0
+version: 3.0
 condition: command_exists "swupd"
 output_directory: /live_response/packages
 artifacts:
@@ -14,4 +14,10 @@ artifacts:
     collector: command
     command: swupd 3rd-party bundle-list
     output_file: swupd_3rd-party_bundle-list.txt
-  
+  -
+    description: List installed bundles.
+    supported_os: [linux]
+    collector: command
+    command: swupd bundle-list -all
+    output_file: swupd_bundle-list_-all.txt
+    
