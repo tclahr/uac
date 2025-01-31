@@ -47,15 +47,19 @@ All notable changes to this project will be documented in this file.
 - `memory_dump/coredump.yaml`: Added collection of core dump, ABRT, Apport, and kdump files [esxi, linux, netbsd]. (by [mnrkbys](https://github.com/mnrkbys))
 
 ### Changed
+
 - `files/logs/macos_unified_logs.yaml`: Updated to include collection of ASL logs [macos]. (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal))
 - `live_response/packages/dpkg.yaml`: Updated to validate all installed packages by comparing the installed files against the package metadata stored in the dpkg database [linux]. (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal))
 - `live_response/packages/snap.yaml`: Updated collection to display installed packages including all revisions [linux]. (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal))
 
 ### Fixed
+
 - Resolved an issue where the `hash` and `stat` collectors failed to function correctly when the `%user_home%` variable was included in the path property. ([#289](https://github.com/tclahr/uac/issues/289))
 
 ### Profiles
+
 - Added `offline_ir_triage.yaml`: New 'offline_ir_triage' profile for offline triage collections. (by [clausing](https://github.com/clausing))
 
 ### New Artifact Properties
+
 - Introduced `redirect_stderr_to_stdout`: When enabled, this property redirects error messages (stderr) to standard output (stdout). Useful for debugging and ensuring complete logs.
