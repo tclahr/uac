@@ -14,7 +14,7 @@ _remove_non_regular_files()
     _log_msg ERR "_remove_non_regular_files: no such file or directory '${__rn_file}'"
     return 1
   fi
- 
+
   if [ ! -s "${__rn_file}" ]; then
     _log_msg DBG "_remove_non_regular_files: skipping empty file '${__rn_file}'"
     return 1

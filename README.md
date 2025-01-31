@@ -1,3 +1,5 @@
+<!-- markdownlint-disable MD033 -->
+<!-- markdownlint-disable MD041 -->
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="logo/uac-light.svg">
@@ -8,13 +10,13 @@
 
   <p align="center">
     <a href="https://github.com/tclahr/uac/actions/workflows/shellcheck.yaml" alt="Issues">
-      <img src="https://github.com/tclahr/uac/actions/workflows/shellcheck.yaml/badge.svg" /></a>
+      <img src="https://github.com/tclahr/uac/actions/workflows/shellcheck.yaml/badge.svg" alt="shellcheck_badge"/></a>
     <a href="https://bestpractices.coreinfrastructure.org/projects/5640" alt="CII Best Practices">
-      <img src="https://bestpractices.coreinfrastructure.org/projects/5640/badge" /></a>
+      <img src="https://bestpractices.coreinfrastructure.org/projects/5640/badge" alt="bestpractices_badge"/></a>
     <a href="https://github.com/tclahr/uac/releases" alt="GitHub release (latest by date including pre-releases)">
-      <img src="https://img.shields.io/github/v/release/tclahr/uac?include_prereleases&style=flat-square" /></a>
+      <img src="https://img.shields.io/github/v/release/tclahr/uac?include_prereleases&style=flat-square" alt="release_badge"/></a>
     <a href="https://github.com/tclahr/uac/LICENSE" alt="License">
-      <img src="https://img.shields.io/github/license/tclahr/uac?style=flat-square" /></a>
+      <img src="https://img.shields.io/github/license/tclahr/uac?style=flat-square" alt="license_badge"/></a>
   </p>
 
   <p align="center">
@@ -34,8 +36,9 @@
     •
     <a href="#-license">License</a>
   </p>
-
 </p>
+<!-- markdownlint-enable MD033 -->
+<!-- markdownlint-enable MD041 -->
 
 ## 🔎 About UAC
 
@@ -43,7 +46,8 @@
 
 Whether you're handling an intrusion, conducting forensic investigations, or performing compliance checks, UAC simplifies and accelerates data collection while minimizing reliance on external support during critical incidents.
 
-### Key Highlights:
+### Key Highlights
+
 - 📂 Fully customizable via YAML profiles for tailored data collection.
 - ⚡ Lightweight, portable, and requires no installation or dependencies.
 - 🔒 Adheres to the order of volatility to ensure reliable data acquisition.
@@ -87,27 +91,32 @@ UAC runs on any Unix-like system, regardless of the processor architecture. All 
 UAC does not need to be installed on the target system. Simply download the latest version from the [releases page](https://github.com/tclahr/uac/releases), uncompress it, and launch. It's that simple!
 
 ### 🛠 Getting Started
+
 1. Download the latest release from the [Releases page](https://github.com/tclahr/uac/releases).
 2. Uncompress the archive.
 3. Execute the tool directly from the terminal.
 
 ### Examples
 
+<!-- markdownlint-disable MD033 -->
 <details>
 <summary>Click to view usage examples</summary>
 
 **Collect all artifacts based on the ir_triage profile:**
-```bash
+
+```shell
 ./uac -p ir_triage /tmp
 ```
 
 **Collect memory dump and all artifacts based on the full profile:**
-```bash
+
+```shell
 ./uac -a ./artifacts/memory_dump/avml.yaml -p full /tmp
 ```
 
 **Collect all artifacts excluding a specific one:**
-```bash
+
+```shell
 ./uac -p full -a \!artifacts/bodyfile/bodyfile.yaml .
 ```
 
@@ -124,6 +133,7 @@ UAC does not need to be installed on the target system. Simply download the late
 ```
 
 </details>
+<!-- markdownlint-enable MD033 -->
 
 ## 💙 Contributing
 
