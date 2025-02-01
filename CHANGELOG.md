@@ -25,6 +25,7 @@ All notable changes to this project will be documented in this file.
 - `files/applications/nano.yaml`: Added collection of nano history files [all]. (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal))
 - `files/applications/okular.yaml`: Added collection of metadata related to documents opened using Okular, a KDE document viewer [freebsd, linux, netbsd, openbsd].
 - `files/applications/php.yaml`: Added collection of PHP history files [all]. (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal))
+- `files/system/aws_ssm_agent.yaml`: Added collection of AWS Systems Manager Agent (SSM Agent) configuration files and logs [linux].
 - `files/system/gvfs_metadata.yaml`: Added collection of user-specific metadata from the `gvfs-metadata` directory [freebsd, linux, netbsd, openbsd].
 - `files/system/kactivitymanagerd.yaml`: Added collection of activity tracking data from KActivityManager [freebsd, linux, netbsd, openbsd].
 - `files/system/upstart.yaml`: Added collection of system-wide and user-session Upstart configuration files [linux].
@@ -38,10 +39,10 @@ All notable changes to this project will be documented in this file.
 - `live_response/packages/portage.yaml`: Added collection of installed package lists using the Portage package management system [linux]. (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal))
 - `live_response/packages/slackpkg.yaml`: Added collection of installed and upgradable packages managed by the Slackpkg package manager [linux]. (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal))
 - `live_response/storage/findmnt.yaml`: Added JSON output support for listing all mounted file systems [linux]. (by [mnrkbys](https://github.com/mnrkbys))
-- `live_response/system/immutable_files.yaml`: Added functionality to list immutable files on the system [linux].
 - `live_response/storage/lsblk.yaml`: Added JSON output support for listing block devices [linux]. (by [mnrkbys](https://github.com/mnrkbys))
 - `live_response/system/coredump.yaml`: Added collection of information about core dump files [linux]. (by [mnrkbys](https://github.com/mnrkbys))
 - `live_response/system/getcap.yaml`: Added functionality to collect a list of files with associated process capabilities [linux]. (by [mnrkbys](https://github.com/mnrkbys))
+- `live_response/system/immutable_files.yaml`: Added functionality to list immutable files on the system [linux].
 - `live_response/system/journalctl.yaml`: Added collection of boot time period listings using `journalctl` [linux]. (by [mnrkbys](https://github.com/mnrkbys))
 - `live_response/system/ulimit.yaml`: Added collection of all resource limits information [all]. (by [mnrkbys](https://github.com/mnrkbys))
 - `memory_dump/coredump.yaml`: Added collection of core dump, ABRT, Apport, and kdump files [esxi, linux, netbsd]. (by [mnrkbys](https://github.com/mnrkbys))

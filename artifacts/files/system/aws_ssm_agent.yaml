@@ -1,0 +1,14 @@
+version: 1.0
+# References:
+# https://docs.aws.amazon.com/systems-manager/latest/userguide/ssm-agent-logs.html
+artifacts:
+  -
+    description: Collect AWS Systems Manager Agent (SSM Agent) configuration files.
+    supported_os: [linux]
+    collector: file
+    path: /etc/amazon/ssm
+  -
+    description: Collect AWS Systems Manager Agent (SSM Agent) logs.
+    supported_os: [linux]
+    collector: file
+    path: /var/log/amazon/ssm/*.log
