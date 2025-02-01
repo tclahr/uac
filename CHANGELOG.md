@@ -49,6 +49,7 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - `files/logs/macos_unified_logs.yaml`: Updated to include collection of ASL logs [macos]. (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal))
+- `files/system/job_scheduler.yaml`: Updated to include anacron job scheduler [aix, esxi, freebsd, linux, netbsd, netscaler, openbsd, solaris]. (by [0xThiebaut](https://github.com/0xThiebaut))
 - `live_response/packages/dpkg.yaml`: Updated to validate all installed packages by comparing the installed files against the package metadata stored in the dpkg database [linux]. (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal))
 - `live_response/packages/snap.yaml`: Updated collection to display installed packages including all revisions [linux]. (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal))
 
