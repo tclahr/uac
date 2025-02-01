@@ -1,33 +1,33 @@
-version: 3.0
+version: 3.1
 artifacts:
   -
     description: Collect cron files.
-    supported_os: [aix, freebsd, linux, netbsd, netscaler, openbsd, solaris]
+    supported_os: [aix, esxi, freebsd, linux, netbsd, netscaler, openbsd, solaris]
     collector: file
     path: /var/cron
   -
     description: Collect cron files.
-    supported_os: [aix, freebsd, linux, netbsd, netscaler, openbsd, solaris]
+    supported_os: [aix, esxi, freebsd, linux, netbsd, netscaler, openbsd, solaris]
     collector: file
     path: /var/adm/cron
   -
     description: Collect anacron files.
-    supported_os: [aix, freebsd, linux, netbsd, netscaler, openbsd, solaris]
+    supported_os: [aix, esxi, freebsd, linux, netbsd, netscaler, openbsd, solaris]
     collector: file
     path: /var/spool/anacron
   -
     description: Collect at files.
-    supported_os: [aix, freebsd, linux, netbsd, netscaler, openbsd, solaris]
+    supported_os: [aix, esxi, freebsd, linux, netbsd, netscaler, openbsd, solaris]
     collector: file
     path: /var/spool/at
   -
     description: Collect cron files.
-    supported_os: [aix, freebsd, linux, netbsd, netscaler, openbsd, solaris]
+    supported_os: [aix, esxi, freebsd, linux, netbsd, netscaler, openbsd, solaris]
     collector: file
     path: /var/spool/cron
   -
     description: Collect tabs files.
-    supported_os: [aix, freebsd, linux, netbsd, netscaler, openbsd, solaris]
+    supported_os: [aix, esxi, freebsd, linux, netbsd, netscaler, openbsd, solaris]
     collector: file
     path: /var/at/tabs
   -
