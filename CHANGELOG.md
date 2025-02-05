@@ -25,6 +25,7 @@ All notable changes to this project will be documented in this file.
 - `files/applications/nano.yaml`: Added collection of nano history files [all]. (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal))
 - `files/applications/okular.yaml`: Added collection of metadata related to documents opened using Okular, a KDE document viewer [freebsd, linux, netbsd, openbsd].
 - `files/applications/php.yaml`: Added collection of PHP history files [all]. (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal))
+- `files/system/aws_ssm_agent.yaml`: Added collection of AWS Systems Manager Agent (SSM Agent) configuration files and logs [linux].
 - `files/system/azure_vm_agent.yaml`: Added collection of Azure Linux VM Agent logs and executed scripts [linux].
 - `files/system/gvfs_metadata.yaml`: Added collection of user-specific metadata from the `gvfs-metadata` directory [freebsd, linux, netbsd, openbsd].
 - `files/system/kactivitymanagerd.yaml`: Added collection of activity tracking data from KActivityManager [freebsd, linux, netbsd, openbsd].
