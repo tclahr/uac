@@ -44,6 +44,7 @@ _validate_artifact()
     __va_permissions=""
     __va_redirect_stderr_to_stdout=""
     __va_supported_os=""
+    __va_version=""
   }
   _cleanup_local_vars
 
@@ -71,6 +72,10 @@ _validate_artifact()
             read __va_dash
             if [ "${__va_dash}" != "-" ]; then
               _error_msg "artifact: invalid 'artifacts' sequence of mappings."
+              return 1
+            fi
+            if [ -z "${__va_version}" ]; then
+              _error_msg "artifact: 'version' must not be empty."
               return 1
             fi
             if [ -n "${__va_output_directory}" ]; then
@@ -370,6 +375,7 @@ _validate_artifact()
               _error_msg "artifact: 'version' must not be empty."
               return 1
             fi
+            __va_version="${__va_value}"
             ;;
           "-")
             ${__va_artifacts_prop_exists} \

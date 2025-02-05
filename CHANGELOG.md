@@ -46,17 +46,24 @@ All notable changes to this project will be documented in this file.
 - `live_response/system/journalctl.yaml`: Added collection of boot time period listings using `journalctl` [linux]. (by [mnrkbys](https://github.com/mnrkbys))
 - `live_response/system/ulimit.yaml`: Added collection of all resource limits information [all]. (by [mnrkbys](https://github.com/mnrkbys))
 - `memory_dump/coredump.yaml`: Added collection of core dump, ABRT, Apport, and kdump files [esxi, linux, netbsd]. (by [mnrkbys](https://github.com/mnrkbys))
+- `osquery/osquery.yaml`: Added collection of multiple artifacts using OSQuery tool. Please note that the `osqueryi` binary is not included in the UAC package and must be manually placed in the `bin` directory [linux]. (by [SolitudePy](https://github.com/SolitudePy))
 
 ### Changed
+
 - `files/logs/macos_unified_logs.yaml`: Updated to include collection of ASL logs [macos]. (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal))
+- `files/system/job_scheduler.yaml`: Updated to include anacron job scheduler [aix, esxi, freebsd, linux, netbsd, netscaler, openbsd, solaris]. (by [0xThiebaut](https://github.com/0xThiebaut))
 - `live_response/packages/dpkg.yaml`: Updated to validate all installed packages by comparing the installed files against the package metadata stored in the dpkg database [linux]. (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal))
 - `live_response/packages/snap.yaml`: Updated collection to display installed packages including all revisions [linux]. (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal))
+- `live_response/process/ps.yaml`: Updated to collect the system date before reporting a snapshot of the current processes including elapsed time since the process was started [all].
 
 ### Fixed
+
 - Resolved an issue where the `hash` and `stat` collectors failed to function correctly when the `%user_home%` variable was included in the path property. ([#289](https://github.com/tclahr/uac/issues/289))
 
 ### Profiles
+
 - Added `offline_ir_triage.yaml`: New 'offline_ir_triage' profile for offline triage collections. (by [clausing](https://github.com/clausing))
 
 ### New Artifact Properties
+
 - Introduced `redirect_stderr_to_stdout`: When enabled, this property redirects error messages (stderr) to standard output (stdout). Useful for debugging and ensuring complete logs.
