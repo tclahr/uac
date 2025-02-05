@@ -26,6 +26,7 @@ All notable changes to this project will be documented in this file.
 - `files/applications/okular.yaml`: Added collection of metadata related to documents opened using Okular, a KDE document viewer [freebsd, linux, netbsd, openbsd].
 - `files/applications/php.yaml`: Added collection of PHP history files [all]. (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal))
 - `files/system/aws_ssm_agent.yaml`: Added collection of AWS Systems Manager Agent (SSM Agent) configuration files and logs [linux].
+- `files/system/azure_vm_agent.yaml`: Added collection of Azure Linux VM Agent logs and executed scripts [linux].
 - `files/system/gvfs_metadata.yaml`: Added collection of user-specific metadata from the `gvfs-metadata` directory [freebsd, linux, netbsd, openbsd].
 - `files/system/kactivitymanagerd.yaml`: Added collection of activity tracking data from KActivityManager [freebsd, linux, netbsd, openbsd].
 - `files/system/upstart.yaml`: Added collection of system-wide and user-session Upstart configuration files [linux].
@@ -46,12 +47,15 @@ All notable changes to this project will be documented in this file.
 - `live_response/system/journalctl.yaml`: Added collection of boot time period listings using `journalctl` [linux]. (by [mnrkbys](https://github.com/mnrkbys))
 - `live_response/system/ulimit.yaml`: Added collection of all resource limits information [all]. (by [mnrkbys](https://github.com/mnrkbys))
 - `memory_dump/coredump.yaml`: Added collection of core dump, ABRT, Apport, and kdump files [esxi, linux, netbsd]. (by [mnrkbys](https://github.com/mnrkbys))
+- `osquery/osquery.yaml`: Added collection of multiple artifacts using OSQuery tool. Please note that the `osqueryi` binary is not included in the UAC package and must be manually placed in the `bin` directory [linux]. (by [SolitudePy](https://github.com/SolitudePy))
 
 ### Changed
 
 - `files/logs/macos_unified_logs.yaml`: Updated to include collection of ASL logs [macos]. (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal))
+- `files/system/job_scheduler.yaml`: Updated to include anacron job scheduler [aix, esxi, freebsd, linux, netbsd, netscaler, openbsd, solaris]. (by [0xThiebaut](https://github.com/0xThiebaut))
 - `live_response/packages/dpkg.yaml`: Updated to validate all installed packages by comparing the installed files against the package metadata stored in the dpkg database [linux]. (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal))
 - `live_response/packages/snap.yaml`: Updated collection to display installed packages including all revisions [linux]. (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal))
+- `live_response/process/ps.yaml`: Updated to collect the system date before reporting a snapshot of the current processes including elapsed time since the process was started [all].
 
 ### Fixed
 
