@@ -18,12 +18,14 @@ _list_artifacts()
     return 1
   fi
 
-  if [ "${__la_os}" = "all" ] || _is_in_list "${__la_os}" "aix|esxi|freebsd|linux|macos|netbsd|netscaler|openbsd|solaris"; then
-    true
-  else
-    _error_msg "list artifacts: invalid operating system '${__la_os}'"
-    return 1
-  fi
+  case "${__la_os}" in
+    all|aix|esxi|freebsd|linux|macos|netbsd|netscaler|openbsd|solaris)
+      ;;
+    *)
+      _error_msg "list artifacts: invalid operating system '${__la_os}'"
+      return 1
+      ;;
+  esac
 
   # Get artifacts for all or a specific operating system.
   # Arguments:
@@ -36,29 +38,22 @@ _list_artifacts()
     __oa_artifacts_dir="${1:-}"
     __oa_os="${2:-all}"
 
-    if [ "${__oa_os}" = "all" ]; then
-      # shellcheck disable=SC2162
-      find "${__oa_artifacts_dir}"/* -name "*.yaml" -print 2>/dev/null \
-        | while read __oa_item || [ -n "${__oa_item}" ]; do
-            if grep -q -E "modifier:.*true" "${__oa_item}" 2>/dev/null; then
-              echo "${__oa_item} (modifier)" | sed -e "s|^${__oa_artifacts_dir}/||" 2>/dev/null
-            else
-              echo "${__oa_item}" | sed -e "s|^${__oa_artifacts_dir}/||" 2>/dev/null
-            fi
-          done
-    else
-      # shellcheck disable=SC2162
-      find "${__oa_artifacts_dir}"/* -name "*.yaml" -print 2>/dev/null \
-        | while read __oa_item || [ -n "${__oa_item}" ]; do
-            if grep -q -E "supported_os:.*all|${__oa_os}" "${__oa_item}" 2>/dev/null; then
-              if grep -q -E "modifier:.*true" "${__oa_item}" 2>/dev/null; then
-                echo "${__oa_item} (modifier)" | sed -e "s|^${__oa_artifacts_dir}/||" 2>/dev/null
-              else
-                echo "${__oa_item}" | sed -e "s|^${__oa_artifacts_dir}/||" 2>/dev/null
-              fi
-            fi
-          done
-    fi
+    # shellcheck disable=SC2162
+    find "${__oa_artifacts_dir}"/* -name "*.yaml" -print 2>/dev/null \
+      | sort -u \
+      | while read __oa_item || [ -n "${__oa_item}" ]; do
+          __oa_modifier=""
+
+          if grep -q -E "modifier:.*true" "${__oa_item}" 2>/dev/null; then
+            __oa_modifier=" (modifier)"
+          fi
+
+          if [ "${__oa_os}" = "all" ] || grep -q -E "supported_os:.*(all|${__oa_os})" "${__oa_item}"; then
+            __oa_filename=`echo "${__oa_item}" | sed -e "s|^${__oa_artifacts_dir}/||" 2>/dev/null`
+            echo "${__oa_filename}${__oa_modifier}"
+          fi
+        done
+
   }
 
   __la_selected_artifacts=`_get_operating_system_artifact_list "${__la_artifacts_dir}" "${__la_os}"`

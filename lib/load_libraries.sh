@@ -24,7 +24,6 @@
 . "${__UAC_DIR}/lib/get_epoch_date.sh"
 . "${__UAC_DIR}/lib/get_hostname.sh"
 . "${__UAC_DIR}/lib/get_mount_point_by_file_system.sh"
-. "${__UAC_DIR}/lib/get_nproc.sh"
 . "${__UAC_DIR}/lib/get_operating_system.sh"
 . "${__UAC_DIR}/lib/get_profile_by_name.sh"
 . "${__UAC_DIR}/lib/get_system_arch_bin_path.sh"

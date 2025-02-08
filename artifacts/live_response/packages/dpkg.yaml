@@ -1,4 +1,4 @@
-version: 2.0
+version: 2.1
 condition: command_exists "dpkg"
 output_directory: /live_response/packages
 artifacts:
@@ -8,3 +8,9 @@ artifacts:
     collector: command
     command: dpkg -l
     output_file: dpkg_-l.txt
+  -
+    description: Verify all packages to compare information about the installed files in the package with information about the files taken from the package metadata stored in the dpkg database.
+    supported_os: [linux]
+    collector: command
+    command: dpkg -V
+    output_file: dpkg_-V.txt

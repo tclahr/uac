@@ -1,0 +1,10 @@
+version: 1.0
+condition: command_exists "ulimit"
+output_directory: /live_response/system
+artifacts:
+  -
+    description: Display all resource limits.
+    supported_os: [all]
+    collector: command
+    command: ulimit -a
+    output_file: ulimit_-a.txt

@@ -1,0 +1,10 @@
+version: 1.0
+condition: command_exists "0install"
+output_directory: /live_response/packages
+artifacts:
+  -
+    description: Display installed packages.
+    supported_os: [linux]
+    collector: command
+    command: 0install list
+    output_file: 0install_list.txt
