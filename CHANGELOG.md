@@ -37,6 +37,7 @@ All notable changes to this project will be documented in this file.
 - `live_response/packages/conary.yaml`: Added collection of installed packages managed by Conary [all]. (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal))
 - `live_response/packages/package_owns_file.yaml`: Added functionality to determine which installed package owns a specific file or command. This artifact is resource-intensive and time-consuming, so it is disabled by default in all profiles [linux]. ([mnrkbys](https://github.com/mnrkbys))
 - `live_response/packages/paludis.yaml`: Added collection of the installed packages managed by the Paludis package manager [linux]. (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal))
+- `live_response/packages/pkgin.yaml`: Added functionality to list information for fully installed packages only [netbsd]. (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal))
 - `live_response/packages/portage.yaml`: Added collection of installed package lists using the Portage package management system [linux]. (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal))
 - `live_response/packages/slackpkg.yaml`: Added collection of installed and upgradable packages managed by the Slackpkg package manager [linux]. (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal))
 - `live_response/storage/findmnt.yaml`: Added JSON output support for listing all mounted file systems [linux]. (by [mnrkbys](https://github.com/mnrkbys))
