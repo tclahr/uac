@@ -283,5 +283,5 @@ _find_based_collector()
       fi
       ;;
   esac
- 
+
 }

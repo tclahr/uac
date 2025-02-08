@@ -63,7 +63,6 @@ __UAC_MOUNT_POINT="/"
 __UAC_OPERATING_SYSTEM=""
 __UAC_ENABLE_MODIFIERS=false
 __UAC_RUN_AS_NON_ROOT=false
-__UAC_PROCESSING_UNITS=""
 __UAC_HOSTNAME=""
 __UAC_TEMP_DIR=""
 __UAC_START_DATE=""
@@ -295,8 +294,6 @@ trap _terminate INT
 
 # get current user
 __ua_current_user=`_get_current_user`
-# get the number of processing units available
-__UAC_PROCESSING_UNITS=`_get_nproc`
 
 # show UAC banner and system information
 printf "%s\n" "--------------------------------------------------------------------------------"
