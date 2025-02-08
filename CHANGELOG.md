@@ -55,6 +55,7 @@ All notable changes to this project will be documented in this file.
 - `files/system/job_scheduler.yaml`: Updated to include anacron job scheduler [aix, esxi, freebsd, linux, netbsd, netscaler, openbsd, solaris]. (by [0xThiebaut](https://github.com/0xThiebaut))
 - `live_response/packages/dpkg.yaml`: Updated to validate all installed packages by comparing the installed files against the package metadata stored in the dpkg database [linux]. (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal))
 - `live_response/packages/snap.yaml`: Updated collection to display installed packages including all revisions [linux]. (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal))
+- `live_response/packages/swupd.yaml`: Updated to list all available bundles for the current version of Clear Linux [linux]. (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal))
 - `live_response/process/ps.yaml`: Updated to collect the system date before reporting a snapshot of the current processes including elapsed time since the process was started [all].
 
 ### Fixed
