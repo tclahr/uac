@@ -13,7 +13,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
-- - `live_response/packages/cargo.yaml`: Added collection of installed packages managed by guix [linux]. (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal))
+- `live_response/packages/cargo.yaml`: Added collection of installed packages managed by guix [linux]. (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal))
 - `chkrootkit/hidden_etc_ld_so_preload.yaml`: Added collection of hidden `/etc/ld.so.preload` using `debugfs` and `xfs_db` tools [linux]. (by [mnrkbys](https://github.com/mnrkbys))
 - `files/applications/ark.yaml`: Added collection of metadata about recently opened archive files in Ark, the KDE archive manager [freebsd, linux, netbsd, openbsd].
 - `files/applications/atftp.yaml`: Added collection of atftp history files [all]. (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal))
