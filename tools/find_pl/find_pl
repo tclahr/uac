@@ -4,6 +4,7 @@
 use strict;
 use File::Find;
 use Cwd ();
+use POSIX qw(getpwuid getgrgid);
 
 sub usage {
     print <<"USAGE";
@@ -13,20 +14,20 @@ EXPRESSION
     The part of the command line after the list of starting points is the expression.
     This is a kind of query specification describing how we match files and what we do with the files that were matched. An expression is composed of a sequence of things:
 
-       Tests  Tests return a true or false value, usually on the basis of some property of a file we are considering.  The -empty test for example is  true  only
-              when the current file is empty.
+    Tests  Tests return a true or false value, usually on the basis of some property of a file we are considering.  The -empty test for example is  true  only
+        when the current file is empty.
 
-       Actions
-              Actions have side effects (such as printing something on the standard output) and return either true or false, usually based on whether or not they
-              are successful.  The -print action for example prints the name of the current file on the standard output.
+    Actions
+        Actions have side effects (such as printing something on the standard output) and return either true or false, usually based on whether or not they
+        are successful.  The -print action for example prints the name of the current file on the standard output.
 
-       Global options
-              Global options affect the operation of tests and actions specified on any part of the command line.  Global options always return true.  The -depth
-              option for example makes find traverse the file system in a depth-first order.
+    Global options
+        Global options affect the operation of tests and actions specified on any part of the command line.  Global options always return true.  The -depth
+        option for example makes find traverse the file system in a depth-first order.
 
-       Operators
-              Operators join together the other items within the expression.  They include for example -o (meaning logical OR)  and  -a  (meaning  logical  AND).
-              Where an operator is missing, -a is assumed.
+    Operators
+        Operators join together the other items within the expression.  They include for example -o (meaning logical OR)  and  -a  (meaning  logical  AND).
+        Where an operator is missing, -a is assumed.
 
 GLOBAL OPTIONS
     -maxdepth LEVELS
@@ -59,6 +60,12 @@ TESTS
 
     -name PATTERN
         File name matches specified glob wildcard pattern (just as with using find).
+
+    -nogroup
+        No group corresponds to file's numeric group ID.
+
+    -nouser
+        No user corresponds to file's numeric user ID.
 
     -path PATTERN
         File path matches specified glob wildcard pattern (just as with using find).
@@ -224,6 +231,10 @@ while (@ARGV) {
         $wanted .= "\$File::Find::name =~ /" . fileglob_to_regex(shift) . "/s";
     } elsif ($arg_option eq "-ipath") {
         $wanted .= "\$File::Find::name =~ /" . fileglob_to_regex(shift) . "/si";
+    } elsif ($arg_option eq "-nogroup") {
+        $wanted .= "(!getgrgid(\$gid))";
+    } elsif ($arg_option eq "-nouser") {
+        $wanted .= "(!getpwuid(\$uid))";
     } elsif ($arg_option eq "-atime") {
         my $atime = shift;
         ($atime =~ /^([\+\-]?)(\d+)$/) || die ("find.pl: invalid argument to -atime: $atime\n");
