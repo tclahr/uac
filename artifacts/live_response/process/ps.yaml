@@ -1,4 +1,4 @@
-version: 3.0
+version: 4.0
 output_directory: /live_response/process
 artifacts:
   -
@@ -38,17 +38,38 @@ artifacts:
     command: ps -efl
     output_file: ps_-efl.txt
   -
+    description: Collect system date before reporting a snapshot of the current processes including elapsed time since the process was started.
+    supported_os: [aix, solaris]
+    collector: command
+    condition: ps -eo pid,user,etime,args
+    command: date
+    output_file: date_before_ps_-eo_pid_user_etime_args.txt
+  -
     description: Report a snapshot of the current processes including elapsed time since the process was started.
     supported_os: [aix, solaris]
     collector: command
     command: ps -eo pid,user,etime,args
     output_file: ps_-eo_pid_user_etime_args.txt
   -
+    description: Collect system date before reporting a snapshot of the current processes including elapsed time since the process was started.
+    supported_os: [freebsd, linux, macos, netbsd, netscaler, openbsd]
+    collector: command
+    condition: ps -axo pid,user,etime,args
+    command: date
+    output_file: date_before_ps_-axo_pid_user_etime_args.txt
+  -
     description: Report a snapshot of the current processes including elapsed time since the process was started.
     supported_os: [freebsd, linux, macos, netbsd, netscaler, openbsd]
     collector: command
     command: ps -axo pid,user,etime,args
     output_file: ps_-axo_pid_user_etime_args.txt
+  -
+    description: Collet system date before reporting a snapshot of the current processes including time the command started.
+    supported_os: [freebsd, linux, macos, netbsd, netscaler, openbsd]
+    collector: command
+    condition: ps -axo pid,user,lstart,args
+    command: date
+    output_file: date_before_ps_-axo_pid_user_lstart_args.txt
   -
     description: Report a snapshot of the current processes including time the command started.
     supported_os: [freebsd, linux, macos, netbsd, netscaler, openbsd]
@@ -61,6 +82,13 @@ artifacts:
     collector: command
     command: ps -axo pid,user,cgroup
     output_file: ps_-axo_pid_user_cgroup.txt
+  -
+    description: Collect system date before reporting a snapshot of the current processes including used time, verbose, session ID and process group, state and type.
+    supported_os: [esxi]
+    collector: command
+    condition: ps -P -T -c -g -s -t -J
+    command: date
+    output_file: date_before_ps_-P_-T_-c_-g_-s_-t_-J.txt
   -
     description: Report a snapshot of the current processes including used time, verbose, session ID and process group, state and type.
     supported_os: [esxi]
