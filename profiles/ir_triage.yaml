@@ -26,6 +26,7 @@ artifacts:
   - live_response/vms/*
   - chkrootkit/*
   - hash_executables/hash_executables.yaml
+  - osquery/osquery.yaml
   - files/applications/git.yaml
   - files/applications/lesshst.yaml
   - files/applications/viminfo.yaml

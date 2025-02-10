@@ -146,9 +146,9 @@ To ensure consistency throughout the source code, keep these rules in mind as yo
 
 We have very precise rules over how our git commit messages can be formatted. This leads to more readable messages that are easy to follow when looking through the project history.
 
-Each commit message consists of a **header**, a **blank line** and a **body**. The header has a special format that includes a **type** and a **subject**. 
+Each commit message consists of a **header**, a **blank line** and a **body**. The header has a special format that includes a **type** and a **subject**.
 
-```
+```text
 <type>: <subject>
 <BLANK LINE>
 <body>
@@ -158,7 +158,7 @@ Any line of the commit message cannot be longer than 100 characters! This allows
 
 Samples:
 
-```
+```text
 docs: update changelog to v2.0.0
 fix: fixed issue #15
 ```

@@ -1,0 +1,22 @@
+version: 1.0
+description: Collect Azure Linux VM Agent logs and executed scripts.
+# References:
+# https://learn.microsoft.com/en-us/azure/virtual-machines/extensions/agent-linux
+# https://learn.microsoft.com/en-us/azure/virtual-machines/linux/run-command
+# https://techcommunity.microsoft.com/blog/itopstalkblog/how-to-run-scripts-on-azure-virtual-machines-with-the-run-command/292446
+artifacts:
+  -
+    description: Collect Azure Linux VM Agent logs.
+    supported_os: [linux]
+    collector: file
+    path: /var/log/azure
+  -
+    description: Collect Azure Linux VM Agent advanced troubleshooting logs.
+    supported_os: [linux]
+    collector: file
+    path: /var/log/waagent.log
+  -
+    description: Collect Azure Linux VM Agent executed scripts (including stderr and stdout).
+    supported_os: [linux]
+    collector: file
+    path: /var/lib/waagent/run-command/download

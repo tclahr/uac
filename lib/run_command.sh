@@ -41,5 +41,5 @@ _run_command()
   fi
 
   return "${__rc_exit_code}"
- 
+
 }
