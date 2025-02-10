@@ -13,7 +13,6 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
-- `live_response/packages/cargo.yaml`: Added collection of installed packages managed by guix [linux]. (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal))
 - `chkrootkit/hidden_etc_ld_so_preload.yaml`: Added collection of hidden `/etc/ld.so.preload` using `debugfs` and `xfs_db` tools [linux]. (by [mnrkbys](https://github.com/mnrkbys))
 - `files/applications/ark.yaml`: Added collection of metadata about recently opened archive files in Ark, the KDE archive manager [freebsd, linux, netbsd, openbsd].
 - `files/applications/atftp.yaml`: Added collection of atftp history files [all]. (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal))
@@ -35,12 +34,14 @@ All notable changes to this project will be documented in this file.
 - `live_response/packages/0install.yaml`: Added collection of installed packages managed by Zero Install [linux]. (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal))
 - `live_response/packages/apk.yaml`: Added collection of installed packages managed by apk package manager [linux]. (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal))
 - `live_response/packages/cargo.yaml`: Added collection of installed packages managed by cargo [all]. (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal))
+- `live_response/packages/cargo.yaml`: Added collection of installed packages managed by guix [linux]. (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal))
 - `live_response/packages/conary.yaml`: Added collection of installed packages managed by Conary [all]. (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal))
 - `live_response/packages/package_owns_file.yaml`: Added functionality to determine which installed package owns a specific file or command. This artifact is resource-intensive and time-consuming, so it is disabled by default in all profiles [linux]. ([mnrkbys](https://github.com/mnrkbys))
 - `live_response/packages/paludis.yaml`: Added collection of the installed packages managed by the Paludis package manager [linux]. (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal))
 - `live_response/packages/pkgin.yaml`: Added functionality to list information for fully installed packages only [netbsd]. (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal))
 - `live_response/packages/portage.yaml`: Added collection of installed package lists using the Portage package management system [linux]. (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal))
 - `live_response/packages/slackpkg.yaml`: Added collection of installed and upgradable packages managed by the Slackpkg package manager [linux]. (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal))
+- `live_response/packages/tazpkg.yaml`: Added collection of the installed packages managed by the Tazpkg package manager [linux]. (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal))
 - `live_response/storage/findmnt.yaml`: Added JSON output support for listing all mounted file systems [linux]. (by [mnrkbys](https://github.com/mnrkbys))
 - `live_response/storage/lsblk.yaml`: Added JSON output support for listing block devices [linux]. (by [mnrkbys](https://github.com/mnrkbys))
 - `live_response/system/coredump.yaml`: Added collection of information about core dump files [linux]. (by [mnrkbys](https://github.com/mnrkbys))
