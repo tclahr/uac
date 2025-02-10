@@ -1,6 +1,6 @@
 version: 1.0
 condition: command_exists "tazpkg"
-output_directory: /live_response/package
+output_directory: /live_response/packages
 artifacts:
   -
     description: Display installed packages.
