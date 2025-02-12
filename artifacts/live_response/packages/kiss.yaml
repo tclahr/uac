@@ -1,0 +1,10 @@
+version: 1.0
+condition: command_exists "kiss"
+output_directory: /live_response/packages
+artifacts:
+  -
+    description: Display installed packages.
+    supported_os: [linux]
+    collector: command
+    command: kiss list
+    output_file: kiss_list.txt

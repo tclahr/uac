@@ -24,7 +24,8 @@ artifacts:
   - live_response/storage/*
   - live_response/containers/*
   - live_response/vms/*
-  - chkrootkit/chkrootkit.yaml
+  - chkrootkit/*
   - hash_executables/hash_executables.yaml
+  - osquery/osquery.yaml
   - files/*
   
