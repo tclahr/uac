@@ -1,4 +1,4 @@
-version: 2.0
+version: 2.1
 artifacts:
   # system accounting files, covering processes that terminated on the system, allowing one to see past program executions
   # this is deactivated by default, but quite useful when active
@@ -31,6 +31,7 @@ artifacts:
     supported_os: [solaris]
     collector: file
     path: /var/adm/acct
+    file_type: [f]
     max_file_size: 1073741824 # 1GB
     ignore_date_range: true
   -
@@ -38,5 +39,6 @@ artifacts:
     supported_os: [solaris]
     collector: file
     path: /var/adm/exacct
+    file_type: [f]
     max_file_size: 1073741824 # 1GB
     ignore_date_range: true

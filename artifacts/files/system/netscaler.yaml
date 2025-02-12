@@ -1,4 +1,4 @@
-version: 3.0
+version: 3.1
 artifacts:
   -
     description: Collect system configuration files.
@@ -11,18 +11,21 @@ artifacts:
     supported_os: [netscaler]
     collector: file
     path: /var/vpn
+    file_type: [f]
     max_file_size: 10485760 # 10MB
   -
     description: Collect files from /var/netscaler/logon.
     supported_os: [netscaler]
     collector: file
     path: /var/netscaler/logon
+    file_type: [f]
     max_file_size: 10485760 # 10MB
   -
     description: Collect files from /netscaler/ns_gui.
     supported_os: [netscaler]
     collector: file
     path: /netscaler/ns_gui
+    file_type: [f]
     max_file_size: 10485760 # 10MB
 
 # References:

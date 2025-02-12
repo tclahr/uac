@@ -1,9 +1,10 @@
-version: 1.0
+version: 1.1
 artifacts:
   -
     description: Collect /var/run/log logs.
     supported_os: [esxi]
     collector: file
     path: /var/run/log
+    file_type: [f]
     max_file_size: 1073741824 # 1GB
   
