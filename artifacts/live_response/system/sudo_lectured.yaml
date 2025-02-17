@@ -4,14 +4,30 @@ artifacts:
   -
     description: Timestamps of users who saw the sudo lecture message.
     supported_os: [all]
-    collector: command
-    foreach: ls /var/db/sudo/lectured
-    command: stat /var/db/sudo/lectured/"%line%"
+    collector: stat
+    path: /var/db/sudo/lectured
+    file_type: [f]
+    output_file: sudo_lectured_timestamps.txt
+  -
+    description: Timestamps of users who saw the sudo lecture message.
+    supported_os: [all]
+    collector: stat
+    path: /var/lib/sudo/lectured
+    file_type: [f]
     output_file: sudo_lectured_timestamps.txt
   -
     description: Timestamps of users who saw the sudo lecture message in JSON format.
     supported_os: [linux]
     collector: command
-    foreach: ls /var/db/sudo/lectured
-    command: stat --format='{"File": "%n", "Size": %s, "Blocks": %b, "IOBlock": %o, "Type": "%F", "Device": "%D", "Inode": %i, "Permissions": "%a", "Links": %h, "UID": %u, "GID": %g, "Access": "%x", "Modify": "%y", "Change": "%z"}' /var/db/sudo/lectured/"%line%"
-    output_file: sudo_lectured_timestamps_json.txt
+    condition: command_exists "stat"
+    foreach: ls "%mount_point%/var/db/sudo/lectured"
+    command: stat --format='{"File": "%n", "Size": %s, "Blocks": %b, "IOBlock": %o, "Type": "%F", "Device": "%D", "Inode": %i, "Permissions": "%a", "Links": %h, "UID": %u, "GID": %g, "Access": "%x", "Modify": "%y", "Change": "%z"}' "%mount_point%/var/db/sudo/lectured/%line%"
+    output_file: sudo_lectured_timestamps.json
+  -
+    description: Timestamps of users who saw the sudo lecture message in JSON format.
+    supported_os: [linux]
+    collector: command
+    condition: command_exists "stat"
+    foreach: ls "%mount_point%/var/lib/sudo/lectured"
+    command: stat --format='{"File": "%n", "Size": %s, "Blocks": %b, "IOBlock": %o, "Type": "%F", "Device": "%D", "Inode": %i, "Permissions": "%a", "Links": %h, "UID": %u, "GID": %g, "Access": "%x", "Modify": "%y", "Change": "%z"}' "%mount_point%/var/lib/sudo/lectured/%line%"
+    output_file: sudo_lectured_timestamps.json
