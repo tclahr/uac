@@ -471,6 +471,12 @@ _validate_artifact()
                 _error_msg "artifact: missing 'path' property."
                 return 1
               fi
+              if [ -n "${__va_max_file_size}" ] || [ -n "${__va_min_file_size}" ]; then
+                if [ "${__va_file_type}" != "f" ]; then
+                  _error_msg "artifact: 'file_type' must be of type 'f' when using 'max_file_size' or 'min_file_size'."
+                  return 1
+                fi
+              fi
               if [ -n "${__va_command}" ]; then
                 _error_msg "artifact: invalid 'command' property for '${__va_collector}' collector."
                 return 1

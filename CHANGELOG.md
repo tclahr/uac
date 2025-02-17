@@ -67,6 +67,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 
 - Resolved an issue where the `hash` and `stat` collectors failed to function correctly when the `%user_home%` variable was included in the path property. ([#289](https://github.com/tclahr/uac/issues/289))
+- Resolved an issue where directories were also being collected when `max_file_size` or `min_file_size` was set. ([#338](https://github.com/tclahr/uac/issues/338))
 
 ### Profiles
 

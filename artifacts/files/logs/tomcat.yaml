@@ -1,4 +1,4 @@
-version: 2.0
+version: 2.1
 artifacts:
   -
     description: Collect Apache Tomcat logs.
@@ -6,4 +6,5 @@ artifacts:
     collector: file
     path: /
     name_pattern: ["access_log*", "error_log*", "httpd-access.log*", "httpd-error.log*", "catalina.out"]
+    file_type: [f]
     max_file_size: 1073741824 # 1GB
