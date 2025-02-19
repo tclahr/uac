@@ -1,4 +1,4 @@
-version: 1.0
+version: 1.1
 artifacts:
   -
     description: Collect nginx logs.
@@ -6,11 +6,13 @@ artifacts:
     collector: file
     path: /var/log
     name_pattern: ["*access_log*", "*access.log*", "*error_log*", "*error.log*"]
+    file_type: [f]
     max_file_size: 1073741824 # 1GB
   -
     description: Collect nginx logs.
     supported_os: [all]
     collector: file
     path: /var/log/nginx
+    file_type: [f]
     max_file_size: 1073741824 # 1GB
 

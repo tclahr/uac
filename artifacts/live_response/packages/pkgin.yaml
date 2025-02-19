@@ -1,0 +1,11 @@
+version: 1.0
+condition: command_exists "pkgin"
+output_directory: /live_response/packages
+artifacts:
+  -
+    description: Display information for fully installed packages only.
+    supported_os: [netbsd]
+    collector: command
+    command: pkgin list
+    output_file: pkgin_list.txt
+    

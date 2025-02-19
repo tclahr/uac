@@ -1,10 +1,10 @@
-version: 3.0
-condition: command_exists "ipkg"
+version: 1.0
+condition: command_exists "kiss"
 output_directory: /live_response/packages
 artifacts:
   -
     description: Display installed packages.
     supported_os: [linux]
     collector: command
-    command: ipkg list-installed
-    output_file: ipkg_list-installed.txt
+    command: kiss list
+    output_file: kiss_list.txt
