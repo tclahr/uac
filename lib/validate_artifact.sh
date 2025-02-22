@@ -37,6 +37,8 @@ _validate_artifact()
     __va_min_file_size=""
     __va_modifier=""
     __va_name_pattern=""
+    __va_no_group=""
+    __va_no_user=""
     __va_output_directory=""
     __va_output_file=""
     __va_path_pattern=""
@@ -284,6 +286,20 @@ _validate_artifact()
             fi
             __va_name_pattern="${__va_value}"
             ;;
+          "no_group:")
+            if [ "${__va_value}" != true ] && [ "${__va_value}" != false ]; then
+              _error_msg "artifact: 'no_group' must be 'true' or 'false'."
+              return 1
+            fi
+            __va_no_group="${__va_value}"
+            ;;
+          "no_user:")
+            if [ "${__va_value}" != true ] && [ "${__va_value}" != false ]; then
+              _error_msg "artifact: 'no_user' must be 'true' or 'false'."
+              return 1
+            fi
+            __va_no_user="${__va_value}"
+            ;;
           "output_directory:")
             if [ -z "${__va_value}" ]; then
               _error_msg "artifact: 'output_directory' must not be empty."
@@ -449,6 +465,14 @@ _validate_artifact()
               fi
               if [ -n "${__va_name_pattern}" ]; then
                 _error_msg "artifact: invalid 'name_pattern' property for 'command' collector."
+                return 1
+              fi
+              if [ -n "${__va_no_group}" ]; then
+                _error_msg "artifact: invalid 'no_group' property for 'command' collector."
+                return 1
+              fi
+              if [ -n "${__va_no_user}" ]; then
+                _error_msg "artifact: invalid 'no_user' property for 'command' collector."
                 return 1
               fi
               if [ -n "${__va_path}" ]; then

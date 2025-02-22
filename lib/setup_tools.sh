@@ -15,6 +15,8 @@ _setup_tools()
   __UAC_TOOL_FIND_SIZE_SUPPORT=false
   __UAC_TOOL_FIND_MAXDEPTH_SUPPORT=false
   __UAC_TOOL_FIND_PERM_SUPPORT=false
+  __UAC_TOOL_FIND_NOGROUP_SUPPORT=false
+  __UAC_TOOL_FIND_NOUSER_SUPPORT=false
   __UAC_TOOL_FIND_TYPE_SUPPORT=false
   __UAC_TOOL_FIND_MTIME_SUPPORT=false
   __UAC_TOOL_FIND_ATIME_SUPPORT=false
@@ -47,6 +49,12 @@ _setup_tools()
   fi
   if find "${__UAC_DIR}/uac" -perm 755 -print >/dev/null; then
     __UAC_TOOL_FIND_PERM_SUPPORT=true
+  fi
+  if find "${__UAC_DIR}/uac" -nogroup -print >/dev/null; then
+    __UAC_TOOL_FIND_NOGROUP_SUPPORT=true
+  fi
+  if find "${__UAC_DIR}/uac" -nouser -print >/dev/null; then
+    __UAC_TOOL_FIND_NOUSER_SUPPORT=true
   fi
   if find "${__UAC_DIR}/uac" -type f -print >/dev/null; then
     __UAC_TOOL_FIND_TYPE_SUPPORT=true

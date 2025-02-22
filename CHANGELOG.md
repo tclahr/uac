@@ -76,3 +76,5 @@ All notable changes to this project will be documented in this file.
 ### New Artifact Properties
 
 - Introduced `redirect_stderr_to_stdout`: When enabled, this property redirects error messages (stderr) to standard output (stdout). Useful for debugging and ensuring complete logs.
+- Introduced `no_group`: Use this option to search for files that have a group ID (GID) that no longer exists in the system.
+- Incroduced `no_user`: Use this option to search for files that have a user ID (UID) that no longer exists in the system.

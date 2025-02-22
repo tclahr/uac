@@ -35,6 +35,8 @@ _parse_artifact()
     __pa_max_file_size=""
     __pa_min_file_size=""
     __pa_name_pattern=""
+    __pa_no_group=false
+    __pa_no_user=false
     __pa_output_directory=""
     __pa_output_file=""
     __pa_path_pattern=""
@@ -182,6 +184,12 @@ _parse_artifact()
             ;;
           "name_pattern:")
             __pa_name_pattern=`echo "${__pa_value}" | _array_to_psv 2>/dev/null`
+            ;;
+          "no_group:")
+            __pa_no_group="${__pa_value}"
+            ;;
+          "no_user:")
+            __pa_no_user="${__pa_value}"
             ;;
           "output_directory:")
             if echo "${__pa_value}" | grep -q -E "%temp_directory%"; then
@@ -347,6 +355,8 @@ _parse_artifact()
                         "${__pa_min_file_size}" \
                         "${__pa_max_file_size}" \
                         "${__pa_permissions}" \
+                        "${__pa_no_group}" \
+                        "${__pa_no_user}" \
                         "${__pa_ignore_date_range}" \
                         "${__UAC_TEMP_DATA_DIR}" \
                         "file_collector.tmp"
@@ -365,6 +375,8 @@ _parse_artifact()
                         "${__pa_min_file_size}" \
                         "${__pa_max_file_size}" \
                         "${__pa_permissions}" \
+                        "${__pa_no_group}" \
+                        "${__pa_no_user}" \
                         "${__pa_ignore_date_range}" \
                         "${__pa_new_output_directory}" \
                         "${__pa_new_output_file}"
@@ -383,6 +395,8 @@ _parse_artifact()
                         "${__pa_min_file_size}" \
                         "${__pa_max_file_size}" \
                         "${__pa_permissions}" \
+                        "${__pa_no_group}" \
+                        "${__pa_no_user}" \
                         "${__pa_ignore_date_range}" \
                         "${__pa_new_output_directory}" \
                         "${__pa_new_output_file}"
@@ -401,6 +415,8 @@ _parse_artifact()
                         "${__pa_min_file_size}" \
                         "${__pa_max_file_size}" \
                         "${__pa_permissions}" \
+                        "${__pa_no_group}" \
+                        "${__pa_no_user}" \
                         "${__pa_ignore_date_range}" \
                         "${__pa_new_output_directory}" \
                         "${__pa_new_output_file}"
@@ -430,6 +446,8 @@ _parse_artifact()
                   "${__pa_min_file_size}" \
                   "${__pa_max_file_size}" \
                   "${__pa_permissions}" \
+                  "${__pa_no_group}" \
+                  "${__pa_no_user}" \
                   "${__pa_ignore_date_range}" \
                   "${__UAC_TEMP_DATA_DIR}" \
                   "file_collector.tmp"
@@ -448,6 +466,8 @@ _parse_artifact()
                   "${__pa_min_file_size}" \
                   "${__pa_max_file_size}" \
                   "${__pa_permissions}" \
+                  "${__pa_no_group}" \
+                  "${__pa_no_user}" \
                   "${__pa_ignore_date_range}" \
                   "${__pa_output_directory}" \
                   "${__pa_output_file}"
@@ -466,6 +486,8 @@ _parse_artifact()
                   "${__pa_min_file_size}" \
                   "${__pa_max_file_size}" \
                   "${__pa_permissions}" \
+                  "${__pa_no_group}" \
+                  "${__pa_no_user}" \
                   "${__pa_ignore_date_range}" \
                   "${__pa_output_directory}" \
                   "${__pa_output_file}"
@@ -484,6 +506,8 @@ _parse_artifact()
                   "${__pa_min_file_size}" \
                   "${__pa_max_file_size}" \
                   "${__pa_permissions}" \
+                  "${__pa_no_group}" \
+                  "${__pa_no_user}" \
                   "${__pa_ignore_date_range}" \
                   "${__pa_output_directory}" \
                   "${__pa_output_file}"
