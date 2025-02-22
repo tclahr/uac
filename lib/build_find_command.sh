@@ -14,6 +14,8 @@
 #   integer min_file_size: minimum file size (optional)
 #   integer max_file_size: maximum file size (optional)
 #   string permissions: permissions (optional)
+#   boolean no_group: no group corresponds to file's numeric group ID (optional)
+#   boolean no_user: No user corresponds to file's numeric user ID (optional)
 #   string print0: uses -print0 instead of -print (optional)
 #   integer start_date_days: days (optional)
 #   integer end_date_days: days (optional)
@@ -44,6 +46,10 @@ _build_find_command()
   __bf_max_file_size="${1:-}"
   shift
   __bf_permissions="${1:-}"
+  shift
+  __bf_no_group="${1:-false}"
+  shift
+  __bf_no_user="${1:-false}"
   shift
   __bf_print0="${1:-false}"
   shift
@@ -144,6 +150,8 @@ _build_find_command()
                 "${__bf_min_file_size}" \
                 "${__bf_max_file_size}" \
                 "${__bf_permissions}" \
+                "${__bf_no_group}" \
+                "${__bf_no_user}" \
                 "${__bf_print0}" \
                 "${__bf_start_date_days}" \
                 "${__bf_end_date_days}" \
@@ -195,6 +203,8 @@ _build_find_command()
                 "${__bf_min_file_size}" \
                 "${__bf_max_file_size}" \
                 "${__bf_permissions}" \
+                "${__bf_no_group}" \
+                "${__bf_no_user}" \
                 "${__bf_print0}" \
                 "${__bf_start_date_days}" \
                 "${__bf_end_date_days}" \
@@ -231,6 +241,8 @@ _build_find_command()
                 "${__bf_min_file_size}" \
                 "${__bf_max_file_size}" \
                 "${__bf_permissions}" \
+                "${__bf_no_group}" \
+                "${__bf_no_user}" \
                 "${__bf_print0}" \
                 "${__bf_start_date_days}" \
                 "${__bf_end_date_days}" \
@@ -289,6 +301,8 @@ _build_find_command()
                 "${__bf_min_file_size}" \
                 "${__bf_max_file_size}" \
                 "${__bf_permissions_line}" \
+                "${__bf_no_group}" \
+                "${__bf_no_user}" \
                 "${__bf_print0}" \
                 "${__bf_start_date_days}" \
                 "${__bf_end_date_days}" \
@@ -298,6 +312,28 @@ _build_find_command()
       fi
     else
       __bf_find_params="${__bf_find_params}${__bf_find_params:+ }-perm ${__bf_permissions}"
+    fi
+  fi
+
+  # build -nogroup parameter
+  # -nogroup parameter will be added even if find does not support it
+  if ${__bf_no_group}; then
+    __bf_find_params="${__bf_find_params}${__bf_find_params:+ }-nogroup"
+    if ${__UAC_TOOL_FIND_NOGROUP_SUPPORT}; then
+      true
+    elif ${__bf_perl_command_exists}; then
+      __bf_find_tool="find_pl"
+    fi
+  fi
+
+  # build -nouser parameter
+  # -nouser parameter will be added even if find does not support it
+  if ${__bf_no_user}; then
+    __bf_find_params="${__bf_find_params}${__bf_find_params:+ }-nouser"
+    if ${__UAC_TOOL_FIND_NOUSER_SUPPORT}; then
+      true
+    elif ${__bf_perl_command_exists}; then
+      __bf_find_tool="find_pl"
     fi
   fi
 
@@ -367,11 +403,11 @@ _build_find_command()
   # build -mtime, -atime and -ctime together
   __bf_find_date_range_param=""
   if {
-       { [ -n "${__bf_find_mtime_param}" ] && [ -n "${__bf_find_atime_param}" ]; } || \
-       { [ -n "${__bf_find_mtime_param}" ] && [ -n "${__bf_find_ctime_param}" ]; } || \
-       { [ -n "${__bf_find_atime_param}" ] && [ -n "${__bf_find_ctime_param}" ]; } 
-     } && \
-     { ${__UAC_TOOL_FIND_OPERATORS_SUPPORT} || ${__bf_perl_command_exists}; }; then
+        { [ -n "${__bf_find_mtime_param}" ] && [ -n "${__bf_find_atime_param}" ]; } || \
+        { [ -n "${__bf_find_mtime_param}" ] && [ -n "${__bf_find_ctime_param}" ]; } || \
+        { [ -n "${__bf_find_atime_param}" ] && [ -n "${__bf_find_ctime_param}" ]; } 
+      } && \
+      { ${__UAC_TOOL_FIND_OPERATORS_SUPPORT} || ${__bf_perl_command_exists}; }; then
       # multiples date range parameters enabled
     if ${__UAC_TOOL_FIND_OPERATORS_SUPPORT}; then
       true
