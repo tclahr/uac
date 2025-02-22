@@ -48,10 +48,12 @@ All notable changes to this project will be documented in this file.
 - `live_response/storage/lsblk.yaml`: Added JSON output support for listing block devices [linux]. (by [mnrkbys](https://github.com/mnrkbys))
 - `live_response/system/coredump.yaml`: Added collection of information about core dump files [linux]. (by [mnrkbys](https://github.com/mnrkbys))
 - `live_response/system/getcap.yaml`: Added functionality to collect a list of files with associated process capabilities [linux]. (by [mnrkbys](https://github.com/mnrkbys))
+- `live_response/system/group_name_unknown_files.yaml`: List files with an unknown group ID name [aix, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris].
 - `live_response/system/immutable_files.yaml`: Added functionality to list immutable files on the system [linux].
 - `live_response/system/journalctl.yaml`: Added collection of boot time period listings using `journalctl` [linux]. (by [mnrkbys](https://github.com/mnrkbys))
 - `live_response/system/sudo_lectured.yaml`: Added collection of the timestamps of users who saw the sudo lecture message [all]. (by [mnrkbys](https://github.com/mnrkbys))
 - `live_response/system/ulimit.yaml`: Added collection of all resource limits information [all]. (by [mnrkbys](https://github.com/mnrkbys))
+- `live_response/system/user_name_unknown_files.yaml`: List files with an unknown user ID name [aix, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris].
 - `memory_dump/coredump.yaml`: Added collection of core dump, ABRT, Apport, and kdump files [esxi, linux, netbsd]. (by [mnrkbys](https://github.com/mnrkbys))
 - `osquery/osquery.yaml`: Added collection of multiple artifacts using OSQuery tool. Please note that the `osqueryi` binary is not included in the UAC package and must be manually placed in the `bin` directory [linux]. (by [SolitudePy](https://github.com/SolitudePy))
 
@@ -75,6 +77,6 @@ All notable changes to this project will be documented in this file.
 
 ### New Artifact Properties
 
-- Introduced `redirect_stderr_to_stdout`: When enabled, this property redirects error messages (stderr) to standard output (stdout). Useful for debugging and ensuring complete logs.
 - Introduced `no_group`: Use this option to search for files that have a group ID (GID) that no longer exists in the system.
 - Incroduced `no_user`: Use this option to search for files that have a user ID (UID) that no longer exists in the system.
+- Introduced `redirect_stderr_to_stdout`: When enabled, this property redirects error messages (stderr) to standard output (stdout). Useful for debugging and ensuring complete logs.

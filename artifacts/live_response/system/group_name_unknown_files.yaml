@@ -1,0 +1,218 @@
+version: 1.0
+output_directory: /live_response/system
+artifacts:
+  -
+    description: List files under / directory (no recursion, top-level only) with an unknown group ID name.
+    supported_os: [aix, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris]
+    collector: find
+    path: /
+    max_depth: 1
+    file_type: [f]
+    no_group: true
+    output_file: group_name_unknown_files.txt
+  -
+    description: List files under /bin directory with an unknown group ID name.
+    supported_os: [aix, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris]
+    collector: find
+    path: /bin
+    file_type: [f]
+    no_group: true
+    output_file: group_name_unknown_files.txt
+  -
+    description: List files under /sbin directory with an unknown group ID name.
+    supported_os: [aix, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris]
+    collector: find
+    path: /sbin
+    file_type: [f]
+    no_group: true
+    output_file: group_name_unknown_files.txt
+  -
+    description: List files under /usr/bin directory with an unknown group ID name.
+    supported_os: [aix, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris]
+    collector: find
+    path: /usr/bin
+    file_type: [f]
+    no_group: true
+    output_file: group_name_unknown_files.txt
+  -
+    description: List files under /usr/sbin directory with an unknown group ID name.
+    supported_os: [aix, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris]
+    collector: find
+    path: /usr/sbin
+    file_type: [f]
+    no_group: true
+    output_file: group_name_unknown_files.txt
+  -
+    description: List files under /usr/local/bin directory with an unknown group ID name.
+    supported_os: [aix, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris]
+    collector: find
+    path: /usr/local/bin
+    file_type: [f]
+    no_group: true
+    output_file: group_name_unknown_files.txt
+  -
+    description: List files under /usr/local/sbin directory with an unknown group ID name.
+    supported_os: [aix, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris]
+    collector: find
+    path: /usr/local/sbin
+    file_type: [f]
+    no_group: true
+    output_file: group_name_unknown_files.txt
+  -
+    description: List files under /dev directory with an unknown group ID name.
+    supported_os: [aix, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris]
+    collector: find
+    path: /dev
+    file_type: [f]
+    no_group: true
+    output_file: group_name_unknown_files.txt
+  -
+    description: List files under /etc directory with an unknown group ID name.
+    supported_os: [aix, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris]
+    collector: find
+    path: /etc
+    file_type: [f]
+    no_group: true
+    output_file: group_name_unknown_files.txt
+  -
+    description: List files under /home directory (no recursion, top-level only) with an unknown group ID name.
+    supported_os: [aix, freebsd, linux, netbsd, netscaler, openbsd]
+    collector: find
+    path: /home
+    max_depth: 1
+    file_type: [f]
+    no_group: true
+    output_file: group_name_unknown_files.txt
+  -
+    description: List files under /export/home directory (no recursion, top-level only) with an unknown group ID name.
+    supported_os: [solaris]
+    collector: find
+    path: /export/home
+    max_depth: 1
+    file_type: [f]
+    no_group: true
+    output_file: group_name_unknown_files.txt
+  -
+    description: List files under /Users directory (no recursion, top-level only) with an unknown group ID name.
+    supported_os: [macos]
+    collector: find
+    path: /Users
+    max_depth: 1
+    file_type: [f]
+    no_group: true
+    output_file: group_name_unknown_files.txt
+  -
+    description: List files under user home directories (no recursion, top-level only) with an unknown group ID name.
+    supported_os: [aix, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris]
+    collector: find
+    path: /%user_home%
+    max_depth: 1
+    file_type: [f]
+    no_group: true
+    exclude_nologin_users: true
+    output_file: group_name_unknown_files.txt
+  -
+    description: List files under /lib directory with an unknown group ID name.
+    supported_os: [aix, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris]
+    collector: find
+    path: /lib
+    file_type: [f]
+    no_group: true
+    output_file: group_name_unknown_files.txt
+  -
+    description: List files under /lib32 directory with an unknown group ID name.
+    supported_os: [aix, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris]
+    collector: find
+    path: /lib32
+    file_type: [f]
+    no_group: true
+    output_file: group_name_unknown_files.txt
+  -
+    description: List files under /lib64 directory with an unknown group ID name.
+    supported_os: [aix, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris]
+    collector: find
+    path: /lib64
+    file_type: [f]
+    no_group: true
+    output_file: group_name_unknown_files.txt
+  -
+    description: List files under /usr/lib directory with an unknown group ID name.
+    supported_os: [aix, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris]
+    collector: find
+    path: /usr/lib
+    file_type: [f]
+    no_group: true
+    output_file: group_name_unknown_files.txt
+  -
+    description: List files under /usr/lib32 directory with an unknown group ID name.
+    supported_os: [aix, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris]
+    collector: find
+    path: /usr/lib32
+    file_type: [f]
+    no_group: true
+    output_file: group_name_unknown_files.txt
+  -
+    description: List files under /usr/lib64 directory with an unknown group ID name.
+    supported_os: [aix, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris]
+    collector: find
+    path: /usr/lib64
+    file_type: [f]
+    no_group: true
+    output_file: group_name_unknown_files.txt
+  -
+    description: List files under /var/lib directory with an unknown group ID name.
+    supported_os: [aix, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris]
+    collector: find
+    path: /var/lib
+    file_type: [f]
+    no_group: true
+    output_file: group_name_unknown_files.txt
+  -
+    description: List files under /run directory with an unknown group ID name.
+    supported_os: [aix, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris]
+    collector: find
+    path: /run
+    file_type: [f]
+    no_group: true
+    output_file: group_name_unknown_files.txt
+  -
+    description: List files under /var/run directory with an unknown group ID name.
+    supported_os: [aix, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris]
+    collector: find
+    path: /var/run
+    file_type: [f]
+    no_group: true
+    output_file: group_name_unknown_files.txt
+  -
+    description: List files under /tmp directory with an unknown group ID name.
+    supported_os: [aix, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris]
+    collector: find
+    path: /tmp
+    file_type: [f]
+    no_group: true
+    output_file: group_name_unknown_files.txt
+  -
+    description: List files under /var/tmp directory with an unknown group ID name.
+    supported_os: [aix, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris]
+    collector: find
+    path: /var/tmp
+    file_type: [f]
+    no_group: true
+    output_file: group_name_unknown_files.txt
+  -
+    description: List files under /run/tmp directory with an unknown group ID name.
+    supported_os: [aix, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris]
+    collector: find
+    path: /run/tmp
+    file_type: [f]
+    no_group: true
+    output_file: group_name_unknown_files.txt
+  -
+    description: List files under /usr/local directory with an unknown group ID name.
+    supported_os: [aix, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris]
+    collector: find
+    path: /usr/local
+    file_type: [f]
+    no_group: true
+    output_file: group_name_unknown_files.txt
+  
