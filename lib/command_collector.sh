@@ -53,7 +53,7 @@ _command_collector()
 
           if [ -n "${__cc_output_file}" ]; then
             __cc_new_output_file=`echo "${__cc_output_file}" | sed -e "s|%line%|${__cc_line}|g"`
-            __cc_new_output_file=`_sanitize_output_file "${__cc_new_output_file}"`
+            __cc_new_output_file=`_sanitize_output_file "${__cc_new_output_file}" "${__cc_new_output_directory}" 240`
             
             if ${__cc_compress_output_file} && command_exists "gzip"; then
               __cc_new_output_file="${__cc_new_output_file}.gz"
@@ -92,7 +92,7 @@ _command_collector()
     fi
 
     if [ -n "${__cc_output_file}" ]; then
-      __cc_output_file=`_sanitize_output_file "${__cc_output_file}"`
+      __cc_output_file=`_sanitize_output_file "${__cc_output_file}" "${__cc_output_directory}" 240`
       if ${__cc_compress_output_file} && command_exists "gzip"; then
         __cc_output_file="${__cc_output_file}.gz"
         __cc_command="${__cc_command} | gzip - | cat -"

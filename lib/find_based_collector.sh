@@ -131,7 +131,7 @@ _find_based_collector()
   fi
 
   __fc_output_directory=`_sanitize_output_directory "${__fc_output_directory}"`
-  __fc_output_file=`_sanitize_output_file "${__fc_output_file}"`
+  __fc_output_file=`_sanitize_output_file "${__fc_output_file}" "${__fc_output_directory}"`
 
   if [ ! -d  "${__fc_output_directory}" ]; then
     mkdir -p "${__fc_output_directory}" >/dev/null
