@@ -71,6 +71,7 @@ All notable changes to this project will be documented in this file.
 
 - Resolved an issue where the `hash` and `stat` collectors failed to function correctly when the `%user_home%` variable was included in the path property. ([#289](https://github.com/tclahr/uac/issues/289))
 - Resolved an issue where directories were also being collected when `max_file_size` or `min_file_size` was set. ([#338](https://github.com/tclahr/uac/issues/338))
+- Resolved an issue where UAC was failing to create output file names longer than 255 characters. ([#341](https://github.com/tclahr/uac/issues/341))
 
 ### Profiles
 
