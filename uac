@@ -12,7 +12,7 @@ LC_ALL=C
 export LC_ALL
 
 # UAC version information
-__UAC_VERSION="DEVELOPMENT VERSION"
+__UAC_VERSION="3.1.0-rc1"
 
 # get UAC working dir
 __UAC_DIR=`pwd`
