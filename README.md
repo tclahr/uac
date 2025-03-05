@@ -53,7 +53,7 @@ Whether you're handling an intrusion, conducting forensic investigations, or per
 - 🔒 Adheres to the order of volatility to ensure reliable data acquisition.
 - 🛠 Designed for diverse environments, including IoT devices and NAS systems.
 
-![UAC in Action](https://tclahr.github.io/uac-docs/img/uac_3_collection.gif)
+![UAC in Action](https://tclahr.github.io/uac-docs/img/uac_collection.gif)
 
 ## 📘 Documentation
 
@@ -69,6 +69,7 @@ Full documentation is available at the [project documentation page](https://tcla
 - Extract files and directories status to create a bodyfile.
 - Collect system and user-specific data, configuration files, and logs.
 - Acquire volatile memory from Linux systems using different methods and tools.
+- Support to write output to various cloud platforms.
 
 ## 💾 Supported Operating Systems
 

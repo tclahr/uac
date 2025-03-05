@@ -31,6 +31,7 @@ All notable changes to this project will be documented in this file.
 - `files/system/kactivitymanagerd.yaml`: Added collection of activity tracking data from KActivityManager [freebsd, linux, netbsd, openbsd].
 - `files/system/upstart.yaml`: Added collection of system-wide and user-session Upstart configuration files [linux].
 - `files/system/xdg_autostart.yaml`: Added collection of system-wide and user-specific XDG autostart files [linux].
+- `live_response/network/nmcli.yaml`: Added displaying information from network connections managed by NetworkManager [linux].
 - `live_response/packages/0install.yaml`: Added collection of installed packages managed by Zero Install [linux]. (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal))
 - `live_response/packages/apk.yaml`: Added collection of installed packages managed by apk package manager [linux]. (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal))
 - `live_response/packages/cargo.yaml`: Added collection of installed packages managed by cargo [all]. (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal))
@@ -66,6 +67,7 @@ All notable changes to this project will be documented in this file.
 - `live_response/packages/swupd.yaml`: Updated to list all available bundles for the current version of Clear Linux [linux]. (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal))
 - `live_response/process/ps.yaml`: Updated to collect the system date before reporting a snapshot of the current processes including elapsed time since the process was started [all].
 - `live_response/system/falconctl.yaml`: Updated as `falconctl -g` is no longer a valid option [linux, macos].
+- `memory_dump/avml.yaml`: Updated output file name from avml.raw to avml.lime [linux].
 
 ### Fixed
 

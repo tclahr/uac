@@ -1,8 +1,8 @@
-version: 2.0
+version: 2.1
 output_directory: /memory_dump
 artifacts:
   -
     description: Capture a memory image.
     supported_os: [linux]
     collector: command
-    command: avml avml.raw
+    command: avml avml.lime
