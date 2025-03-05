@@ -15,6 +15,8 @@ _setup_tools()
   __UAC_TOOL_FIND_SIZE_SUPPORT=false
   __UAC_TOOL_FIND_MAXDEPTH_SUPPORT=false
   __UAC_TOOL_FIND_PERM_SUPPORT=false
+  __UAC_TOOL_FIND_NOGROUP_SUPPORT=false
+  __UAC_TOOL_FIND_NOUSER_SUPPORT=false
   __UAC_TOOL_FIND_TYPE_SUPPORT=false
   __UAC_TOOL_FIND_MTIME_SUPPORT=false
   __UAC_TOOL_FIND_ATIME_SUPPORT=false
@@ -25,6 +27,7 @@ _setup_tools()
   __UAC_TOOL_STAT_PARAMS=""
   __UAC_TOOL_STAT_BTIME=false
   __UAC_TOOL_TAR_NO_FROM_FILE_SUPPORT=false
+  __UAC_MAX_FILENAME_SIZE=118
   __UAC_TOOL_MD5_BIN=""
   __UAC_TOOL_SHA1_BIN=""
   __UAC_TOOL_SHA256_BIN=""
@@ -47,6 +50,12 @@ _setup_tools()
   fi
   if find "${__UAC_DIR}/uac" -perm 755 -print >/dev/null; then
     __UAC_TOOL_FIND_PERM_SUPPORT=true
+  fi
+  if find "${__UAC_DIR}/uac" -nogroup -print >/dev/null; then
+    __UAC_TOOL_FIND_NOGROUP_SUPPORT=true
+  fi
+  if find "${__UAC_DIR}/uac" -nouser -print >/dev/null; then
+    __UAC_TOOL_FIND_NOUSER_SUPPORT=true
   fi
   if find "${__UAC_DIR}/uac" -type f -print >/dev/null; then
     __UAC_TOOL_FIND_TYPE_SUPPORT=true
@@ -106,6 +115,11 @@ _setup_tools()
       fi
       ;;
   esac
+
+  # check if the maximum filename size that can be created in the file system is 255 characters
+  if touch "${__UAC_TEMP_DATA_DIR}/1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890"; then
+    __UAC_MAX_FILENAME_SIZE=245
+  fi
 
   # check for available MD5 hashing tools
   if command_exists "md5sum"; then

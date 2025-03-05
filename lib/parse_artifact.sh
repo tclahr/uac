@@ -35,11 +35,14 @@ _parse_artifact()
     __pa_max_file_size=""
     __pa_min_file_size=""
     __pa_name_pattern=""
+    __pa_no_group=false
+    __pa_no_user=false
     __pa_output_directory=""
     __pa_output_file=""
     __pa_path_pattern=""
     __pa_path=""
     __pa_permissions=""
+    __pa_redirect_stderr_to_stdout=false
     __pa_supported_os=""
   }
   _cleanup_local_vars
@@ -93,14 +96,14 @@ _parse_artifact()
               # run global condition command and skip collection if exit code is greater than 0
               if echo "${__pa_condition}" | grep -q -E "^!"; then
                 __pa_condition=`echo "${__pa_condition}" | sed -e 's|^! *||' 2>/dev/null`
-                if _run_command "${__pa_condition}" >/dev/null; then
+                if _run_command "${__pa_condition}" true >/dev/null; then
                   _log_msg DBG "Global condition '${__pa_condition}' not satisfied. Skipping..."
                   return 1
                 else
                   _log_msg DBG "Global condition '${__pa_condition}' satisfied"
                 fi
               else
-                if _run_command "${__pa_condition}" >/dev/null; then
+                if _run_command "${__pa_condition}" true >/dev/null; then
                   _log_msg DBG "Global condition '${__pa_condition}' satisfied"
                 else
                   _log_msg DBG "Global condition '${__pa_condition}' not satisfied. Skipping..."
@@ -182,6 +185,12 @@ _parse_artifact()
           "name_pattern:")
             __pa_name_pattern=`echo "${__pa_value}" | _array_to_psv 2>/dev/null`
             ;;
+          "no_group:")
+            __pa_no_group="${__pa_value}"
+            ;;
+          "no_user:")
+            __pa_no_user="${__pa_value}"
+            ;;
           "output_directory:")
             if echo "${__pa_value}" | grep -q -E "%temp_directory%"; then
               __pa_output_directory=`echo "${__pa_value}" | sed -e "s|%temp_directory%|${__UAC_TEMP_DATA_DIR}/tmp|g" 2>/dev/null`
@@ -200,6 +209,9 @@ _parse_artifact()
             ;;
           "permissions:")
             __pa_permissions=`echo "${__pa_value}" | _array_to_psv 2>/dev/null`
+            ;;
+          "redirect_stderr_to_stdout:")
+            __pa_redirect_stderr_to_stdout="${__pa_value}"
             ;;
           "supported_os:")
             __pa_supported_os=`echo "${__pa_value}" | _array_to_psv 2>/dev/null`
@@ -232,7 +244,7 @@ _parse_artifact()
               # run local condition command and skip collection if exit code greater than 0
               if echo "${__pa_condition}" | grep -q -E "^!"; then
                 __pa_condition=`echo "${__pa_condition}" | sed -e 's|^! *||' 2>/dev/null`
-                if _run_command "${__pa_condition}" false >/dev/null; then
+                if _run_command "${__pa_condition}" true >/dev/null; then
                   _log_msg DBG "Condition '${__pa_condition}' not satisfied. Skipping..."
                   _cleanup_local_vars
                   continue
@@ -240,7 +252,7 @@ _parse_artifact()
                   _log_msg DBG "Condition '${__pa_condition}' satisfied"
                 fi
               else
-                if _run_command "${__pa_condition}" false >/dev/null; then
+                if _run_command "${__pa_condition}" true >/dev/null; then
                   _log_msg DBG "Condition '${__pa_condition}' satisfied"
                 else
                   _log_msg DBG "Condition '${__pa_condition}' not satisfied. Skipping..."
@@ -326,7 +338,8 @@ _parse_artifact()
                         "${__pa_new_command}" \
                         "${__pa_new_output_directory}" \
                         "${__pa_new_output_file}" \
-                        "${__pa_compress_output_file}"
+                        "${__pa_compress_output_file}" \
+                        "${__pa_redirect_stderr_to_stdout}"
                     elif [ "${__pa_collector}" = "file" ]; then
                       _find_based_collector \
                         "file" \
@@ -342,6 +355,8 @@ _parse_artifact()
                         "${__pa_min_file_size}" \
                         "${__pa_max_file_size}" \
                         "${__pa_permissions}" \
+                        "${__pa_no_group}" \
+                        "${__pa_no_user}" \
                         "${__pa_ignore_date_range}" \
                         "${__UAC_TEMP_DATA_DIR}" \
                         "file_collector.tmp"
@@ -360,11 +375,13 @@ _parse_artifact()
                         "${__pa_min_file_size}" \
                         "${__pa_max_file_size}" \
                         "${__pa_permissions}" \
+                        "${__pa_no_group}" \
+                        "${__pa_no_user}" \
                         "${__pa_ignore_date_range}" \
                         "${__pa_new_output_directory}" \
                         "${__pa_new_output_file}"
                     elif [ "${__pa_collector}" = "hash" ]; then
-                      _file_collector \
+                      _find_based_collector \
                         "hash" \
                         "${__pa_new_path}" \
                         "${__pa_is_file_list}" \
@@ -378,11 +395,13 @@ _parse_artifact()
                         "${__pa_min_file_size}" \
                         "${__pa_max_file_size}" \
                         "${__pa_permissions}" \
+                        "${__pa_no_group}" \
+                        "${__pa_no_user}" \
                         "${__pa_ignore_date_range}" \
                         "${__pa_new_output_directory}" \
                         "${__pa_new_output_file}"
                     elif [ "${__pa_collector}" = "stat" ]; then
-                      _file_collector \
+                      _find_based_collector \
                         "stat" \
                         "${__pa_new_path}" \
                         "${__pa_is_file_list}" \
@@ -396,6 +415,8 @@ _parse_artifact()
                         "${__pa_min_file_size}" \
                         "${__pa_max_file_size}" \
                         "${__pa_permissions}" \
+                        "${__pa_no_group}" \
+                        "${__pa_no_user}" \
                         "${__pa_ignore_date_range}" \
                         "${__pa_new_output_directory}" \
                         "${__pa_new_output_file}"
@@ -408,7 +429,8 @@ _parse_artifact()
                   "${__pa_command}" \
                   "${__pa_output_directory}" \
                   "${__pa_output_file}" \
-                  "${__pa_compress_output_file}"
+                  "${__pa_compress_output_file}" \
+                  "${__pa_redirect_stderr_to_stdout}"
               elif [ "${__pa_collector}" = "file" ]; then
                 _find_based_collector \
                   "file" \
@@ -424,6 +446,8 @@ _parse_artifact()
                   "${__pa_min_file_size}" \
                   "${__pa_max_file_size}" \
                   "${__pa_permissions}" \
+                  "${__pa_no_group}" \
+                  "${__pa_no_user}" \
                   "${__pa_ignore_date_range}" \
                   "${__UAC_TEMP_DATA_DIR}" \
                   "file_collector.tmp"
@@ -442,6 +466,8 @@ _parse_artifact()
                   "${__pa_min_file_size}" \
                   "${__pa_max_file_size}" \
                   "${__pa_permissions}" \
+                  "${__pa_no_group}" \
+                  "${__pa_no_user}" \
                   "${__pa_ignore_date_range}" \
                   "${__pa_output_directory}" \
                   "${__pa_output_file}"
@@ -460,6 +486,8 @@ _parse_artifact()
                   "${__pa_min_file_size}" \
                   "${__pa_max_file_size}" \
                   "${__pa_permissions}" \
+                  "${__pa_no_group}" \
+                  "${__pa_no_user}" \
                   "${__pa_ignore_date_range}" \
                   "${__pa_output_directory}" \
                   "${__pa_output_file}"
@@ -478,6 +506,8 @@ _parse_artifact()
                   "${__pa_min_file_size}" \
                   "${__pa_max_file_size}" \
                   "${__pa_permissions}" \
+                  "${__pa_no_group}" \
+                  "${__pa_no_user}" \
                   "${__pa_ignore_date_range}" \
                   "${__pa_output_directory}" \
                   "${__pa_output_file}"
