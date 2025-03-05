@@ -1,0 +1,41 @@
+version: 1.0
+condition: command_exists "nmcli"
+output_directory: /live_response/network
+artifacts:
+  -
+    description: Display network connections managed by NetworkManager.
+    supported_os: [linux]
+    collector: command
+    command: nmcli
+    output_file: nmcli.txt
+  -
+    description: List in-memory and on-disk connection profiles, some of which may also be active if a device is using that connection profile.
+    supported_os: [linux]
+    collector: command
+    command: nmcli connection show
+    output_file: nmcli_connection_show.txt
+  -
+    description: Show detailed information about all devices.
+    supported_os: [linux]
+    collector: command
+    command: nmcli device show
+    output_file: nmcli_device_show.txt
+  -
+    description: Print status of all devices.
+    supported_os: [linux]
+    collector: command
+    command: nmcli device status
+    output_file: nmcli_device_status.txt
+  -
+    description: Show overall status of NetworkManager.
+    supported_os: [linux]
+    collector: command
+    command: nmcli general status
+    output_file: nmcli_general_status.txt
+  -
+    description: Show radio switches status.
+    supported_os: [linux]
+    collector: command
+    command: nmcli radio all
+    output_file: nmcli_radio_all.txt
+  
