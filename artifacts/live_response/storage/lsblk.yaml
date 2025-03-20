@@ -1,4 +1,4 @@
-version: 3.0
+version: 3.1
 condition: command_exists "lsblk"
 output_directory: /live_response/storage
 artifacts:
@@ -9,15 +9,32 @@ artifacts:
     command: lsblk
     output_file: lsblk.txt
   -
+    description: List block devices as JSON.
+    supported_os: [linux]
+    collector: command
+    command: lsblk -J
+    output_file: lsblk_-J.txt
+  -
     description: List block devices.
     supported_os: [linux]
     collector: command
     command: lsblk -l
     output_file: lsblk_-l.txt
   -
+    description: List block devices as JSON.
+    supported_os: [linux]
+    collector: command
+    command: lsblk -l -J
+    output_file: lsblk_-l_-J.txt
+  -
     description: List block devices including information about filesystems.
     supported_os: [linux]
     collector: command
     command: lsblk -f
     output_file: lsblk_-f.txt
-    
+  -
+    description: List block devices including information about filesystems as JSON.
+    supported_os: [linux]
+    collector: command
+    command: lsblk -f -J
+    output_file: lsblk_-f_-J.txt

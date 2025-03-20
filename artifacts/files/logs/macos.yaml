@@ -1,28 +1,32 @@
-version: 2.0
+version: 2.1
 artifacts:
   -
     description: Collect fseventsd system logs.
     supported_os: [macos]
     collector: file
     path: /.fseventsd
+    file_type: [f]
     max_file_size: 1073741824 # 1GB
   -
     description: Collect fseventsd system logs.
     supported_os: [macos]
     collector: file
     path: /System/Volumes/*/.fseventsd
+    file_type: [f]
     max_file_size: 1073741824 # 1GB
   -
     description: Collect system logs.
     supported_os: [macos]
     collector: file
     path: /Library/Logs
+    file_type: [f]
     max_file_size: 1073741824 # 1GB
   -
     description: Collect user applications logs.
     supported_os: [macos]
     collector: file
     path: /%user_home%/Library/Logs
+    file_type: [f]
     max_file_size: 1073741824 # 1GB
   -
     description: Collect auditd logs.
@@ -30,5 +34,6 @@ artifacts:
     supported_os: [macos]
     collector: file
     path: /var/audit
+    file_type: [f]
     max_file_size: 1073741824 # 1GB
   

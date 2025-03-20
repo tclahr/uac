@@ -233,8 +233,19 @@ artifacts:
     description: List all PIDs with a directory in /proc but hidden for ps command.
     supported_os: [linux]
     collector: command
+    condition: ps ax
     foreach: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
     command: if ps ax | awk '{print $1}' | grep -q %line%; then true; else echo %line%; fi
+    output_file: hidden_pids_for_ps_command.txt
+  -
+    # this artifact is only collected if the previous one fails.
+    # some systems may not have the ps ax command available such as busybox.
+    description: List all PIDs with a directory in /proc but hidden for ps command.
+    supported_os: [linux]
+    collector: command
+    condition: if ps ax; then false; fi
+    foreach: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
+    command: if ps | awk '{print $1}' | grep -q %line%; then true; else echo %line%; fi
     output_file: hidden_pids_for_ps_command.txt
   # linux: strings available
   -

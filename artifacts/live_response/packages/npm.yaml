@@ -1,0 +1,16 @@
+version: 1.0
+condition: command_exists "npm"
+output_directory: /live_response/packages
+artifacts:
+  -
+    description: Display locally installed packages with their version.
+    supported_os: [linux]
+    collector: command
+    command: npm list --depth=0
+    output_file: npm_list_--depth_0.txt
+  -
+    description: Display globally installed packages with their version.
+    supported_os: [linux]
+    collector: command
+    command: npm list -g --depth=0
+    output_file: npm_list_-g_--depth_0.txt

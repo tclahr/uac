@@ -1,0 +1,31 @@
+version: 1.0
+output_directory: /live_response/system
+artifacts:
+  -
+    description: Display the coredump file name pattern.
+    supported_os: [linux]
+    collector: command
+    command: cat /proc/sys/kernel/core_pattern
+    output_file: core_pattern.txt
+  -
+    description: List all coredump files.
+    supported_os: [linux]
+    collector: command
+    condition: command_exists "coredumpctl"
+    command: coredumpctl list
+    output_file: coredumpctl_list.txt
+  -
+    description: Display info of all coredump files.
+    supported_os: [linux]
+    collector: command
+    condition: command_exists "coredumpctl"
+    foreach: coredumpctl list --no-legend | awk '{print $5}'
+    command: coredumpctl info %line%
+    output_file: coredumpctl_info_%line%.txt
+  -
+    description: Get extended attributes of all coredump files.
+    supported_os: [linux]
+    collector: command
+    condition: command_exists "getfattr"
+    command: getfattr -R -d --absolute-names /var/lib/systemd/coredump
+    output_file: getfattr_coredump.txt

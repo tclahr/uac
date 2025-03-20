@@ -1,0 +1,11 @@
+version: 1.0
+condition: command_exists "cargo"
+output_directory: /live_response/packages
+artifacts:
+  -
+    description: Display installed packages.
+    supported_os: [all]
+    collector: command
+    command: cargo install --list
+    output_file: cargo_install_--list.txt
+    

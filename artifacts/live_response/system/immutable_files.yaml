@@ -1,0 +1,59 @@
+version: 1.0
+condition: command_exists "lsattr"
+output_directory: /live_response/system
+artifacts:
+  -
+    description: List immutable files under / directory (no recursion, top-level only).
+    supported_os: [linux]
+    collector: command
+    command: lsattr / | awk '{if ($1 ~ /i/ && $1 !~ /^\\//) print $0}'
+    output_file: immutable_files.txt
+  -
+    description: List immutable files under system binary directories (recursively).
+    supported_os: [linux]
+    collector: command
+    command: lsattr -R /bin /sbin /usr/bin /usr/sbin /usr/local/bin /usr/local/sbin | awk '{if ($1 ~ /i/ && $1 !~ /^\\//) print $0}'
+    output_file: immutable_files.txt
+  -
+    description: List immutable files under /dev directory (recursively).
+    supported_os: [linux]
+    collector: command
+    command: lsattr -R /dev | awk '{if ($1 ~ /i/ && $1 !~ /^\\//) print $0}'
+    output_file: immutable_files.txt
+  -
+    description: List immutable files under /etc directory (recursively).
+    supported_os: [linux]
+    collector: command
+    command: lsattr -R /etc | awk '{if ($1 ~ /i/ && $1 !~ /^\\//) print $0}'
+    output_file: immutable_files.txt
+  -
+    description: List immutable files under user home directories (no recursion, top-level only).
+    supported_os: [linux]
+    collector: command
+    command: lsattr /%user_home% /%user_home%/.ssh /%user_home%/.*history | awk '{if ($1 ~ /i/ && $1 !~ /^\\//) print $0}'
+    exclude_nologin_users: true
+    output_file: immutable_files.txt
+  -
+    description: List immutable files under system library directories (recursively).
+    supported_os: [linux]
+    collector: command
+    command: lsattr -R /lib /lib32 /lib64 /usr/lib /usr/lib32 /usr/lib64 /var/lib | awk '{if ($1 ~ /i/ && $1 !~ /^\\//) print $0}'
+    output_file: immutable_files.txt
+  -
+    description: List immutable files under /run directories (recursively).
+    supported_os: [linux]
+    collector: command
+    command: lsattr -R /run /var/run | awk '{if ($1 ~ /i/ && $1 !~ /^\\//) print $0}'
+    output_file: immutable_files.txt
+  -
+    description: List immutable files under /tmp directories (recursively).
+    supported_os: [linux]
+    collector: command
+    command: lsattr -R /tmp /var/tmp /run/tmp | awk '{if ($1 ~ /i/ && $1 !~ /^\\//) print $0}'
+    output_file: immutable_files.txt
+  -
+    description: List immutable files under /user/local directories (recursively).
+    supported_os: [linux]
+    collector: command
+    command: lsattr -R /usr/local | awk '{if ($1 ~ /i/ && $1 !~ /^\\//) print $0}'
+    output_file: immutable_files.txt

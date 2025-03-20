@@ -1,8 +1,9 @@
-version: 2.0
+version: 2.1
 artifacts:
   -
     description: Collect /var/adm logs.
     supported_os: [aix, freebsd, linux, netbsd, netscaler, openbsd, solaris]
     collector: file
     path: /var/adm
+    file_type: [f]
     max_file_size: 1073741824 # 1GB
