@@ -1,0 +1,10 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect KDE Most Recently Used.
+    supported_os: [freebsd, linux, netbsd, openbsd]
+    collector: file
+    path: /%user_home%/.local/share/RecentDocuments
+    ignore_date_range: true
+    exclude_nologin_users: true
+  

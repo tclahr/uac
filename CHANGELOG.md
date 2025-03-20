@@ -22,15 +22,18 @@ All notable changes to this project will be documented in this file.
 - `files/applications/gedit.yaml`: Added collection of metadata about recently opened files in the Gedit text editor [freebsd, linux, netbsd, openbsd].
 - `files/applications/gnome_text_editor.yaml`: Added collection of metadata about recently opened files in the Gnome Text Editor [freebsd, linux, netbsd, openbsd].
 - `files/applications/katesession.yaml`: Added collection of metadata about recently opened files in Kwrite and Kate text editors [freebsd, linux, netbsd, openbsd].
+- `files/applications/kde_mru.yaml`: Added collection of metadata about recently opened files in KDE [freebsd, linux, netbsd, openbsd].
 - `files/applications/nano.yaml`: Added collection of nano history files [all]. (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal))
 - `files/applications/okular.yaml`: Added collection of metadata related to documents opened using Okular, a KDE document viewer [freebsd, linux, netbsd, openbsd].
 - `files/applications/php.yaml`: Added collection of PHP history files [all]. (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal))
+- `files/browsers/konqueror.yaml`: Added collection of Konqueror browser history, bookmark, cookies, cache, sessions, extensions and configuration files [linux]. (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal))
 - `files/system/aws_ssm_agent.yaml`: Added collection of AWS Systems Manager Agent (SSM Agent) configuration files and logs [linux].
 - `files/system/azure_vm_agent.yaml`: Added collection of Azure Linux VM Agent logs and executed scripts [linux].
 - `files/system/gvfs_metadata.yaml`: Added collection of user-specific metadata from the `gvfs-metadata` directory [freebsd, linux, netbsd, openbsd].
 - `files/system/kactivitymanagerd.yaml`: Added collection of activity tracking data from KActivityManager [freebsd, linux, netbsd, openbsd].
 - `files/system/upstart.yaml`: Added collection of system-wide and user-session Upstart configuration files [linux].
 - `files/system/xdg_autostart.yaml`: Added collection of system-wide and user-specific XDG autostart files [linux].
+- `live_response/network/nmcli.yaml`: Added displaying information from network connections managed by NetworkManager [linux].
 - `live_response/packages/0install.yaml`: Added collection of installed packages managed by Zero Install [linux]. (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal))
 - `live_response/packages/apk.yaml`: Added collection of installed packages managed by apk package manager [linux]. (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal))
 - `live_response/packages/cargo.yaml`: Added collection of installed packages managed by cargo [all]. (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal))
@@ -43,6 +46,7 @@ All notable changes to this project will be documented in this file.
 - `live_response/packages/pkgin.yaml`: Added functionality to list information for fully installed packages only [netbsd]. (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal))
 - `live_response/packages/portage.yaml`: Added collection of installed package lists using the Portage package management system [linux]. (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal))
 - `live_response/packages/slackpkg.yaml`: Added collection of installed and upgradable packages managed by the Slackpkg package manager [linux]. (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal))
+- `live_response/packages/soar.yaml`: Added collection of installed packages managed by Soar package manager [all]. (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal))
 - `live_response/packages/tazpkg.yaml`: Added collection of the installed packages managed by the Tazpkg package manager [linux]. (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal))
 - `live_response/storage/findmnt.yaml`: Added JSON output support for listing all mounted file systems [linux]. (by [mnrkbys](https://github.com/mnrkbys))
 - `live_response/storage/lsblk.yaml`: Added JSON output support for listing block devices [linux]. (by [mnrkbys](https://github.com/mnrkbys))
@@ -66,6 +70,7 @@ All notable changes to this project will be documented in this file.
 - `live_response/packages/swupd.yaml`: Updated to list all available bundles for the current version of Clear Linux [linux]. (by [Pierre-Gronau-ndaal](https://github.com/Pierre-Gronau-ndaal))
 - `live_response/process/ps.yaml`: Updated to collect the system date before reporting a snapshot of the current processes including elapsed time since the process was started [all].
 - `live_response/system/falconctl.yaml`: Updated as `falconctl -g` is no longer a valid option [linux, macos].
+- `memory_dump/avml.yaml`: Updated output file name from avml.raw to avml.lime [linux].
 
 ### Fixed
 

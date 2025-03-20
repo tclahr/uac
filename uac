@@ -5,6 +5,9 @@
 # remove all existing aliases
 \unalias -a
 
+# remove LD_PRELOAD environment variable
+unset LD_PRELOAD
+
 # set locale
 LANG=C
 export LANG
