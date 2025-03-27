@@ -6,5 +6,6 @@ artifacts:
     description: Show terse runtime status information about one or more logged in users, followed by the most recent log data from the journal.
     supported_os: [linux]
     collector: command
-    command: loginctl user-status
+    foreach: loginctl list-users | tail -n +2 | head -n -2 | awk '{print $2}'
+    command: loginctl user-status %line%
     output_file: loginctl_user-status.txt
