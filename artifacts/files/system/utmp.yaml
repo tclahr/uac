@@ -1,0 +1,7 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect utmp file.
+    supported_os: [linux]
+    collector: file
+    path: /var/run/utmp
