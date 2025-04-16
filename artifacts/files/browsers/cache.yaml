@@ -4,7 +4,19 @@ artifacts:
     description: Collect Brave browser cache directory.
     supported_os: [linux]
     collector: file
-    path: /%user_home%/.config/BraveSoftware/Brave-Browser/Cache
+    path: /%user_home%/.cache/BraveSoftware/Brave-Browser
+    exclude_nologin_users: true
+  -
+    description: Collect Brave browser cache directory (Flatpak version).
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.var/app/com.brave.Browser/cache/BraveSoftware/Brave-Browser
+    exclude_nologin_users: true
+  -
+    description: Collect Brave browser cache directory (Snap version).
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/snap/brave/common/.cache/BraveSoftware/Brave-Browser
     exclude_nologin_users: true
   -
     description: Collect Brave browser cache directory.
@@ -19,28 +31,40 @@ artifacts:
     path: /%user_home%/.cache/google-chrome
     exclude_nologin_users: true
   -
+    description: Collect Chrome browser cache directory (Flatpak version).
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.var/app/com.google.Chrome/cache/google-chrome
+    exclude_nologin_users: true
+  -
     description: Collect Chrome browser cache directory.
     supported_os: [macos]
     collector: file
     path: /%user_home%/Library/Caches/Google/Chrome
     exclude_nologin_users: true
   -
-    description: Collect Chromium browser cache directory.
+    description: Collect Chromium browser cache directory (Flatpak version).
     supported_os: [linux]
     collector: file
-    path: /%user_home%/.cache/chromium
+    path: /%user_home%/.var/app/org.chromium.Chromium/cache/chromium
     exclude_nologin_users: true
   -
-    description: Collect Chromium browser cache directory.
-    supported_os: [macos]
+    description: Collect Chromium browser cache directory (Snap version).
+    supported_os: [linux]
     collector: file
-    path: /%user_home%/Library/Caches/Chromium
+    path: /%user_home%/snap/chromium/common/chromium/Default/Cache
     exclude_nologin_users: true
   -
     description: Collect Edge browser cache directory.
     supported_os: [linux]
     collector: file
-    path: /%user_home%/.config/microsoft-edge/Cache
+    path: /%user_home%/.cache/microsoft-edge
+    exclude_nologin_users: true
+  -
+    description: Collect Edge browser cache directory (Flatpak version).
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.var/app/com.microsoft.Edge/cache/microsoft-edge
     exclude_nologin_users: true
   -
     description: Collect Edge browser cache directory.
@@ -50,15 +74,27 @@ artifacts:
     exclude_nologin_users: true
   -
     description: Collect Firefox browser cache directory.
+    supported_os: [freebsd, linux]
+    collector: file
+    path: /%user_home%/.cache/mozilla/firefox
+    exclude_nologin_users: true
+  -
+    description: Collect Firefox browser cache directory (Flatpak version).
     supported_os: [linux]
     collector: file
-    path: /%user_home%/.cache/mozilla/firefox/*.default-release/cache2
+    path: /%user_home%/.var/app/org.mozilla.firefox/cache/mozilla/firefox
+    exclude_nologin_users: true
+  -
+    description: Collect Firefox browser cache directory (Snap version).
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/snap/firefox/common/.cache/mozilla/firefox
     exclude_nologin_users: true
   -
     description: Collect Firefox browser cache directory.
     supported_os: [macos]
     collector: file
-    path: /%user_home%/Library/Caches/Mozilla/Firefox/Profiles/*.default-release/cache2
+    path: /%user_home%/Library/Caches/Firefox
     exclude_nologin_users: true
   -
     description: Collect Konqueror browser cache directory.
@@ -87,6 +123,18 @@ artifacts:
     path: /%user_home%/.cache/opera
     exclude_nologin_users: true
   -
+    description: Collect Opera browser cache directory (Flatpak version).
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.var/app/com.opera.Opera/cache/opera
+    exclude_nologin_users: true
+  -
+    description: Collect Opera browser cache directory (Snap version).
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/snap/opera/common/.cache/opera
+    exclude_nologin_users: true
+  -
     description: Collect Opera browser cache directory.
     supported_os: [macos]
     collector: file
@@ -99,10 +147,28 @@ artifacts:
     path: /%user_home%/Library/Caches/com.apple.Safari
     exclude_nologin_users: true
   -
+    description: Collect Safari browser cache directory.
+    supported_os: [macos]
+    collector: file
+    path: /%user_home%/Library/Containers/com.apple.Safari/Data/Library/Caches/com.apple.Safari
+    exclude_nologin_users: true
+  -
     description: Collect Vivaldi browser cache directory.
     supported_os: [linux]
     collector: file
     path: /%user_home%/.cache/vivaldi
+    exclude_nologin_users: true
+  -
+    description: Collect Vivaldi browser cache directory (Flatpak version).
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.var/app/com.vivaldi.Vivaldi/cache/vivaldi
+    exclude_nologin_users: true
+  -
+    description: Collect Vivaldi browser cache directory (Snap version).
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/snap/vivaldi/common/.cache/vivaldi
     exclude_nologin_users: true
   -
     description: Collect Vivaldi browser cache directory.
