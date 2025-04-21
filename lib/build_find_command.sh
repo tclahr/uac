@@ -103,7 +103,7 @@ _build_find_command()
   # global options such as -maxdepth must be specified before other arguments.
   # i.e., -maxdepth affects tests specified before it as well as those specified after it.
   # build -maxdepth parameter
-  if [ "${__UAC_CONF_MAX_DEPTH}" -gt 0 ] && [ "${__UAC_CONF_MAX_DEPTH}" -lt "${__bf_max_depth}" ]; then
+  if [ "${__bf_max_depth}" -eq 0 ] || ([ "${__UAC_CONF_MAX_DEPTH}" -gt 0 ] && [ "${__UAC_CONF_MAX_DEPTH}" -lt "${__bf_max_depth}" ]); then
     __bf_max_depth="${__UAC_CONF_MAX_DEPTH}"
   fi
   if [ "${__bf_max_depth}" -gt 0 ]; then
