@@ -1,4 +1,4 @@
-version: 2.0
+version: 3.0
 condition: command_exists "loginctl"
 output_directory: /live_response/system
 artifacts:
@@ -6,6 +6,6 @@ artifacts:
     description: Show terse runtime status information about one or more logged in users, followed by the most recent log data from the journal.
     supported_os: [linux]
     collector: command
-    foreach: loginctl list-users | tail -n +2 | head -n -2 | awk '{print $2}'
-    command: loginctl user-status %line%
-    output_file: loginctl_user-status.txt
+    command: loginctl user-status %user%
+    output_file: loginctl_user-status_%user%.txt
+    exclude_nologin_users: true
