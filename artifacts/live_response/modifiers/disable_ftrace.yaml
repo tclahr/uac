@@ -1,0 +1,19 @@
+version: 1.0
+modifier: true
+output_directory: /live_response/modifiers
+artifacts:
+  -
+    description: Display kernel parameters before changing the system state.
+    supported_os: [linux]
+    collector: command
+    command: sysctl -a
+    output_file: sysctl_-a.txt
+  -
+    description: Disable ftrace to prevent syscall hooking by LKM rootkits.
+    supported_os: [linux]
+    collector: command
+    command: sysctl kernel.ftrace_enabled=0
+    output_file: sysctl_disable_ftrace.txt
+
+# References:
+# https://tmpout.sh/4/10.html
