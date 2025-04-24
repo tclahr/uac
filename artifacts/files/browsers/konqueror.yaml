@@ -1,4 +1,4 @@
-version: 1.0
+version: 1.1
 artifacts:
   -
     description: Collect Konqueror browser files.
@@ -15,13 +15,6 @@ artifacts:
     path: /%user_home%/.local/share/konqueror
     name_pattern: ["Local Storage", "Session Storage", "sessions"]
     file_type: [d]
-    ignore_date_range: true
-    exclude_nologin_users: true
-  -
-    description: Collect Konqueror cache files.
-    supported_os: [linux]
-    collector: file
-    path: /%user_home%/.cache/konqueror
     ignore_date_range: true
     exclude_nologin_users: true
   -
