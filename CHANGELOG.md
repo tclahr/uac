@@ -13,7 +13,11 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- `live_response/system/loginctl.yaml`: Added terse runtime status information collection for each user in the system [linux]. (by [clausing](https://github.com/clausing))
+
 ### Fixed
+
+- Fixed a bug where the global `max_depth` set in uac.conf was not being respected in some cases. ([#359](https://github.com/tclahr/uac/issues/359))
 
 ### Profiles
 
