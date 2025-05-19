@@ -159,8 +159,12 @@ _verbose_msg "Validating artifact list..."
 __ua_artifact_list=`_validate_artifact_list "${__UAC_ARTIFACT_LIST}"` || _exit_fatal
 
 # load config file
-_verbose_msg "Loading config file..."
+_verbose_msg "Loading uac.conf..."
 _load_config_file "${__UAC_CONFIG_FILE}" || _exit_fatal
+if [ -f "${__UAC_DIR}/config/${__UAC_OPERATING_SYSTEM}.conf" ]; then
+  _verbose_msg "Loading ${__UAC_OPERATING_SYSTEM}.conf..."
+  _load_config_file "${__UAC_DIR}/config/${__UAC_OPERATING_SYSTEM}.conf" || _exit_fatal
+fi
 
 # add proper local 'bin' and 'tools' directory to path
 __ua_bin_path=`_get_bin_path "${__UAC_OPERATING_SYSTEM}" "${__UAC_SYSTEM_ARCH}"`
@@ -328,7 +332,7 @@ _log_msg INF "Temp Directory: ${__UAC_TEMP_DATA_DIR}"
 _log_msg INF "Output format: ${__UAC_OUTPUT_FORMAT}"
 _log_msg INF "Current PID: ${$}"
 _log_msg INF "PATH: ${PATH}"
-_log_msg INF "Loading uac.conf settings"
+_log_msg INF "Loading configuration file(s)"
 _log_msg INF "Exclude path pattern: ${__UAC_CONF_EXCLUDE_PATH_PATTERN}"
 _log_msg INF "Exclude name pattern: ${__UAC_CONF_EXCLUDE_NAME_PATTERN}"
 _log_msg INF "Exclude file system: ${__UAC_CONF_EXCLUDE_FILE_SYSTEM}"
