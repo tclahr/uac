@@ -1,5 +1,5 @@
-version: 2.0
-output_directory: /live_response/system
+version: 2.1
+output_directory: /system
 artifacts:
   -
     description: Search for files that have SGID bit set.
