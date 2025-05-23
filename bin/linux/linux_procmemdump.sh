@@ -2,11 +2,14 @@
 # Hal Pomeranz (hrpomeranz@gmail.com) -- 2022-11-26
 # Distributed under the Creative Commons Attribution-ShareAlike 4.0 license (CC BY-SA 4.0)
 
-set -o errexit
-set -o errtrace
-set -o nounset
-set -o pipefail
-# set -o xtrace
+# Enable strict mode
+set -o errexit  # Exit on error
+set -o errtrace # Exit on error in functions
+set -o nounset  # Exit on undefined variables
+set -o pipefail # Exit on pipe failures
+# set -o xtrace # Uncomment for debugging
+
+# Set safe field separator
 # nosemgrep: ifs-tampering
 IFS=$'\n\t'
 
@@ -43,7 +46,7 @@ done
 
 [[ -z "${outputdir}" ]] && usage  # Specify an output directory or error
 
-if [[ -n "${user_pid}" ]]; then  # One user specified PID or all PIDS?
+if [[ -n "${user_pid}" ]]; then  # One user specified PID or all PIDs?
     input_files="/proc/${user_pid}/maps"
 else
     input_files="/proc/[0-9]*/maps"
@@ -54,7 +57,7 @@ fi
 fifo_path=""
 if [[ ${strings_only} -eq 0 ]]; then
     fifo_path="${outputdir}/.tempfifo"
-    mkdir -p "${outputdir}"
+    sudo mkdir -p -v "${outputdir}"
     mkfifo "${fifo_path}"
 fi
 
@@ -67,7 +70,7 @@ for mapfile in ${input_files}; do
     [[ ${pid} -eq $$ ]] && continue  # Don't dump our own process
 
     thisoutput="${outputdir}/${pid}"  # Where the output for this process goes
-    mkdir -p "${thisoutput}/${uac_path}"
+    mkdir -p -v "${thisoutput}/${uac_path}"
 
     # Process the regions for this process
     while read -r start end flags _; do
