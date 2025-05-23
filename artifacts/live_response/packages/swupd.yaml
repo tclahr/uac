@@ -1,4 +1,4 @@
-version: 2.0
+version: 4.0
 condition: command_exists "swupd"
 output_directory: /live_response/packages
 artifacts:
@@ -9,9 +9,15 @@ artifacts:
     command: swupd bundle-list
     output_file: swupd_bundle-list.txt
   -
+    description: List all available bundles for the current version of Clear Linux.
+    supported_os: [linux]
+    collector: command
+    command: swupd bundle-list --all
+    output_file: swupd_bundle-list_--all.txt
+  -
     description: List installed 3rd-party bundles.
     supported_os: [linux]
     collector: command
     command: swupd 3rd-party bundle-list
     output_file: swupd_3rd-party_bundle-list.txt
-  
+    

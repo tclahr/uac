@@ -37,6 +37,8 @@ _validate_artifact()
     __va_min_file_size=""
     __va_modifier=""
     __va_name_pattern=""
+    __va_no_group=""
+    __va_no_user=""
     __va_output_directory=""
     __va_output_file=""
     __va_path_pattern=""
@@ -44,6 +46,7 @@ _validate_artifact()
     __va_permissions=""
     __va_redirect_stderr_to_stdout=""
     __va_supported_os=""
+    __va_version=""
   }
   _cleanup_local_vars
 
@@ -71,6 +74,10 @@ _validate_artifact()
             read __va_dash
             if [ "${__va_dash}" != "-" ]; then
               _error_msg "artifact: invalid 'artifacts' sequence of mappings."
+              return 1
+            fi
+            if [ -z "${__va_version}" ]; then
+              _error_msg "artifact: 'version' must not be empty."
               return 1
             fi
             if [ -n "${__va_output_directory}" ]; then
@@ -279,6 +286,20 @@ _validate_artifact()
             fi
             __va_name_pattern="${__va_value}"
             ;;
+          "no_group:")
+            if [ "${__va_value}" != true ] && [ "${__va_value}" != false ]; then
+              _error_msg "artifact: 'no_group' must be 'true' or 'false'."
+              return 1
+            fi
+            __va_no_group="${__va_value}"
+            ;;
+          "no_user:")
+            if [ "${__va_value}" != true ] && [ "${__va_value}" != false ]; then
+              _error_msg "artifact: 'no_user' must be 'true' or 'false'."
+              return 1
+            fi
+            __va_no_user="${__va_value}"
+            ;;
           "output_directory:")
             if [ -z "${__va_value}" ]; then
               _error_msg "artifact: 'output_directory' must not be empty."
@@ -370,6 +391,7 @@ _validate_artifact()
               _error_msg "artifact: 'version' must not be empty."
               return 1
             fi
+            __va_version="${__va_value}"
             ;;
           "-")
             ${__va_artifacts_prop_exists} \
@@ -445,6 +467,14 @@ _validate_artifact()
                 _error_msg "artifact: invalid 'name_pattern' property for 'command' collector."
                 return 1
               fi
+              if [ -n "${__va_no_group}" ]; then
+                _error_msg "artifact: invalid 'no_group' property for 'command' collector."
+                return 1
+              fi
+              if [ -n "${__va_no_user}" ]; then
+                _error_msg "artifact: invalid 'no_user' property for 'command' collector."
+                return 1
+              fi
               if [ -n "${__va_path}" ]; then
                 _error_msg "artifact: invalid 'path' property for 'command' collector."
                 return 1
@@ -464,6 +494,12 @@ _validate_artifact()
               if [ -z "${__va_path}" ]; then
                 _error_msg "artifact: missing 'path' property."
                 return 1
+              fi
+              if [ -n "${__va_max_file_size}" ] || [ -n "${__va_min_file_size}" ]; then
+                if [ "${__va_file_type}" != "f" ]; then
+                  _error_msg "artifact: 'file_type' must be of type 'f' when using 'max_file_size' or 'min_file_size'."
+                  return 1
+                fi
               fi
               if [ -n "${__va_command}" ]; then
                 _error_msg "artifact: invalid 'command' property for '${__va_collector}' collector."
