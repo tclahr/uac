@@ -4,12 +4,8 @@ artifacts:
   - bodyfile/bodyfile.yaml
   - chkrootkit/*
   - hash_executables/hash_executables.yaml
-  - live_response/packages/*
-  - live_response/system/immutable_files.yaml
-  - live_response/system/hidden_files.yaml
-  - live_response/system/hidden_directories.yaml
-  - live_response/system/sgid.yaml
-  - live_response/system/suid.yaml
+  - system/*
+  - packages/*
   - files/applications/git.yaml
   - files/applications/lesshst.yaml
   - files/applications/nano.yaml

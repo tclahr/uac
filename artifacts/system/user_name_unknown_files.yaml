@@ -1,5 +1,5 @@
-version: 1.0
-output_directory: /live_response/system
+version: 1.1
+output_directory: /system
 artifacts:
   -
     description: List files under / directory (no recursion, top-level only) with an unknown user ID name.

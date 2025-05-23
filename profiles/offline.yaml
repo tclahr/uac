@@ -4,4 +4,6 @@ artifacts:
   - bodyfile/bodyfile.yaml
   - chkrootkit/*
   - hash_executables/hash_executables.yaml
+  - system/*
+  - packages/*
   - files/*
