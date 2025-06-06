@@ -31,7 +31,12 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 
 - Fixed a bug where the global `max_depth` set in uac.conf was not being respected in some cases. ([#359](https://github.com/tclahr/uac/issues/359))
+- Fixed a bug where sftp ssh options were not being set correctly. ([#366](https://github.com/tclahr/uac/issues/366))
 
 ### Profiles
+
+### Command Line Option Changes
+
+- `--sftp-ssh-options` is now `--sftp-ssh-option`: This allows setting SSH options as key=value pairs. Can be used multiple times to set multiple options. ([#366](https://github.com/tclahr/uac/issues/366))
 
 ### New Artifact Properties

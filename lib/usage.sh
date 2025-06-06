@@ -101,8 +101,9 @@ Remote Transfer Arguments:
       --sftp-identity-file FILE
                     File from which the identity (private key) for public key
                     authentication is read.
-      --sftp-ssh-options
-                    Comma separated ssh options.
+      --sftp-ssh-option
+                    Allow setting SSH options as key=value pairs.
+                    Can be used multiple times to set multiple options.
       --s3-provider
                     Transfer the output and log files to S3 service.
                     Options: amazon, google, ibm
