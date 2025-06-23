@@ -552,4 +552,11 @@ artifacts:
     command: astrings /proc/%line%/status
     output_directory: /live_response/process/proc/%line%
     output_file: status.txt
+  -
+    description: Collect /proc/modules
+    supported_os: [all]
+    collector: command
+    command: cat /proc/modules
+    output_directory: /live_response/process/proc/
+    output_file: modules.txt
     
