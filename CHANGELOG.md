@@ -32,6 +32,7 @@ All notable changes to this project will be documented in this file.
 
 - Fixed a bug where the global `max_depth` set in uac.conf was not being respected in some cases. ([#359](https://github.com/tclahr/uac/issues/359))
 - Fixed a bug where sftp ssh options were not being set correctly. ([#366](https://github.com/tclahr/uac/issues/366))
+- Fixed a bug where the bodyfile artifact was returning corrupted file names when `statx` was being used with `xargs -0`. ([#369](https://github.com/tclahr/uac/issues/369))
 
 ### Profiles
 
