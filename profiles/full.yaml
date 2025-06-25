@@ -30,4 +30,5 @@ artifacts:
   - packages/*
   - osquery/osquery.yaml
   - files/*
+  - !files/browsers/cache.yaml
   

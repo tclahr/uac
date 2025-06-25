@@ -7,3 +7,4 @@ artifacts:
   - system/*
   - packages/*
   - files/*
+  - !files/browsers/cache.yaml

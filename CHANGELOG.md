@@ -11,8 +11,9 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
-- `files/browsers/cache.yaml`: Added collection of browser cache data [freebsd, linux, macos].
+- `files/browsers/cache.yaml`: Added collection of browser cache data. This artifact is resource-intensive and time-consuming, so it is disabled by default in all profiles [freebsd, linux, macos].
 - `live_response/modifiers/disable_ftrace.yaml`: Added modifier to disable ftrace to prevent syscall hooking by LKM rootkits [linux]. (by [mnrkbys](https://github.com/mnrkbys))
+- `osquery/osquery.yaml`: Added new queries for apt_sources, deb_packages, shell_history, system_controls, logged_in_users and last_logins [linux]. (by [SolitudePy](https://github.com/SolitudePy))
 
 ### Changed
 
@@ -27,11 +28,13 @@ All notable changes to this project will be documented in this file.
 - `live_response/system/user_name_known_files.yaml`: Moved to `system/user_name_known_files.yaml`.
 - `live_response/system/world_writable_directories.yaml`: Moved to `system/world_writable_directories.yaml`.
 - `live_response/system/world_writable_files.yaml`: Moved to `system/world_writable_files.yaml`.
+- `osquery/osquery.yaml`: Fixed query for authorized_keys [linux]. (by [SolitudePy](https://github.com/SolitudePy))
 
 ### Fixed
 
 - Fixed a bug where the global `max_depth` set in uac.conf was not being respected in some cases. ([#359](https://github.com/tclahr/uac/issues/359))
 - Fixed a bug where sftp ssh options were not being set correctly. ([#366](https://github.com/tclahr/uac/issues/366))
+- Fixed a bug where the bodyfile artifact was returning corrupted file names when `statx` was being used with `xargs -0`. ([#369](https://github.com/tclahr/uac/issues/369)) (by [halpomeranz](https://github.com/halpomeranz))
 
 ### Profiles
 
