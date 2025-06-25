@@ -1,4 +1,4 @@
-version: 2.1
+version: 2.2
 output_directory: /live_response/process
 artifacts:
   -
@@ -7,6 +7,13 @@ artifacts:
     collector: command
     command: ls -l /proc/[0-9]*
     output_file: ls_-l_proc.txt
+  -
+    description: Collect /proc/modules.
+    supported_os: [aix, freebsd, linux, netbsd, netscaler, solaris]
+    collector: command
+    command: cat /proc/modules
+    output_directory: /live_response/process/proc/
+    output_file: modules.txt
 
   # each operating system has its own particularities and artifacts available in /proc
   # to make this artifact easier to read and more organized, each operating system
