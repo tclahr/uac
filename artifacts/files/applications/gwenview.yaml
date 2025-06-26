@@ -1,4 +1,4 @@
-version: 1.0
+version: 1.1
 artifacts:
   -
     description: Collect the paths to recently viewed or edited images using Gwenview image viewer.
@@ -6,7 +6,6 @@ artifacts:
     collector: file
     path: /%user_home%/.config
     name_pattern: ["gwenviewrc"]
-    file_type: [f]
     exclude_nologin_users: true
   -
     description: Collect the paths to recently viewed or edited images using Gwenview image viewer (Flatpak version).
@@ -14,7 +13,6 @@ artifacts:
     collector: file
     path: /%user_home%/.var/app
     name_pattern: ["gwenviewrc"]
-    file_type: [f]
     exclude_nologin_users: true
   -
     description: Collect the paths to recently viewed or edited images using Gwenview image viewer (Snap version).
@@ -22,6 +20,5 @@ artifacts:
     collector: file
     path: /%user_home%/snap
     name_pattern: ["gwenviewrc"]
-    file_type: [f]
     exclude_nologin_users: true
   

@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 
 - Amazon S3 output file transfer now supports AWS Signature Version 4 (AWS4-HMAC-SHA256).
 - You can create files with the operating system name in the `config` directory to **override** the default configuration for a specific operating system. Please check the [documentation](https://tclahr.github.io/uac-docs/config_file/) for more information.
+- Most artifacts were updated to also collect symlinks ([#355](https://github.com/tclahr/uac/issues/355)).
 
 ### Added
 

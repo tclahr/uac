@@ -1,4 +1,4 @@
-version: 1.0
+version: 1.1
 output_directory: /live_response/system
 artifacts:
   -
@@ -6,14 +6,12 @@ artifacts:
     supported_os: [all]
     collector: stat
     path: /var/db/sudo/lectured
-    file_type: [f]
     output_file: sudo_lectured_timestamps.txt
   -
     description: Timestamps of users who saw the sudo lecture message.
     supported_os: [all]
     collector: stat
     path: /var/lib/sudo/lectured
-    file_type: [f]
     output_file: sudo_lectured_timestamps.txt
   -
     description: Timestamps of users who saw the sudo lecture message in JSON format.

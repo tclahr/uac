@@ -1,4 +1,4 @@
-version: 1.0
+version: 1.1
 artifacts:
   -
     description: Collect core dump files from /var/core/.
@@ -11,7 +11,6 @@ artifacts:
     collector: file
     path: /var/lib/systemd/coredump
     name_pattern: ["core.*"]
-    file_type: [f]
   -
     description: Collect ABRT files.
     supported_os: [linux]

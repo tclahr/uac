@@ -22,7 +22,6 @@ artifacts:
     collector: file
     path: /%user_home%/
     name_pattern: ["anydesk*.png"]
-    file_type: [f]
     max_depth: 4
     exclude_nologin_users: true
   -
@@ -31,7 +30,6 @@ artifacts:
     collector: file
     path: /%user_home%/
     name_pattern: ["*.anydesk"]
-    file_type: [f]
     max_depth: 4
     exclude_nologin_users: true
   -

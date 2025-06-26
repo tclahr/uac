@@ -6,6 +6,7 @@ artifacts:
     supported_os: [aix, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris]
     collector: find
     path: /
+    exclude_path_pattern: ["/dev", "/proc", "/run", "/sys"]
     max_depth: 1
     file_type: [f]
     no_user: true

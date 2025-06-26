@@ -6,3 +6,4 @@ artifacts:
     collector: file
     path: /
     name_pattern: ["*.journal", "*.journal~"]
+    exclude_path_pattern: ["/dev", "/proc", "/run", "/sys"]
