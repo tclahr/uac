@@ -1,4 +1,4 @@
-version: 1.0
+version: 1.1
 artifacts:
   # AnyDesk artifacts are stored within different locations depending on the version downloaded and installed on the system (.tar.gz, .deb, .rpm, .dmg).
   -
