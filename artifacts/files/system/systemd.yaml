@@ -1,4 +1,4 @@
-version: 3.0
+version: 3.1
 artifacts:
   -
     description: Collect systemd configuration files.
@@ -16,7 +16,6 @@ artifacts:
     supported_os: [linux]
     collector: file
     path: /run/systemd/sessions
-    file_type: [f]
   -
     description: Collect systemd files.
     supported_os: [linux]

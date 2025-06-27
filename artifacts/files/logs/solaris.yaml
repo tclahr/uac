@@ -1,4 +1,4 @@
-version: 2.1
+version: 2.2
 artifacts:
   -
     description: Collect lastlog log file.
@@ -20,12 +20,10 @@ artifacts:
     supported_os: [solaris]
     collector: file
     path: /var/svc/log
-    file_type: [f]
     max_file_size: 1073741824 # 1GB
   -
     description: Collect webui log files.
     supported_os: [solaris]
     collector: file
     path: /var/webui/logs
-    file_type: [f]
     max_file_size: 1073741824 # 1GB

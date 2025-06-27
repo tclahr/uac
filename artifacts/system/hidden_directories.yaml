@@ -8,6 +8,7 @@ artifacts:
     path: /
     name_pattern: [".*"]
     exclude_path_pattern: ["/root", "/home", "/export/home", "/Users"]
+    exclude_file_system: [proc, procfs]
     file_type: [d]
     output_file: hidden_directories.txt
   

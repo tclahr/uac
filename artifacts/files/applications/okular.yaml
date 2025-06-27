@@ -1,4 +1,4 @@
-version: 1.0
+version: 1.1
 artifacts:
   -
     description: Collect metadata related to documents that have been opened or interacted with using Okular, a document viewer for KDE.
@@ -6,7 +6,6 @@ artifacts:
     collector: file
     path: /%user_home%/.local/share
     path_pattern: ["*/okular/docdata/*"]
-    file_type: [f]
     exclude_nologin_users: true
   -
     description: Collect Okular configuration file.
@@ -14,7 +13,6 @@ artifacts:
     collector: file
     path: /%user_home%/.config
     name_pattern: ["okularrc"]
-    file_type: [f]
     ignore_date_range: true
     exclude_nologin_users: true
   -
@@ -23,7 +21,6 @@ artifacts:
     collector: file
     path: /%user_home%/.var/app
     path_pattern: ["*/okular/docdata/*"]
-    file_type: [f]
     exclude_nologin_users: true
   -
     description: Collect Okular configuration file (Flatpak version).
@@ -31,7 +28,6 @@ artifacts:
     collector: file
     path: /%user_home%/.var/app
     name_pattern: ["okularrc"]
-    file_type: [f]
     ignore_date_range: true
     exclude_nologin_users: true
   -
@@ -40,7 +36,6 @@ artifacts:
     collector: file
     path: /%user_home%/snap
     path_pattern: ["*/okular/docdata/*"]
-    file_type: [f]
     exclude_nologin_users: true
   -
     description: Collect Okular configuration file (Snap version).
@@ -48,7 +43,6 @@ artifacts:
     collector: file
     path: /%user_home%/snap
     name_pattern: ["okularrc"]
-    file_type: [f]
     ignore_date_range: true
     exclude_nologin_users: true
   
