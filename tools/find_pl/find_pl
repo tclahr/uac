@@ -8,7 +8,11 @@ use POSIX qw(getpwuid getgrgid);
 
 sub usage {
     print <<"USAGE";
-Usage: find_pl starting-point [expression]
+Usage: find_pl [-L] starting-point [expression]
+
+OPTIONS
+    -L
+        Follow symbolic links.
 
 EXPRESSION
     The part of the command line after the list of starting points is the expression.
@@ -185,6 +189,7 @@ my $wanted = "my (\$dev,\$inode,\$mode,\$nlink,\$uid,\$gid,\$rdev,\$size,\$atime
 my $depth = 0;
 my $maxdepth = -1;
 my $print_needed = 1;
+my $follow_fast = 0;
 
 # print usage if no arguments are provided
 if (@ARGV < 1) {
@@ -195,7 +200,9 @@ if (@ARGV < 1) {
 # get starting-points only
 while (@ARGV) {
     my $arg_option = shift;
-    if (($arg_option !~ /^-/) and ($arg_option ne "!") and ($arg_option ne "(") and ($arg_option ne ")")) {
+    if ($arg_option eq "-L") {
+        $follow_fast = 1;
+    } elsif (($arg_option !~ /^-/) and ($arg_option ne "!") and ($arg_option ne "(") and ($arg_option ne ")")) {
         push(@starting_points, $arg_option);
     } else {
         unshift(@ARGV, $arg_option);
@@ -351,7 +358,8 @@ for my $starting_point (@starting_points) {
                 eval $wanted;
             },
             no_chdir => 0,
-            follow_skip => 1
+            follow_fast => $follow_fast,
+            follow_skip => 2
         }, $starting_point);
     } else {
         print STDERR "find.pl: no such file or directory '$starting_point'\n";
