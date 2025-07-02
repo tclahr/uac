@@ -10,14 +10,7 @@ artifacts:
     description: Collect multiple configuration files.
     supported_os: [linux]
     collector: file
-    path: /%user_home%/.local/share/Steam
-    name_pattern: ["*.vdf"]
-    exclude_nologin_users: true
-  -
-    description: Collect multiple configuration files.
-    supported_os: [linux]
-    collector: file
-    path: /%user_home%/.steam
+    path: /%user_home%/.steam /%user_home%/.local/share/Steam
     name_pattern: ["*.vdf"]
     exclude_nologin_users: true
   -

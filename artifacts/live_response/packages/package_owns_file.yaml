@@ -1,4 +1,4 @@
-version: 1.0
+version: 1.1
 condition: command_exists "dpkg" || command_exists "pacman" || command_exists "rpm"
 output_directory: /live_response/packages
 artifacts:
@@ -6,63 +6,7 @@ artifacts:
     description: List filenames under /bin/.
     supported_os: [linux]
     collector: find
-    path: /bin/*
-    file_type: [f, l]
-    output_directory: /%temp_directory%/live_response/packages
-    output_file: binary_files.txt
-  -
-    description: List filenames under /sbin/.
-    supported_os: [linux]
-    collector: find
-    path: /sbin/*
-    file_type: [f, l]
-    output_directory: /%temp_directory%/live_response/packages
-    output_file: binary_files.txt
-  -
-    description: List filenames under /usr/bin/.
-    supported_os: [linux]
-    collector: find
-    path: /usr/bin/*
-    file_type: [f, l]
-    output_directory: /%temp_directory%/live_response/packages
-    output_file: binary_files.txt
-  -
-    description: List filenames under /usr/sbin/.
-    supported_os: [linux]
-    collector: find
-    path: /usr/sbin/*
-    file_type: [f, l]
-    output_directory: /%temp_directory%/live_response/packages
-    output_file: binary_files.txt
-  -
-    description: List filenames under /usr/local/bin/.
-    supported_os: [linux]
-    collector: find
-    path: /usr/local/bin/*
-    file_type: [f, l]
-    output_directory: /%temp_directory%/live_response/packages
-    output_file: binary_files.txt
-  -
-    description: List filenames under /usr/local/sbin/.
-    supported_os: [linux]
-    collector: find
-    path: /usr/local/sbin/*
-    file_type: [f, l]
-    output_directory: /%temp_directory%/live_response/packages
-    output_file: binary_files.txt
-  -
-    description: List filenames under /opt/bin/.
-    supported_os: [linux]
-    collector: find
-    path: /opt/bin/*
-    file_type: [f, l]
-    output_directory: /%temp_directory%/live_response/packages
-    output_file: binary_files.txt
-  -
-    description: List filenames under /opt/sbin/.
-    supported_os: [linux]
-    collector: find
-    path: /opt/sbin/*
+    path: /bin/* /sbin/* /usr/bin/* /usr/sbin/* /usr/local/bin/* /usr/local/sbin/* /opt/bin/* /opt/sbin/*
     file_type: [f, l]
     output_directory: /%temp_directory%/live_response/packages
     output_file: binary_files.txt

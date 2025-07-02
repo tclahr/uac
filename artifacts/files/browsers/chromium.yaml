@@ -1,35 +1,18 @@
-version: 2.0
+version: 2.1
 artifacts:
   -
-    description: Collect Chromium browser files (Flatpak version).
+    description: Collect Chromium browser files (Flatpak and Snap versions).
     supported_os: [linux]
     collector: file
-    path: /%user_home%/.var/app/org.chromium.Chromium
+    path: /%user_home%/.var/app/org.chromium.Chromium /%user_home%/snap/chromium
     name_pattern: ["Bookmarks*", "Cookies*", "DownloadMetadata", "Extension Cookies*", "Favicons*", "History*", "Login Data*", "Media History*", "Network Action Predictor*", "Network Persistent State", "Preferences", "QuotaManager*", "Reporting and NEL*", "SecurePreferences", "Shortcuts*", "SyncData.sqlite3", "Top Sites*", "Trust Tokens*", "Visited Links", "Web Data*"]
     ignore_date_range: true
     exclude_nologin_users: true
   -
-    description: Collect Chromium browser directories (Flatpak version).
+    description: Collect Chromium browser directories (Flatpak and Snap versions).
     supported_os: [linux]
     collector: file
-    path: /%user_home%/.var/app/org.chromium.Chromium
-    name_pattern: ["Extensions", "File System", "Sessions"]
-    file_type: [d]
-    ignore_date_range: true
-    exclude_nologin_users: true
-  -
-    description: Collect Chromium browser files (Snap version).
-    supported_os: [linux]
-    collector: file
-    path: /%user_home%/snap/chromium
-    name_pattern: ["Bookmarks*", "Cookies*", "DownloadMetadata", "Extension Cookies*", "Favicons*", "History*", "Login Data*", "Media History*", "Network Action Predictor*", "Network Persistent State", "Preferences", "QuotaManager*", "Reporting and NEL*", "SecurePreferences", "Shortcuts*", "SyncData.sqlite3", "Top Sites*", "Trust Tokens*", "Visited Links", "Web Data*"]
-    ignore_date_range: true
-    exclude_nologin_users: true
-  -
-    description: Collect Chromium browser directories (Snap version).
-    supported_os: [linux]
-    collector: file
-    path: /%user_home%/snap/chromium
+    path: /%user_home%/.var/app/org.chromium.Chromium /%user_home%/snap/chromium
     name_pattern: ["Extensions", "File System", "Sessions"]
     file_type: [d]
     ignore_date_range: true

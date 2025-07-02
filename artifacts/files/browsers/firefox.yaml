@@ -1,4 +1,4 @@
-version: 4.1
+version: 4.2
 artifacts:
   -
     description: Collect Firefox browser files.
@@ -18,35 +18,18 @@ artifacts:
     ignore_date_range: true
     exclude_nologin_users: true
   -
-    description: Collect Firefox browser files (Flatpak version).
+    description: Collect Firefox browser files (Flatpak and Snap versions).
     supported_os: [linux]
     collector: file
-    path: /%user_home%/.var/app/org.mozilla.firefox
+    path: /%user_home%/.var/app/org.mozilla.firefox /%user_home%/snap/firefox
     name_pattern: ["addons.*", "bookmarks.sqlite*", "cookies.sqlite*", "downloads.sqlite*", "extensions.json", "favicons.sqlite*", "firefox_cookies.sqlite*", "formhistory.sqlite*", "key*.db", "logins.json", "permissions.sqlite*", "places.sqlite*", "prefs.js", "protections.sqlite*", "search.sqlite*", "signon*.*", "signons.sqlite*", "storage-sync*.sqlite*", "webappstore.sqlite*"]
     ignore_date_range: true
     exclude_nologin_users: true
   -
-    description: Collect Firefox browser directories (Flatpak version).
+    description: Collect Firefox browser directories (Flatpak and Snap versions).
     supported_os: [linux]
     collector: file
-    path: /%user_home%/.var/app/org.mozilla.firefox
-    name_pattern: ["bookmarkbackups", "sessionstore*"]
-    file_type: [d]
-    ignore_date_range: true
-    exclude_nologin_users: true
-  -
-    description: Collect Firefox browser files (Snap version).
-    supported_os: [linux]
-    collector: file
-    path: /%user_home%/snap/firefox
-    name_pattern: ["addons.*", "bookmarks.sqlite*", "cookies.sqlite*", "downloads.sqlite*", "extensions.json", "favicons.sqlite*", "firefox_cookies.sqlite*", "formhistory.sqlite*", "key*.db", "logins.json", "permissions.sqlite*", "places.sqlite*", "prefs.js", "protections.sqlite*", "search.sqlite*", "signon*.*", "signons.sqlite*", "storage-sync*.sqlite*", "webappstore.sqlite*"]
-    ignore_date_range: true
-    exclude_nologin_users: true
-  -
-    description: Collect Firefox browser directories (Snap version).
-    supported_os: [linux]
-    collector: file
-    path: /%user_home%/snap/firefox
+    path: /%user_home%/.var/app/org.mozilla.firefox /%user_home%/snap/firefox
     name_pattern: ["bookmarkbackups", "sessionstore*"]
     file_type: [d]
     ignore_date_range: true

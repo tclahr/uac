@@ -1,71 +1,25 @@
-version: 1.0
+version: 1.1
 artifacts:
   -
-    description: Collect Viber database files.
+    description: Collect Viber database files (including Flatpak and Snap versions).
     supported_os: [linux]
     collector: file
-    path: /%user_home%/.ViberPC
+    path: /%user_home%/.ViberPC /%user_home%/.var/app/com.viber.Viber /%user_home%/snap/viber
     name_pattern: ["config.db*", "viber.db*"]
     exclude_nologin_users: true
   -
-    description: Collect Viber avatar files.
+    description: Collect Viber avatar files (including Flatpak and Snap versions).
     supported_os: [linux]
     collector: file
-    path: /%user_home%/.ViberPC
+    path: /%user_home%/.ViberPC /%user_home%/.var/app/com.viber.Viber /%user_home%/snap/viber
     path_pattern: ["*/Avatars/*"]
     ignore_date_range: true
     exclude_nologin_users: true
   -
-    description: Collect Viber thumbnails files.
+    description: Collect Viber thumbnails files (including Flatpak and Snap versions).
     supported_os: [linux]
     collector: file
-    path: /%user_home%/.ViberPC
-    path_pattern: ["*/Thumbnails/*"]
-    ignore_date_range: true
-    exclude_nologin_users: true
-  -
-    description: Collect Viber database files (Flatpak version).
-    supported_os: [linux]
-    collector: file
-    path: /%user_home%/.var/app/com.viber.Viber
-    name_pattern: ["config.db*", "viber.db*"]
-    exclude_nologin_users: true
-  -
-    description: Collect Viber avatar files (Flatpak version).
-    supported_os: [linux]
-    collector: file
-    path: /%user_home%/.var/app/com.viber.Viber
-    path_pattern: ["*/Avatars/*"]
-    ignore_date_range: true
-    exclude_nologin_users: true
-  -
-    description: Collect Viber thumbnails files (Flatpak version).
-    supported_os: [linux]
-    collector: file
-    path: /%user_home%/.var/app/com.viber.Viber
-    path_pattern: ["*/Thumbnails/*"]
-    ignore_date_range: true
-    exclude_nologin_users: true
-  -
-    description: Collect Viber database files (Snap unofficial version).
-    supported_os: [linux]
-    collector: file
-    path: /%user_home%/snap/viber-unofficial
-    name_pattern: ["config.db*", "viber.db*"]
-    exclude_nologin_users: true
-  -
-    description: Collect Viber avatar files (Snap unofficial version).
-    supported_os: [linux]
-    collector: file
-    path: /%user_home%/snap/viber-unofficial
-    path_pattern: ["*/Avatars/*"]
-    ignore_date_range: true
-    exclude_nologin_users: true
-  -
-    description: Collect Viber thumbnails files (Snap unofficial version).
-    supported_os: [linux]
-    collector: file
-    path: /%user_home%/snap/viber-unofficial
+    path: /%user_home%/.ViberPC /%user_home%/.var/app/com.viber.Viber /%user_home%/snap/viber
     path_pattern: ["*/Thumbnails/*"]
     ignore_date_range: true
     exclude_nologin_users: true

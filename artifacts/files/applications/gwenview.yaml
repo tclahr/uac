@@ -1,4 +1,4 @@
-version: 1.1
+version: 1.2
 artifacts:
   -
     description: Collect the paths to recently viewed or edited images using Gwenview image viewer.
@@ -11,14 +11,6 @@ artifacts:
     description: Collect the paths to recently viewed or edited images using Gwenview image viewer (Flatpak version).
     supported_os: [linux]
     collector: file
-    path: /%user_home%/.var/app
+    path: /%user_home%/.var/app /%user_home%/snap
     name_pattern: ["gwenviewrc"]
     exclude_nologin_users: true
-  -
-    description: Collect the paths to recently viewed or edited images using Gwenview image viewer (Snap version).
-    supported_os: [linux]
-    collector: file
-    path: /%user_home%/snap
-    name_pattern: ["gwenviewrc"]
-    exclude_nologin_users: true
-  

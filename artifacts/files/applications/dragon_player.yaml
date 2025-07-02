@@ -1,4 +1,4 @@
-version: 1.1
+version: 1.2
 artifacts:
   -
     description: Collect the paths to recently opened video files using the Dragon Player.
@@ -8,17 +8,9 @@ artifacts:
     name_pattern: ["dragonplayerrc"]
     exclude_nologin_users: true
   -
-    description: Collect the paths to recently opened video files using the Dragon Player (Flatpak version).
+    description: Collect the paths to recently opened video files using the Dragon Player (Flatpak and Snap versions).
     supported_os: [linux]
     collector: file
-    path: /%user_home%/.var/app
+    path: /%user_home%/.var/app /%user_home%/snap
     name_pattern: ["dragonplayerrc"]
     exclude_nologin_users: true
-  -
-    description: Collect the paths to recently opened video files using the Dragon Player (Snap version).
-    supported_os: [linux]
-    collector: file
-    path: /%user_home%/snap
-    name_pattern: ["dragonplayerrc"]
-    exclude_nologin_users: true
-  

@@ -1,4 +1,4 @@
-version: 1.1
+version: 1.2
 artifacts:
   -
     description: Collect session data for the Dolphin file manager in the KDE desktop environment. This file contains information about the state of the Dolphin application, such as the currently open directories and their paths and the last accessed locations.
@@ -8,17 +8,9 @@ artifacts:
     name_pattern: ["dolphin_dolphin_dolphin"]
     exclude_nologin_users: true
   -
-    description: Collect session data for the Dolphin file manager in the KDE desktop environment. This file contains information about the state of the Dolphin application, such as the currently open directories and their paths and the last accessed locations (Flatpak version).
+    description: Collect session data for the Dolphin file manager in the KDE desktop environment. This file contains information about the state of the Dolphin application, such as the currently open directories and their paths and the last accessed locations (Flatpak and Snap versions).
     supported_os: [linux]
     collector: file
-    path: /%user_home%/.var/app
+    path: /%user_home%/.var/app /%user_home%/snap
     name_pattern: ["dolphin_dolphin_dolphin"]
     exclude_nologin_users: true
-  -
-    description: Collect session data for the Dolphin file manager in the KDE desktop environment. This file contains information about the state of the Dolphin application, such as the currently open directories and their paths and the last accessed locations (Snap version).
-    supported_os: [linux]
-    collector: file
-    path: /%user_home%/snap
-    name_pattern: ["dolphin_dolphin_dolphin"]
-    exclude_nologin_users: true
-  
