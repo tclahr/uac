@@ -1,4 +1,4 @@
-version: 2.1
+version: 2.2
 artifacts:
   -
     description: Collect installed packages database.
@@ -6,16 +6,10 @@ artifacts:
     collector: file
     path: /var/db/pkg/local.sqlite
   -
-    description: Collect package table of contents files.
+    description: Collect package table of contents files (including NetBSD 10 and later).
     supported_os: [netbsd, openbsd]
     collector: file
-    path: /var/db/pkg
-    path_pattern: ["*/+CONTENTS"]
-  -
-    description: Collect package table of contents files (NetBSD 10 and later).
-    supported_os: [netbsd]
-    collector: file
-    path: /usr/pkg/pkgdb
+    path: /var/db/pkg /usr/pkg/pkgdb
     path_pattern: ["*/+CONTENTS"]
   -
     description: Collect package table of contents files.

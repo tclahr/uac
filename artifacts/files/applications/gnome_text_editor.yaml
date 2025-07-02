@@ -1,4 +1,4 @@
-version: 1.1
+version: 1.2
 artifacts:
   -
     description: Collect metadata about recently opened files in Gnome Text Editor.
@@ -8,17 +8,9 @@ artifacts:
     name_pattern: ["session.gvariant"]
     exclude_nologin_users: true
   -
-    description: Collect metadata about recently opened files in Gnome Text Editor (Flatpak version).
+    description: Collect metadata about recently opened files in Gnome Text Editor (Flatpak and Snap versions).
     supported_os: [linux]
     collector: file
-    path: /%user_home%/.var/app
+    path: /%user_home%/.var/app /%user_home%/snap
     name_pattern: ["session.gvariant"]
     exclude_nologin_users: true
-  -
-    description: Collect metadata about recently opened files in Gnome Text Editor (Snap version).
-    supported_os: [linux]
-    collector: file
-    path: /%user_home%/snap
-    name_pattern: ["session.gvariant"]
-    exclude_nologin_users: true
-  

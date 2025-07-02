@@ -1,24 +1,10 @@
-version: 1.0
+version: 1.1
 artifacts:
   -
-    description: Collect Discord cache and leveldb files.
+    description: Collect Discord cache and leveldb files (including Flatpak and Snap versions).
     supported_os: [linux]
     collector: file
-    path: /%user_home%/.config/discord
-    path_pattern: ["*/Cache/*", "*/Local Storage/leveldb/*"]
-    exclude_nologin_users: true
-  -
-    description: Collect Discord cache and leveldb files (Flatpak version).
-    supported_os: [linux]
-    collector: file
-    path: /%user_home%/.var/app/com.discordapp.Discord
-    path_pattern: ["*/Cache/*", "*/Local Storage/leveldb/*"]
-    exclude_nologin_users: true
-  -
-    description: Collect Discord cache and leveldb files (Snap version).
-    supported_os: [linux]
-    collector: file
-    path: /%user_home%/snap/discord
+    path: /%user_home%/.config/discord /%user_home%/.var/app/com.discordapp.Discord /%user_home%/snap/discord
     path_pattern: ["*/Cache/*", "*/Local Storage/leveldb/*"]
     exclude_nologin_users: true
   -

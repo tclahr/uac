@@ -1,4 +1,4 @@
-version: 1.1
+version: 1.2
 artifacts:
   -
     description: Collect core dump files from /var/core/.
@@ -15,17 +15,7 @@ artifacts:
     description: Collect ABRT files.
     supported_os: [linux]
     collector: file
-    path: /var/spool/abrt
-  -
-    description: Collect ABRT files.
-    supported_os: [linux]
-    collector: file
-    path: /var/spool/abrt-upload
-  -
-    description: Collect ABRT files.
-    supported_os: [linux]
-    collector: file
-    path: /var/tmp/abrt
+    path: /var/spool/abrt /var/spool/abrt-upload /var/tmp/abrt
   -
     description: Collect Apport or kdump files.
     supported_os: [linux]
