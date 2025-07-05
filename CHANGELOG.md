@@ -11,29 +11,28 @@ All notable changes to this project will be documented in this file.
 
 ### Artifacts
 
-- `artifacts/files/logs/advanced_log_search.yaml`: `file_type: [f]` was removed to also collect symlinks. ([#355](https://github.com/tclahr/uac/issues/355))
-- `artifacts/files/logs/apache.yaml`: `file_type: [f]` was removed to also collect symlinks. ([#355](https://github.com/tclahr/uac/issues/355))
-- `artifacts/files/logs/macos_unified_logs.yaml`: `file_type: [f]` was removed to also collect symlinks. ([#355](https://github.com/tclahr/uac/issues/355))
-- `artifacts/files/logs/macos.yaml`: `file_type: [f]` was removed to also collect symlinks. ([#355](https://github.com/tclahr/uac/issues/355))
-- `artifacts/files/logs/netscaler.yaml`: `file_type: [f]` was removed to also collect symlinks. ([#355](https://github.com/tclahr/uac/issues/355))
-- `artifacts/files/logs/nginx.yaml`: `file_type: [f]` was removed to also collect symlinks. ([#355](https://github.com/tclahr/uac/issues/355))
-- `artifacts/files/logs/run_log.yaml`: `file_type: [f]` was removed to also collect symlinks. ([#355](https://github.com/tclahr/uac/issues/355))
-- `artifacts/files/logs/solaris.yaml`: `file_type: [f]` was removed to also collect symlinks. ([#355](https://github.com/tclahr/uac/issues/355))
-- `artifacts/files/logs/tomcat.yaml`: `file_type: [f]` was removed to also collect symlinks. ([#355](https://github.com/tclahr/uac/issues/355))
-- `artifacts/files/logs/var_adm.yaml`: `file_type: [f]` was removed to also collect symlinks. ([#355](https://github.com/tclahr/uac/issues/355))
-- `artifacts/files/logs/var_log.yaml`: `file_type: [f]` was removed to also collect symlinks. ([#355](https://github.com/tclahr/uac/issues/355))
-- `artifacts/files/logs/var_run_log.yaml`: `file_type: [f]` was removed to also collect symlinks. ([#355](https://github.com/tclahr/uac/issues/355))
-- `artifacts/files/system/dev_shm.yaml`: `file_type: [f]` was removed to also collect symlinks. ([#355](https://github.com/tclahr/uac/issues/355))
-- `artifacts/files/system/etc.yaml`: `file_type: [f]` was removed to also collect symlinks. ([#355](https://github.com/tclahr/uac/issues/355))
-- `artifacts/files/system/gvfs_metadata.yaml`: `file_type: [f]` was removed to also collect symlinks. ([#355](https://github.com/tclahr/uac/issues/355))
-- `artifacts/files/system/netscaler.yaml`: `file_type: [f]` was removed to also collect symlinks. ([#355](https://github.com/tclahr/uac/issues/355))
-- `artifacts/files/system/run_shm.yaml`: `file_type: [f]` was removed to also collect symlinks. ([#355](https://github.com/tclahr/uac/issues/355))
-- `artifacts/files/system/systemd.yaml`: `file_type: [f]` was removed to also collect symlinks. ([#355](https://github.com/tclahr/uac/issues/355))
-- `artifacts/files/system/tmp.yaml`: `file_type: [f]` was removed to also collect symlinks. ([#355](https://github.com/tclahr/uac/issues/355))
-- `artifacts/files/system/udev.yaml`: `file_type: [f]` was removed to also collect symlinks. ([#355](https://github.com/tclahr/uac/issues/355))
-- `artifacts/files/system/var_tmp.yaml`: `file_type: [f]` was removed to also collect symlinks. ([#355](https://github.com/tclahr/uac/issues/355))
-- `artifacts/system/hidden_files.yaml`: Added collection of symlinks.
 - `files/browsers/cache.yaml`: Added collection of browser cache data. This artifact is resource-intensive and time-consuming, so it is disabled by default in all profiles [freebsd, linux, macos].
+- `files/logs/advanced_log_search.yaml`: `file_type: [f]` was removed to also collect symlinks. ([#355](https://github.com/tclahr/uac/issues/355))
+- `files/logs/apache.yaml`: `file_type: [f]` was removed to also collect symlinks. ([#355](https://github.com/tclahr/uac/issues/355))
+- `files/logs/macos_unified_logs.yaml`: `file_type: [f]` was removed to also collect symlinks. ([#355](https://github.com/tclahr/uac/issues/355))
+- `files/logs/macos.yaml`: `file_type: [f]` was removed to also collect symlinks. ([#355](https://github.com/tclahr/uac/issues/355))
+- `files/logs/netscaler.yaml`: `file_type: [f]` was removed to also collect symlinks. ([#355](https://github.com/tclahr/uac/issues/355))
+- `files/logs/nginx.yaml`: `file_type: [f]` was removed to also collect symlinks. ([#355](https://github.com/tclahr/uac/issues/355))
+- `files/logs/run_log.yaml`: `file_type: [f]` was removed to also collect symlinks. ([#355](https://github.com/tclahr/uac/issues/355))
+- `files/logs/solaris.yaml`: `file_type: [f]` was removed to also collect symlinks. ([#355](https://github.com/tclahr/uac/issues/355))
+- `files/logs/tomcat.yaml`: `file_type: [f]` was removed to also collect symlinks. ([#355](https://github.com/tclahr/uac/issues/355))
+- `files/logs/var_adm.yaml`: `file_type: [f]` was removed to also collect symlinks. ([#355](https://github.com/tclahr/uac/issues/355))
+- `files/logs/var_log.yaml`: `file_type: [f]` was removed to also collect symlinks. ([#355](https://github.com/tclahr/uac/issues/355))
+- `files/logs/var_run_log.yaml`: `file_type: [f]` was removed to also collect symlinks. ([#355](https://github.com/tclahr/uac/issues/355))
+- `files/system/dev_shm.yaml`: `file_type: [f]` was removed to also collect symlinks. ([#355](https://github.com/tclahr/uac/issues/355))
+- `files/system/etc.yaml`: `file_type: [f]` was removed to also collect symlinks. ([#355](https://github.com/tclahr/uac/issues/355))
+- `files/system/gvfs_metadata.yaml`: `file_type: [f]` was removed to also collect symlinks. ([#355](https://github.com/tclahr/uac/issues/355))
+- `files/system/netscaler.yaml`: `file_type: [f]` was removed to also collect symlinks. ([#355](https://github.com/tclahr/uac/issues/355))
+- `files/system/run_shm.yaml`: `file_type: [f]` was removed to also collect symlinks. ([#355](https://github.com/tclahr/uac/issues/355))
+- `files/system/systemd.yaml`: `file_type: [f]` was removed to also collect symlinks. ([#355](https://github.com/tclahr/uac/issues/355))
+- `files/system/tmp.yaml`: `file_type: [f]` was removed to also collect symlinks. ([#355](https://github.com/tclahr/uac/issues/355))
+- `files/system/udev.yaml`: `file_type: [f]` was removed to also collect symlinks. ([#355](https://github.com/tclahr/uac/issues/355))
+- `files/system/var_tmp.yaml`: `file_type: [f]` was removed to also collect symlinks. ([#355](https://github.com/tclahr/uac/issues/355))
 - `live_response/modifiers/disable_ftrace.yaml`: Added modifier to disable ftrace to prevent syscall hooking by LKM rootkits [linux]. (by [mnrkbys](https://github.com/mnrkbys))
 - `live_response/packages/slackpkg.yaml`: Moved to `packages/slackpkg.yaml`.
 - `live_response/process/procfs_information.yaml`: Added collection of /proc/modules [aix, freebsd, linux, netbsd, netscaler, solaris]. (by [SolitudePy](https://github.com/SolitudePy))
@@ -45,10 +44,12 @@ All notable changes to this project will be documented in this file.
 - `live_response/system/sgid.yaml`: Moved to `system/sgid.yaml`.
 - `live_response/system/suid.yaml`: Moved to `system/suid.yaml`.
 - `live_response/system/user_name_known_files.yaml`: Moved to `system/user_name_known_files.yaml`.
+- `live_response/system/utmpdump.yaml`: Added collection of utmp and wtmp (including log rotated) files using `utmpdump` command [linux]. (by [mnrkbys](https://github.com/mnrkbys))
 - `live_response/system/world_writable_directories.yaml`: Moved to `system/world_writable_directories.yaml`.
 - `live_response/system/world_writable_files.yaml`: Moved to `system/world_writable_files.yaml`.
 - `osquery/osquery.yaml`: Added new queries for apt_sources, deb_packages, shell_history, system_controls, logged_in_users and last_logins [linux]. (by [SolitudePy](https://github.com/SolitudePy))
 - `osquery/osquery.yaml`: Fixed query for authorized_keys [linux]. (by [SolitudePy](https://github.com/SolitudePy))
+- `system/hidden_files.yaml`: Added collection of symlinks.
 
 ### Fixed
 

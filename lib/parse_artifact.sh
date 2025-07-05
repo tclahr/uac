@@ -97,7 +97,7 @@ _parse_artifact()
               if echo "${__pa_condition}" | grep -q -E "^!"; then
                 __pa_condition=`echo "${__pa_condition}" | sed -e 's|^! *||' 2>/dev/null`
                 if _run_command "${__pa_condition}" true >/dev/null; then
-                  _log_msg DBG "Global condition '${__pa_condition}' not satisfied. Skipping..."
+                  _log_msg INF "Global condition '${__pa_condition}' not satisfied. Skipping..."
                   return 1
                 else
                   _log_msg DBG "Global condition '${__pa_condition}' satisfied"
@@ -106,7 +106,7 @@ _parse_artifact()
                 if _run_command "${__pa_condition}" true >/dev/null; then
                   _log_msg DBG "Global condition '${__pa_condition}' satisfied"
                 else
-                  _log_msg DBG "Global condition '${__pa_condition}' not satisfied. Skipping..."
+                  _log_msg INF "Global condition '${__pa_condition}' not satisfied. Skipping..."
                   return 1
                 fi
               fi
@@ -245,7 +245,7 @@ _parse_artifact()
               if echo "${__pa_condition}" | grep -q -E "^!"; then
                 __pa_condition=`echo "${__pa_condition}" | sed -e 's|^! *||' 2>/dev/null`
                 if _run_command "${__pa_condition}" true >/dev/null; then
-                  _log_msg DBG "Condition '${__pa_condition}' not satisfied. Skipping..."
+                  _log_msg INF "Condition '${__pa_condition}' not satisfied. Skipping..."
                   _cleanup_local_vars
                   continue
                 else
@@ -255,7 +255,7 @@ _parse_artifact()
                 if _run_command "${__pa_condition}" true >/dev/null; then
                   _log_msg DBG "Condition '${__pa_condition}' satisfied"
                 else
-                  _log_msg DBG "Condition '${__pa_condition}' not satisfied. Skipping..."
+                  _log_msg INF "Condition '${__pa_condition}' not satisfied. Skipping..."
                   _cleanup_local_vars
                   continue
                 fi
