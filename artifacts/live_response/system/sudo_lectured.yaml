@@ -1,0 +1,25 @@
+version: 1.2
+output_directory: /live_response/system
+artifacts:
+  -
+    description: Timestamps of users who saw the sudo lecture message.
+    supported_os: [all]
+    collector: stat
+    path: /var/db/sudo/lectured /var/lib/sudo/lectured
+    output_file: sudo_lectured_timestamps.txt
+  -
+    description: Timestamps of users who saw the sudo lecture message in JSON format.
+    supported_os: [linux]
+    collector: command
+    condition: command_exists "stat"
+    foreach: ls "%mount_point%/var/db/sudo/lectured"
+    command: stat --format='{"File": "%n", "Size": %s, "Blocks": %b, "IOBlock": %o, "Type": "%F", "Device": "%D", "Inode": %i, "Permissions": "%a", "Links": %h, "UID": %u, "GID": %g, "Access": "%x", "Modify": "%y", "Change": "%z"}' "%mount_point%/var/db/sudo/lectured/%line%"
+    output_file: sudo_lectured_timestamps.json
+  -
+    description: Timestamps of users who saw the sudo lecture message in JSON format.
+    supported_os: [linux]
+    collector: command
+    condition: command_exists "stat"
+    foreach: ls "%mount_point%/var/lib/sudo/lectured"
+    command: stat --format='{"File": "%n", "Size": %s, "Blocks": %b, "IOBlock": %o, "Type": "%F", "Device": "%D", "Inode": %i, "Permissions": "%a", "Links": %h, "UID": %u, "GID": %g, "Access": "%x", "Modify": "%y", "Change": "%z"}' "%mount_point%/var/lib/sudo/lectured/%line%"
+    output_file: sudo_lectured_timestamps.json

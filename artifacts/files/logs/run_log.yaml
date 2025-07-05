@@ -1,4 +1,4 @@
-version: 1.0
+version: 1.2
 artifacts:
   -
     description: Collect /run/log files.

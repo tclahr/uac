@@ -1,4 +1,4 @@
-version: 4.0
+version: 4.1
 artifacts:
   -
     description: Collect system configuration files.
@@ -6,14 +6,12 @@ artifacts:
     collector: file
     path: /etc
     exclude_name_pattern: ["shadow", "shadow-", "master.passwd", "spwd.db", "gshadow", "gshadow-"]
-    file_type: [f]
     ignore_date_range: true
   -
     description: Collect system configuration files.
     supported_os: [aix, esxi, freebsd, linux, netbsd, netscaler, openbsd, solaris]
     collector: file
     path: /usr/local/etc
-    file_type: [f]
     ignore_date_range: true
   -
     description: Collect system configuration files.
@@ -21,7 +19,6 @@ artifacts:
     collector: file
     path: /private/etc
     exclude_name_pattern: ["shadow", "shadow-"]
-    file_type: [f]
     ignore_date_range: true
 
 # References:

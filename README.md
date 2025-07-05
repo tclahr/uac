@@ -1,51 +1,63 @@
+<!-- markdownlint-disable MD033 -->
+<!-- markdownlint-disable MD041 -->
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="logo/uac-light.svg">
     <img src="logo/uac-dark.svg" alt="logo" width="120px">
   </picture>
 
-  <h2 align="center">Unix-like Artifacts Collector</h2>
+  <h2 align="center">Unix-like Artifacts Collector (UAC)</h2>
 
   <p align="center">
     <a href="https://github.com/tclahr/uac/actions/workflows/shellcheck.yaml" alt="Issues">
-      <img src="https://github.com/tclahr/uac/actions/workflows/shellcheck.yaml/badge.svg" /></a>
+      <img src="https://github.com/tclahr/uac/actions/workflows/shellcheck.yaml/badge.svg" alt="shellcheck_badge"/></a>
     <a href="https://bestpractices.coreinfrastructure.org/projects/5640" alt="CII Best Practices">
-      <img src="https://bestpractices.coreinfrastructure.org/projects/5640/badge" /></a>
+      <img src="https://bestpractices.coreinfrastructure.org/projects/5640/badge" alt="bestpractices_badge"/></a>
     <a href="https://github.com/tclahr/uac/releases" alt="GitHub release (latest by date including pre-releases)">
-      <img src="https://img.shields.io/github/v/release/tclahr/uac?include_prereleases&style=flat" /></a>
+      <img src="https://img.shields.io/github/v/release/tclahr/uac?include_prereleases&style=flat-square" alt="release_badge"/></a>
     <a href="https://github.com/tclahr/uac/LICENSE" alt="License">
-      <img src="https://img.shields.io/github/license/tclahr/uac?style=flat" /></a>
+      <img src="https://img.shields.io/github/license/tclahr/uac?style=flat-square" alt="license_badge"/></a>
   </p>
 
   <p align="center">
+    <a href="#-about-uac">About</a>
+    •
     <a href="#-documentation">Documentation</a>
     •
     <a href="#-main-features">Main Features</a>
     •
     <a href="#-supported-operating-systems">Supported Operating Systems</a>
     •
-    <a href="">Using UAC</a>
+    <a href="#-usage">Usage</a>
     •
     <a href="#-contributing">Contributing</a>
     •
-    <a href="#-community-support">Support</a>
+    <a href="#-support">Support</a>
     •
     <a href="#-license">License</a>
   </p>
-
 </p>
+<!-- markdownlint-enable MD033 -->
+<!-- markdownlint-enable MD041 -->
 
 ## 🔎 About UAC
 
-UAC is a Live Response collection script for Incident Response that makes use of native binaries and tools to automate the collection of AIX, ESXi, FreeBSD, Linux, macOS, NetBSD, NetScaler, OpenBSD and Solaris systems artifacts. It was created to facilitate and speed up data collection, and depend less on remote support during incident response engagements.
+**UAC (Unix-like Artifacts Collector)** is a powerful and extensible incident response tool designed for forensic investigators, security analysts, and IT professionals. It automates the collection of artifacts from a wide range of Unix-like systems, including AIX, ESXi, FreeBSD, Linux, macOS, NetBSD, NetScaler, OpenBSD and Solaris.
 
-UAC reads YAML files on the fly and, based on their contents, collects relevant artifacts. This makes UAC very customizable and extensible.
+Whether you're handling an intrusion, conducting forensic investigations, or performing compliance checks, UAC simplifies and accelerates data collection while minimizing reliance on external support during critical incidents.
 
-[![uac_collection](https://tclahr.github.io/uac-docs/img/uac_3_collection.gif)](#)
+### Key Highlights
+
+- 📂 Fully customizable via YAML profiles for tailored data collection.
+- ⚡ Lightweight, portable, and requires no installation or dependencies.
+- 🔒 Adheres to the order of volatility to ensure reliable data acquisition.
+- 🛠 Designed for diverse environments, including IoT devices and NAS systems.
+
+![UAC in Action](https://tclahr.github.io/uac-docs/img/uac_collection.gif)
 
 ## 📘 Documentation
 
-Project documentation page: [https://tclahr.github.io/uac-docs](https://tclahr.github.io/uac-docs)
+Full documentation is available at the [project documentation page](https://tclahr.github.io/uac-docs).
 
 ## 🌟 Main Features
 
@@ -55,8 +67,9 @@ Project documentation page: [https://tclahr.github.io/uac-docs](https://tclahr.g
 - Collect information about current running processes (including processes without a binary on disk).
 - Hash running processes and executable files.
 - Extract files and directories status to create a bodyfile.
-- Collect system and user-specific data, configuration files and logs.
+- Collect system and user-specific data, configuration files, and logs.
 - Acquire volatile memory from Linux systems using different methods and tools.
+- Support to write output to various cloud platforms.
 
 ## 💾 Supported Operating Systems
 
@@ -72,63 +85,76 @@ UAC runs on any Unix-like system, regardless of the processor architecture. All 
 [![OpenBSD](https://img.shields.io/static/v1?label=&message=OpenBSD&color=yellow&style=for-the-badge)](#-supported-operating-systems)
 [![Solaris](https://img.shields.io/static/v1?label=&message=Solaris&color=lightblue&style=for-the-badge)](#-supported-operating-systems)
 
-*Note that UAC even runs on systems like Network Attached Storage (NAS) devices, Network devices such as OpenWrt, and IoT devices.*
+*Note: UAC even runs on systems like Network Attached Storage (NAS) devices, Network devices such as OpenWrt, and IoT devices.*
 
 ## 🚀 Usage
 
 UAC does not need to be installed on the target system. Simply download the latest version from the [releases page](https://github.com/tclahr/uac/releases), uncompress it, and launch. It's that simple!
 
-> **Full Disk Access** permission is a privacy feature introduced in macOS Mojave (10.14) that prevents some applications from accessing important data, such as Mail, Messages, and Safari files. So it is strongly recommended that you manually [grant permission for Terminal application](https://support.apple.com/guide/mac-help/allow-access-to-system-configuration-files-mchlccb25729/mac) before running UAC from the terminal, or [grant permission for remote users](https://support.apple.com/guide/mac-help/allow-a-remote-computer-to-access-your-mac-mchlp1066/mac) before running UAC via ssh.
+### 🛠 Getting Started
 
-To execute a collection, you must supply at least a profile and/or a list of artifacts, and specify the destination directory. Any additional parameters are optional.
+1. Download the latest release from the [Releases page](https://github.com/tclahr/uac/releases).
+2. Uncompress the archive.
+3. Execute the tool directly from the terminal.
 
-Examples:
+### Examples
 
-Collect all artifacts based on the ir_triage profile, and save the output file to /tmp.
+<!-- markdownlint-disable MD033 -->
+<details>
+<summary>Click to view usage examples</summary>
+
+**Collect all artifacts based on the ir_triage profile:**
 
 ```shell
 ./uac -p ir_triage /tmp
 ```
 
-Collect all artifacts located in the artifacts/live_response directory, and save the output file to /tmp.
-
-```shell
-./uac -a ./artifacts/live_response/\* /tmp
-```
-
-Collect all artifacts based on the ir_triage profile, along with all artifacts located in the /my_custom_artifacts directory, and save the output file to /mnt/sda1.
-
-```shell
-./uac -p ir_triage -a /my_custom_artifacts/\* /mnt/sda1
-```
-
-Collect a memory dump and all artifacts based on the full profile.
+**Collect memory dump and all artifacts based on the full profile:**
 
 ```shell
 ./uac -a ./artifacts/memory_dump/avml.yaml -p full /tmp
 ```
 
-Collect all artifacts based on the ir_triage profile excluding the bodyfile/bodyfile.yaml artifact.
+**Collect all artifacts excluding a specific one:**
 
 ```shell
-./uac -p ir_triage -a \!artifacts/bodyfile/bodyfile.yaml /tmp
+./uac -p full -a \!artifacts/bodyfile/bodyfile.yaml .
 ```
+
+**Collect all artifacts based on the ir_triage profile, along with all artifacts located in the /my_custom_artifacts directory:**
+
+```shell
+./uac -p ir_triage -a /my_custom_artifacts/\* /mnt/sda1
+```
+
+**Collect all artifacts based on a custom profile:**
+
+```shell
+./uac -p /my_custom_uac_data/my_custom_uac_profile.yaml /tmp
+```
+
+</details>
+<!-- markdownlint-enable MD033 -->
 
 ## 💙 Contributing
 
-Contributions are what makes the open source community such an amazing place to learn, inspire, and create. Any contributions you make are greatly appreciated.
+Contributions make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are greatly appreciated.
 
 Have you created any artifacts? Please share them with us!
 
-You can contribute with new artifacts, profiles, bug fixes or even propose new features. Please read our [Contributing Guide](CONTRIBUTING.md) before submitting a Pull Request to the project.
+You can contribute with new artifacts, profiles, bug fixes, or propose new features. Please read our [Contributing Guide](CONTRIBUTING.md) before submitting a Pull Request to the project.
 
-## 👨‍💻 Community Support
+## 👨‍💻 Support
 
-For general help using UAC, please refer to the [project documentation page](https://tclahr.github.io/uac-docs). For additional help, you can use one of the channels to ask a question:
+For general help using UAC, please refer to the [project documentation page](https://tclahr.github.io/uac-docs). For additional help, you can use one of the following channels:
 
 - [Discord](https://discord.com/invite/digitalforensics) (For live discussion with the community and UAC team)
 - [GitHub](https://github.com/tclahr/uac/issues) (Bug reports and contributions)
 - [Twitter](https://twitter.com/tclahr) (Get the news fast)
+
+## ⭐ Support the Project
+
+If you find UAC helpful, please give us a ⭐ on [GitHub](https://github.com/tclahr/uac)! This helps others discover the project and motivates us to improve it further.
 
 ## 📜 License
 

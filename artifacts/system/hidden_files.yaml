@@ -1,13 +1,14 @@
-version: 2.0
-output_directory: /live_response/system
+version: 2.1
+output_directory: /system
 artifacts:
   -
-    description: List all hidden files outside of user home directory.
+    description: List all hidden files and symlinks outside of user home directory.
     supported_os: [all]
     collector: find
     path: /
     name_pattern: [".*"]
     exclude_path_pattern: ["/root", "/home", "/export/home", "/Users"]
-    file_type: [f]
+    exclude_file_system: [proc, procfs]
+    file_type: [f, l]
     output_file: hidden_files.txt
   

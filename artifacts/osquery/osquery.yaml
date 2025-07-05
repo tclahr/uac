@@ -1,0 +1,142 @@
+version: 2.0
+condition: command_exists "osqueryi"
+output_directory: /osquery
+artifacts:
+  -
+    description: Collect local users in json format.
+    supported_os: [linux]
+    collector: command
+    command: osqueryi --json 'SELECT * FROM users;'
+    output_file: users.json
+  -
+    description: Collect rpm packages in json format.
+    supported_os: [linux]
+    collector: command
+    command: osqueryi --json 'SELECT * FROM rpm_packages;'
+    output_file: rpm_packages.json
+  -
+    description: Collect deb packages in json format.
+    supported_os: [linux]
+    collector: command
+    command: osqueryi --json 'SELECT * FROM deb_packages;'
+    output_file: deb_packages.json
+  -
+    description: Collect processes in json format.
+    supported_os: [linux]
+    collector: command
+    command: osqueryi --json 'SELECT p.path, p.name, p.cmdline, p.on_disk, p.uid, u.username, h.md5, h.sha1, h.sha256 FROM processes AS p LEFT JOIN hash AS h ON p.path = h.path LEFT JOIN users AS u ON p.uid = u.uid;' 
+    output_file: processes.json
+  -
+    description: Collect startup items in json format.
+    supported_os: [linux]
+    collector: command
+    command: osqueryi --json 'SELECT * FROM startup_items;'
+    output_file: startup_items.json
+  -
+    description: Collect systemd units in json format.
+    supported_os: [linux]
+    collector: command
+    command: osqueryi --json 'SELECT * FROM systemd_units;'
+    output_file: systemd_units.json
+  -
+    description: Collect crontab in json format.
+    supported_os: [linux]
+    collector: command
+    command: osqueryi --json 'SELECT * FROM crontab;'
+    output_file: crontab.json
+  -
+    description: Collect etc_hosts in json format.
+    supported_os: [linux]
+    collector: command
+    command: osqueryi --json 'SELECT * FROM etc_hosts;'
+    output_file: etc_hosts.json
+  -
+    description: Collect kernel modules in json format.
+    supported_os: [linux]
+    collector: command
+    command: osqueryi --json 'SELECT * FROM kernel_modules;'
+    output_file: kernel_modules.json
+  -
+    description: Collect mounts in json format.
+    supported_os: [linux]
+    collector: command
+    command: osqueryi --json 'SELECT * FROM mounts;'
+    output_file: mounts.json
+  -
+    description: Collect suid bin in json format.
+    supported_os: [linux]
+    collector: command
+    command: osqueryi --json 'SELECT * FROM suid_bin;'
+    output_file: suid_bin.json
+  -
+    description: Collect process memory map in json format.
+    supported_os: [linux]
+    collector: command
+    command: osqueryi --json 'SELECT * FROM process_memory_map;'
+    output_file: process_memory_map.json
+  -
+    description: Collect arp cache in json format.
+    supported_os: [linux]
+    collector: command
+    command: osqueryi --json 'SELECT * FROM arp_cache;'
+    output_file: arp_cache.json
+  -
+    description: Collect yum sources in json format.
+    supported_os: [linux]
+    collector: command
+    command: osqueryi --json 'SELECT * FROM yum_sources;'
+    output_file: yum_sources.json
+  -
+    description: Collect apt sources in json format.
+    supported_os: [linux]
+    collector: command
+    command: osqueryi --json 'SELECT * FROM apt_sources;'
+    output_file: apt_sources.json
+  -
+    description: Collect dns resolvers in json format.
+    supported_os: [linux]
+    collector: command
+    command: osqueryi --json 'SELECT * FROM dns_resolvers;'
+    output_file: dns_resolvers.json
+  -
+    description: Collect process open sockets in json format.
+    supported_os: [linux]
+    collector: command
+    command: osqueryi --json 'SELECT DISTINCT p.pid, p.name AS process_name, p.cmdline AS command_line, p.uid AS user_id, u.username AS username, s.local_address, s.local_port, s.remote_address, s.remote_port, s.path FROM process_open_sockets AS s LEFT JOIN processes AS p ON s.pid = p.pid LEFT JOIN users AS u ON p.uid = u.uid;'
+    output_file: process_open_sockets.json
+  -
+    description: Collect process open files in json format.
+    supported_os: [linux]
+    collector: command
+    command: osqueryi --json 'SELECT DISTINCT o.path AS file, o.pid, p.name AS process_name, p.cmdline, p.uid, u.username FROM process_open_files AS o LEFT JOIN processes AS p ON o.pid = p.pid LEFT JOIN users AS u ON p.uid = u.uid;'
+    output_file: process_open_files.json
+  -
+    description: Collect authorized keys in json format.
+    supported_os: [linux]
+    collector: command
+    command: osqueryi --json 'SELECT a.key_file, a.key, a.algorithm, u.uid, u.username FROM users AS u LEFT JOIN authorized_keys AS a ON u.uid = a.uid;'
+    output_file: authorized_keys.json
+  -
+    description: Collect system controls in json format.
+    supported_os: [linux]
+    collector: command
+    command: osqueryi --json 'SELECT * FROM system_controls;'
+    output_file: system_controls.json
+  -
+    description: Collect shell history in json format.
+    supported_os: [linux]
+    collector: command
+    command: osqueryi --json 'SELECT * FROM users JOIN shell_history using(uid);'
+    output_file: shell_history.json
+  -
+    description: Collect logged in users in json format.
+    supported_os: [linux]
+    collector: command
+    command: osqueryi --json 'SELECT * FROM logged_in_users;'
+    output_file: logged_in_users.json
+  -
+    description: Collect last logins in json format.
+    supported_os: [linux]
+    collector: command
+    command: osqueryi --json 'SELECT * FROM last;'
+    output_file: last_logins.json

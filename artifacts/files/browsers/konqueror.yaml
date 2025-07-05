@@ -1,0 +1,50 @@
+version: 1.1
+artifacts:
+  -
+    description: Collect Konqueror browser files.
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.local/share/konqueror
+    name_pattern: ["bookmarks.xml", "closeditems_saved", "cookies*",  "extensions*", "konq_history*", "Network Persistent State", "user_prefs.json", "Visited Links"]
+    ignore_date_range: true
+    exclude_nologin_users: true
+  -
+    description: Collect Konqueror browser directories.
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.local/share/konqueror
+    name_pattern: ["Local Storage", "Session Storage", "sessions"]
+    file_type: [d]
+    ignore_date_range: true
+    exclude_nologin_users: true
+  -
+    description: Collect Konqueror browser files.
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.kde/share/apps/konqueror
+    name_pattern: ["addons.*", "bookmarks.xml", "cookies*", "konq_history*", "extensions*"]
+    ignore_date_range: true
+    exclude_nologin_users: true
+  -
+    description: Collect Konqueror browser directories.
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.kde/share/apps/konqueror
+    name_pattern: ["bookmarkbackups", "sessionstore*"]
+    file_type: [d]
+    ignore_date_range: true
+    exclude_nologin_users: true
+  -
+    description: Collect Konqueror cookies.
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.kde/share/apps/kcookiejar
+    ignore_date_range: true
+    exclude_nologin_users: true
+  -
+    description: Collect Konqueror config file.
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.kde/share/config/konquerorrc
+    ignore_date_range: true
+    exclude_nologin_users: true

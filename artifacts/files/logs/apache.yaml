@@ -1,4 +1,4 @@
-version: 2.0
+version: 2.3
 artifacts:
   -
     description: Collect Apache logs.
@@ -11,17 +11,5 @@ artifacts:
     description: Collect Apache logs.
     supported_os: [all]
     collector: file
-    path: /var/log/apache
-    max_file_size: 1073741824 # 1GB
-  -
-    description: Collect Apache logs.
-    supported_os: [all]
-    collector: file
-    path: /var/log/apache2
-    max_file_size: 1073741824 # 1GB
-  -
-    description: Collect Apache logs.
-    supported_os: [all]
-    collector: file
-    path: /var/log/httpd
+    path: /var/log/apache /var/log/apache2 /var/log/httpd
     max_file_size: 1073741824 # 1GB

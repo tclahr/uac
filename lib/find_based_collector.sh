@@ -17,6 +17,8 @@
 #   integer min_file_size: minimum file size (optional)
 #   integer max_file_size: maximum file size (optional)
 #   string permissions: permissions (optional)
+#   boolean no_group: no group corresponds to file's numeric group ID (optional)
+#   boolean no_user: No user corresponds to file's numeric user ID (optional)
 #   boolean ignore_date_range: ignore date range (optional) (default: false)
 #   string output_directory: full path to the output directory
 #   string output_file: output file name
@@ -50,6 +52,10 @@ _find_based_collector()
   __fc_max_file_size="${1:-}"
   shift
   __fc_permissions="${1:-}"
+  shift
+  __fc_no_group="${1:-false}"
+  shift
+  __fc_no_user="${1:-false}"
   shift
   __fc_ignore_date_range="${1:-false}"
   shift
@@ -125,7 +131,7 @@ _find_based_collector()
   fi
 
   __fc_output_directory=`_sanitize_output_directory "${__fc_output_directory}"`
-  __fc_output_file=`_sanitize_output_file "${__fc_output_file}"`
+  __fc_output_file=`_sanitize_output_file "${__fc_output_file}" "${__fc_output_directory}"`
 
   if [ ! -d  "${__fc_output_directory}" ]; then
     mkdir -p "${__fc_output_directory}" >/dev/null
@@ -147,6 +153,8 @@ _find_based_collector()
           "${__fc_min_file_size}" \
           "${__fc_max_file_size}" \
           "${__fc_permissions}" \
+          "${__fc_no_group}" \
+          "${__fc_no_user}" \
           "" \
           "${__fc_start_date_days}" \
           "${__fc_end_date_days}"`
@@ -182,6 +190,8 @@ _find_based_collector()
               "${__fc_min_file_size}" \
               "${__fc_max_file_size}" \
               "${__fc_permissions}" \
+              "${__fc_no_group}" \
+              "${__fc_no_user}" \
               "true" \
               "${__fc_start_date_days}" \
               "${__fc_end_date_days}"`
@@ -201,6 +211,8 @@ _find_based_collector()
               "${__fc_min_file_size}" \
               "${__fc_max_file_size}" \
               "${__fc_permissions}" \
+              "${__fc_no_group}" \
+              "${__fc_no_user}" \
               "" \
               "${__fc_start_date_days}" \
               "${__fc_end_date_days}"`
@@ -235,6 +247,8 @@ _find_based_collector()
             "${__fc_min_file_size}" \
             "${__fc_max_file_size}" \
             "${__fc_permissions}" \
+            "${__fc_no_group}" \
+            "${__fc_no_user}" \
             "true" \
             "${__fc_start_date_days}" \
             "${__fc_end_date_days}"`
@@ -254,6 +268,8 @@ _find_based_collector()
             "${__fc_min_file_size}" \
             "${__fc_max_file_size}" \
             "${__fc_permissions}" \
+            "${__fc_no_group}" \
+            "${__fc_no_user}" \
             "" \
             "${__fc_start_date_days}" \
             "${__fc_end_date_days}"`
@@ -283,5 +299,5 @@ _find_based_collector()
       fi
       ;;
   esac
- 
+
 }

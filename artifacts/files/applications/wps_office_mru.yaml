@@ -1,26 +1,10 @@
-version: 2.0
+version: 2.1
 artifacts:
   -
-    description: Collect WPS Office Most Recently Used.
+    description: Collect WPS Office Most Recently Used (including Flatpak and Snap versions).
     supported_os: [linux]
     collector: file
-    path: /%user_home%/.config/Kingsoft
-    name_pattern: ["Office.conf", "recently-used.xbel", "workarea.cfg"]
-    ignore_date_range: true
-    exclude_nologin_users: true
-  -
-    description: Collect WPS Office Most Recently Used (Flatpak version).
-    supported_os: [linux]
-    collector: file
-    path: /%user_home%/.var/app/com.wps.Office
-    name_pattern: ["Office.conf", "recently-used.xbel", "workarea.cfg"]
-    ignore_date_range: true
-    exclude_nologin_users: true
-  -
-    description: Collect WPS Office Most Recently Used (Snap version).
-    supported_os: [linux]
-    collector: file
-    path: /%user_home%/snap/wps-office
+    path: /%user_home%/.config/Kingsoft /%user_home%/.var/app/com.wps.Office /%user_home%/snap/wps-office
     name_pattern: ["Office.conf", "recently-used.xbel", "workarea.cfg"]
     ignore_date_range: true
     exclude_nologin_users: true

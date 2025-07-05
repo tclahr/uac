@@ -1,5 +1,5 @@
-version: 2.0
-output_directory: /live_response/system
+version: 2.1
+output_directory: /system
 artifacts:
   -
     description: List all hidden directories outside of user home directory.
@@ -8,6 +8,7 @@ artifacts:
     path: /
     name_pattern: [".*"]
     exclude_path_pattern: ["/root", "/home", "/export/home", "/Users"]
+    exclude_file_system: [proc, procfs]
     file_type: [d]
     output_file: hidden_directories.txt
   

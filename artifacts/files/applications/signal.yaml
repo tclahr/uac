@@ -1,106 +1,39 @@
-version: 1.0
+version: 1.1
 artifacts:
   -
-    description: Collect Signal cache files.
+    description: Collect Signal cache files (including Flatpak and Snap versions).
     supported_os: [linux]
     collector: file
-    path: /%user_home%/.config/Signal/Cache
-    exclude_nologin_users: true
-  -
-    description: Collect Signal attachments cache files.
-    supported_os: [linux]
-    collector: file
-    path: /%user_home%/.config/Signal/attachments.noindex
-    exclude_nologin_users: true
-  -
-    description: Collect Signal log files.
-    supported_os: [linux]
-    collector: file
-    path: /%user_home%/.config/Signal/logs
-    exclude_nologin_users: true
-  -
-    description: Collect Signal config.json file.
-    supported_os: [linux]
-    collector: file
-    path: /%user_home%/.config/Signal/config.json
-    ignore_date_range: true
-    exclude_nologin_users: true
-  -
-    description: Collect Signal database files.
-    supported_os: [linux]
-    collector: file
-    path: /%user_home%/.config/Signal/sql/db.sqlite*
-    exclude_nologin_users: true
-  -
-    description: Collect Signal cache files (Flatpak version).
-    supported_os: [linux]
-    collector: file
-    path: /%user_home%/.var/app/org.signal.Signal
+    path: /%user_home%/.config/Signal /%user_home%/.var/app/org.signal.Signal /%user_home%/snap/signal-desktop
     path_pattern: ["*/Cache/*"]
     exclude_nologin_users: true
   -
-    description: Collect Signal attachments cache files (Flatpak version).
+    description: Collect Signal attachments cache files (including Flatpak and Snap versions).
     supported_os: [linux]
     collector: file
-    path: /%user_home%/.var/app/org.signal.Signal
+    path: /%user_home%/.config/Signal /%user_home%/.var/app/org.signal.Signal /%user_home%/snap/signal-desktop
     path_pattern: ["*/attachments.noindex/*"]
     exclude_nologin_users: true
   -
-    description: Collect Signal log files (Flatpak version).
+    description: Collect Signal log files (including Flatpak and Snap versions).
     supported_os: [linux]
     collector: file
-    path: /%user_home%/.var/app/org.signal.Signal
+    path: /%user_home%/.config/Signal /%user_home%/.var/app/org.signal.Signal /%user_home%/snap/signal-desktop
     path_pattern: ["*/logs/*"]
     exclude_nologin_users: true
   -
-    description: Collect Signal config.json file (Flatpak version).
+    description: Collect Signal config.json file (including Flatpak and Snap versions).
     supported_os: [linux]
     collector: file
-    path: /%user_home%/.var/app/org.signal.Signal
+    path: /%user_home%/.config/Signal /%user_home%/.var/app/org.signal.Signal /%user_home%/snap/signal-desktop
     name_pattern: ["config.json"]
     ignore_date_range: true
     exclude_nologin_users: true
   -
-    description: Collect Signal database files (Flatpak version).
+    description: Collect Signal database files (including Flatpak and Snap versions).
     supported_os: [linux]
     collector: file
-    path: /%user_home%/.var/app/org.signal.Signal
-    name_pattern: ["db.sqlite*"]
-    exclude_nologin_users: true
-  -
-    description: Collect Signal cache files (Snap version).
-    supported_os: [linux]
-    collector: file
-    path: /%user_home%/snap/signal-desktop
-    path_pattern: ["*/Cache/*"]
-    exclude_nologin_users: true
-  -
-    description: Collect Signal attachments cache files (Snap version).
-    supported_os: [linux]
-    collector: file
-    path: /%user_home%/snap/signal-desktop
-    path_pattern: ["*/attachments.noindex/*"]
-    exclude_nologin_users: true
-  -
-    description: Collect Signal log files (Snap version).
-    supported_os: [linux]
-    collector: file
-    path: /%user_home%/snap/signal-desktop
-    path_pattern: ["*/logs/*"]
-    exclude_nologin_users: true
-  -
-    description: Collect Signal config.json file (Snap version).
-    supported_os: [linux]
-    collector: file
-    path: /%user_home%/snap/signal-desktop
-    name_pattern: ["config.json"]
-    ignore_date_range: true
-    exclude_nologin_users: true
-  -
-    description: Collect Signal database files (Snap version).
-    supported_os: [linux]
-    collector: file
-    path: /%user_home%/snap/signal-desktop
+    path: /%user_home%/.config/Signal /%user_home%/.var/app/org.signal.Signal /%user_home%/snap/signal-desktop
     name_pattern: ["db.sqlite*"]
     exclude_nologin_users: true
   -

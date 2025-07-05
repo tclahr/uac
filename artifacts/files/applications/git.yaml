@@ -1,4 +1,4 @@
-version: 1.0
+version: 1.1
 artifacts:
 # Git hooks/Git pager can be used to run persistence.
 # ref: https://www.elastic.co/security-labs/sequel-on-persistence-mechanisms
@@ -8,7 +8,7 @@ artifacts:
     collector: file
     path: /
     path_pattern: ["*/.git/hooks/*"]
-    file_type: [f]
+    exclude_path_pattern: ["/dev", "/proc", "/run", "/sys"]
   -
     description: Collect /etc/gitconfig file.
     supported_os: [linux, macos]

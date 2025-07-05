@@ -5,6 +5,9 @@
 # remove all existing aliases
 \unalias -a
 
+# remove LD_PRELOAD environment variable
+unset LD_PRELOAD
+
 # set locale
 LANG=C
 export LANG
@@ -63,7 +66,6 @@ __UAC_MOUNT_POINT="/"
 __UAC_OPERATING_SYSTEM=""
 __UAC_ENABLE_MODIFIERS=false
 __UAC_RUN_AS_NON_ROOT=false
-__UAC_PROCESSING_UNITS=""
 __UAC_HOSTNAME=""
 __UAC_TEMP_DIR=""
 __UAC_START_DATE=""
@@ -157,8 +159,12 @@ _verbose_msg "Validating artifact list..."
 __ua_artifact_list=`_validate_artifact_list "${__UAC_ARTIFACT_LIST}"` || _exit_fatal
 
 # load config file
-_verbose_msg "Loading config file..."
+_verbose_msg "Loading uac.conf..."
 _load_config_file "${__UAC_CONFIG_FILE}" || _exit_fatal
+if [ -f "${__UAC_DIR}/config/${__UAC_OPERATING_SYSTEM}.conf" ]; then
+  _verbose_msg "Loading ${__UAC_OPERATING_SYSTEM}.conf..."
+  _load_config_file "${__UAC_DIR}/config/${__UAC_OPERATING_SYSTEM}.conf" || _exit_fatal
+fi
 
 # add proper local 'bin' and 'tools' directory to path
 __ua_bin_path=`_get_bin_path "${__UAC_OPERATING_SYSTEM}" "${__UAC_SYSTEM_ARCH}"`
@@ -295,8 +301,6 @@ trap _terminate INT
 
 # get current user
 __ua_current_user=`_get_current_user`
-# get the number of processing units available
-__UAC_PROCESSING_UNITS=`_get_nproc`
 
 # show UAC banner and system information
 printf "%s\n" "--------------------------------------------------------------------------------"
@@ -328,7 +332,7 @@ _log_msg INF "Temp Directory: ${__UAC_TEMP_DATA_DIR}"
 _log_msg INF "Output format: ${__UAC_OUTPUT_FORMAT}"
 _log_msg INF "Current PID: ${$}"
 _log_msg INF "PATH: ${PATH}"
-_log_msg INF "Loading uac.conf settings"
+_log_msg INF "Loading configuration file(s)"
 _log_msg INF "Exclude path pattern: ${__UAC_CONF_EXCLUDE_PATH_PATTERN}"
 _log_msg INF "Exclude name pattern: ${__UAC_CONF_EXCLUDE_NAME_PATTERN}"
 _log_msg INF "Exclude file system: ${__UAC_CONF_EXCLUDE_FILE_SYSTEM}"
@@ -359,16 +363,18 @@ if ln -s "${__UAC_DIR}/uac" "${__UAC_TEMP_DATA_DIR}/uac-symlink-support-test.tmp
 fi
 
 _log_msg INF "find operators support: ${__UAC_TOOL_FIND_OPERATORS_SUPPORT}"
-_log_msg INF "find -path support: ${__UAC_TOOL_FIND_PATH_SUPPORT}"
-_log_msg INF "find -prune support: ${__UAC_TOOL_FIND_PRUNE_SUPPORT}"
-_log_msg INF "find -size support: ${__UAC_TOOL_FIND_SIZE_SUPPORT}"
-_log_msg INF "find -maxdepth support: ${__UAC_TOOL_FIND_MAXDEPTH_SUPPORT}"
-_log_msg INF "find -perm support: ${__UAC_TOOL_FIND_PERM_SUPPORT}"
-_log_msg INF "find -type support: ${__UAC_TOOL_FIND_TYPE_SUPPORT}"
-_log_msg INF "find -mtime support: ${__UAC_TOOL_FIND_MTIME_SUPPORT}"
 _log_msg INF "find -atime support: ${__UAC_TOOL_FIND_ATIME_SUPPORT}"
 _log_msg INF "find -ctime support: ${__UAC_TOOL_FIND_CTIME_SUPPORT}"
+_log_msg INF "find -maxdepth support: ${__UAC_TOOL_FIND_MAXDEPTH_SUPPORT}"
+_log_msg INF "find -mtime support: ${__UAC_TOOL_FIND_MTIME_SUPPORT}"
+_log_msg INF "find -nogroup support: ${__UAC_TOOL_FIND_NOGROUP_SUPPORT}"
+_log_msg INF "find -nouser support: ${__UAC_TOOL_FIND_NOUSER_SUPPORT}"
+_log_msg INF "find -path support: ${__UAC_TOOL_FIND_PATH_SUPPORT}"
+_log_msg INF "find -perm support: ${__UAC_TOOL_FIND_PERM_SUPPORT}"
 _log_msg INF "find -print0 support: ${__UAC_TOOL_FIND_PRINT0_SUPPORT}"
+_log_msg INF "find -prune support: ${__UAC_TOOL_FIND_PRUNE_SUPPORT}"
+_log_msg INF "find -size support: ${__UAC_TOOL_FIND_SIZE_SUPPORT}"
+_log_msg INF "find -type support: ${__UAC_TOOL_FIND_TYPE_SUPPORT}"
 if command_exists "tar"; then
   _log_msg INF "tar command exists: true"
 else
@@ -492,6 +498,8 @@ if [ "${__UAC_OUTPUT_FORMAT}" = "none" ] || ${__UAC_HASH_COLLECTED} || ${__UAC_T
       "hash" \
       "${__UAC_TEMP_DATA_DIR}/pre_output.tmp" \
       true \
+      "" \
+      "" \
       "" \
       "" \
       "" \

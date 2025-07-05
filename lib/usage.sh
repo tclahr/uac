@@ -8,10 +8,10 @@
 #   none
 _usage()
 {
-  printf "%s" "Usage: $0 [-h] [-V] [--debug] {-p PROFILE | -a ARTIFACT} DESTINATION 
-             
-   or: $0 --validate-artifact FILE
-   or: $0 --validate-profile FILE
+  printf "%s" "Usage: $0 [-h] [-V] [--debug] {-p PROFILE | -a ARTIFACT} DESTINATION
+
+  or: $0 --validate-artifact FILE
+  or: $0 --validate-profile FILE
 
 Optional Arguments:
   -h, --help        Display this help and exit.
@@ -59,7 +59,7 @@ Collection Arguments:
   -s, --operating-system OPERATING_SYSTEM
                     Specify the operating system.
                     Options: aix, esxi, freebsd, linux, macos, netbsd
-                             netscaler, openbsd, solaris
+                      netscaler, openbsd, solaris
   -H, --hash-collected
                     Hash all collected files.
   -u, --run-as-non-root
@@ -69,7 +69,7 @@ Collection Arguments:
                     Enable artifacts that change the system state.
       --hostname  HOSTNAME
                     Specify the target system hostname.
-      --temp-dir  PATH   
+      --temp-dir  PATH
                     Write all temporary data to this directory.
 
 Filter Arguments:
@@ -101,8 +101,9 @@ Remote Transfer Arguments:
       --sftp-identity-file FILE
                     File from which the identity (private key) for public key
                     authentication is read.
-      --sftp-ssh-options
-                    Comma separated ssh options.
+      --sftp-ssh-option
+                    Allow setting SSH options as key=value pairs.
+                    Can be used multiple times to set multiple options.
       --s3-provider
                     Transfer the output and log files to S3 service.
                     Options: amazon, google, ibm

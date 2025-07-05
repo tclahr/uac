@@ -2,6 +2,9 @@ name: offline
 description: Offline artifacts collection.
 artifacts:
   - bodyfile/bodyfile.yaml
-  - chkrootkit/chkrootkit.yaml
+  - chkrootkit/*
   - hash_executables/hash_executables.yaml
+  - system/*
+  - packages/*
   - files/*
+  - !files/browsers/cache.yaml

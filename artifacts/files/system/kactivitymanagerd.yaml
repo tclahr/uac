@@ -1,0 +1,9 @@
+version: 1.1
+artifacts:
+  -
+    description: Collect activity tracking data used by KActivityManager (part of KDE) to track and manage user activities, such as recently opened files, applications, and other resources.
+    supported_os: [freebsd, linux, netbsd, openbsd]
+    collector: file
+    path: /%user_home%/.local/share/kactivitymanagerd/resources
+    exclude_nologin_users: true
+  

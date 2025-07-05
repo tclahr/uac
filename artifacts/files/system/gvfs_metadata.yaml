@@ -1,0 +1,9 @@
+version: 1.1
+artifacts:
+  -
+    description: Collect data from the gvfs-metadata directory to retrieve user-specific metadata, such as local and remote file access details, custom properties, and interaction history.
+    supported_os: [freebsd, linux, netbsd, openbsd]
+    collector: file
+    path: /%user_home%/.local/share/gvfs-metadata
+    exclude_nologin_users: true
+  

@@ -1,4 +1,4 @@
-version: 2.0
+version: 3.0
 condition: command_exists "ipkg"
 output_directory: /live_response/packages
 artifacts:
@@ -8,10 +8,3 @@ artifacts:
     collector: command
     command: ipkg list-installed
     output_file: ipkg_list-installed.txt
-  -
-    description: Display installed packages.
-    supported_os: [linux]
-    collector: command
-    command: ipkg list_installed
-    output_file: ipkg_list_installed.txt
-  

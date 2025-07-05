@@ -1,0 +1,32 @@
+version: 1.2
+artifacts:
+  -
+    description: Collect metadata related to documents that have been opened or interacted with using Okular, a document viewer for KDE.
+    supported_os: [freebsd, linux, netbsd, openbsd]
+    collector: file
+    path: /%user_home%/.local/share
+    path_pattern: ["*/okular/docdata/*"]
+    exclude_nologin_users: true
+  -
+    description: Collect Okular configuration file.
+    supported_os: [freebsd, linux, netbsd, openbsd]
+    collector: file
+    path: /%user_home%/.config
+    name_pattern: ["okularrc"]
+    ignore_date_range: true
+    exclude_nologin_users: true
+  -
+    description: Collect metadata related to documents that have been opened or interacted with using Okular, a document viewer for KDE (Flatpak and Snap versions).
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.var/app /%user_home%/snap
+    path_pattern: ["*/okular/docdata/*"]
+    exclude_nologin_users: true
+  -
+    description: Collect Okular configuration file (Flatpak and Snap versions).
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.var/app /%user_home%/snap
+    name_pattern: ["okularrc"]
+    ignore_date_range: true
+    exclude_nologin_users: true
