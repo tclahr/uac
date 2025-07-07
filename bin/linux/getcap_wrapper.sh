@@ -3,7 +3,7 @@
 # shellcheck disable=SC2006
 
 _usage() {
-  printf "%s" "Usage: $0 MOUNT_POINT [EXCLUDE_PATHS]
+  printf "%s" "Usage: getcap_wrapper.sh MOUNT_POINT [EXCLUDE_PATHS]
   
 Recursively scans a local directory tree and prints 'getcap' commands
 without executing them, while allowing exclusion of specified paths
@@ -14,7 +14,7 @@ Arguments:
   EXCLUDE_PATHS    Pipe-separated list of paths to exclude (e.g. /proc|/sys|/dev)
 
 Example:
-  $0 / \"/proc|/sys|/dev\"
+  getcap_wrapper.sh / \"/proc|/sys|/dev\"
 "
 }
 
@@ -80,7 +80,7 @@ while [ ${#} -gt 0 ]; do
       elif [ -z "${__gc_exclude_paths}" ]; then
         __gc_exclude_paths="${1}"
       else
-        printf "invalid option '%s'\nTry '%s --help' for more information.\n" "${1}" "$0" >&2
+        printf "invalid option '%s'\nTry 'getcap_wrapper.sh --help' for more information.\n" "${1}" >&2
         return 1
       fi
       ;;
@@ -97,7 +97,7 @@ if [ -z "${__gc_mount_point}" ]; then
 fi
 
 if [ ! -d "${__gc_mount_point}" ]; then
-  printf "%s: cannot access '%s': No such file or directory\n" "$0" "${__gc_mount_point}" >&2
+  printf "getcap_wrapper.sh: cannot access '%s': No such file or directory\n" "${__gc_mount_point}" >&2
   exit 1
 fi
 
