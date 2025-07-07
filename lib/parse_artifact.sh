@@ -66,6 +66,7 @@ _parse_artifact()
     printf "%s" "${__re_value}" \
       | sed -e "s|%uac_directory%|${__UAC_DIR}|g" \
             -e "s|%mount_point%|${__UAC_MOUNT_POINT}|g" \
+            -e "s:%non_local_mount_points%:${__UAC_EXCLUDE_MOUNT_POINTS}:g" \
             -e "s|%temp_directory%|${__UAC_TEMP_DATA_DIR}/tmp|g" 2>/dev/null
   }
 
