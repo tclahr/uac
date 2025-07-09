@@ -429,23 +429,28 @@ __ua_collection_progress=0
 __ua_collection_progress_total=`echo "${__ua_artifact_list}" | wc -l | awk '{print $1}'`
 _log_msg INF "${__ua_collection_progress_total} artifact(s) selected"
 
-printf "%s\n" "Artifacts collection started"
-_log_msg INF "Artifacts collection started"
-
 # store artifact list into a file as netscaler raises a segmentation faul in the following situation:
 # echo "${__ua_artifact_list}" | while read __ua_artifact; do .....; done
-echo "${__ua_artifact_list}" >"${__UAC_TEMP_DATA_DIR}/artifact_list.tmp"
+echo "${__ua_artifact_list}" | sed -e '/^$/d' >"${__UAC_TEMP_DATA_DIR}/artifact_list.tmp"
 
-# shellcheck disable=SC2162
-while read __ua_artifact || [ -n "${__ua_artifact}" ]; do
-  __ua_artifact_without_uac_dir=`echo "${__ua_artifact}" | sed -e "s|^${__UAC_DIR}/artifacts/||"`
-  # shellcheck disable=SC2003,SC2086
-  __ua_collection_progress=`expr ${__ua_collection_progress} + 1`
-  __ua_collection_progress_timestamp=`date "+%Y-%m-%d %H:%M:%S %z"`
-  printf "[%03d/%03d] %s %s\n" "${__ua_collection_progress}" "${__ua_collection_progress_total}" "${__ua_collection_progress_timestamp}" "${__ua_artifact_without_uac_dir}"
-  _log_msg INF "Parsing ${__ua_artifact_without_uac_dir}"
-  _parse_artifact "${__ua_artifact}"
-done <"${__UAC_TEMP_DATA_DIR}/artifact_list.tmp"
+if [ ! -s "${__UAC_TEMP_DATA_DIR}/artifact_list.tmp" ]; then
+  printf "%s\n" "No artifacts suitable for the target operating system"
+  _log_msg INF "No artifacts suitable for the target operating system"
+else
+  printf "%s\n" "Artifacts collection started"
+  _log_msg INF "Artifacts collection started"
+
+  # shellcheck disable=SC2162
+  while read __ua_artifact || [ -n "${__ua_artifact}" ]; do
+    __ua_artifact_without_uac_dir=`echo "${__ua_artifact}" | sed -e "s|^${__UAC_DIR}/artifacts/||"`
+    # shellcheck disable=SC2003,SC2086
+    __ua_collection_progress=`expr ${__ua_collection_progress} + 1`
+    __ua_collection_progress_timestamp=`date "+%Y-%m-%d %H:%M:%S %z"`
+    printf "[%03d/%03d] %s %s\n" "${__ua_collection_progress}" "${__ua_collection_progress_total}" "${__ua_collection_progress_timestamp}" "${__ua_artifact_without_uac_dir}"
+    _log_msg INF "Parsing ${__ua_artifact_without_uac_dir}"
+    _parse_artifact "${__ua_artifact}"
+  done <"${__UAC_TEMP_DATA_DIR}/artifact_list.tmp"
+fi
 
 # acquisition start date
 __ua_acquisition_end_date=`date "+%a %b %d %H:%M:%S %Y %z"`
