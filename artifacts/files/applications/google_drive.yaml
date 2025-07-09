@@ -1,0 +1,28 @@
+version: 1.0
+artifacts:
+# References:
+# https://forensafe.com/blogs/windows_google_drive.html
+  -
+    description: Collect the database that contains information about all of the devices that have been partially or completely backed to Google Drive or any device that has been connected to the computer while Google Drive App was running. The database also stores information about the root (folders) synced to the cloud using Google Drive desktop app.
+    supported_os: [macos]
+    collector: file
+    path: /%user_home%/Library/"Application Support"/Google/DriveFS/root_preference_sqlite.db*
+    exclude_nologin_users: true
+  -
+    description: Collect the database that contains information about all of the items (root folders, sub-folders, or files) synced to the cloud using Google Drive desktop app.
+    supported_os: [macos]
+    collector: file
+    path: /%user_home%/Library/"Application Support"/Google/DriveFS/*/mirror_sqlite.db*
+    exclude_nologin_users: true
+  -
+    description: Collect the databases that contain information about the items stored in the cloud using Google Drive, deleted items, as well as information related to the user’s account.
+    supported_os: [macos]
+    collector: file
+    path: /%user_home%/Library/"Application Support"/Google/DriveFS/*/metadata_sqlite_db* /Library/Application\ Support/Google/DriveFS/*/mirror_metadata_sqlite.db*
+    exclude_nologin_users: true
+  -
+    description: Collect Google Drive logs.
+    supported_os: [macos]
+    collector: file
+    path: /%user_home%/Library/"Application Support"/Google/DriveFS/Logs
+    exclude_nologin_users: true
