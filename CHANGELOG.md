@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## DEVELOPMENT VERSION
+## 3.2.0-rc1 (2025-07-09)
 
 ### Highlights
 
