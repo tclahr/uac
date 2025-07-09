@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 
 ### Artifacts
 
+- `files/applications/google_drive.yaml`: Added collection of Google Drive metadata databases and log files [macos].
 - `files/browsers/cache.yaml`: Added collection of browser cache data. This artifact is resource-intensive and time-consuming, so it is disabled by default in all profiles [freebsd, linux, macos].
 - `files/logs/advanced_log_search.yaml`: `file_type: [f]` was removed to also collect symlinks. ([#355](https://github.com/tclahr/uac/issues/355))
 - `files/logs/apache.yaml`: `file_type: [f]` was removed to also collect symlinks. ([#355](https://github.com/tclahr/uac/issues/355))
@@ -58,10 +59,6 @@ All notable changes to this project will be documented in this file.
 - Fixed a bug where sftp ssh options were not being set correctly. ([#366](https://github.com/tclahr/uac/issues/366))
 - Fixed a bug where the bodyfile artifact was returning corrupted file names when `statx` was being used with `xargs -0`. ([#369](https://github.com/tclahr/uac/issues/369)) (by [halpomeranz](https://github.com/halpomeranz))
 
-### Profiles
-
 ### Command Line Option Changes
 
 - `--sftp-ssh-options` is now `--sftp-ssh-option`: This allows setting SSH options as key=value pairs. Can be used multiple times to set multiple options. ([#366](https://github.com/tclahr/uac/issues/366))
-
-### New Artifact Properties
