@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to this project will be documented in this file.  
+All notable changes to this project will be documented in this file.
 
 ## DEVELOPMENT VERSION
 
@@ -36,10 +36,11 @@ All notable changes to this project will be documented in this file.
 - `live_response/modifiers/disable_ftrace.yaml`: Added modifier to disable ftrace to prevent syscall hooking by LKM rootkits [linux]. (by [mnrkbys](https://github.com/mnrkbys))
 - `live_response/packages/slackpkg.yaml`: Moved to `packages/slackpkg.yaml`.
 - `live_response/process/procfs_information.yaml`: Added collection of /proc/modules [aix, freebsd, linux, netbsd, netscaler, solaris]. (by [SolitudePy](https://github.com/SolitudePy))
+- `live_response/system/getcap.yaml`: Moved to `system/getcap.yaml`. Updated to skip non-local file systems [linux]. ([#375](https://github.com/tclahr/uac/issues/375))
 - `live_response/system/group_name_unknown_files.yaml`: Moved to `system/group_name_unknown_files.yaml`.
 - `live_response/system/hidden_directories.yaml`: Moved to `system/hidden_directories.yaml`.
 - `live_response/system/hidden_files.yaml`: Moved to `system/hidden_files.yaml`.
-- `live_response/system/immutable_files.yaml`: Moved to `system/immutable_files.yaml`.
+- `live_response/system/immutable_files.yaml`: Moved to `system/immutable_files.yaml`. Updated to skip non-local file systems [linux].
 - `live_response/system/loginctl.yaml`: Added terse runtime status information collection for each user in the system [linux]. (by [clausing](https://github.com/clausing))
 - `live_response/system/sgid.yaml`: Moved to `system/sgid.yaml`.
 - `live_response/system/suid.yaml`: Moved to `system/suid.yaml`.

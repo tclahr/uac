@@ -6,6 +6,7 @@ on:
       - develop
       - main
     paths:
+      - 'bin/linux/**'
       - 'lib/**'
       - 'uac'
       
@@ -41,4 +42,4 @@ jobs:
       - name: Run tests
         working-directory: ushunit
         run: |
-          UAC_DIR="../uac" ./ushunit -i ../uac-tests/tests/lib/*.sh ../uac-tests/tests/*.sh
+          UAC_DIR="../uac" ./ushunit -i ../uac-tests/tests/bin/linux/*.sh ../uac-tests/tests/lib/*.sh ../uac-tests/tests/*.sh
