@@ -3,9 +3,9 @@
 # shellcheck disable=SC2006
 
 _usage() {
-  printf "%s" "Usage: getcap_wrapper.sh MOUNT_POINT [EXCLUDE_PATHS]
+  printf "%s" "Usage: lsattr_wrapper.sh MOUNT_POINT [EXCLUDE_PATHS]
   
-Recursively scans a local directory tree and prints 'getcap' commands
+Recursively scans a local directory tree and prints 'lsattr' commands
 without executing them, while allowing exclusion of specified paths
 to avoid non-local mounts.
 
@@ -14,7 +14,7 @@ Arguments:
   EXCLUDE_PATHS    Pipe-separated list of paths to exclude (e.g. /proc|/sys|/dev)
 
 Example:
-  getcap_wrapper.sh / \"/proc|/sys|/dev\"
+  lsattr_wrapper.sh / \"/proc|/sys|/dev\"
 "
 }
 
@@ -39,7 +39,7 @@ _recurse_dir() {
   __rd_base_dir="${1:-}"
   __rd_exclude_paths="${2:-}"
 
-  printf "getcap \"%s\"/*\n" "${__rd_base_dir}"
+  printf "lsattr \"%s\"\n" "${__rd_base_dir}"
 
   for __rd_entry in "${__rd_base_dir}"/*; do
     if [ ! -d "${__rd_entry}" ]; then
@@ -73,7 +73,7 @@ _recurse_dir() {
     IFS=${__rd_OIFS}
 
     if [ "${__rd_skip_dir}" = false ]; then
-      printf "getcap -r \"%s\"/*\n" "${__rd_entry}"
+      printf "lsattr -R \"%s\"\n" "${__rd_entry}"
     fi
 
   done
@@ -95,7 +95,7 @@ while [ ${#} -gt 0 ]; do
       elif [ -z "${__gc_exclude_paths}" ]; then
         __gc_exclude_paths="${1}"
       else
-        printf "invalid option '%s'\nTry 'getcap_wrapper.sh --help' for more information.\n" "${1}" >&2
+        printf "invalid option '%s'\nTry 'lsattr_wrapper.sh --help' for more information.\n" "${1}" >&2
         return 1
       fi
       ;;
@@ -112,7 +112,7 @@ if [ -z "${__gc_mount_point}" ]; then
 fi
 
 if [ ! -d "${__gc_mount_point}" ]; then
-  printf "getcap_wrapper.sh: cannot access '%s': No such file or directory\n" "${__gc_mount_point}" >&2
+  printf "lsattr_wrapper.sh: cannot access '%s': No such file or directory\n" "${__gc_mount_point}" >&2
   exit 1
 fi
 

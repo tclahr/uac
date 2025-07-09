@@ -8,6 +8,6 @@ artifacts:
     description: List files that have process capabilities.
     supported_os: [linux]
     collector: command
-    foreach: getcap_wrapper.sh "%mount_point%" "/dev|/proc|/run|/sys|%non_local_mount_points%"
+    foreach: getcap_wrapper.sh "%mount_point%" "/proc|/sys|%non_local_mount_points%"
     command: %line%
     output_file: getcap.txt
