@@ -15,7 +15,7 @@ LC_ALL=C
 export LC_ALL
 
 # UAC version information
-__UAC_VERSION="3.2.0-rc1"
+__UAC_VERSION="DEVELOPMENT VERSION"
 
 # get UAC working dir
 __UAC_DIR=`pwd`
@@ -171,7 +171,7 @@ __ua_bin_path=`_get_bin_path "${__UAC_OPERATING_SYSTEM}" "${__UAC_SYSTEM_ARCH}"`
 PATH="${__ua_bin_path}:${PATH}"
 __ua_tools_path=`_get_tools_path "${__UAC_OPERATING_SYSTEM}" "${__UAC_SYSTEM_ARCH}"`
 PATH="${__ua_tools_path}:${PATH}"
-PATH="${__UAC_DIR}/tools/date_to_epoch_pl:${__UAC_DIR}/tools/find_pl:${__UAC_DIR}/tools/stat_pl:${PATH}"
+PATH="${__UAC_DIR}/tools/date_to_epoch_pl:${__UAC_DIR}/tools/find_pl:${__UAC_DIR}/tools/stat_pl:${__UAC_DIR}/tools/timeout:${PATH}"
 export PATH
 
 # set tar as the default output format if none has been set via command line
