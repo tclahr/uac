@@ -35,7 +35,7 @@ All notable changes to this project will be documented in this file.
 - `files/system/tmp.yaml`: `file_type: [f]` was removed to also collect symlinks. ([#355](https://github.com/tclahr/uac/issues/355))
 - `files/system/udev.yaml`: `file_type: [f]` was removed to also collect symlinks. ([#355](https://github.com/tclahr/uac/issues/355))
 - `files/system/var_tmp.yaml`: `file_type: [f]` was removed to also collect symlinks. ([#355](https://github.com/tclahr/uac/issues/355))
-- `live_response/hardware/lshw.yaml`: Added timeout to the `lshw` command. ([#379](https://github.com/tclahr/uac/issues/379)) (by [qinidema](https://github.com/qinidema))
+- `live_response/hardware/lshw.yaml`: Added timeout to the `lshw` command. ([#380](https://github.com/tclahr/uac/issues/380)) (by [qinidema](https://github.com/qinidema))
 - `live_response/modifiers/disable_ftrace.yaml`: Added modifier to disable ftrace to prevent syscall hooking by LKM rootkits [linux]. (by [mnrkbys](https://github.com/mnrkbys))
 - `live_response/packages/slackpkg.yaml`: Moved to `packages/slackpkg.yaml`.
 - `live_response/process/procfs_information.yaml`: Added collection of /proc/modules [aix, freebsd, linux, netbsd, netscaler, solaris]. (by [SolitudePy](https://github.com/SolitudePy))
