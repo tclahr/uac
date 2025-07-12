@@ -25,20 +25,20 @@ _run_command()
 
   if ${__rc_redirect_stderr_to_stdout}; then
     eval "${__rc_command}" 2>&1
-    __rc_exit_code="$?"
-  else
-    eval "${__rc_command}" 2>"${__rc_stderr_file}"
-    __rc_exit_code="$?"
-
-    __rc_stderr=""
-    if [ -s "${__rc_stderr_file}" ]; then
-      __rc_stderr=`awk 'BEGIN {ORS="/n"} {print $0}' "${__rc_stderr_file}" | sed -e 's|/n$||' 2>/dev/null`
-      __rc_stderr=" 2> ${__rc_stderr}"
-    fi
-
-    __rc_command=`echo "${__rc_command}" | awk 'BEGIN {ORS="/n"} {print $0}' | sed -e 's|  *| |g' -e 's|/n$||' 2>/dev/null`
-    _log_msg CMD "${__rc_command}${__rc_stderr}"
+    return $?
   fi
+
+  eval "${__rc_command}" 2>"${__rc_stderr_file}"
+  __rc_exit_code="$?"
+
+  __rc_stderr=""
+  if [ -s "${__rc_stderr_file}" ]; then
+    __rc_stderr=`awk 'BEGIN {ORS="/n"} {print $0}' "${__rc_stderr_file}" | sed -e 's|/n$||' 2>/dev/null`
+    __rc_stderr=" 2> ${__rc_stderr}"
+  fi
+
+  __rc_command=`echo "${__rc_command}" | awk 'BEGIN {ORS="/n"} {print $0}' | sed -e 's|  *| |g' -e 's|/n$||' 2>/dev/null`
+  _log_msg CMD "${__rc_command}${__rc_stderr}"
 
   return "${__rc_exit_code}"
 

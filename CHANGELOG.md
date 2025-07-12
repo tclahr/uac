@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 
 - Amazon S3 output file transfer now supports AWS Signature Version 4 (AWS4-HMAC-SHA256).
 - You can create files with the operating system name in the `config` directory to **override** the default configuration for a specific operating system. Please check the [documentation](https://tclahr.github.io/uac-docs/config_file/) for more information.
+- The shell script `timeout` was added to the `tools` directory. It mimics the traditional Linux `timeout` command and can be used to limit the execution time of a command on all operating systems. Please check the [documentation](https://tclahr.github.io/uac-docs/artifacts/#command_1) for more information.
 
 ### Artifacts
 
