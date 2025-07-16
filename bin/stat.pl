@@ -3,8 +3,41 @@
 
 sub usage {
     print <<"USAGE";
-Usage: stat_pl FILE...
+stat.pl version 1.0.0
 
+Usage: stat.pl [OPTIONS] FILE...
+
+Display file statistics in pipe-delimited format.
+
+OPTIONS:
+  -h, --help    Show this help message and exit
+
+ARGUMENTS:
+  FILE...       One or more files or directories to examine
+
+OUTPUT FORMAT:
+  Each line contains pipe-delimited fields:
+  0|filename|inode|mode|uid|gid|size|atime|mtime|ctime|0
+
+  Where:
+    filename  - File path (with symlink target if applicable)
+    inode     - Inode number
+    mode      - File type and permissions (e.g., -rwxr-xr-x)
+    uid       - User ID of owner
+    gid       - Group ID of owner
+    size      - File size in bytes
+    atime     - Last access time (Unix timestamp)
+    mtime     - Last modification time (Unix timestamp)
+    ctime     - Last status change time (Unix timestamp)
+
+EXAMPLES:
+  stat.pl file.txt                 # Show stats for single file
+  stat.pl /etc/passwd /bin/ls      # Show stats for multiple files
+  stat.pl /usr/bin/*               # Show stats for all files in directory
+
+NOTES:
+  - Symbolic links show both the link path and target
+  - Times are displayed as Unix timestamps
 USAGE
 }
 
@@ -51,6 +84,11 @@ sub get_file_stats {
 if (@ARGV < 1) {
     usage();
     exit 1;
+}
+
+if ($ARGV[0] eq '-h' || $ARGV[0] eq '--help') {
+    usage();
+    exit 0;
 }
 
 while (@ARGV) {

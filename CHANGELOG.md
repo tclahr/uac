@@ -8,7 +8,7 @@ All notable changes to this project will be documented in this file.
 
 - Amazon S3 output file transfer now supports AWS Signature Version 4 (AWS4-HMAC-SHA256).
 - You can create files with the operating system name in the `config` directory to **override** the default configuration for a specific operating system. Please check the [documentation](https://tclahr.github.io/uac-docs/config_file/) for more information.
-- The shell script `timeout` was added to the `tools` directory. It mimics the traditional Linux `timeout` command and can be used to limit the execution time of a command on all operating systems. Please check the [documentation](https://tclahr.github.io/uac-docs/artifacts/#command_1) for more information.
+- The shell script [timeout.sh](https://github.com/tclahr/timeout.sh) was added to the `bin` directory. It mimics the traditional Linux `timeout` command and can be used to limit the execution time of a command on all operating systems.
 
 ### Artifacts
 
@@ -64,3 +64,8 @@ All notable changes to this project will be documented in this file.
 ### Command Line Option Changes
 
 - `--sftp-ssh-options` is now `--sftp-ssh-option`: This allows setting SSH options as key=value pairs. Can be used multiple times to set multiple options. ([#366](https://github.com/tclahr/uac/issues/366))
+
+### Tools
+
+- All scripts/binaries from the `tools` directory were moved to `bin`.
+- `astrings` helper function was improved and is now available as [strings.sh](https://github.com/tclahr/strings.sh) in the `bin` directory.

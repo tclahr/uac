@@ -8,7 +8,11 @@ use POSIX qw(getpwuid getgrgid);
 
 sub usage {
     print <<"USAGE";
-Usage: find_pl [-L] starting-point [expression]
+find.pl version 1.0.0
+
+Usage: find.pl [-L] starting-point [expression]
+
+Search for files in a directory hierarchy.
 
 OPTIONS
     -L
@@ -125,7 +129,6 @@ OPERATORS
     !   not
     -a  and
     -o  or
-
 USAGE
 }
 

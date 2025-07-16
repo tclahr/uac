@@ -24,7 +24,7 @@ _get_epoch_date()
       | awk 'BEGIN { FS="-"; } { print $2$3"0000"$1; }' 2>/dev/null`
     date -d "${__ge_string}" "+%s" 2>/dev/null && return 0
     # any system with 'perl' tool
-    date_to_epoch_pl "${__ge_date}" 2>/dev/null
+    date_to_epoch.pl "${__ge_date}" 2>/dev/null
   elif perl -e 'print time' >/dev/null 2>/dev/null; then
     # get current epoch timestamp
     perl -e 'print time' 2>/dev/null

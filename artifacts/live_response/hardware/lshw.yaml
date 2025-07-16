@@ -6,5 +6,5 @@ artifacts:
     description: Display hardware information.
     supported_os: [linux]
     collector: command
-    command: timeout -k 45s 30s lshw
+    command: timeout.sh -k 45s 30s lshw
     output_file: lshw.txt

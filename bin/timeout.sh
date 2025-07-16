@@ -3,7 +3,9 @@
 # shellcheck disable=SC2003,SC2006
 
 _usage() {
-  printf "Usage: timeout [OPTIONS] DURATION COMMAND [ARGS]...
+  printf "timeout.sh version 1.0.0
+  
+Usage: timeout.sh [OPTIONS] DURATION COMMAND [ARGS]...
 
 Start COMMAND, and kill it if still running after DURATION.
 
@@ -11,7 +13,6 @@ OPTIONS:
   -s, --signal=SIGNAL   Signal to send to command (default: TERM)
   -k, --kill-after=DUR  Send KILL after DUR seconds if still running
   -h, --help            Display this help
-  -v, --version         Display version
 
 DURATION is an integer number with an optional suffix:
 's' for seconds (the default), 'm' for minutes, 'h' for hours or 'd' for days.
@@ -28,16 +29,12 @@ Exit codes:
   -    the exit status of COMMAND otherwise
 
 Examples:
-  timeout 10 sleep 5           # Success - sleep finishes in 5s
-  timeout 5 sleep 10           # Timeout - sleep terminated with SIGTERM in 5s
-  timeout 60 long_command      # 60 seconds timeout with SIGTERM
-  timeout -s KILL 10 cmd       # Use SIGKILL instead of SIGTERM
-  timeout -k 2 10 sleep 30     # SIGTERM after 10s, SIGKILL after 2s more
+  timeout.sh 10 sleep 5           # Success - sleep finishes in 5s
+  timeout.sh 5 sleep 10           # Timeout - sleep terminated with SIGTERM in 5s
+  timeout.sh 60 long_command      # 60 seconds timeout with SIGTERM
+  timeout.sh -s KILL 10 cmd       # Use SIGKILL instead of SIGTERM
+  timeout.sh -k 2 10 sleep 30     # SIGTERM after 10s, SIGKILL after 2s more
 "
-}
-
-_show_version() {
-  printf "timeout 1.0\n"
 }
 
 _command_exists()
@@ -55,7 +52,6 @@ _command_exists()
   else
     which "${__co_command}" >/dev/null 2>/dev/null
   fi
-
 }
 
 _parse_duration() {
@@ -171,13 +167,9 @@ while [ $# -gt 0 ]; do
       _usage
       exit ${__EXIT_SUCCESS}
       ;;
-    "-v"|"--version")
-      _show_version
-      exit ${__EXIT_SUCCESS}
-      ;;
     "-s"|"--signal")
       if [ -z "${2}" ]; then
-        printf "timeout: option '%s' requires an argument\n" "${1}" >&2
+        printf "timeout.sh: option '%s' requires an argument\n" "${1}" >&2
         exit ${__EXIT_INVALID_ARGS}
       fi
       # remove SIG prefix if present
@@ -186,7 +178,7 @@ while [ $# -gt 0 ]; do
       if _is_valid_signal "${__to_kill_signal}"; then
         true
       else
-        printf "timeout: invalid signal '%s'\n" "${__to_kill_signal}" >&2
+        printf "timeout.sh: invalid signal '%s'\n" "${__to_kill_signal}" >&2
         exit ${__EXIT_INVALID_ARGS}
       fi
       shift 2
@@ -197,20 +189,20 @@ while [ $# -gt 0 ]; do
       if _is_valid_signal "${__to_kill_signal}"; then
         true
       else
-        printf "timeout: invalid signal '%s'\n" "${__to_kill_signal}" >&2
+        printf "timeout.sh: invalid signal '%s'\n" "${__to_kill_signal}" >&2
         exit ${__EXIT_INVALID_ARGS}
       fi
       shift
       ;;
     "-k"|"--kill-after")
       if [ -z "${2}" ]; then
-        printf "timeout: option '%s' requires an argument\n" "${1}" >&2
+        printf "timeout.sh: option '%s' requires an argument\n" "${1}" >&2
         exit ${__EXIT_INVALID_ARGS}
       fi
       __to_kill_after=`_parse_duration "${2}"`
       #shellcheck disable=SC2181
       if [ $? -ne 0 ]; then
-        printf "timeout: invalid duration '%s'\n" "${2}" >&2
+        printf "timeout.sh: invalid duration '%s'\n" "${2}" >&2
         exit ${__EXIT_INVALID_ARGS}
       fi
       shift 2
@@ -221,7 +213,7 @@ while [ $# -gt 0 ]; do
       __to_kill_after=`_parse_duration "${__to_kill_after}"`
       # shellcheck disable=SC2181
       if [ $? -ne 0 ]; then
-        printf "timeout: invalid duration '%s'\n" "${__to_kill_after}" >&2
+        printf "timeout.sh: invalid duration '%s'\n" "${__to_kill_after}" >&2
         exit ${__EXIT_INVALID_ARGS}
       fi
       shift
@@ -231,7 +223,7 @@ while [ $# -gt 0 ]; do
       break
       ;;
     -*)
-      printf "timeout: invalid option '%s'\nTry 'timeout --help' for more information.\n" "${1}" >&2
+      printf "timeout.sh: invalid option '%s'\nTry 'timeout.sh --help' for more information.\n" "${1}" >&2
       exit ${__EXIT_INVALID_ARGS}
       ;;
     *)
@@ -241,14 +233,14 @@ while [ $# -gt 0 ]; do
 done
 
 if [ $# -lt 2 ]; then
-  printf "timeout: insufficient arguments\nTry 'timeout --help' for more information.\n" >&2
+  printf "timeout.sh: insufficient arguments\nTry 'timeout.sh --help' for more information.\n" >&2
   exit ${__EXIT_INVALID_ARGS}
 fi
 
 __to_duration=`_parse_duration "${1}"`
 #shellcheck disable=SC2181
 if [ $? -ne 0 ]; then
-  printf "timeout: invalid duration '%s'\n"  "${1}" >&2
+  printf "timeout.sh: invalid duration '%s'\n"  "${1}" >&2
   exit ${__EXIT_INVALID_ARGS}
 fi
 shift
@@ -256,7 +248,7 @@ shift
 if _command_exists "${1}"; then
   true
 else
-  printf "timeout: command not found '%s'\n" "${1}" >&2
+  printf "timeout.sh: command not found '%s'\n" "${1}" >&2
   exit ${__EXIT_COMMAND_NOT_FOUND}
 fi
 
