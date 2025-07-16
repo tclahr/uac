@@ -7,5 +7,6 @@ artifacts:
     path: /
     name_pattern: ["*.[Ll][Oo][Gg]", "*.[Ll][Oo][Gg].*", "[Ll][Oo][Gg]", "[Ll][Oo][Gg][Ss]"]
     exclude_path_pattern: ["/dev", "/proc", "/run", "/sys"]
+    file_type: [f, l]
     max_file_size: 1073741824 # 1GB
   

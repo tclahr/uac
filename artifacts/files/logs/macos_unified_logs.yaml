@@ -21,6 +21,7 @@ artifacts:
     supported_os: [macos]
     collector: file
     path: /private/var/log/asl.db /private/var/log/asl.log /private/var/log/asl/*
+    file_type: [f, l]
     max_file_size: 1073741824 # 1GB
     
 # References:
