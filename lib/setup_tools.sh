@@ -94,8 +94,8 @@ _setup_tools()
     if stat -f "0|%N%SY|%i|%Sp|%u|%g|%z|%a|%m|%c|%B" "${__UAC_MOUNT_POINT}" | grep -q -E "\|[0-9]+\|[0-9]+\|[0-9][0-9]+$"; then
       __UAC_TOOL_STAT_BTIME=true
     fi
-  elif stat_pl "${__UAC_MOUNT_POINT}" | grep -q -E "\|[0-9]+\|[0-9]+\|[0-9]+$"; then
-    __UAC_TOOL_STAT_BIN="stat_pl"
+  elif stat.pl "${__UAC_MOUNT_POINT}" | grep -q -E "\|[0-9]+\|[0-9]+\|[0-9]+$"; then
+    __UAC_TOOL_STAT_BIN="stat.pl"
     __UAC_TOOL_STAT_PARAMS=""
   fi
 

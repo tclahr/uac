@@ -5,16 +5,19 @@ artifacts:
     supported_os: [netscaler]
     collector: file
     path: /var/nslog
+    file_type: [f, l]
     max_file_size: 1073741824 # 1GB
   -
     description: Collect nsproflog logs.
     supported_os: [netscaler]
     collector: file
     path: /var/nsproflog
+    file_type: [f, l]
     max_file_size: 1073741824 # 1GB
   -
     description: Collect nssynclog logs.
     supported_os: [netscaler]
     collector: file
     path: /var/nssynclog
+    file_type: [f, l]
     max_file_size: 1073741824 # 1GB

@@ -5,4 +5,5 @@ artifacts:
     supported_os: [all]
     collector: file
     path: /dev/shm
+    file_type: [f, l]
     max_file_size: 10485760 # 10MB

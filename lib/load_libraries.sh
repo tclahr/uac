@@ -3,7 +3,6 @@
 # shellcheck disable=SC1091
 
 . "${__UAC_DIR}/lib/array_to_psv.sh"
-. "${__UAC_DIR}/lib/astrings.sh"
 . "${__UAC_DIR}/lib/aws_s3_presigned_url_transfer.sh"
 . "${__UAC_DIR}/lib/azure_storage_sas_url_transfer.sh"
 . "${__UAC_DIR}/lib/build_artifact_list.sh"
@@ -46,6 +45,7 @@
 . "${__UAC_DIR}/lib/parse_artifact.sh"
 . "${__UAC_DIR}/lib/parse_command_line_arguments.sh"
 . "${__UAC_DIR}/lib/parse_profile.sh"
+. "${__UAC_DIR}/lib/prepend_mount_point.sh"
 . "${__UAC_DIR}/lib/remove_non_regular_files.sh"
 . "${__UAC_DIR}/lib/remove_temp_data_dir.sh"
 . "${__UAC_DIR}/lib/run_command.sh"

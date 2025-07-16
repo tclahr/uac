@@ -111,7 +111,7 @@ _build_find_command()
       __bf_find_params="${__bf_find_params}${__bf_find_params:+ }-maxdepth ${__bf_max_depth}"
     elif ${__bf_perl_command_exists}; then
       __bf_find_params="${__bf_find_params}${__bf_find_params:+ }-maxdepth ${__bf_max_depth}"
-      __bf_find_tool="find_pl"
+      __bf_find_tool="find.pl"
     fi
   fi
 
@@ -121,7 +121,7 @@ _build_find_command()
       __bf_find_params="${__bf_find_params}${__bf_find_params:+ }\( `_build_recursive_parameter \"-path\" \"${__bf_exclude_path_pattern}\" true` \) -prune -o"
     elif ${__bf_perl_command_exists}; then
       __bf_find_params="${__bf_find_params}${__bf_find_params:+ }\( `_build_recursive_parameter \"-path\" \"${__bf_exclude_path_pattern}\" true` \) -prune -o"
-      __bf_find_tool="find_pl"
+      __bf_find_tool="find.pl"
     fi
   fi
 
@@ -133,7 +133,7 @@ _build_find_command()
         __bf_find_params="${__bf_find_params}${__bf_find_params:+ }\( `_build_recursive_parameter \"-path\" \"${__bf_path_pattern}\" true` \)"
       elif ${__bf_perl_command_exists}; then
         __bf_find_params="${__bf_find_params}${__bf_find_params:+ }\( `_build_recursive_parameter \"-path\" \"${__bf_path_pattern}\" true` \)"
-        __bf_find_tool="find_pl"
+        __bf_find_tool="find.pl"
       else
         # shellcheck disable=SC2162,SC2030
         echo "${__bf_path_pattern}" \
@@ -164,7 +164,7 @@ _build_find_command()
       if ${__UAC_TOOL_FIND_PATH_SUPPORT}; then
         true
       elif ${__bf_perl_command_exists}; then
-        __bf_find_tool="find_pl"
+        __bf_find_tool="find.pl"
       fi
     fi
   fi
@@ -175,7 +175,7 @@ _build_find_command()
       __bf_find_params="${__bf_find_params}${__bf_find_params:+ }\( `_build_recursive_parameter \"-name\" \"${__bf_exclude_name_pattern}\" true` \) -prune -o"
     elif ${__bf_perl_command_exists}; then
       __bf_find_params="${__bf_find_params}${__bf_find_params:+ }\( `_build_recursive_parameter \"-name\" \"${__bf_exclude_name_pattern}\" true` \) -prune -o"
-      __bf_find_tool="find_pl"
+      __bf_find_tool="find.pl"
     fi
   fi
 
@@ -186,7 +186,7 @@ _build_find_command()
         __bf_find_params="${__bf_find_params}${__bf_find_params:+ }\( `_build_recursive_parameter \"-name\" \"${__bf_name_pattern}\" true` \)"
       elif ${__bf_perl_command_exists}; then
         __bf_find_params="${__bf_find_params}${__bf_find_params:+ }\( `_build_recursive_parameter \"-name\" \"${__bf_name_pattern}\" true` \)"
-        __bf_find_tool="find_pl"
+        __bf_find_tool="find.pl"
       else
         # shellcheck disable=SC2162,SC2030
         echo "${__bf_name_pattern}" \
@@ -224,7 +224,7 @@ _build_find_command()
         __bf_find_params="${__bf_find_params}${__bf_find_params:+ }\( `_build_recursive_parameter \"-type\" \"${__bf_file_type}\"` \)"
       elif ${__bf_perl_command_exists}; then
         __bf_find_params="${__bf_find_params}${__bf_find_params:+ }\( `_build_recursive_parameter \"-type\" \"${__bf_file_type}\"` \)"
-        __bf_find_tool="find_pl"
+        __bf_find_tool="find.pl"
       elif ${__UAC_TOOL_FIND_TYPE_SUPPORT}; then
         # shellcheck disable=SC2162,SC2030
         echo "${__bf_file_type}" \
@@ -254,7 +254,7 @@ _build_find_command()
       __bf_find_params="${__bf_find_params}${__bf_find_params:+ }-type ${__bf_file_type}"
     elif ${__bf_perl_command_exists}; then
       __bf_find_params="${__bf_find_params}${__bf_find_params:+ }-type ${__bf_file_type}"
-      __bf_find_tool="find_pl"
+      __bf_find_tool="find.pl"
     fi
   fi
 
@@ -264,7 +264,7 @@ _build_find_command()
       __bf_find_params="${__bf_find_params}${__bf_find_params:+ }-size +${__bf_min_file_size}c"
     elif ${__bf_perl_command_exists}; then
       __bf_find_params="${__bf_find_params}${__bf_find_params:+ }-size +${__bf_min_file_size}c"
-      __bf_find_tool="find_pl"
+      __bf_find_tool="find.pl"
     fi
   fi
   if [ -n "${__bf_max_file_size}" ]; then
@@ -272,7 +272,7 @@ _build_find_command()
       __bf_find_params="${__bf_find_params}${__bf_find_params:+ }-size -${__bf_max_file_size}c"
     elif ${__bf_perl_command_exists}; then
       __bf_find_params="${__bf_find_params}${__bf_find_params:+ }-size -${__bf_max_file_size}c"
-      __bf_find_tool="find_pl"
+      __bf_find_tool="find.pl"
     fi
   fi
 
@@ -284,7 +284,7 @@ _build_find_command()
         __bf_find_params="${__bf_find_params}${__bf_find_params:+ }\( `_build_recursive_parameter \"-perm\" \"${__bf_permissions}\"` \)"
       elif ${__bf_perl_command_exists}; then
         __bf_find_params="${__bf_find_params}${__bf_find_params:+ }\( `_build_recursive_parameter \"-perm\" \"${__bf_permissions}\"` \)"
-        __bf_find_tool="find_pl"
+        __bf_find_tool="find.pl"
       else
         # shellcheck disable=SC2162,SC2030
         echo "${__bf_permissions}" \
@@ -322,7 +322,7 @@ _build_find_command()
     if ${__UAC_TOOL_FIND_NOGROUP_SUPPORT}; then
       true
     elif ${__bf_perl_command_exists}; then
-      __bf_find_tool="find_pl"
+      __bf_find_tool="find.pl"
     fi
   fi
 
@@ -333,7 +333,7 @@ _build_find_command()
     if ${__UAC_TOOL_FIND_NOUSER_SUPPORT}; then
       true
     elif ${__bf_perl_command_exists}; then
-      __bf_find_tool="find_pl"
+      __bf_find_tool="find.pl"
     fi
   fi
 
@@ -345,7 +345,7 @@ _build_find_command()
         __bf_find_mtime_param="${__bf_find_mtime_param}${__bf_find_mtime_param:+ }-mtime -${__bf_start_date_days}"
       elif ${__bf_perl_command_exists}; then
         __bf_find_mtime_param="${__bf_find_mtime_param}${__bf_find_mtime_param:+ }-mtime -${__bf_start_date_days}"
-        __bf_find_tool="find_pl"
+        __bf_find_tool="find.pl"
       fi
     fi
     if [ "${__bf_end_date_days}" -gt 0 ]; then
@@ -353,7 +353,7 @@ _build_find_command()
         __bf_find_mtime_param="${__bf_find_mtime_param}${__bf_find_mtime_param:+ }-mtime +${__bf_end_date_days}"
       elif ${__bf_perl_command_exists}; then
         __bf_find_mtime_param="${__bf_find_mtime_param}${__bf_find_mtime_param:+ }-mtime +${__bf_end_date_days}"
-        __bf_find_tool="find_pl"
+        __bf_find_tool="find.pl"
       fi
     fi
   fi
@@ -366,7 +366,7 @@ _build_find_command()
         __bf_find_atime_param="${__bf_find_atime_param}${__bf_find_atime_param:+ }-atime -${__bf_start_date_days}"
       elif ${__bf_perl_command_exists}; then
         __bf_find_atime_param="${__bf_find_atime_param}${__bf_find_atime_param:+ }-atime -${__bf_start_date_days}"
-        __bf_find_tool="find_pl"
+        __bf_find_tool="find.pl"
       fi
     fi
     if [ "${__bf_end_date_days}" -gt 0 ]; then
@@ -374,7 +374,7 @@ _build_find_command()
         __bf_find_atime_param="${__bf_find_atime_param}${__bf_find_atime_param:+ }-atime +${__bf_end_date_days}"
       elif ${__bf_perl_command_exists}; then
         __bf_find_atime_param="${__bf_find_atime_param}${__bf_find_atime_param:+ }-atime +${__bf_end_date_days}"
-        __bf_find_tool="find_pl"
+        __bf_find_tool="find.pl"
       fi
     fi
   fi
@@ -387,7 +387,7 @@ _build_find_command()
         __bf_find_ctime_param="${__bf_find_ctime_param}${__bf_find_ctime_param:+ }-ctime -${__bf_start_date_days}"
       elif ${__bf_perl_command_exists}; then
         __bf_find_ctime_param="${__bf_find_ctime_param}${__bf_find_ctime_param:+ }-ctime -${__bf_start_date_days}"
-        __bf_find_tool="find_pl"
+        __bf_find_tool="find.pl"
       fi
     fi
     if [ "${__bf_end_date_days}" -gt 0 ]; then
@@ -395,7 +395,7 @@ _build_find_command()
         __bf_find_ctime_param="${__bf_find_ctime_param}${__bf_find_ctime_param:+ }-ctime +${__bf_end_date_days}"
       elif ${__bf_perl_command_exists}; then
         __bf_find_ctime_param="${__bf_find_ctime_param}${__bf_find_ctime_param:+ }-ctime +${__bf_end_date_days}"
-        __bf_find_tool="find_pl"
+        __bf_find_tool="find.pl"
       fi
     fi
   fi
@@ -412,7 +412,7 @@ _build_find_command()
     if ${__UAC_TOOL_FIND_OPERATORS_SUPPORT}; then
       true
     else
-      __bf_find_tool="find_pl"
+      __bf_find_tool="find.pl"
     fi
     if [ -n "${__bf_find_mtime_param}" ]; then
       __bf_find_date_range_param="${__bf_find_date_range_param}${__bf_find_date_range_param:+ }\( ${__bf_find_mtime_param} \)"
@@ -453,7 +453,7 @@ _build_find_command()
       __bf_find_params="${__bf_find_params}${__bf_find_params:+ }-print0"
     elif ${__bf_perl_command_exists}; then
       __bf_find_params="${__bf_find_params}${__bf_find_params:+ }-print0"
-      __bf_find_tool="find_pl"
+      __bf_find_tool="find.pl"
     else
       __bf_find_params="${__bf_find_params}${__bf_find_params:+ }-print"
     fi

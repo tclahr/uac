@@ -7,4 +7,5 @@ artifacts:
     path: /
     name_pattern: ["access_log*", "error_log*", "httpd-access.log*", "httpd-error.log*", "catalina.out"]
     exclude_path_pattern: ["/dev", "/proc", "/run", "/sys"]
+    file_type: [f, l]
     max_file_size: 1073741824 # 1GB

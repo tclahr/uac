@@ -5,6 +5,7 @@ artifacts:
     supported_os: [all]
     collector: file
     path: /var/log
+    file_type: [f, l]
     name_pattern: ["access_log*", "access.log*", "error_log*", "error.log*"]
     max_file_size: 1073741824 # 1GB
   -
@@ -12,4 +13,5 @@ artifacts:
     supported_os: [all]
     collector: file
     path: /var/log/apache /var/log/apache2 /var/log/httpd
+    file_type: [f, l]
     max_file_size: 1073741824 # 1GB

@@ -23,7 +23,7 @@ __UAC_DIR=`pwd`
 # check whether UAC is being executed from untarred directory
 if [ ! -d "${__UAC_DIR}/artifacts" ] || [ ! -d "${__UAC_DIR}/bin" ] \
   || [ ! -d "${__UAC_DIR}/config" ] || [ ! -d "${__UAC_DIR}/lib" ] \
-  || [ ! -d "${__UAC_DIR}/profiles" ] || [ ! -d "${__UAC_DIR}/tools" ]; then
+  || [ ! -d "${__UAC_DIR}/profiles" ]; then
   printf "%s\n" "uac: required files not found. Make sure you are executing uac from untarred directory." >&2
   exit 1
 fi
@@ -166,12 +166,9 @@ if [ -f "${__UAC_DIR}/config/${__UAC_OPERATING_SYSTEM}.conf" ]; then
   _load_config_file "${__UAC_DIR}/config/${__UAC_OPERATING_SYSTEM}.conf" || _exit_fatal
 fi
 
-# add proper local 'bin' and 'tools' directory to path
+# add proper local 'bin' directory to path
 __ua_bin_path=`_get_bin_path "${__UAC_OPERATING_SYSTEM}" "${__UAC_SYSTEM_ARCH}"`
 PATH="${__ua_bin_path}:${PATH}"
-__ua_tools_path=`_get_tools_path "${__UAC_OPERATING_SYSTEM}" "${__UAC_SYSTEM_ARCH}"`
-PATH="${__ua_tools_path}:${PATH}"
-PATH="${__UAC_DIR}/tools/date_to_epoch_pl:${__UAC_DIR}/tools/find_pl:${__UAC_DIR}/tools/stat_pl:${__UAC_DIR}/tools/timeout:${PATH}"
 export PATH
 
 # set tar as the default output format if none has been set via command line
@@ -390,7 +387,7 @@ if command_exists "gzip"; then
 else
   _log_msg INF "gzip command exists: false"
 fi
-if command_exists "zip"; then
+if command_exists "zip" && zip --version >/dev/null 2>/dev/null; then
   _log_msg INF "zip command exists: true"
 else
   _log_msg INF "zip command exists: false"
@@ -532,8 +529,8 @@ if [ "${__UAC_OUTPUT_FORMAT}" = "none" ]; then
     printf "Output directory created '%s'\n" "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}"
     _remove_temp_data_dir
   else
-    _error_msg "cannot create output directory '%s'\nPlease check collected artifacts in '%s'\n" \
-      "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}" "${__UAC_TEMP_DATA_DIR}"
+    _error_msg "cannot create output directory '${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}'"
+    _error_msg "please check collected artifacts in '${__UAC_TEMP_DATA_DIR}'"
   fi
 else
   printf "Creating output file. Please wait...\n"
@@ -568,8 +565,8 @@ else
     printf "Output file created '%s'\n" "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}.${__UAC_OUTPUT_EXTENSION}"
     _remove_temp_data_dir
   else
-    _error_msg "cannot create output file '%s'\nPlease check collected artifacts in '%s'\n" \
-      "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}.${__UAC_OUTPUT_EXTENSION}" "${__UAC_TEMP_DATA_DIR}"
+    _error_msg "cannot create output file '${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}.${__UAC_OUTPUT_EXTENSION}'"
+    _error_msg "please check collected artifacts in '${__UAC_TEMP_DATA_DIR}'"
   fi
 fi
 
@@ -606,7 +603,7 @@ if _create_acquisition_log \
   "${__ua_output_file_sha256_hash}"; then
   printf "Acquisition log created '%s'\n" "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}.log"
 else
-  _error_msg "cannot create acquisition log\n"
+  _error_msg "cannot create acquisition log"
 fi
 
 # transfer output and log file to SFTP server

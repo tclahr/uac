@@ -82,9 +82,9 @@ _validate_profile()
             ;;
           "__EOF__")
             ${__vp_name_prop_exists} \
-              || { _error_msg "profile: missing 'name' property."; return 1; }
+              || { _error_msg "profile: missing 'name' field."; return 1; }
             ${__vp_description_prop_exists} \
-              || { _error_msg "profile: missing 'description' property."; return 1; }
+              || { _error_msg "profile: missing 'description' field."; return 1; }
             ${__vp_artifacts_prop_exists} \
               || { _error_msg "profile: missing 'artifacts' mapping."; return 1; }
             ${__vp_artifact_list_exists} \
@@ -92,7 +92,7 @@ _validate_profile()
             ;;
           *)
             __vp_key=`echo "${__vp_key}" | sed -e 's|\|$||'`
-            _error_msg "profile: invalid property '${__vp_key}'."
+            _error_msg "profile: invalid field '${__vp_key}'."
             return 1
         esac
       done
