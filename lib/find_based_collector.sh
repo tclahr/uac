@@ -6,6 +6,7 @@
 # Arguments:
 #   string collector: collector name
 #   string path: path
+#   string mount_point: mount point (default: /)
 #   boolean is_file_list: path points to an existing file list (optional) (default: false)
 #   string path_pattern: pipe-separated list of path patterns (optional)
 #   string name_pattern: pipe-separated list of name patterns (optional)
@@ -30,6 +31,8 @@ _find_based_collector()
   __fc_collector="${1:-}"
   shift
   __fc_path="${1:-}"
+  #shift
+  #__fc_mount_point="${1:-/}"
   shift
   __fc_is_file_list="${1:-false}"
   shift
@@ -97,8 +100,12 @@ _find_based_collector()
       return 1
     fi
   else
-    # prepend mount point to path
-    __fc_path=`_sanitize_path "${__UAC_MOUNT_POINT}/${__fc_path}"`
+    # prepend mount point to path if mount point is not /
+    if [ "${__UAC_MOUNT_POINT}" = "/" ]; then
+      __fc_path=`_sanitize_path "${__fc_path}"`
+    else
+      __fc_path=`_prepend_mount_point "${__fc_path}" "${__UAC_MOUNT_POINT}"`
+    fi
 
     # exclude path pattern (global)
     if [ -n "${__UAC_CONF_EXCLUDE_PATH_PATTERN}" ]; then
