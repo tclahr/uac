@@ -53,7 +53,7 @@ Output Arguments:
 
 Collection Arguments:
   -c, --config      FILE
-                    Load the config from a specific file.
+                    Load config from a specific file.
   -m, --mount-point MOUNT_POINT
                     Specify the mount point (default: /).
   -s, --operating-system OPERATING_SYSTEM
