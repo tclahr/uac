@@ -1,4 +1,4 @@
-version: 2.1
+version: 2.2
 artifacts:
   -
     description: Collect all log files and directories.
@@ -6,6 +6,7 @@ artifacts:
     collector: file
     path: /
     name_pattern: ["*.[Ll][Oo][Gg]", "*.[Ll][Oo][Gg].*", "[Ll][Oo][Gg]", "[Ll][Oo][Gg][Ss]"]
-    file_type: [f]
+    exclude_path_pattern: ["/dev", "/proc", "/run", "/sys"]
+    file_type: [f, l]
     max_file_size: 1073741824 # 1GB
   

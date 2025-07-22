@@ -29,7 +29,7 @@ _is_output_format_supported()
       fi
       ;;
     "zip")
-      if command_exists "zip"; then
+      if command_exists "zip" && zip --version >/dev/null 2>/dev/null; then
         __if_output_extension="zip"
         if [ -n "${__if_output_password}" ]; then
           if zip --password infected - "${__UAC_DIR}/uac" >/dev/null 2>/dev/null; then

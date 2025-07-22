@@ -15,7 +15,7 @@ LC_ALL=C
 export LC_ALL
 
 # UAC version information
-__UAC_VERSION="3.1.0"
+__UAC_VERSION="DEVELOPMENT VERSION"
 
 # get UAC working dir
 __UAC_DIR=`pwd`
@@ -23,7 +23,7 @@ __UAC_DIR=`pwd`
 # check whether UAC is being executed from untarred directory
 if [ ! -d "${__UAC_DIR}/artifacts" ] || [ ! -d "${__UAC_DIR}/bin" ] \
   || [ ! -d "${__UAC_DIR}/config" ] || [ ! -d "${__UAC_DIR}/lib" ] \
-  || [ ! -d "${__UAC_DIR}/profiles" ] || [ ! -d "${__UAC_DIR}/tools" ]; then
+  || [ ! -d "${__UAC_DIR}/profiles" ]; then
   printf "%s\n" "uac: required files not found. Make sure you are executing uac from untarred directory." >&2
   exit 1
 fi
@@ -62,6 +62,7 @@ __UAC_OUTPUT_EXTENSION=""
 __UAC_OUTPUT_PASSWORD=""
 __UAC_HASH_COLLECTED=false
 __UAC_CONFIG_FILE="${__UAC_DIR}/config/uac.conf"
+__UAC_CUSTOM_CONFIG_FILE=""
 __UAC_MOUNT_POINT="/"
 __UAC_OPERATING_SYSTEM=""
 __UAC_ENABLE_MODIFIERS=false
@@ -159,15 +160,23 @@ _verbose_msg "Validating artifact list..."
 __ua_artifact_list=`_validate_artifact_list "${__UAC_ARTIFACT_LIST}"` || _exit_fatal
 
 # load config file
-_verbose_msg "Loading config file..."
+_verbose_msg "Loading uac.conf..."
 _load_config_file "${__UAC_CONFIG_FILE}" || _exit_fatal
+if [ -f "${__UAC_DIR}/config/${__UAC_OPERATING_SYSTEM}.conf" ]; then
+  _verbose_msg "Loading ${__UAC_OPERATING_SYSTEM}.conf..."
+  _load_config_file "${__UAC_DIR}/config/${__UAC_OPERATING_SYSTEM}.conf" || _exit_fatal
+fi
+if [ -n "${__UAC_CUSTOM_CONFIG_FILE}" ]; then
+  if [ ! -f "${__UAC_CUSTOM_CONFIG_FILE}" ]; then
+    _exit_fatal "no such config file '${__UAC_CUSTOM_CONFIG_FILE}'"
+  fi
+  _verbose_msg "Loading ${__UAC_CUSTOM_CONFIG_FILE}..."
+  _load_config_file "${__UAC_CUSTOM_CONFIG_FILE}" || _exit_fatal
+fi
 
-# add proper local 'bin' and 'tools' directory to path
+# add proper local 'bin' directory to path
 __ua_bin_path=`_get_bin_path "${__UAC_OPERATING_SYSTEM}" "${__UAC_SYSTEM_ARCH}"`
 PATH="${__ua_bin_path}:${PATH}"
-__ua_tools_path=`_get_tools_path "${__UAC_OPERATING_SYSTEM}" "${__UAC_SYSTEM_ARCH}"`
-PATH="${__ua_tools_path}:${PATH}"
-PATH="${__UAC_DIR}/tools/date_to_epoch_pl:${__UAC_DIR}/tools/find_pl:${__UAC_DIR}/tools/stat_pl:${PATH}"
 export PATH
 
 # set tar as the default output format if none has been set via command line
@@ -328,7 +337,7 @@ _log_msg INF "Temp Directory: ${__UAC_TEMP_DATA_DIR}"
 _log_msg INF "Output format: ${__UAC_OUTPUT_FORMAT}"
 _log_msg INF "Current PID: ${$}"
 _log_msg INF "PATH: ${PATH}"
-_log_msg INF "Loading uac.conf settings"
+_log_msg INF "Loading configuration file(s)"
 _log_msg INF "Exclude path pattern: ${__UAC_CONF_EXCLUDE_PATH_PATTERN}"
 _log_msg INF "Exclude name pattern: ${__UAC_CONF_EXCLUDE_NAME_PATTERN}"
 _log_msg INF "Exclude file system: ${__UAC_CONF_EXCLUDE_FILE_SYSTEM}"
@@ -386,7 +395,7 @@ if command_exists "gzip"; then
 else
   _log_msg INF "gzip command exists: false"
 fi
-if command_exists "zip"; then
+if command_exists "zip" && zip --version >/dev/null 2>/dev/null; then
   _log_msg INF "zip command exists: true"
 else
   _log_msg INF "zip command exists: false"
@@ -425,23 +434,28 @@ __ua_collection_progress=0
 __ua_collection_progress_total=`echo "${__ua_artifact_list}" | wc -l | awk '{print $1}'`
 _log_msg INF "${__ua_collection_progress_total} artifact(s) selected"
 
-printf "%s\n" "Artifacts collection started"
-_log_msg INF "Artifacts collection started"
-
 # store artifact list into a file as netscaler raises a segmentation faul in the following situation:
 # echo "${__ua_artifact_list}" | while read __ua_artifact; do .....; done
-echo "${__ua_artifact_list}" >"${__UAC_TEMP_DATA_DIR}/artifact_list.tmp"
+echo "${__ua_artifact_list}" | sed -e '/^$/d' >"${__UAC_TEMP_DATA_DIR}/artifact_list.tmp"
 
-# shellcheck disable=SC2162
-while read __ua_artifact || [ -n "${__ua_artifact}" ]; do
-  __ua_artifact_without_uac_dir=`echo "${__ua_artifact}" | sed -e "s|^${__UAC_DIR}/artifacts/||"`
-  # shellcheck disable=SC2003,SC2086
-  __ua_collection_progress=`expr ${__ua_collection_progress} + 1`
-  __ua_collection_progress_timestamp=`date "+%Y-%m-%d %H:%M:%S %z"`
-  printf "[%03d/%03d] %s %s\n" "${__ua_collection_progress}" "${__ua_collection_progress_total}" "${__ua_collection_progress_timestamp}" "${__ua_artifact_without_uac_dir}"
-  _log_msg INF "Parsing ${__ua_artifact_without_uac_dir}"
-  _parse_artifact "${__ua_artifact}"
-done <"${__UAC_TEMP_DATA_DIR}/artifact_list.tmp"
+if [ ! -s "${__UAC_TEMP_DATA_DIR}/artifact_list.tmp" ]; then
+  printf "%s\n" "No artifacts suitable for the target operating system"
+  _log_msg INF "No artifacts suitable for the target operating system"
+else
+  printf "%s\n" "Artifacts collection started"
+  _log_msg INF "Artifacts collection started"
+
+  # shellcheck disable=SC2162
+  while read __ua_artifact || [ -n "${__ua_artifact}" ]; do
+    __ua_artifact_without_uac_dir=`echo "${__ua_artifact}" | sed -e "s|^${__UAC_DIR}/artifacts/||"`
+    # shellcheck disable=SC2003,SC2086
+    __ua_collection_progress=`expr ${__ua_collection_progress} + 1`
+    __ua_collection_progress_timestamp=`date "+%Y-%m-%d %H:%M:%S %z"`
+    printf "[%03d/%03d] %s %s\n" "${__ua_collection_progress}" "${__ua_collection_progress_total}" "${__ua_collection_progress_timestamp}" "${__ua_artifact_without_uac_dir}"
+    _log_msg INF "Parsing ${__ua_artifact_without_uac_dir}"
+    _parse_artifact "${__ua_artifact}"
+  done <"${__UAC_TEMP_DATA_DIR}/artifact_list.tmp"
+fi
 
 # acquisition start date
 __ua_acquisition_end_date=`date "+%a %b %d %H:%M:%S %Y %z"`
@@ -523,8 +537,8 @@ if [ "${__UAC_OUTPUT_FORMAT}" = "none" ]; then
     printf "Output directory created '%s'\n" "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}"
     _remove_temp_data_dir
   else
-    _error_msg "cannot create output directory '%s'\nPlease check collected artifacts in '%s'\n" \
-      "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}" "${__UAC_TEMP_DATA_DIR}"
+    _error_msg "cannot create output directory '${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}'"
+    _error_msg "please check collected artifacts in '${__UAC_TEMP_DATA_DIR}'"
   fi
 else
   printf "Creating output file. Please wait...\n"
@@ -559,8 +573,8 @@ else
     printf "Output file created '%s'\n" "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}.${__UAC_OUTPUT_EXTENSION}"
     _remove_temp_data_dir
   else
-    _error_msg "cannot create output file '%s'\nPlease check collected artifacts in '%s'\n" \
-      "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}.${__UAC_OUTPUT_EXTENSION}" "${__UAC_TEMP_DATA_DIR}"
+    _error_msg "cannot create output file '${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}.${__UAC_OUTPUT_EXTENSION}'"
+    _error_msg "please check collected artifacts in '${__UAC_TEMP_DATA_DIR}'"
   fi
 fi
 
@@ -597,7 +611,7 @@ if _create_acquisition_log \
   "${__ua_output_file_sha256_hash}"; then
   printf "Acquisition log created '%s'\n" "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}.log"
 else
-  _error_msg "cannot create acquisition log\n"
+  _error_msg "cannot create acquisition log"
 fi
 
 # transfer output and log file to SFTP server

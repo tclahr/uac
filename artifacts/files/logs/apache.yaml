@@ -1,31 +1,17 @@
-version: 2.1
+version: 2.3
 artifacts:
   -
     description: Collect Apache logs.
     supported_os: [all]
     collector: file
     path: /var/log
+    file_type: [f, l]
     name_pattern: ["access_log*", "access.log*", "error_log*", "error.log*"]
-    file_type: [f]
     max_file_size: 1073741824 # 1GB
   -
     description: Collect Apache logs.
     supported_os: [all]
     collector: file
-    path: /var/log/apache
-    file_type: [f]
-    max_file_size: 1073741824 # 1GB
-  -
-    description: Collect Apache logs.
-    supported_os: [all]
-    collector: file
-    path: /var/log/apache2
-    file_type: [f]
-    max_file_size: 1073741824 # 1GB
-  -
-    description: Collect Apache logs.
-    supported_os: [all]
-    collector: file
-    path: /var/log/httpd
-    file_type: [f]
+    path: /var/log/apache /var/log/apache2 /var/log/httpd
+    file_type: [f, l]
     max_file_size: 1073741824 # 1GB

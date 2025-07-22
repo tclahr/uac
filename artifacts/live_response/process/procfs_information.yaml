@@ -1,4 +1,4 @@
-version: 2.1
+version: 2.2
 output_directory: /live_response/process
 artifacts:
   -
@@ -7,6 +7,13 @@ artifacts:
     collector: command
     command: ls -l /proc/[0-9]*
     output_file: ls_-l_proc.txt
+  -
+    description: Collect /proc/modules.
+    supported_os: [aix, freebsd, linux, netbsd, netscaler, solaris]
+    collector: command
+    command: cat /proc/modules
+    output_directory: /live_response/process/proc/
+    output_file: modules.txt
 
   # each operating system has its own particularities and artifacts available in /proc
   # to make this artifact easier to read and more organized, each operating system
@@ -68,7 +75,7 @@ artifacts:
     collector: command
     condition: ! command_exists "strings"
     foreach: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
-    command: astrings /proc/%line%/psinfo
+    command: strings.sh /proc/%line%/psinfo
     output_directory: /live_response/process/proc/%line%
     output_file: psinfo.txt
   -
@@ -77,7 +84,7 @@ artifacts:
     collector: command
     condition: ! command_exists "strings"
     foreach: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
-    command: astrings /proc/%line%/status
+    command: strings.sh /proc/%line%/status
     output_directory: /live_response/process/proc/%line%
     output_file: status.txt
   
@@ -132,7 +139,7 @@ artifacts:
     collector: command
     condition: ! command_exists "strings"
     foreach: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
-    command: astrings /proc/%line%/cmdline
+    command: strings.sh /proc/%line%/cmdline
     output_directory: /live_response/process/proc/%line%
     output_file: cmdline.txt
 
@@ -273,7 +280,7 @@ artifacts:
     collector: command
     condition: ! command_exists "strings"
     foreach: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
-    command: astrings /proc/%line%/cmdline
+    command: strings.sh /proc/%line%/cmdline
     output_directory: /live_response/process/proc/%line%
     output_file: cmdline.txt
   -
@@ -282,7 +289,7 @@ artifacts:
     collector: command
     condition: ! command_exists "strings"
     foreach: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
-    command: astrings /proc/%line%/environ
+    command: strings.sh /proc/%line%/environ
     output_directory: /live_response/process/proc/%line%
     output_file: environ.txt
 
@@ -365,7 +372,7 @@ artifacts:
     collector: command
     condition: ! command_exists "strings"
     foreach: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
-    command: astrings /proc/%line%/cmdline
+    command: strings.sh /proc/%line%/cmdline
     output_directory: /live_response/process/proc/%line%
     output_file: cmdline.txt
   -
@@ -374,7 +381,7 @@ artifacts:
     collector: command
     condition: ! command_exists "strings"
     foreach: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
-    command: astrings /proc/%line%/environ
+    command: strings.sh /proc/%line%/environ
     output_directory: /live_response/process/proc/%line%
     output_file: environ.txt
 
@@ -418,7 +425,7 @@ artifacts:
     collector: command
     condition: ! command_exists "strings"
     foreach: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
-    command: astrings /proc/%line%/cmdline
+    command: strings.sh /proc/%line%/cmdline
     output_directory: /live_response/process/proc/%line%
     output_file: cmdline.txt
 
@@ -513,7 +520,7 @@ artifacts:
     collector: command
     condition: ! command_exists "strings"
     foreach: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
-    command: astrings /proc/%line%/cmdline
+    command: strings.sh /proc/%line%/cmdline
     output_directory: /live_response/process/proc/%line%
     output_file: cmdline.txt
   -
@@ -522,7 +529,7 @@ artifacts:
     collector: command
     condition: ! command_exists "strings"
     foreach: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
-    command: astrings /proc/%line%/environ
+    command: strings.sh /proc/%line%/environ
     output_directory: /live_response/process/proc/%line%
     output_file: environ.txt
   -
@@ -531,7 +538,7 @@ artifacts:
     collector: command
     condition: ! command_exists "strings"
     foreach: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
-    command: astrings /proc/%line%/map
+    command: strings.sh /proc/%line%/map
     output_directory: /live_response/process/proc/%line%
     output_file: map.txt
   -
@@ -540,7 +547,7 @@ artifacts:
     collector: command
     condition: ! command_exists "strings"
     foreach: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
-    command: astrings /proc/%line%/psinfo
+    command: strings.sh /proc/%line%/psinfo
     output_directory: /live_response/process/proc/%line%
     output_file: psinfo.txt
   -
@@ -549,7 +556,7 @@ artifacts:
     collector: command
     condition: ! command_exists "strings"
     foreach: for pid in /proc/[0-9]*; do echo ${pid} | sed -e 's:/proc/::'; done
-    command: astrings /proc/%line%/status
+    command: strings.sh /proc/%line%/status
     output_directory: /live_response/process/proc/%line%
     output_file: status.txt
     

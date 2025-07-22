@@ -1,0 +1,40 @@
+version: 1.3
+output_directory: /system
+artifacts:
+  -
+    description: List files under / directory (no recursion, top-level only) with an unknown user ID name.
+    supported_os: [aix, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris]
+    collector: find
+    path: /
+    exclude_path_pattern: ["/dev", "/proc", "/run", "/sys"]
+    max_depth: 1
+    file_type: [f]
+    no_user: true
+    output_file: user_name_unknown_files.txt
+  -
+    description: List files with an unknown user ID name.
+    supported_os: [aix, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris]
+    collector: find
+    path: /bin /sbin /usr/bin /usr/sbin /usr/local /usr/local/bin /usr/local/sbin /dev /etc /home /export/home /lib /lib32 /lib64 /usr/lib /usr/lib32 /usr/lib64 /var/lib /run /var/run /tmp /var/tmp /run/tmp
+    file_type: [f]
+    no_user: true
+    output_file: user_name_unknown_files.txt
+  -
+    description: List files under user home directories (no recursion, top-level only) with an unknown user ID name.
+    supported_os: [aix, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris]
+    collector: find
+    path: /%user_home%
+    max_depth: 1
+    file_type: [f]
+    no_user: true
+    exclude_nologin_users: true
+    output_file: user_name_unknown_files.txt
+  -
+    description: List files under /Users directory (no recursion, top-level only) with an unknown user ID name.
+    supported_os: [macos]
+    collector: find
+    path: /Users
+    max_depth: 1
+    file_type: [f]
+    no_user: true
+    output_file: user_name_unknown_files.txt

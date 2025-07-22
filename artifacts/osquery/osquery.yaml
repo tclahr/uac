@@ -1,4 +1,4 @@
-version: 1.0
+version: 2.0
 condition: command_exists "osqueryi"
 output_directory: /osquery
 artifacts:
@@ -14,6 +14,12 @@ artifacts:
     collector: command
     command: osqueryi --json 'SELECT * FROM rpm_packages;'
     output_file: rpm_packages.json
+  -
+    description: Collect deb packages in json format.
+    supported_os: [linux]
+    collector: command
+    command: osqueryi --json 'SELECT * FROM deb_packages;'
+    output_file: deb_packages.json
   -
     description: Collect processes in json format.
     supported_os: [linux]
@@ -81,6 +87,12 @@ artifacts:
     command: osqueryi --json 'SELECT * FROM yum_sources;'
     output_file: yum_sources.json
   -
+    description: Collect apt sources in json format.
+    supported_os: [linux]
+    collector: command
+    command: osqueryi --json 'SELECT * FROM apt_sources;'
+    output_file: apt_sources.json
+  -
     description: Collect dns resolvers in json format.
     supported_os: [linux]
     collector: command
@@ -102,5 +114,29 @@ artifacts:
     description: Collect authorized keys in json format.
     supported_os: [linux]
     collector: command
-    command: osqueryi --json 'SELECT a.key_file, a.key, a.algorithm, u.uid, u.username FROM authorized_keys AS a LEFT JOIN users AS u ON u.uid = a.uid;'
+    command: osqueryi --json 'SELECT a.key_file, a.key, a.algorithm, u.uid, u.username FROM users AS u LEFT JOIN authorized_keys AS a ON u.uid = a.uid;'
     output_file: authorized_keys.json
+  -
+    description: Collect system controls in json format.
+    supported_os: [linux]
+    collector: command
+    command: osqueryi --json 'SELECT * FROM system_controls;'
+    output_file: system_controls.json
+  -
+    description: Collect shell history in json format.
+    supported_os: [linux]
+    collector: command
+    command: osqueryi --json 'SELECT * FROM users JOIN shell_history using(uid);'
+    output_file: shell_history.json
+  -
+    description: Collect logged in users in json format.
+    supported_os: [linux]
+    collector: command
+    command: osqueryi --json 'SELECT * FROM logged_in_users;'
+    output_file: logged_in_users.json
+  -
+    description: Collect last logins in json format.
+    supported_os: [linux]
+    collector: command
+    command: osqueryi --json 'SELECT * FROM last;'
+    output_file: last_logins.json

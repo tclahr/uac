@@ -126,7 +126,7 @@ _validate_artifact()
               __va_value=""
               while read __va_line && [ "${__va_line}" != "\"\"\"" ]; do
                 if [ "${__va_line}" = "-" ]; then
-                  _error_msg "artifact: missing closing \"\"\" for 'condition' property."
+                  _error_msg "artifact: missing closing \"\"\" for 'condition' field."
                   return 1
                 fi
                 __va_value="${__va_value}${__va_line}\n"
@@ -214,7 +214,7 @@ _validate_artifact()
               __va_value=""
               while read __va_line && [ "${__va_line}" != "\"\"\"" ]; do
                 if [ "${__va_line}" = "-" ]; then
-                  _error_msg "artifact: missing closing \"\"\" for 'foreach' property."
+                  _error_msg "artifact: missing closing \"\"\" for 'foreach' field."
                   return 1
                 fi
                 __va_value="${__va_value}${__va_line}\n"
@@ -398,15 +398,15 @@ _validate_artifact()
               || { _error_msg "artifact: missing 'artifacts' mapping."; return 1; }
             
             if [ -z "${__va_description}" ]; then
-              _error_msg "artifact: missing 'description' property."
+              _error_msg "artifact: missing 'description' field."
               return 1
             fi
             if [ -z "${__va_supported_os}" ]; then
-              _error_msg "artifact: missing 'supported_os' property."
+              _error_msg "artifact: missing 'supported_os' field."
               return 1
             fi
             if [ -z "${__va_collector}" ]; then
-              _error_msg "artifact: missing 'collector' property."
+              _error_msg "artifact: missing 'collector' field."
               return 1
             fi
             if [ "${__va_collector}" = "command" ] \
@@ -414,77 +414,77 @@ _validate_artifact()
               || [ "${__va_collector}" = "hash" ] \
               || [ "${__va_collector}" = "stat" ]; then
               if [ -z "${__va_output_directory}" ] && [ -z "${__va_global_output_directory}" ]; then
-                _error_msg "artifact: missing 'output_directory' property."
+                _error_msg "artifact: missing 'output_directory' field."
                 return 1
               fi
             fi
             if [ "${__va_collector}" = "command" ]; then
               if [ -z "${__va_command}" ]; then
-                _error_msg "artifact: missing 'command' property."
+                _error_msg "artifact: missing 'command' field."
                 return 1
               fi
               if [ -n "${__va_exclude_file_system}" ]; then
-                _error_msg "artifact: invalid 'exclude_file_system' property for 'command' collector."
+                _error_msg "artifact: invalid 'exclude_file_system' field for 'command' collector."
                 return 1
               fi
               if [ -n "${__va_exclude_name_pattern}" ]; then
-                _error_msg "artifact: invalid 'exclude_name_pattern' property for 'command' collector."
+                _error_msg "artifact: invalid 'exclude_name_pattern' field for 'command' collector."
                 return 1
               fi
               if [ -n "${__va_exclude_path_pattern}" ]; then
-                _error_msg "artifact: invalid 'exclude_path_pattern' property for 'command' collector."
+                _error_msg "artifact: invalid 'exclude_path_pattern' field for 'command' collector."
                 return 1
               fi
               if [ -n "${__va_file_type}" ]; then
-                _error_msg "artifact: invalid 'file_type' property for 'command' collector."
+                _error_msg "artifact: invalid 'file_type' field for 'command' collector."
                 return 1
               fi
               if [ -n "${__va_ignore_date_range}" ]; then
-                _error_msg "artifact: invalid 'ignore_date_range' property for 'command' collector."
+                _error_msg "artifact: invalid 'ignore_date_range' field for 'command' collector."
                 return 1
               fi
               if [ -n "${__va_is_file_list}" ]; then
-                _error_msg "artifact: invalid 'is_file_list' property for 'command' collector."
+                _error_msg "artifact: invalid 'is_file_list' field for 'command' collector."
                 return 1
               fi
               if [ -n "${__va_max_depth}" ]; then
-                _error_msg "artifact: invalid 'max_depth' property for 'command' collector."
+                _error_msg "artifact: invalid 'max_depth' field for 'command' collector."
                 return 1
               fi
               if [ -n "${__va_max_file_size}" ]; then
-                _error_msg "artifact: invalid 'max_file_size' property for 'command' collector."
+                _error_msg "artifact: invalid 'max_file_size' field for 'command' collector."
                 return 1
               fi
               if [ -n "${__va_min_file_size}" ]; then
-                _error_msg "artifact: invalid 'min_file_size' property for 'command' collector."
+                _error_msg "artifact: invalid 'min_file_size' field for 'command' collector."
                 return 1
               fi
               if [ -n "${__va_modifier}" ]; then
-                _error_msg "artifact: invalid 'modifier' property for 'command' collector."
+                _error_msg "artifact: invalid 'modifier' field for 'command' collector."
                 return 1
               fi
               if [ -n "${__va_name_pattern}" ]; then
-                _error_msg "artifact: invalid 'name_pattern' property for 'command' collector."
+                _error_msg "artifact: invalid 'name_pattern' field for 'command' collector."
                 return 1
               fi
               if [ -n "${__va_no_group}" ]; then
-                _error_msg "artifact: invalid 'no_group' property for 'command' collector."
+                _error_msg "artifact: invalid 'no_group' field for 'command' collector."
                 return 1
               fi
               if [ -n "${__va_no_user}" ]; then
-                _error_msg "artifact: invalid 'no_user' property for 'command' collector."
+                _error_msg "artifact: invalid 'no_user' field for 'command' collector."
                 return 1
               fi
               if [ -n "${__va_path}" ]; then
-                _error_msg "artifact: invalid 'path' property for 'command' collector."
+                _error_msg "artifact: invalid 'path' field for 'command' collector."
                 return 1
               fi
               if [ -n "${__va_path_pattern}" ]; then
-                _error_msg "artifact: invalid 'path_pattern' property for 'command' collector."
+                _error_msg "artifact: invalid 'path_pattern' field for 'command' collector."
                 return 1
               fi
               if [ -n "${__va_permissions}" ]; then
-                _error_msg "artifact: invalid 'permissions' property for 'command' collector."
+                _error_msg "artifact: invalid 'permissions' field for 'command' collector."
                 return 1
               fi
             elif [ "${__va_collector}" = "file" ] \
@@ -492,40 +492,58 @@ _validate_artifact()
               || [ "${__va_collector}" = "hash" ] \
               || [ "${__va_collector}" = "stat" ]; then
               if [ -z "${__va_path}" ]; then
-                _error_msg "artifact: missing 'path' property."
+                _error_msg "artifact: missing 'path' field."
                 return 1
               fi
-              if [ -n "${__va_max_file_size}" ] || [ -n "${__va_min_file_size}" ]; then
-                if [ "${__va_file_type}" != "f" ]; then
-                  _error_msg "artifact: 'file_type' must be of type 'f' when using 'max_file_size' or 'min_file_size'."
-                  return 1
-                fi
-              fi
               if [ -n "${__va_command}" ]; then
-                _error_msg "artifact: invalid 'command' property for '${__va_collector}' collector."
+                _error_msg "artifact: invalid 'command' field for '${__va_collector}' collector."
                 return 1
               fi
               if [ -n "${__va_compress_output_file}" ]; then
-                _error_msg "artifact: invalid 'compress_output_file' property for '${__va_collector}' collector."
+                _error_msg "artifact: invalid 'compress_output_file' field for '${__va_collector}' collector."
                 return 1
               fi
               if [ -n "${__va_redirect_stderr_to_stdout}" ]; then
-                _error_msg "artifact: invalid 'redirect_stderr_to_stdout' property for '${__va_collector}' collector."
+                _error_msg "artifact: invalid 'redirect_stderr_to_stdout' field for '${__va_collector}' collector."
                 return 1
               fi
               if [ -n "${__va_foreach}" ]; then
-                _error_msg "artifact: invalid 'foreach' property for '${__va_collector}' collector."
+                _error_msg "artifact: invalid 'foreach' field for '${__va_collector}' collector."
                 return 1
               fi
               if [ -n "${__va_modifier}" ]; then
-                _error_msg "artifact: invalid 'modifier' property for '${__va_collector}' collector."
+                _error_msg "artifact: invalid 'modifier' field for '${__va_collector}' collector."
                 return 1
+              fi
+              if [ -n "${__va_max_file_size}" ]; then
+                if [ -z "${__va_file_type}" ]; then
+                  _error_msg "artifact: 'file_type' must not be empty when max_file_size is specified."
+                  return 1
+                fi
+                if _is_in_list "f" "${__va_file_type}"; then
+                  true
+                else
+                  _error_msg "artifact: 'file_type' must include 'f' when 'max_file_size' is specified."
+                  return 1
+                fi
+              fi
+              if [ -n "${__va_min_file_size}" ]; then
+                if [ -z "${__va_file_type}" ]; then
+                  _error_msg "artifact: 'file_type' must not be empty when 'min_file_size' is specified."
+                  return 1
+                fi
+                if _is_in_list "f" "${__va_file_type}"; then
+                  true
+                else
+                  _error_msg "artifact: 'file_type' must include 'f' when 'min_file_size' is specified."
+                  return 1
+                fi
               fi
               if [ "${__va_collector}" = "find" ] \
               || [ "${__va_collector}" = "hash" ] \
               || [ "${__va_collector}" = "stat" ]; then
                 if [ -z "${__va_output_file}" ]; then
-                  _error_msg "artifact: missing 'output_file' property."
+                  _error_msg "artifact: missing 'output_file' field."
                   return 1
                 fi
               fi
@@ -534,7 +552,7 @@ _validate_artifact()
             ;;
           *)
             __va_key=`echo "${__va_key}" | sed -e 's|\|$||'`
-            _error_msg "artifact: invalid property '${__va_key}'."
+            _error_msg "artifact: invalid field '${__va_key}'."
             return 1
         esac
 

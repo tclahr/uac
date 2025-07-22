@@ -1,4 +1,4 @@
-version: 1.0
+version: 1.2
 artifacts:
   -
     description: Collect metadata related to documents that have been opened or interacted with using Okular, a document viewer for KDE.
@@ -6,7 +6,6 @@ artifacts:
     collector: file
     path: /%user_home%/.local/share
     path_pattern: ["*/okular/docdata/*"]
-    file_type: [f]
     exclude_nologin_users: true
   -
     description: Collect Okular configuration file.
@@ -14,41 +13,20 @@ artifacts:
     collector: file
     path: /%user_home%/.config
     name_pattern: ["okularrc"]
-    file_type: [f]
     ignore_date_range: true
     exclude_nologin_users: true
   -
-    description: Collect metadata related to documents that have been opened or interacted with using Okular, a document viewer for KDE (Flatpak version).
+    description: Collect metadata related to documents that have been opened or interacted with using Okular, a document viewer for KDE (Flatpak and Snap versions).
     supported_os: [linux]
     collector: file
-    path: /%user_home%/.var/app
+    path: /%user_home%/.var/app /%user_home%/snap
     path_pattern: ["*/okular/docdata/*"]
-    file_type: [f]
     exclude_nologin_users: true
   -
-    description: Collect Okular configuration file (Flatpak version).
+    description: Collect Okular configuration file (Flatpak and Snap versions).
     supported_os: [linux]
     collector: file
-    path: /%user_home%/.var/app
+    path: /%user_home%/.var/app /%user_home%/snap
     name_pattern: ["okularrc"]
-    file_type: [f]
     ignore_date_range: true
     exclude_nologin_users: true
-  -
-    description: Collect metadata related to documents that have been opened or interacted with using Okular, a document viewer for KDE (Snap version).
-    supported_os: [linux]
-    collector: file
-    path: /%user_home%/snap
-    path_pattern: ["*/okular/docdata/*"]
-    file_type: [f]
-    exclude_nologin_users: true
-  -
-    description: Collect Okular configuration file (Snap version).
-    supported_os: [linux]
-    collector: file
-    path: /%user_home%/snap
-    name_pattern: ["okularrc"]
-    file_type: [f]
-    ignore_date_range: true
-    exclude_nologin_users: true
-  

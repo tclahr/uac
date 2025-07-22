@@ -1,0 +1,10 @@
+version: 1.2
+condition: command_exists "slackpkg"
+output_directory: /packages
+artifacts:
+  -
+    description: Display installed and upgradable packages.
+    supported_os: [linux]
+    collector: find
+    path: /var/log/packages/*
+    output_file: var_log_packages.txt

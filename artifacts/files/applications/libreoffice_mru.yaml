@@ -1,26 +1,10 @@
-version: 2.0
+version: 2.1
 artifacts:
   -
-    description: Collect LibreOffice Most Recently Used.
+    description: Collect LibreOffice Most Recently Used (including Flatpak and Snap versions).
     supported_os: [linux]
     collector: file
-    path: /%user_home%/.config/libreoffice
-    name_pattern: ["recently-used.xbel", "registrymodifications.xcu"]
-    ignore_date_range: true
-    exclude_nologin_users: true
-  -
-    description: Collect LibreOffice Most Recently Used (Flatpak version).
-    supported_os: [linux]
-    collector: file
-    path: /%user_home%/.var/app/org.libreoffice.LibreOffice
-    name_pattern: ["recently-used.xbel", "registrymodifications.xcu"]
-    ignore_date_range: true
-    exclude_nologin_users: true
-  -
-    description: Collect LibreOffice Most Recently Used (Snap version).
-    supported_os: [linux]
-    collector: file
-    path: /%user_home%/snap/libreoffice
+    path: /%user_home%/.config/libreoffice /%user_home%/.var/app/org.libreoffice.LibreOffice /%user_home%/snap/libreoffice
     name_pattern: ["recently-used.xbel", "registrymodifications.xcu"]
     ignore_date_range: true
     exclude_nologin_users: true

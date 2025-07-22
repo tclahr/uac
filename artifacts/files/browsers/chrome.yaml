@@ -1,35 +1,18 @@
-version: 3.0
+version: 3.1
 artifacts:
   -
-    description: Collect Chrome browser files.
+    description: Collect Chrome browser files (including Flatpak version).
     supported_os: [linux]
     collector: file
-    path: /%user_home%/.config/google-chrome
+    path: /%user_home%/.config/google-chrome /%user_home%/.var/app/com.google.Chrome
     name_pattern: ["Bookmarks*", "Cookies*", "DownloadMetadata", "Extension Cookies*", "Favicons*", "History*", "Login Data*", "Media History*", "Network Action Predictor*", "Network Persistent State", "Preferences", "QuotaManager*", "Reporting and NEL*", "SecurePreferences", "Shortcuts*", "SyncData.sqlite3", "Top Sites*", "Trust Tokens*", "Visited Links", "Web Data*"]
     ignore_date_range: true
     exclude_nologin_users: true
   -
-    description: Collect Chrome browser directories.
+    description: Collect Chrome browser directories (including Flatpak version).
     supported_os: [linux]
     collector: file
-    path: /%user_home%/.config/google-chrome
-    name_pattern: ["Extensions", "File System", "Sessions"]
-    file_type: [d]
-    ignore_date_range: true
-    exclude_nologin_users: true
-  -
-    description: Collect Chrome browser files (Flatpak version).
-    supported_os: [linux]
-    collector: file
-    path: /%user_home%/.var/app/com.google.Chrome
-    name_pattern: ["Bookmarks*", "Cookies*", "DownloadMetadata", "Extension Cookies*", "Favicons*", "History*", "Login Data*", "Media History*", "Network Action Predictor*", "Network Persistent State", "Preferences", "QuotaManager*", "Reporting and NEL*", "SecurePreferences", "Shortcuts*", "SyncData.sqlite3", "Top Sites*", "Trust Tokens*", "Visited Links", "Web Data*"]
-    ignore_date_range: true
-    exclude_nologin_users: true
-  -
-    description: Collect Chrome browser directories (Flatpak version).
-    supported_os: [linux]
-    collector: file
-    path: /%user_home%/.var/app/com.google.Chrome
+    path: /%user_home%/.config/google-chrome /%user_home%/.var/app/com.google.Chrome
     name_pattern: ["Extensions", "File System", "Sessions"]
     file_type: [d]
     ignore_date_range: true

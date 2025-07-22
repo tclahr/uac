@@ -1,0 +1,14 @@
+version: 2.1
+output_directory: /system
+artifacts:
+  -
+    description: List all hidden files and symlinks outside of user home directory.
+    supported_os: [all]
+    collector: find
+    path: /
+    name_pattern: [".*"]
+    exclude_path_pattern: ["/root", "/home", "/export/home", "/Users"]
+    exclude_file_system: [proc, procfs]
+    file_type: [f, l]
+    output_file: hidden_files.txt
+  

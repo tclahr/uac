@@ -26,6 +26,9 @@ artifacts:
   - live_response/vms/*
   - chkrootkit/*
   - hash_executables/hash_executables.yaml
+  - system/*
+  - packages/*
   - osquery/osquery.yaml
   - files/*
+  - !files/browsers/cache.yaml
   

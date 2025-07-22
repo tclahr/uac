@@ -1,18 +1,11 @@
-version: 3.0
+version: 4.0
 output_directory: /bodyfile
 artifacts:
   -
     description: Collect file stat information to create a bodyfile.
-    supported_os: [aix, esxi, freebsd, linux, netbsd, netscaler, openbsd, solaris]
+    supported_os: [all]
     collector: stat
     path: /
     exclude_file_system: [proc, procfs]
     output_file: bodyfile.txt
-  -
-    description: Collect file stat information to create a bodyfile.
-    supported_os: [macos]
-    collector: stat
-    path: /
-    exclude_path_pattern: ["/System/Volumes/Data", "/System/Volumes/Preboot", "/System/Volumes/Recovery", "/System/Volumes/VM"]
-    exclude_file_system: [proc, procfs]
-    output_file: bodyfile.txt
+  

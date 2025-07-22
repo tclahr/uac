@@ -103,7 +103,7 @@ _parse_command_line_arguments()
       # collection arguments
       "-c"|"--config")
           if [ -n "${2:-}" ]; then
-            __UAC_CONFIG_FILE="${2}"
+            __UAC_CUSTOM_CONFIG_FILE="${2}"
             shift
           else
             _error_msg "option '${1}' requires an argument.\nTry 'uac --help' for more information."
@@ -248,9 +248,9 @@ _parse_command_line_arguments()
           return 1
         fi
         ;;
-      "--sftp-ssh-options")
+      "--sftp-ssh-option")
         if [ -n "${2:-}" ]; then
-          __UAC_SFTP_SSH_OPTIONS="${2}"
+          __UAC_SFTP_SSH_OPTIONS="${__UAC_SFTP_SSH_OPTIONS} -o ${2}"
           shift
         else
           _error_msg "option '${1}' requires an argument.\nTry 'uac --help' for more information."

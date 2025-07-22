@@ -1,4 +1,4 @@
-version: 1.0
+version: 1.1
 artifacts:
   # AnyDesk artifacts are stored within different locations depending on the version downloaded and installed on the system (.tar.gz, .deb, .rpm, .dmg).
   -
@@ -22,7 +22,6 @@ artifacts:
     collector: file
     path: /%user_home%/
     name_pattern: ["anydesk*.png"]
-    file_type: [f]
     max_depth: 4
     exclude_nologin_users: true
   -
@@ -31,7 +30,6 @@ artifacts:
     collector: file
     path: /%user_home%/
     name_pattern: ["*.anydesk"]
-    file_type: [f]
     max_depth: 4
     exclude_nologin_users: true
   -

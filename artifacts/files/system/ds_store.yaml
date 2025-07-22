@@ -1,4 +1,4 @@
-version: 1.0
+version: 1.1
 artifacts:
   -
     description: Collect .DS_Store files.
@@ -6,5 +6,5 @@ artifacts:
     collector: file
     path: /
     name_pattern: [".DS_Store"]
-    file_type: [f]
+    exclude_path_pattern: ["/dev", "/proc", "/run", "/sys"]
   
