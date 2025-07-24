@@ -15,6 +15,7 @@ All notable changes to this project will be documented in this file.
 ### Artifacts
 
 - `files/applications/google_drive.yaml`: Added collection of Google Drive metadata databases and log files [macos].
+- `files/applications/spotlight.yaml`: Updated the collection of Spotlight searches performed by users [macos].
 - `files/browsers/cache.yaml`: Added collection of browser cache data. This artifact is resource-intensive and time-consuming, so it is disabled by default in all profiles [freebsd, linux, macos].
 - `files/logs/advanced_log_search.yaml`: `file_type: [f, l]` was added to also collect symlinks as `max_file_type` was specified. ([#355](https://github.com/tclahr/uac/issues/355))
 - `files/logs/apache.yaml`: `file_type: [f, l]` was added to also collect symlinks as `max_file_type` was specified. ([#355](https://github.com/tclahr/uac/issues/355))
@@ -29,6 +30,7 @@ All notable changes to this project will be documented in this file.
 - `files/logs/var_log.yaml`: `file_type: [f, l]` was added to also collect symlinks as `max_file_type` was specified. ([#355](https://github.com/tclahr/uac/issues/355))
 - `files/logs/var_run_log.yaml`: `file_type: [f, l]` was added to also collect symlinks as `max_file_type` was specified. ([#355](https://github.com/tclahr/uac/issues/355))
 - `files/system/acct.yaml`: `file_type: [f, l]` was added to also collect symlinks as `max_file_type` was specified. ([#355](https://github.com/tclahr/uac/issues/355))
+- `files/system/apple_accounts.yaml`: Moved to `files/system/user_accounts.yaml`.
 - `files/system/dev_shm.yaml`: `file_type: [f, l]` was added to also collect symlinks as `max_file_type` was specified. ([#355](https://github.com/tclahr/uac/issues/355))
 - `files/system/etc.yaml`: `file_type: [f]` removed. ([#355](https://github.com/tclahr/uac/issues/355))
 - `files/system/gvfs_metadata.yaml`: `file_type: [f]` removed. ([#355](https://github.com/tclahr/uac/issues/355))
@@ -37,6 +39,7 @@ All notable changes to this project will be documented in this file.
 - `files/system/systemd.yaml`: `file_type: [f]` removed. ([#355](https://github.com/tclahr/uac/issues/355))
 - `files/system/tmp.yaml`: `file_type: [f, l]` was added to also collect symlinks as `max_file_type` was specified. ([#355](https://github.com/tclahr/uac/issues/355))
 - `files/system/udev.yaml`: `file_type: [f]` removed. ([#355](https://github.com/tclahr/uac/issues/355))
+- `files/system/user_accounts.yaml`: Added collection about the users that have logged in to the macOS computer, as recovered from the settings (.plist) files [macos].
 - `files/system/var_tmp.yaml`: `file_type: [f, l]` was added to also collect symlinks as `max_file_type` was specified. ([#355](https://github.com/tclahr/uac/issues/355))
 - `live_response/hardware/lshw.yaml`: Added timeout to the `lshw` command. ([#380](https://github.com/tclahr/uac/issues/380)) (by [qinidema](https://github.com/qinidema))
 - `live_response/modifiers/disable_ftrace.yaml`: Added modifier to disable ftrace to prevent syscall hooking by LKM rootkits [linux]. (by [mnrkbys](https://github.com/mnrkbys))
@@ -48,6 +51,7 @@ All notable changes to this project will be documented in this file.
 - `live_response/system/hidden_files.yaml`: Moved to `system/hidden_files.yaml`.
 - `live_response/system/immutable_files.yaml`: Moved to `system/immutable_files.yaml`. Updated to skip non-local file systems [linux].
 - `live_response/system/loginctl.yaml`: Added terse runtime status information collection for each user in the system [linux]. (by [clausing](https://github.com/clausing))
+- `live_response/system/mdatp.yaml`: Update supported OS for mdatp artifacts to include macOS [macos]. (by [JakePeralta7](https://github.com/JakePeralta7))
 - `live_response/system/sgid.yaml`: Moved to `system/sgid.yaml`.
 - `live_response/system/suid.yaml`: Moved to `system/suid.yaml`.
 - `live_response/system/user_name_known_files.yaml`: Moved to `system/user_name_known_files.yaml`.

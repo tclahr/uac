@@ -1,0 +1,18 @@
+version: 2.1
+artifacts:
+  -
+    description: Collect information about the searches that a user performed in the Spotlight application.
+    supported_os: [macos]
+    collector: file
+    path: /%user_home%/Library/"Application Support" /%user_home%/Library/"Group Containers"
+    name_pattern: ["com.apple.spotlight.Shortcuts.v3"]
+    ignore_date_range: true
+    exclude_nologin_users: true
+-
+    description: Collect information about the searches that a user performed in the Spotlight application.
+    supported_os: [macos]
+    collector: file
+    path: /%user_home%/Library/"Group Containers"
+    path_pattern: ["*/com.apple.spotlight/local/*"]
+    ignore_date_range: true
+    exclude_nologin_users: true
