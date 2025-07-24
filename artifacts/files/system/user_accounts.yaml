@@ -1,0 +1,17 @@
+version: 2.0
+artifacts:
+  -
+    description: Collect Apple Accounts database files.
+    supported_os: [macos]
+    collector: file
+    path: /%user_home%/Library/Accounts/Accounts*.sqlite*
+    ignore_date_range: true
+    exclude_nologin_users: true
+  -
+    description: Collect information about the users that have logged in to the macOS computer, as recovered from the settings (.plist) files.
+    supported_os: [macos]
+    collector: file
+    path: /private/var/db/dslocal/nodes/Default/users
+    name_pattern: ["*.plist"]
+    ignore_date_range: true
+  
