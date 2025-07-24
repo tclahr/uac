@@ -22,7 +22,7 @@ _get_days_since_date_until_now()
     __gd_difference=`expr "${__gd_epoch_now}" - "${__gd_epoch_date}" 2>/dev/null`
     expr "${__gd_difference}" / 86400 2>/dev/null
   else
-    _error_msg "date '${__gd_date}' cannot be greater than today."
+    _error_msg "Date '${__gd_date}' cannot be greater than today."
     return 1
   fi
 

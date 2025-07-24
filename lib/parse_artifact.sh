@@ -283,8 +283,11 @@ _parse_artifact()
               echo "${__pa_user_home_list}" \
                 | while read __pa_line && [ -n "${__pa_line}" ]; do
                     __pa_user=`echo "${__pa_line}" | cut -d ":" -f 1`
+
                     __pa_home=`echo "${__pa_line}" | cut -d ":" -f 2`
+
                     __pa_no_slash_home=`echo "${__pa_line}" | cut -d ":" -f 2 | sed -e 's|^/||' 2>/dev/null`
+                    
                     _log_msg INF "Collecting data for user ${__pa_user}"
 
                     # replace %user% and %user_home% in path

@@ -22,12 +22,12 @@ _command_collector()
   __cc_redirect_stderr_to_stdout="${6:-false}"
 
   if [ -z "${__cc_command}" ]; then
-    _log_msg ERR "_command_collector: empty command parameter"
+    _log_msg ERR "_command_collector: Empty command parameter"
     return 1
   fi
 
   if [ -z "${__cc_output_directory}" ]; then
-    _log_msg ERR "_command_collector: empty output_directory parameter"
+    _log_msg ERR "_command_collector: Empty output_directory parameter"
     return 1
   fi
 
@@ -69,11 +69,11 @@ _command_collector()
               __cc_compressed_file_size=`wc -c "${__cc_new_output_directory}/${__cc_new_output_file}" | awk '{print $1}'`
               if [ "${__cc_compressed_file_size}" -lt 21 ]; then
                 rm -f "${__cc_new_output_directory}/${__cc_new_output_file}" >/dev/null
-                _log_msg DBG "Empty compressed output file '${__cc_new_output_file}'"
+                _log_msg DBG "Empty compressed output file: '${__cc_new_output_file}'"
               fi
             elif [ ! -s "${__cc_new_output_directory}/${__cc_new_output_file}" ]; then
               rm -f "${__cc_new_output_directory}/${__cc_new_output_file}" >/dev/null
-              _log_msg DBG "Empty output file '${__cc_new_output_file}'"
+              _log_msg DBG "Empty output file: '${__cc_new_output_file}'"
             fi
           else
             _verbose_msg "${__UAC_VERBOSE_CMD_PREFIX}${__cc_new_command}"
@@ -106,11 +106,11 @@ _command_collector()
         __cc_compressed_file_size=`wc -c "${__cc_output_directory}/${__cc_output_file}" | awk '{print $1}'`
         if [ "${__cc_compressed_file_size}" -lt 21 ]; then
           rm -f "${__cc_output_directory}/${__cc_output_file}" >/dev/null
-          _log_msg DBG "Empty compressed output file '${__cc_output_file}'"
+          _log_msg DBG "Empty compressed output file: '${__cc_output_file}'"
         fi
       elif [ ! -s "${__cc_output_directory}/${__cc_output_file}" ]; then
         rm -f "${__cc_output_directory}/${__cc_output_file}" >/dev/null
-        _log_msg DBG "Empty output file '${__cc_output_file}'"
+        _log_msg DBG "Empty output file: '${__cc_output_file}'"
       fi
     else
       _verbose_msg "${__UAC_VERBOSE_CMD_PREFIX}${__cc_command}"

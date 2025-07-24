@@ -15,7 +15,7 @@ _zip_data()
   __zd_password="${3:-}"
 
   if [ ! -f "${__zd_from_file}" ]; then
-    _error_msg "_zip_data: no such file or directory: '${__zd_from_file}'"
+    _error_msg "File containing the list of files to be archived '${__zd_from_file}' does not exist."
     return 1
   fi
 

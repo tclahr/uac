@@ -12,7 +12,7 @@ _list_profiles()
   __lp_profiles_dir="${1:-}"
 
   if [ ! -d "${__lp_profiles_dir}" ]; then
-    _error_msg "list profiles: no such file or directory: '${__lp_profiles_dir}'"
+    _error_msg "Profiles directory '${__lp_profiles_dir}' does not exist."
     return 1
   fi
 

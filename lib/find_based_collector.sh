@@ -70,22 +70,22 @@ _find_based_collector()
     && [ "${__fc_collector}" != "find" ] \
     && [ "${__fc_collector}" != "hash" ] \
     && [ "${__fc_collector}" != "stat" ]; then
-    _log_msg ERR "_find_based_collector: invalid collector '${__fc_collector}'"
+    _log_msg ERR "_find_based_collector: Invalid collector: '${__fc_collector}'"
     return 1
   fi
 
   if [ -z "${__fc_path}" ]; then
-    _log_msg ERR "_find_based_collector: empty path parameter"
+    _log_msg ERR "_find_based_collector: Empty path parameter"
     return 1
   fi
 
   if [ -z "${__fc_output_directory}" ]; then
-    _log_msg ERR "_find_based_collector: empty output_directory parameter"
+    _log_msg ERR "_find_based_collector: Empty output_directory parameter"
     return 1
   fi
 
   if [ -z "${__fc_output_file}" ]; then
-    _log_msg ERR "_find_based_collector: empty output_file parameter"
+    _log_msg ERR "_find_based_collector: Empty output_file parameter"
     return 1
   fi
 
@@ -96,7 +96,7 @@ _find_based_collector()
     fi
     __fc_path=`_sanitize_path "${__fc_path}"`
     if [ ! -f "${__fc_path}" ]; then
-      _log_msg ERR "_find_based_collector: no such file or directory: '${__fc_path}'"
+      _log_msg ERR "_find_based_collector: No such file or directory: '${__fc_path}'"
       return 1
     fi
   else
@@ -233,7 +233,7 @@ _find_based_collector()
             >>"${__fc_output_directory}/${__fc_output_file}.${__fc_algorithm}"
           if [ ! -s "${__fc_output_directory}/${__fc_output_file}.${__fc_algorithm}" ]; then
             rm -f "${__fc_output_directory}/${__fc_output_file}.${__fc_algorithm}" >/dev/null
-            _log_msg DBG "Empty output file '${__fc_output_file}.${__fc_algorithm}'"
+            _log_msg DBG "Empty output file: '${__fc_output_file}.${__fc_algorithm}'"
           fi
         fi
       done
@@ -298,10 +298,10 @@ _find_based_collector()
           >>"${__fc_output_directory}/${__fc_output_file}"
         if [ ! -s "${__fc_output_directory}/${__fc_output_file}" ]; then
           rm -f "${__fc_output_directory}/${__fc_output_file}" >/dev/null
-          _log_msg DBG "Empty output file '${__fc_output_file}'"
+          _log_msg DBG "Empty output file: '${__fc_output_file}'"
         fi
       else
-        _log_msg ERR "_find_based_collector: cannot run stat collector. Target system has neither 'stat', 'statx' nor 'perl' tool available"
+        _log_msg ERR "_find_based_collector: Cannot run stat collector. Target system has neither 'stat', 'statx' nor 'perl' tool available"
         return 1
       fi
       ;;
