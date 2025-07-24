@@ -42,8 +42,9 @@ _parse_command_line_arguments()
           else
             # get profile file based on the profile name
             __pc_profile=`_get_profile_by_name "${2}" "${__UAC_DIR}/profiles"`
+
             if [ -z "${__pc_profile}" ]; then
-              _error_msg "profile not found '${2}'"
+              _error_msg "Profile '${2}' does not exist.\nTry 'uac --profile list' to list all available profiles."
               return 1
             fi
           fi
@@ -51,10 +52,11 @@ _parse_command_line_arguments()
           _validate_profile "${__pc_profile}" "${__UAC_DIR}/artifacts" || return 1
 
           __pc_new_artifacts=`_parse_profile "${__pc_profile}" 2>/dev/null`
+          
           __UAC_ARTIFACT_LIST="${__UAC_ARTIFACT_LIST}${__UAC_ARTIFACT_LIST:+,}${__pc_new_artifacts}"
           shift
         else
-          _error_msg "option '${1}' requires an argument.\nTry 'uac --help' for more information."
+          _error_msg "Option '${1}' requires an argument.\nTry 'uac --help' for more information."
           return 1
         fi
         ;;
@@ -68,7 +70,7 @@ _parse_command_line_arguments()
           __UAC_ARTIFACT_LIST="${__UAC_ARTIFACT_LIST}${__UAC_ARTIFACT_LIST:+,}${2}"
           shift
         else
-          _error_msg "option '${1}' requires an argument.\nTry 'uac --help' for more information."
+          _error_msg "Option '${1}' requires an argument.\nTry 'uac --help' for more information."
           return 1
         fi
         ;;
@@ -78,7 +80,7 @@ _parse_command_line_arguments()
             __UAC_OUTPUT_BASE_NAME="${2}"
             shift
           else
-            _error_msg "option '${1}' requires an argument.\nTry 'uac --help' for more information."
+            _error_msg "Option '${1}' requires an argument.\nTry 'uac --help' for more information."
             return 1
           fi
           ;;
@@ -87,7 +89,7 @@ _parse_command_line_arguments()
             __UAC_OUTPUT_FORMAT="${2}"
             shift
           else
-            _error_msg "option '${1}' requires an argument.\nTry 'uac --help' for more information."
+            _error_msg "Option '${1}' requires an argument.\nTry 'uac --help' for more information."
             return 1
           fi
           ;;
@@ -96,7 +98,7 @@ _parse_command_line_arguments()
             __UAC_OUTPUT_PASSWORD="${2}"
             shift
           else
-            _error_msg "option '${1}' requires an argument.\nTry 'uac --help' for more information."
+            _error_msg "Option '${1}' requires an argument.\nTry 'uac --help' for more information."
             return 1
           fi
           ;;
@@ -106,7 +108,7 @@ _parse_command_line_arguments()
             __UAC_CUSTOM_CONFIG_FILE="${2}"
             shift
           else
-            _error_msg "option '${1}' requires an argument.\nTry 'uac --help' for more information."
+            _error_msg "Option '${1}' requires an argument.\nTry 'uac --help' for more information."
             return 1
           fi
           ;;
@@ -115,7 +117,7 @@ _parse_command_line_arguments()
           __UAC_MOUNT_POINT="${2}"
           shift
         else
-          _error_msg "option '${1}' requires an argument.\nTry 'uac --help' for more information."
+          _error_msg "Option '${1}' requires an argument.\nTry 'uac --help' for more information."
           return 1
         fi
         ;;
@@ -124,7 +126,7 @@ _parse_command_line_arguments()
           __UAC_OPERATING_SYSTEM="${2}"
           shift
         else
-          _error_msg "option '${1}' requires an argument.\nTry 'uac --help' for more information."
+          _error_msg "Option '${1}' requires an argument.\nTry 'uac --help' for more information."
           return 1
         fi
         ;;
@@ -142,7 +144,7 @@ _parse_command_line_arguments()
           __UAC_HOSTNAME="${2}"
           shift
         else
-          _error_msg "option '${1}' requires an argument.\nTry 'uac --help' for more information."
+          _error_msg "Option '${1}' requires an argument.\nTry 'uac --help' for more information."
           return 1
         fi
         ;;
@@ -151,7 +153,7 @@ _parse_command_line_arguments()
           __UAC_TEMP_DIR="${2}"
           shift
         else
-          _error_msg "option '${1}' requires an argument.\nTry 'uac --help' for more information."
+          _error_msg "Option '${1}' requires an argument.\nTry 'uac --help' for more information."
           return 1
         fi
         ;;
@@ -161,7 +163,7 @@ _parse_command_line_arguments()
           __UAC_START_DATE="${2}"
           shift
         else
-          _error_msg "option '${1}' requires an argument.\nTry 'uac --help' for more information."
+          _error_msg "Option '${1}' requires an argument.\nTry 'uac --help' for more information."
           return 1
         fi
         ;;
@@ -170,7 +172,7 @@ _parse_command_line_arguments()
           __UAC_END_DATE="${2}"
           shift
         else
-          _error_msg "option '${1}' requires an argument.\nTry 'uac --help' for more information."
+          _error_msg "Option '${1}' requires an argument.\nTry 'uac --help' for more information."
           return 1
         fi
         ;;
@@ -180,7 +182,7 @@ _parse_command_line_arguments()
           __UAC_CASE_NUMBER="${2}"
           shift
         else
-          _error_msg "option '${1}' requires an argument.\nTry 'uac --help' for more information."
+          _error_msg "Option '${1}' requires an argument.\nTry 'uac --help' for more information."
           return 1
         fi
         ;;
@@ -189,7 +191,7 @@ _parse_command_line_arguments()
           __UAC_EVIDENCE_DESCRIPTION="${2}"
           shift
         else
-          _error_msg "option '${1}' requires an argument.\nTry 'uac --help' for more information."
+          _error_msg "Option '${1}' requires an argument.\nTry 'uac --help' for more information."
           return 1
         fi
         ;;
@@ -198,7 +200,7 @@ _parse_command_line_arguments()
           __UAC_EVIDENCE_NUMBER="${2}"
           shift
         else
-          _error_msg "option '${1}' requires an argument.\nTry 'uac --help' for more information."
+          _error_msg "Option '${1}' requires an argument.\nTry 'uac --help' for more information."
           return 1
         fi
         ;;
@@ -207,7 +209,7 @@ _parse_command_line_arguments()
           __UAC_EXAMINER="${2}"
           shift
         else
-          _error_msg "option '${1}' requires an argument.\nTry 'uac --help' for more information."
+          _error_msg "Option '${1}' requires an argument.\nTry 'uac --help' for more information."
           return 1
         fi
         ;;
@@ -216,7 +218,7 @@ _parse_command_line_arguments()
           __UAC_EVIDENCE_NOTES="${2}"
           shift
         else
-          _error_msg "option '${1}' requires an argument.\nTry 'uac --help' for more information."
+          _error_msg "Option '${1}' requires an argument.\nTry 'uac --help' for more information."
           return 1
         fi
         ;;
@@ -226,7 +228,7 @@ _parse_command_line_arguments()
           __UAC_SFTP="${2}"
           shift
         else
-          _error_msg "option '${1}' requires an argument.\nTry 'uac --help' for more information."
+          _error_msg "Option '${1}' requires an argument.\nTry 'uac --help' for more information."
           return 1
         fi
         ;;
@@ -235,7 +237,7 @@ _parse_command_line_arguments()
           __UAC_SFTP_PORT="${2}"
           shift
         else
-          _error_msg "option '${1}' requires an argument.\nTry 'uac --help' for more information."
+          _error_msg "Option '${1}' requires an argument.\nTry 'uac --help' for more information."
           return 1
         fi
         ;;
@@ -244,7 +246,7 @@ _parse_command_line_arguments()
           __UAC_SFTP_IDENTITY_FILE="${2}"
           shift
         else
-          _error_msg "option '${1}' requires an argument.\nTry 'uac --help' for more information."
+          _error_msg "Option '${1}' requires an argument.\nTry 'uac --help' for more information."
           return 1
         fi
         ;;
@@ -253,7 +255,7 @@ _parse_command_line_arguments()
           __UAC_SFTP_SSH_OPTIONS="${__UAC_SFTP_SSH_OPTIONS} -o ${2}"
           shift
         else
-          _error_msg "option '${1}' requires an argument.\nTry 'uac --help' for more information."
+          _error_msg "Option '${1}' requires an argument.\nTry 'uac --help' for more information."
           return 1
         fi
         ;;
@@ -262,7 +264,7 @@ _parse_command_line_arguments()
           __UAC_S3_PROVIDER="${2}"
           shift
         else
-          _error_msg "option '${1}' requires an argument.\nTry 'uac --help' for more information."
+          _error_msg "Option '${1}' requires an argument.\nTry 'uac --help' for more information."
           return 1
         fi
         ;;
@@ -271,7 +273,7 @@ _parse_command_line_arguments()
           __UAC_S3_REGION="${2}"
           shift
         else
-          _error_msg "option '${1}' requires an argument.\nTry 'uac --help' for more information."
+          _error_msg "Option '${1}' requires an argument.\nTry 'uac --help' for more information."
           return 1
         fi
         ;;
@@ -280,7 +282,7 @@ _parse_command_line_arguments()
           __UAC_S3_BUCKET="${2}"
           shift
         else
-          _error_msg "option '${1}' requires an argument.\nTry 'uac --help' for more information."
+          _error_msg "Option '${1}' requires an argument.\nTry 'uac --help' for more information."
           return 1
         fi
         ;;
@@ -289,7 +291,7 @@ _parse_command_line_arguments()
           __UAC_S3_ACCESS_KEY="${2}"
           shift
         else
-          _error_msg "option '${1}' requires an argument.\nTry 'uac --help' for more information."
+          _error_msg "Option '${1}' requires an argument.\nTry 'uac --help' for more information."
           return 1
         fi
         ;;
@@ -298,7 +300,7 @@ _parse_command_line_arguments()
           __UAC_S3_SECRET_KEY="${2}"
           shift
         else
-          _error_msg "option '${1}' requires an argument.\nTry 'uac --help' for more information."
+          _error_msg "Option '${1}' requires an argument.\nTry 'uac --help' for more information."
           return 1
         fi
         ;;
@@ -307,7 +309,7 @@ _parse_command_line_arguments()
           __UAC_S3_TOKEN="${2}"
           shift
         else
-          _error_msg "option '${1}' requires an argument.\nTry 'uac --help' for more information."
+          _error_msg "Option '${1}' requires an argument.\nTry 'uac --help' for more information."
           return 1
         fi
         ;;
@@ -316,7 +318,7 @@ _parse_command_line_arguments()
           __UAC_AWS_S3_PRESIGNED_URL="${2}"
           shift
         else
-          _error_msg "option '${1}' requires an argument.\nTry 'uac --help' for more information."
+          _error_msg "Option '${1}' requires an argument.\nTry 'uac --help' for more information."
           return 1
         fi
         ;;
@@ -325,7 +327,7 @@ _parse_command_line_arguments()
           __UAC_AWS_S3_PRESIGNED_URL_LOG_FILE="${2}"
           shift
         else
-          _error_msg "option '${1}' requires an argument.\nTry 'uac --help' for more information."
+          _error_msg "Option '${1}' requires an argument.\nTry 'uac --help' for more information."
           return 1
         fi
         ;;
@@ -334,7 +336,7 @@ _parse_command_line_arguments()
           __UAC_AZURE_STORAGE_SAS_URL="${2}"
           shift
         else
-          _error_msg "option '${1}' requires an argument.\nTry 'uac --help' for more information."
+          _error_msg "Option '${1}' requires an argument.\nTry 'uac --help' for more information."
           return 1
         fi
         ;;
@@ -343,7 +345,7 @@ _parse_command_line_arguments()
           __UAC_AZURE_STORAGE_SAS_URL_LOG_FILE="${2}"
           shift
         else
-          _error_msg "option '${1}' requires an argument.\nTry 'uac --help' for more information."
+          _error_msg "Option '${1}' requires an argument.\nTry 'uac --help' for more information."
           return 1
         fi
         ;;
@@ -353,27 +355,27 @@ _parse_command_line_arguments()
       # validation arguments
       "--validate-artifact")
         if [ -n "${2:-}" ]; then
-          printf "Validating artifact %s\n" "${2}"
+          printf "Validating artifact '%s'...\n" "${2}"
           _validate_artifact "${2}" || return 1
-          _exit_success "artifact successfully validated."
+          _exit_success "Artifact validation completed successfully."
         else
-          _error_msg "option '${1}' requires an argument.\nTry 'uac --help' for more information."
+          _error_msg "Option '${1}' requires an argument.\nTry 'uac --help' for more information."
           return 1
         fi
         ;;
       "--validate-profile")
         if [ -n "${2:-}" ]; then
-          printf "Validating profile %s\n" "${2}"
+          printf "Validating profile '%s'...\n" "${2}"
           _validate_profile "${2}" || return 1
-          _exit_success "profile successfully validated."
+          _exit_success "Profile validation completed successfully."
         else
-          _error_msg "option '${1}' requires an argument.\nTry 'uac --help' for more information."
+          _error_msg "Option '${1}' requires an argument.\nTry 'uac --help' for more information."
           return 1
         fi
         ;;
       # invalid arguments
       -*)
-        _error_msg "invalid option '${1}'\nTry 'uac --help' for more information."
+        _error_msg "Invalid option '${1}'.\nTry 'uac --help' for more information."
         return 1
         ;;
       # positional arguments
@@ -381,7 +383,7 @@ _parse_command_line_arguments()
         if [ -z "${__UAC_DESTINATION_DIR}" ]; then
           __UAC_DESTINATION_DIR="${1}"
         else
-          _error_msg "invalid option '${1}'\nTry 'uac --help' for more information."
+          _error_msg "Invalid option '${1}'.\nTry 'uac --help' for more information."
           return 1
         fi
         ;;

@@ -12,7 +12,7 @@ _load_config_file()
   __lc_config_file="${1:-}"
 
   if [ ! -f "${__lc_config_file}" ]; then
-    _error_msg "config file: no such file or directory: '${__lc_config_file}'"
+    _error_msg "Configuration file '${__lc_config_file}' does not exist."
     return 1
   fi
 
@@ -37,7 +37,7 @@ _load_config_file()
   if echo "${__lc_config_file_content}" | grep -q "exclude_path_pattern:"; then
     __lc_value=`echo "${__lc_config_file_content}" | sed -n -e 's|exclude_path_pattern\: *\(.*\)|\1|p'`
     if echo "${__lc_value}" | grep -q -v -E "^\[.*\]$"; then
-      _error_msg "config file: 'exclude_path_pattern' must be an array/list."
+      _error_msg "Configuration option 'exclude_path_pattern' must be a list."
       return 1
     fi
     __UAC_CONF_EXCLUDE_PATH_PATTERN=`echo "${__lc_value}" | _array_to_psv 2>/dev/null`
@@ -47,7 +47,7 @@ _load_config_file()
   if echo "${__lc_config_file_content}" | grep -q "exclude_name_pattern:"; then
     __lc_value=`echo "${__lc_config_file_content}" | sed -n -e 's|exclude_name_pattern\: *\(.*\)|\1|p'`
     if echo "${__lc_value}" | grep -q -v -E "^\[.*\]$"; then
-      _error_msg "config file: 'exclude_name_pattern' must be an array/list."
+      _error_msg "Configuration option 'exclude_name_pattern' must be a list."
       return 1
     fi
     __UAC_CONF_EXCLUDE_NAME_PATTERN=`echo "${__lc_value}" | _array_to_psv 2>/dev/null`
@@ -57,7 +57,7 @@ _load_config_file()
   if echo "${__lc_config_file_content}" | grep -q "exclude_file_system:"; then
     __lc_value=`echo "${__lc_config_file_content}" | sed -n -e 's|exclude_file_system\: *\(.*\)|\1|p'`
     if echo "${__lc_value}" | grep -q -v -E "^\[.*\]$"; then
-      _error_msg "config file: 'exclude_file_system' must be an array/list."
+      _error_msg "Configuration option 'exclude_file_system' must be a list."
       return 1
     fi
     __UAC_CONF_EXCLUDE_FILE_SYSTEM=`echo "${__lc_value}" | _array_to_psv 2>/dev/null`
@@ -67,13 +67,13 @@ _load_config_file()
   if echo "${__lc_config_file_content}" | grep -q "hash_algorithm:"; then
     __lc_value=`echo "${__lc_config_file_content}" | sed -n -e 's|hash_algorithm\: *\(.*\)|\1|p'`
     if echo "${__lc_value}" | grep -q -v -E "^\[.*\]$"; then
-      _error_msg "config file: 'hash_algorithm' must be an array/list."
+      _error_msg "Configuration option 'hash_algorithm' must be a list."
       return 1
     fi
     __UAC_CONF_HASH_ALGORITHM=`echo "${__lc_value}" | _array_to_psv 2>/dev/null`
     __lc_valid_values="md5|sha1|sha256"
     for __lc_item in `echo "${__UAC_CONF_HASH_ALGORITHM}" | sed -e 's:|: :g'`; do
-      _is_in_list "${__lc_item}" "${__lc_valid_values}" || { _error_msg "config file: invalid hash algorithm '${__lc_item}'"; return 1; }
+      _is_in_list "${__lc_item}" "${__lc_valid_values}" || { _error_msg "Configuration option Invalid hash algorithm '${__lc_item}'"; return 1; }
     done
   fi
 
@@ -83,7 +83,7 @@ _load_config_file()
     if _is_digit "${__lc_value}" && [ "${__lc_value}" -ge 0 ]; then
       true
     else
-      _error_msg "config file: 'max_depth' must be equal or greater than zero."
+      _error_msg "Configuration option 'max_depth' must be an integer greater than or equal to zero."
       return 1
     fi
     __UAC_CONF_MAX_DEPTH="${__lc_value}"    
@@ -93,7 +93,7 @@ _load_config_file()
   if echo "${__lc_config_file_content}" | grep -q "enable_find_mtime:"; then
     __lc_value=`echo "${__lc_config_file_content}" | sed -n -e 's|enable_find_mtime\: *\(.*\)|\1|p'`
     if [ "${__lc_value}" != true ] && [ "${__lc_value}" != false ]; then
-      _error_msg "config file: 'enable_find_mtime' must be 'true' or 'false'."
+      _error_msg "Configuration option 'enable_find_mtime' must be 'true' or 'false'."
       return 1
     fi
     __UAC_CONF_ENABLE_FIND_MTIME="${__lc_value}"    
@@ -103,7 +103,7 @@ _load_config_file()
   if echo "${__lc_config_file_content}" | grep -q "enable_find_atime:"; then
     __lc_value=`echo "${__lc_config_file_content}" | sed -n -e 's|enable_find_atime\: *\(.*\)|\1|p'`
     if [ "${__lc_value}" != true ] && [ "${__lc_value}" != false ]; then
-      _error_msg "config file: 'enable_find_atime' must be 'true' or 'false'."
+      _error_msg "Configuration option 'enable_find_atime' must be 'true' or 'false'."
       return 1
     fi
     __UAC_CONF_ENABLE_FIND_ATIME="${__lc_value}"    
@@ -113,7 +113,7 @@ _load_config_file()
   if echo "${__lc_config_file_content}" | grep -q "enable_find_ctime:"; then
     __lc_value=`echo "${__lc_config_file_content}" | sed -n -e 's|enable_find_ctime\: *\(.*\)|\1|p'`
     if [ "${__lc_value}" != true ] && [ "${__lc_value}" != false ]; then
-      _error_msg "config file: 'enable_find_ctime' must be 'true' or 'false'."
+      _error_msg "Configuration option 'enable_find_ctime' must be 'true' or 'false'."
       return 1
     fi
     __UAC_CONF_ENABLE_FIND_CTIME="${__lc_value}"    

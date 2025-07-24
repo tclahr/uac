@@ -10,7 +10,7 @@ _exit_fatal()
 {
   __ef_message="${1:-}"
   if [ -n "${__ef_message}" ]; then
-    printf "uac: %b" "${__ef_message}\n" >&2
+    printf "%b" "${__ef_message}\n" >&2
   fi
   exit 1
 }
