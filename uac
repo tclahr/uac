@@ -15,7 +15,7 @@ LC_ALL=C
 export LC_ALL
 
 # UAC version information
-__UAC_VERSION="DEVELOPMENT VERSION"
+__UAC_VERSION="3.2.0-rc2"
 
 # get UAC working dir
 __UAC_DIR=`pwd`
@@ -267,6 +267,10 @@ if [ -n "${__UAC_AWS_S3_PRESIGNED_URL}" ]; then
   if [ "${__UAC_OUTPUT_FORMAT}" = "none" ]; then
     _exit_fatal "AWS S3 transfer aborted: Output format is set to 'none'."
   fi
+  __UAC_AWS_S3_PRESIGNED_URL=`echo "${__UAC_AWS_S3_PRESIGNED_URL}" \
+    | sed -e "s|%hostname%|${__UAC_HOSTNAME}|g" \
+          -e "s|%os%|${__UAC_OPERATING_SYSTEM}|g" \
+          -e "s|%timestamp%|${__ua_current_date_time}|g"`
   printf "Validating connectivity to the AWS S3 presigned URL...\n"
   _aws_s3_presigned_url_transfer \
     "" \
@@ -279,6 +283,10 @@ if [ -n "${__UAC_AZURE_STORAGE_SAS_URL}" ]; then
   if [ "${__UAC_OUTPUT_FORMAT}" = "none" ]; then
     _exit_fatal "Azure Storage SAS URL transfer aborted: Output format is set to 'none'."
   fi
+  __UAC_AZURE_STORAGE_SAS_URL=`echo "${__UAC_AZURE_STORAGE_SAS_URL}" \
+    | sed -e "s|%hostname%|${__UAC_HOSTNAME}|g" \
+          -e "s|%os%|${__UAC_OPERATING_SYSTEM}|g" \
+          -e "s|%timestamp%|${__ua_current_date_time}|g"`
   printf "Validating connectivity to the Azure Storage SAS URL...\n"
   _azure_storage_sas_url_transfer \
     "" \
@@ -298,7 +306,7 @@ else
   __UAC_TEMP_DATA_DIR="${__UAC_DESTINATION_DIR}/uac-data.tmp"
 fi
 
-_verbose_msg "Creating the uac-data.tmp directory..."
+_verbose_msg "Creating uac-data.tmp directory..."
 _init_temp_data_dir || _exit_fatal
 
 # clean up and exit if SIGINT (ctrl-c) is sent
@@ -570,7 +578,7 @@ else
   esac
   cd "${__UAC_DIR}" || _exit_fatal "cd: ${__UAC_DIR}: No such file or directory"
   if [ -f "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}.${__UAC_OUTPUT_EXTENSION}" ]; then
-    printf "Output file successfully created: '%s'\n" "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}.${__UAC_OUTPUT_EXTENSION}"
+    printf "Output file created: '%s'\n" "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}.${__UAC_OUTPUT_EXTENSION}"
     _remove_temp_data_dir
   else
     _error_msg "Failed to create output file: '${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}.${__UAC_OUTPUT_EXTENSION}'"
@@ -742,6 +750,10 @@ if [ -n "${__UAC_AWS_S3_PRESIGNED_URL}" ]; then
     _error_msg "Failed to transfer output file to the S3 server."
   fi
   if [ -n "${__UAC_AWS_S3_PRESIGNED_URL_LOG_FILE}" ]; then
+    __UAC_AWS_S3_PRESIGNED_URL_LOG_FILE=`echo "${__UAC_AWS_S3_PRESIGNED_URL_LOG_FILE}" \
+      | sed -e "s|%hostname%|${__UAC_HOSTNAME}|g" \
+            -e "s|%os%|${__UAC_OPERATING_SYSTEM}|g" \
+            -e "s|%timestamp%|${__ua_current_date_time}|g"`
     printf "Transferring '%s' to Amazon S3 presigned URL...\n" "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}.log"
     if _aws_s3_presigned_url_transfer \
         "${__UAC_OUTPUT_BASE_NAME}.log" \
@@ -769,6 +781,10 @@ if [ -n "${__UAC_AZURE_STORAGE_SAS_URL}" ]; then
     _error_msg "Failed to transfer output file to Azure Storage SAS URL."
   fi
   if [ -n "${__UAC_AZURE_STORAGE_SAS_URL_LOG_FILE}" ]; then
+    __UAC_AZURE_STORAGE_SAS_URL_LOG_FILE=`echo "${__UAC_AZURE_STORAGE_SAS_URL_LOG_FILE}" \
+      | sed -e "s|%hostname%|${__UAC_HOSTNAME}|g" \
+            -e "s|%os%|${__UAC_OPERATING_SYSTEM}|g" \
+            -e "s|%timestamp%|${__ua_current_date_time}|g"`
     printf "Transferring '%s' to Azure Storage SAS URL...\n" "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}.log"
     if _azure_storage_sas_url_transfer \
         "${__UAC_OUTPUT_BASE_NAME}.log" \
