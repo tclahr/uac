@@ -267,6 +267,10 @@ if [ -n "${__UAC_AWS_S3_PRESIGNED_URL}" ]; then
   if [ "${__UAC_OUTPUT_FORMAT}" = "none" ]; then
     _exit_fatal "AWS S3 transfer aborted: Output format is set to 'none'."
   fi
+  __UAC_AWS_S3_PRESIGNED_URL=`echo "${__UAC_AWS_S3_PRESIGNED_URL}" \
+    | sed -e "s|%hostname%|${__UAC_HOSTNAME}|g" \
+          -e "s|%os%|${__UAC_OPERATING_SYSTEM}|g" \
+          -e "s|%timestamp%|${__ua_current_date_time}|g"`
   printf "Validating connectivity to the AWS S3 presigned URL...\n"
   _aws_s3_presigned_url_transfer \
     "" \
@@ -279,6 +283,10 @@ if [ -n "${__UAC_AZURE_STORAGE_SAS_URL}" ]; then
   if [ "${__UAC_OUTPUT_FORMAT}" = "none" ]; then
     _exit_fatal "Azure Storage SAS URL transfer aborted: Output format is set to 'none'."
   fi
+  __UAC_AZURE_STORAGE_SAS_URL=`echo "${__UAC_AZURE_STORAGE_SAS_URL}" \
+    | sed -e "s|%hostname%|${__UAC_HOSTNAME}|g" \
+          -e "s|%os%|${__UAC_OPERATING_SYSTEM}|g" \
+          -e "s|%timestamp%|${__ua_current_date_time}|g"`
   printf "Validating connectivity to the Azure Storage SAS URL...\n"
   _azure_storage_sas_url_transfer \
     "" \
@@ -742,6 +750,10 @@ if [ -n "${__UAC_AWS_S3_PRESIGNED_URL}" ]; then
     _error_msg "Failed to transfer output file to the S3 server."
   fi
   if [ -n "${__UAC_AWS_S3_PRESIGNED_URL_LOG_FILE}" ]; then
+    __UAC_AWS_S3_PRESIGNED_URL_LOG_FILE=`echo "${__UAC_AWS_S3_PRESIGNED_URL_LOG_FILE}" \
+      | sed -e "s|%hostname%|${__UAC_HOSTNAME}|g" \
+            -e "s|%os%|${__UAC_OPERATING_SYSTEM}|g" \
+            -e "s|%timestamp%|${__ua_current_date_time}|g"`
     printf "Transferring '%s' to Amazon S3 presigned URL...\n" "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}.log"
     if _aws_s3_presigned_url_transfer \
         "${__UAC_OUTPUT_BASE_NAME}.log" \
@@ -769,6 +781,10 @@ if [ -n "${__UAC_AZURE_STORAGE_SAS_URL}" ]; then
     _error_msg "Failed to transfer output file to Azure Storage SAS URL."
   fi
   if [ -n "${__UAC_AZURE_STORAGE_SAS_URL_LOG_FILE}" ]; then
+    __UAC_AZURE_STORAGE_SAS_URL_LOG_FILE=`echo "${__UAC_AZURE_STORAGE_SAS_URL_LOG_FILE}" \
+      | sed -e "s|%hostname%|${__UAC_HOSTNAME}|g" \
+            -e "s|%os%|${__UAC_OPERATING_SYSTEM}|g" \
+            -e "s|%timestamp%|${__ua_current_date_time}|g"`
     printf "Transferring '%s' to Azure Storage SAS URL...\n" "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}.log"
     if _azure_storage_sas_url_transfer \
         "${__UAC_OUTPUT_BASE_NAME}.log" \

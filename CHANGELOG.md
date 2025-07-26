@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## 3.2.0-rc2 (2023-07-24)
+## 3.2.0-rc2 (2023-07-26)
 
 ### Highlights
 
@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 - You can create files with the operating system name in the `config` directory to **override** the default configuration for a specific operating system. Please check the [documentation](https://tclahr.github.io/uac-docs/config_file/) for more information.
 - The shell script [timeout.sh](https://github.com/tclahr/timeout.sh) was added to the `bin` directory. It mimics the traditional Linux `timeout` command and can be used to limit the execution time of a command on all operating systems.
 - `--validate-artifact` was updated to verify if `f` is included in the `file_type` when `max_file_type` or `min_file_type` is specified.
+- Added runtime variable support for `--aws-s3-presigned-url`, `--aws-s3-presigned-url-log-file`, `--azure-storage-sas-url` and `--azure-storage-sas-url-log-file` ([#392](https://github.com/tclahr/uac/issues/392)). Please check the [documentation](https://tclahr.github.io/uac-docs/runtime_variables/) for more information.
 
 ### Artifacts
 
