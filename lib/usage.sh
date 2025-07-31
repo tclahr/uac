@@ -119,12 +119,16 @@ Remote Transfer Arguments:
                     The session/bearer token for the bucket/cloud object storage.
       --aws-s3-presigned-url URL
                     Transfer the output file to AWS S3 using a pre-signed URL.
+                    Use single quotes to enclose the URL.
       --aws-s3-presigned-url-log-file URL
                     Transfer the log file to AWS S3 using a pre-signed URL.
+                    Use single quotes to enclose the URL.
       --azure-storage-sas-url URL
                     Transfer the output file to Azure Storage using a SAS URL.
+                    Use single quotes to enclose the URL.
       --azure-storage-sas-url-log-file URL
                     Transfer the log file to Azure Storage using a SAS URL.
+                    Use single quotes to enclose the URL.
       --delete-local-on-successful-transfer
                     Delete local output and log files on successful transfer.
 
