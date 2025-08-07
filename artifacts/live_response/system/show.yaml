@@ -1,0 +1,17 @@
+version: 1.0
+condition: command_exists "vyatta-op-cmd-wrapper"
+output_directory: /live_response/system
+artifacts:
+  -
+    description: Show Vyatta consolidated tech-support report.
+    supported_os: [linux]
+    collector: command
+    command: vyatta-op-cmd-wrapper show tech-support
+    output_file: show_tech-support.txt
+  -
+    description: Show VyOS consolidated tech-support report.
+    supported_os: [linux]
+    collector: command
+    command: vyatta-op-cmd-wrapper show tech-support report
+    output_file: show_tech-support_report.txt
+  
