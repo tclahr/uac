@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## 3.2.0-rc2 (2023-07-26)
+## DEVELOPMENT VERSION
 
 ### Highlights
 
@@ -42,6 +42,7 @@ All notable changes to this project will be documented in this file.
 - `files/system/udev.yaml`: `file_type: [f]` removed. ([#355](https://github.com/tclahr/uac/issues/355))
 - `files/system/user_accounts.yaml`: Added collection about the users that have logged in to the macOS computer, as recovered from the settings (.plist) files [macos].
 - `files/system/var_tmp.yaml`: `file_type: [f, l]` was added to also collect symlinks as `max_file_type` was specified. ([#355](https://github.com/tclahr/uac/issues/355))
+- `files/system/vyatta.yaml`: Added collection of Vyatta and VyOS configuration files [linux].
 - `live_response/hardware/lshw.yaml`: Added timeout to the `lshw` command. ([#380](https://github.com/tclahr/uac/issues/380)) (by [qinidema](https://github.com/qinidema))
 - `live_response/modifiers/disable_ftrace.yaml`: Added modifier to disable ftrace to prevent syscall hooking by LKM rootkits [linux]. (by [mnrkbys](https://github.com/mnrkbys))
 - `live_response/packages/slackpkg.yaml`: Moved to `packages/slackpkg.yaml`.
@@ -54,6 +55,7 @@ All notable changes to this project will be documented in this file.
 - `live_response/system/loginctl.yaml`: Added terse runtime status information collection for each user in the system [linux]. (by [clausing](https://github.com/clausing))
 - `live_response/system/mdatp.yaml`: Update supported OS for mdatp artifacts to include macOS [macos]. (by [JakePeralta7](https://github.com/JakePeralta7))
 - `live_response/system/sgid.yaml`: Moved to `system/sgid.yaml`.
+- `live_response/system/show.yaml`: Added collection of consolidated tech-support report from Vyatta and VyOS systems [linux].
 - `live_response/system/suid.yaml`: Moved to `system/suid.yaml`.
 - `live_response/system/user_name_known_files.yaml`: Moved to `system/user_name_known_files.yaml`.
 - `live_response/system/utmpdump.yaml`: Added collection of utmp and wtmp (including log rotated) files using `utmpdump` command [linux]. (by [mnrkbys](https://github.com/mnrkbys))

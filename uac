@@ -43,6 +43,7 @@ fi
 __ua_path="/usr/xpg4/bin:/usr/xpg6/bin:/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin"
 __ua_path="${__ua_path}:/usr/local/sbin:/usr/ucb:/usr/ccs/bin:/opt/bin:/opt/sbin"
 __ua_path="${__ua_path}:/opt/local/bin:/snap/bin:/netscaler:/opt/homebrew/bin"
+__ua_path="${__ua_path}:/opt/vyatta/bin"
 
 PATH="${__ua_path}:${PATH}"
 export PATH

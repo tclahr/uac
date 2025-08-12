@@ -1,0 +1,8 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect Vyatta/VyOS system configuration files.
+    supported_os: [linux]
+    collector: file
+    path: /opt/vyatta/etc/config
+    ignore_date_range: true
