@@ -1,4 +1,4 @@
-version: 1.0
+version: 1.1
 # DNF can be used to run persistence.
 # ref: https://www.elastic.co/security-labs/sequel-on-persistence-mechanisms
 artifacts:
@@ -13,4 +13,5 @@ artifacts:
     collector: file
     path: /
     name_pattern: ["dnf-plugins"]
+    exclude_path_pattern: ["/dev", "/proc", "/run", "/sys"]
     file_type: [d]

@@ -53,7 +53,7 @@ Output Arguments:
 
 Collection Arguments:
   -c, --config      FILE
-                    Load the config from a specific file.
+                    Load config from a specific file.
   -m, --mount-point MOUNT_POINT
                     Specify the mount point (default: /).
   -s, --operating-system OPERATING_SYSTEM
@@ -101,8 +101,9 @@ Remote Transfer Arguments:
       --sftp-identity-file FILE
                     File from which the identity (private key) for public key
                     authentication is read.
-      --sftp-ssh-options
-                    Comma separated ssh options.
+      --sftp-ssh-option
+                    Allow setting SSH options as key=value pairs.
+                    Can be used multiple times to set multiple options.
       --s3-provider
                     Transfer the output and log files to S3 service.
                     Options: amazon, google, ibm
@@ -118,12 +119,16 @@ Remote Transfer Arguments:
                     The session/bearer token for the bucket/cloud object storage.
       --aws-s3-presigned-url URL
                     Transfer the output file to AWS S3 using a pre-signed URL.
+                    Use single quotes to enclose the URL.
       --aws-s3-presigned-url-log-file URL
                     Transfer the log file to AWS S3 using a pre-signed URL.
+                    Use single quotes to enclose the URL.
       --azure-storage-sas-url URL
                     Transfer the output file to Azure Storage using a SAS URL.
+                    Use single quotes to enclose the URL.
       --azure-storage-sas-url-log-file URL
                     Transfer the log file to Azure Storage using a SAS URL.
+                    Use single quotes to enclose the URL.
       --delete-local-on-successful-transfer
                     Delete local output and log files on successful transfer.
 

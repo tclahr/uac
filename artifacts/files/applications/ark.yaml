@@ -1,4 +1,4 @@
-version: 1.0
+version: 1.2
 artifacts:
   -
     description: Collect metadata about recently opened archive files in Ark, the KDE archive manager.
@@ -6,23 +6,11 @@ artifacts:
     collector: file
     path: /%user_home%/.local/share
     name_pattern: ["ark_recentfiles"]
-    file_type: [f]
     exclude_nologin_users: true
   -
-    description: Collect metadata about recently opened archive files in Ark, the KDE archive manager (Flatpak version).
+    description: Collect metadata about recently opened archive files in Ark, the KDE archive manager (Flatpak and Snap versions).
     supported_os: [linux]
     collector: file
-    path: /%user_home%/.var/app
+    path: /%user_home%/.var/app /%user_home%/snap
     name_pattern: ["ark_recentfiles"]
-    file_type: [f]
     exclude_nologin_users: true
-  -
-    description: Collect metadata about recently opened archive files in Ark, the KDE archive manager (Snap version).
-    supported_os: [linux]
-    collector: file
-    path: /%user_home%/snap
-    name_pattern: ["ark_recentfiles"]
-    file_type: [f]
-    exclude_nologin_users: true
-  
-  

@@ -1,4 +1,4 @@
-version: 2.0
+version: 2.1
 artifacts:
   -
     description: Collect InstallHistory.plist file.
@@ -10,26 +10,12 @@ artifacts:
     description: Collect Info.plist from installed applications.
     supported_os: [macos]
     collector: file
-    path: /Applications
+    path: /Applications /Library /opt
     path_pattern: ["*/Contents/Info.plist"]
   -
     description: Collect Info.plist from installed applications.
     supported_os: [macos]
     collector: file
-    path: /Library
-    path_pattern: ["*/Contents/Info.plist"]
-  -
-    description: Collect Info.plist from installed applications.
-    supported_os: [macos]
-    collector: file
-    path: /%user_home%/Applications
+    path: /%user_home%/Applications /%user_home%/Library
     path_pattern: ["*/Contents/Info.plist"]
     exclude_nologin_users: true
-  -
-    description: Collect Info.plist from installed applications.
-    supported_os: [macos]
-    collector: file
-    path: /%user_home%/Library
-    path_pattern: ["*/Contents/Info.plist"]
-    exclude_nologin_users: true
-  

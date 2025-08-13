@@ -4,25 +4,25 @@ output_directory: /live_response/system
 artifacts:
   -
     description: Display sensor health.
-    supported_os: [linux]
+    supported_os: [linux, macos]
     collector: command
     command: mdatp health
     output_file: mdatp_health.txt
   -
     description: Display all antivirus exclusions.
-    supported_os: [linux]
+    supported_os: [linux, macos]
     collector: command
     command: mdatp exclusion list
     output_file: mdatp_exclusion_list.txt
   -
     description: Display all quarantined files.
-    supported_os: [linux]
+    supported_os: [linux, macos]
     collector: command
     command: mdatp threat quarantine list
     output_file: mdatp_threat_quarantine_list.txt
   -
     description: Display the full protection history.
-    supported_os: [linux]
+    supported_os: [linux, macos]
     collector: command
     command: mdatp threat list
     output_file: mdatp_threat_list.txt

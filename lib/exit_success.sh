@@ -10,7 +10,7 @@ _exit_success()
 {
   __es_message="${1:-}"
   if [ -n "${__es_message}" ]; then 
-    printf "uac: %b" "${__es_message}\n"
+    printf "%b" "${__es_message}\n"
   fi
   exit 0
 }

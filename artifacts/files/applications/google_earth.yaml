@@ -1,17 +1,10 @@
-version: 1.0
+version: 1.1
 artifacts:
   -
-    description: Collect Google Earth KML files.
+    description: Collect Google Earth KML files (including Flatpak version).
     supported_os: [linux]
     collector: file
-    path: /%user_home%/.googleearth
-    name_pattern: ["*.kml"]
-    exclude_nologin_users: true
-  -
-    description: Collect Google Earth KML files (Flatpak version).
-    supported_os: [linux]
-    collector: file
-    path: /%user_home%/.var/app
+    path: /%user_home%/.googleearth /%user_home%/snap
     name_pattern: ["*.kml"]
     exclude_nologin_users: true
   -

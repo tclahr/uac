@@ -1,4 +1,4 @@
-version: 4.0
+version: 4.1
 artifacts:
   -
     description: Collect Startup Items configuration files.
@@ -10,13 +10,7 @@ artifacts:
     description: Collect Agents configuration files.
     supported_os: [macos]
     collector: file
-    path: /Library/LaunchAgents
-    ignore_date_range: true
-  -
-    description: Collect Agents configuration files.
-    supported_os: [macos]
-    collector: file
-    path: /System/Library/LaunchAgents
+    path: /Library/LaunchAgents /System/Library/LaunchAgents
     ignore_date_range: true
   -
     description: Collect Agents configuration files.
@@ -28,13 +22,7 @@ artifacts:
     description: Collect Daemons configuration files.
     supported_os: [macos]
     collector: file
-    path: /Library/LaunchDaemons
-    ignore_date_range: true
-  -
-    description: Collect Daemons configuration files.
-    supported_os: [macos]
-    collector: file
-    path: /System/Library/LaunchDaemons
+    path: /Library/LaunchDaemons /System/Library/LaunchDaemons
     ignore_date_range: true
   -
     description: Collect login items installed using the Service Management framework.

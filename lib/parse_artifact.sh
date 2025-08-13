@@ -66,6 +66,7 @@ _parse_artifact()
     printf "%s" "${__re_value}" \
       | sed -e "s|%uac_directory%|${__UAC_DIR}|g" \
             -e "s|%mount_point%|${__UAC_MOUNT_POINT}|g" \
+            -e "s:%non_local_mount_points%:${__UAC_EXCLUDE_MOUNT_POINTS}:g" \
             -e "s|%temp_directory%|${__UAC_TEMP_DATA_DIR}/tmp|g" 2>/dev/null
   }
 
@@ -97,7 +98,7 @@ _parse_artifact()
               if echo "${__pa_condition}" | grep -q -E "^!"; then
                 __pa_condition=`echo "${__pa_condition}" | sed -e 's|^! *||' 2>/dev/null`
                 if _run_command "${__pa_condition}" true >/dev/null; then
-                  _log_msg DBG "Global condition '${__pa_condition}' not satisfied. Skipping..."
+                  _log_msg INF "Global condition '${__pa_condition}' not satisfied. Skipping..."
                   return 1
                 else
                   _log_msg DBG "Global condition '${__pa_condition}' satisfied"
@@ -106,7 +107,7 @@ _parse_artifact()
                 if _run_command "${__pa_condition}" true >/dev/null; then
                   _log_msg DBG "Global condition '${__pa_condition}' satisfied"
                 else
-                  _log_msg DBG "Global condition '${__pa_condition}' not satisfied. Skipping..."
+                  _log_msg INF "Global condition '${__pa_condition}' not satisfied. Skipping..."
                   return 1
                 fi
               fi
@@ -245,7 +246,7 @@ _parse_artifact()
               if echo "${__pa_condition}" | grep -q -E "^!"; then
                 __pa_condition=`echo "${__pa_condition}" | sed -e 's|^! *||' 2>/dev/null`
                 if _run_command "${__pa_condition}" true >/dev/null; then
-                  _log_msg DBG "Condition '${__pa_condition}' not satisfied. Skipping..."
+                  _log_msg INF "Condition '${__pa_condition}' not satisfied. Skipping..."
                   _cleanup_local_vars
                   continue
                 else
@@ -255,7 +256,7 @@ _parse_artifact()
                 if _run_command "${__pa_condition}" true >/dev/null; then
                   _log_msg DBG "Condition '${__pa_condition}' satisfied"
                 else
-                  _log_msg DBG "Condition '${__pa_condition}' not satisfied. Skipping..."
+                  _log_msg INF "Condition '${__pa_condition}' not satisfied. Skipping..."
                   _cleanup_local_vars
                   continue
                 fi
@@ -282,8 +283,11 @@ _parse_artifact()
               echo "${__pa_user_home_list}" \
                 | while read __pa_line && [ -n "${__pa_line}" ]; do
                     __pa_user=`echo "${__pa_line}" | cut -d ":" -f 1`
+
                     __pa_home=`echo "${__pa_line}" | cut -d ":" -f 2`
+
                     __pa_no_slash_home=`echo "${__pa_line}" | cut -d ":" -f 2 | sed -e 's|^/||' 2>/dev/null`
+                    
                     _log_msg INF "Collecting data for user ${__pa_user}"
 
                     # replace %user% and %user_home% in path

@@ -1,23 +1,10 @@
-version: 1.0
+version: 1.1
 artifacts:
   -
     description: Collect VLC configuration file which contains the list of recently opened files.
     supported_os: [linux]
     collector: file
-    path: /%user_home%/.config/vlc/vlc-qt-interface.conf
-    exclude_nologin_users: true
-  -
-    description: Collect VLC configuration file which contains the list of recently opened files (Flatpak version).
-    supported_os: [linux]
-    collector: file
-    path: /%user_home%/.var/app/org.videolan.VLC
-    name_pattern: ["vlc-qt-interface.conf"]
-    exclude_nologin_users: true
-  -
-    description: Collect VLC configuration file which contains the list of recently opened files (Snap version).
-    supported_os: [linux]
-    collector: file
-    path: /%user_home%/snap/vlc
+    path: /%user_home%/.config/vlc /%user_home%/.var/app/org.videolan.VLC /%user_home%/snap/vlc
     name_pattern: ["vlc-qt-interface.conf"]
     exclude_nologin_users: true
 

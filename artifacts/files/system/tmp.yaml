@@ -1,16 +1,16 @@
-version: 4.0
+version: 4.1
 artifacts:
   -
     description: Collect system temporary files.
     supported_os: [aix, esxi, freebsd, linux, netbsd, netscaler, openbsd, solaris]
     collector: file
     path: /tmp
-    file_type: [f]
+    file_type: [f, l]
     max_file_size: 10485760 # 10MB
   -
     description: Collect system temporary files.
     supported_os: [macos]
     collector: file
     path: /private/tmp
-    file_type: [f]
+    file_type: [f, l]
     max_file_size: 10485760 # 10MB

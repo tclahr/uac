@@ -15,7 +15,7 @@ LC_ALL=C
 export LC_ALL
 
 # UAC version information
-__UAC_VERSION="3.1.0"
+__UAC_VERSION="3.2.0"
 
 # get UAC working dir
 __UAC_DIR=`pwd`
@@ -23,8 +23,8 @@ __UAC_DIR=`pwd`
 # check whether UAC is being executed from untarred directory
 if [ ! -d "${__UAC_DIR}/artifacts" ] || [ ! -d "${__UAC_DIR}/bin" ] \
   || [ ! -d "${__UAC_DIR}/config" ] || [ ! -d "${__UAC_DIR}/lib" ] \
-  || [ ! -d "${__UAC_DIR}/profiles" ] || [ ! -d "${__UAC_DIR}/tools" ]; then
-  printf "%s\n" "uac: required files not found. Make sure you are executing uac from untarred directory." >&2
+  || [ ! -d "${__UAC_DIR}/profiles" ]; then
+  printf "%s\n" "Required files not found. Please ensure you are running uac from the extracted directory." >&2
   exit 1
 fi
 
@@ -43,6 +43,7 @@ fi
 __ua_path="/usr/xpg4/bin:/usr/xpg6/bin:/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin"
 __ua_path="${__ua_path}:/usr/local/sbin:/usr/ucb:/usr/ccs/bin:/opt/bin:/opt/sbin"
 __ua_path="${__ua_path}:/opt/local/bin:/snap/bin:/netscaler:/opt/homebrew/bin"
+__ua_path="${__ua_path}:/opt/vyatta/bin"
 
 PATH="${__ua_path}:${PATH}"
 export PATH
@@ -62,6 +63,7 @@ __UAC_OUTPUT_EXTENSION=""
 __UAC_OUTPUT_PASSWORD=""
 __UAC_HASH_COLLECTED=false
 __UAC_CONFIG_FILE="${__UAC_DIR}/config/uac.conf"
+__UAC_CUSTOM_CONFIG_FILE=""
 __UAC_MOUNT_POINT="/"
 __UAC_OPERATING_SYSTEM=""
 __UAC_ENABLE_MODIFIERS=false
@@ -116,7 +118,7 @@ fi
 
 # check whether destination directory exists
 if [ ! -d "${__UAC_DESTINATION_DIR}" ]; then
-  _exit_fatal "no such file or directory '${__UAC_DESTINATION_DIR}'"
+  _exit_fatal "Destination directory '${__UAC_DESTINATION_DIR}' does not exist."
 fi
 # get absolute destination directory path
 __UAC_DESTINATION_DIR=`_get_absolute_path "${__UAC_DESTINATION_DIR}" 2>/dev/null`
@@ -131,12 +133,12 @@ if _is_in_list "${__UAC_OPERATING_SYSTEM}" "aix|esxi|freebsd|linux|macos|netbsd|
   # get system arch
   __UAC_SYSTEM_ARCH=`_get_system_arch "${__UAC_OPERATING_SYSTEM}"`
 else
-  _exit_fatal "invalid operating system '${__UAC_OPERATING_SYSTEM}'"
+  _exit_fatal "Unsupported operating system: '${__UAC_OPERATING_SYSTEM}'."
 fi
 
 # check if mount point exists
 if [ ! -d "${__UAC_MOUNT_POINT}" ]; then
-  _exit_fatal "no such file or directory '${__UAC_MOUNT_POINT}'"
+  _exit_fatal "Mount point '${__UAC_MOUNT_POINT}' does not exist."
 fi
 # get absolute mount point path
 __UAC_MOUNT_POINT=`_get_absolute_path "${__UAC_MOUNT_POINT}" 2>/dev/null`
@@ -151,23 +153,31 @@ fi
 if _is_root || ${__UAC_RUN_AS_NON_ROOT}; then
   true
 else
-  _exit_fatal "this script requires root privileges to run properly. \
-Use '-u' option to disable root user check."
+  _exit_fatal "This script must be run as root. \
+Use the '-u' option to bypass this check if needed."
 fi
 
 _verbose_msg "Validating artifact list..."
 __ua_artifact_list=`_validate_artifact_list "${__UAC_ARTIFACT_LIST}"` || _exit_fatal
 
 # load config file
-_verbose_msg "Loading config file..."
+_verbose_msg "Loading uac.conf..."
 _load_config_file "${__UAC_CONFIG_FILE}" || _exit_fatal
+if [ -f "${__UAC_DIR}/config/${__UAC_OPERATING_SYSTEM}.conf" ]; then
+  _verbose_msg "Loading ${__UAC_OPERATING_SYSTEM}.conf..."
+  _load_config_file "${__UAC_DIR}/config/${__UAC_OPERATING_SYSTEM}.conf" || _exit_fatal
+fi
+if [ -n "${__UAC_CUSTOM_CONFIG_FILE}" ]; then
+  if [ ! -f "${__UAC_CUSTOM_CONFIG_FILE}" ]; then
+    _exit_fatal "Configuration file '${__UAC_CUSTOM_CONFIG_FILE}' not found."
+  fi
+  _verbose_msg "Loading ${__UAC_CUSTOM_CONFIG_FILE}..."
+  _load_config_file "${__UAC_CUSTOM_CONFIG_FILE}" || _exit_fatal
+fi
 
-# add proper local 'bin' and 'tools' directory to path
+# add proper local 'bin' directory to path
 __ua_bin_path=`_get_bin_path "${__UAC_OPERATING_SYSTEM}" "${__UAC_SYSTEM_ARCH}"`
 PATH="${__ua_bin_path}:${PATH}"
-__ua_tools_path=`_get_tools_path "${__UAC_OPERATING_SYSTEM}" "${__UAC_SYSTEM_ARCH}"`
-PATH="${__ua_tools_path}:${PATH}"
-PATH="${__UAC_DIR}/tools/date_to_epoch_pl:${__UAC_DIR}/tools/find_pl:${__UAC_DIR}/tools/stat_pl:${PATH}"
 export PATH
 
 # set tar as the default output format if none has been set via command line
@@ -189,18 +199,18 @@ _output_exists "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}${__UAC_OUTPUT
 
 # check whether start and end dates are valid
 if [ -n "${__UAC_START_DATE}" ]; then
-  __UAC_START_DATE_EPOCH=`_get_epoch_date "${__UAC_START_DATE}"` || _exit_fatal "invalid date '${__UAC_START_DATE}'."
+  __UAC_START_DATE_EPOCH=`_get_epoch_date "${__UAC_START_DATE}"` || _exit_fatal "Invalid date '${__UAC_START_DATE}'."
   __UAC_START_DATE_DAYS=`_get_days_since_date_until_now "${__UAC_START_DATE}"` || _exit_fatal
 fi
 if [ -n "${__UAC_END_DATE}" ]; then
-  __UAC_END_DATE_EPOCH=`_get_epoch_date "${__UAC_END_DATE}"` || _exit_fatal "invalid date '${__UAC_END_DATE}'."
+  __UAC_END_DATE_EPOCH=`_get_epoch_date "${__UAC_END_DATE}"` || _exit_fatal "Invalid date '${__UAC_END_DATE}'."
   __UAC_END_DATE_DAYS=`_get_days_since_date_until_now "${__UAC_END_DATE}"` || _exit_fatal
-  [ "${__UAC_START_DATE_EPOCH}" -gt "${__UAC_END_DATE_EPOCH}" ] && _exit_fatal "start date cannot be greater than end date."
+  [ "${__UAC_START_DATE_EPOCH}" -gt "${__UAC_END_DATE_EPOCH}" ] && _exit_fatal "Start date cannot be greater than end date."
 fi
 
 # test the connectivity to remote sftp server
 if [ -n "${__UAC_SFTP}" ]; then
-  command_exists "sftp" || _exit_fatal "cannot transfer to sftp server as sftp tool was not found"
+  command_exists "sftp" || _exit_fatal "Cannot transfer to SFTP server: 'sftp' tool not found."
   printf "Validating connectivity to SFTP server...\n"
   _sftp_transfer \
     "" \
@@ -208,36 +218,36 @@ if [ -n "${__UAC_SFTP}" ]; then
     "${__UAC_SFTP_PORT}" \
     "${__UAC_SFTP_IDENTITY_FILE}" \
     "${__UAC_SFTP_SSH_OPTIONS}" \
-    || _exit_fatal "error connecting to SFTP server"
+    || _exit_fatal "Failed to connect to the SFTP server."
 fi
 
 # test the connectivity to S3
 if [ -n "${__UAC_S3_PROVIDER}" ]; then
   if [ -z "${__UAC_S3_BUCKET}" ]; then
-    _exit_fatal "bucket name required"
+    _exit_fatal "Bucket name is required for S3 transfer."
   fi
   if [ "${__UAC_OUTPUT_FORMAT}" = "none" ]; then
-    _exit_fatal "cannot transfer to S3 as output format is none"
+    _exit_fatal "S3 transfer aborted: Output format is set to 'none'."
   fi
   if command_exists "curl" || command_exists "wget"; then
     printf "Validating connectivity to S3 server...\n"
     case "${__UAC_S3_PROVIDER}" in
       "amazon")
-        command_exists "openssl" || _exit_fatal "cannot transfer to S3 as openssl tool was not found"
+        command_exists "openssl" || _exit_fatal "Cannot transfer to S3 server: 'openssl' tool not found."
         _s3_transfer_amazon \
           "" \
           "${__UAC_S3_REGION}" \
           "${__UAC_S3_BUCKET}" \
           "${__UAC_S3_ACCESS_KEY}" \
           "${__UAC_S3_SECRET_KEY}" \
-          || _exit_fatal "error connecting to S3 server"
+          || _exit_fatal "Failed to connect to the S3 server."
         ;;
       "google")
         _s3_transfer_google \
           "" \
           "${__UAC_S3_BUCKET}" \
           "${__UAC_S3_TOKEN}" \
-          || _exit_fatal "error connecting to S3 server"
+          || _exit_fatal "Failed to connect to the S3 server."
         ;;
       "ibm")
         _s3_transfer_ibm \
@@ -245,42 +255,50 @@ if [ -n "${__UAC_S3_PROVIDER}" ]; then
           "${__UAC_S3_REGION}" \
           "${__UAC_S3_BUCKET}" \
           "${__UAC_S3_TOKEN}" \
-          || _exit_fatal "error connecting to S3 server"
+          || _exit_fatal "Failed to connect to the S3 server."
         ;;
     esac
   else
-    _exit_fatal "cannot transfer to S3 as neither curl nor wget tools are available"
+    _exit_fatal "Cannot transfer to S3 server: neither 'curl' nor 'wget' is available."
   fi
 fi
 
 # test the connectivity to Amazon S3 presigned URL
 if [ -n "${__UAC_AWS_S3_PRESIGNED_URL}" ]; then
   if [ "${__UAC_OUTPUT_FORMAT}" = "none" ]; then
-    _exit_fatal "cannot transfer to Amazon S3 presigned URL as output format is none"
+    _exit_fatal "AWS S3 transfer aborted: Output format is set to 'none'."
   fi
-  printf "Validating connectivity to AWS S3 presigned URL...\n"
+  __UAC_AWS_S3_PRESIGNED_URL=`echo "${__UAC_AWS_S3_PRESIGNED_URL}" \
+    | sed -e "s|%hostname%|${__UAC_HOSTNAME}|g" \
+          -e "s|%os%|${__UAC_OPERATING_SYSTEM}|g" \
+          -e "s|%timestamp%|${__ua_current_date_time}|g"`
+  printf "Validating connectivity to the AWS S3 presigned URL...\n"
   _aws_s3_presigned_url_transfer \
     "" \
     "${__UAC_AWS_S3_PRESIGNED_URL}" \
-    || _exit_fatal "error connecting to aws S3 presigned URL"
+    || _exit_fatal "Failed to connect to the AWS S3 presigned URL."
 fi
 
 # test the connectivity to Azure Storage SAS URL
 if [ -n "${__UAC_AZURE_STORAGE_SAS_URL}" ]; then
   if [ "${__UAC_OUTPUT_FORMAT}" = "none" ]; then
-    _exit_fatal "cannot transfer to Azure Storage SAS URL as output format is none"
+    _exit_fatal "Azure Storage SAS URL transfer aborted: Output format is set to 'none'."
   fi
-  printf "Validating connectivity to Azure Storage SAS URL...\n"
+  __UAC_AZURE_STORAGE_SAS_URL=`echo "${__UAC_AZURE_STORAGE_SAS_URL}" \
+    | sed -e "s|%hostname%|${__UAC_HOSTNAME}|g" \
+          -e "s|%os%|${__UAC_OPERATING_SYSTEM}|g" \
+          -e "s|%timestamp%|${__ua_current_date_time}|g"`
+  printf "Validating connectivity to the Azure Storage SAS URL...\n"
   _azure_storage_sas_url_transfer \
     "" \
     "${__UAC_AZURE_STORAGE_SAS_URL}" \
-    || _exit_fatal "error connecting to Azure Storage SAS URL"
+    || _exit_fatal "Failed to connect to the Azure Storage SAS URL."
 fi
 
 # check whether temp-dir exists
 if [ -n "${__UAC_TEMP_DIR}" ]; then
   if [ ! -d "${__UAC_TEMP_DIR}" ]; then
-    _exit_fatal "no such file or directory '${__UAC_TEMP_DIR}'"
+    _exit_fatal "Temporary directory '${__UAC_TEMP_DIR}' does not exist."
   fi
   # get absolute temp-dir path
   __UAC_TEMP_DIR=`_get_absolute_path "${__UAC_TEMP_DIR}" 2>/dev/null`
@@ -289,7 +307,7 @@ else
   __UAC_TEMP_DATA_DIR="${__UAC_DESTINATION_DIR}/uac-data.tmp"
 fi
 
-_verbose_msg "Creating temp directory..."
+_verbose_msg "Creating uac-data.tmp directory..."
 _init_temp_data_dir || _exit_fatal
 
 # clean up and exit if SIGINT (ctrl-c) is sent
@@ -328,7 +346,7 @@ _log_msg INF "Temp Directory: ${__UAC_TEMP_DATA_DIR}"
 _log_msg INF "Output format: ${__UAC_OUTPUT_FORMAT}"
 _log_msg INF "Current PID: ${$}"
 _log_msg INF "PATH: ${PATH}"
-_log_msg INF "Loading uac.conf settings"
+_log_msg INF "Loading configuration file(s)"
 _log_msg INF "Exclude path pattern: ${__UAC_CONF_EXCLUDE_PATH_PATTERN}"
 _log_msg INF "Exclude name pattern: ${__UAC_CONF_EXCLUDE_NAME_PATTERN}"
 _log_msg INF "Exclude file system: ${__UAC_CONF_EXCLUDE_FILE_SYSTEM}"
@@ -386,7 +404,7 @@ if command_exists "gzip"; then
 else
   _log_msg INF "gzip command exists: false"
 fi
-if command_exists "zip"; then
+if command_exists "zip" && zip --version >/dev/null 2>/dev/null; then
   _log_msg INF "zip command exists: true"
 else
   _log_msg INF "zip command exists: false"
@@ -425,23 +443,28 @@ __ua_collection_progress=0
 __ua_collection_progress_total=`echo "${__ua_artifact_list}" | wc -l | awk '{print $1}'`
 _log_msg INF "${__ua_collection_progress_total} artifact(s) selected"
 
-printf "%s\n" "Artifacts collection started"
-_log_msg INF "Artifacts collection started"
-
 # store artifact list into a file as netscaler raises a segmentation faul in the following situation:
 # echo "${__ua_artifact_list}" | while read __ua_artifact; do .....; done
-echo "${__ua_artifact_list}" >"${__UAC_TEMP_DATA_DIR}/artifact_list.tmp"
+echo "${__ua_artifact_list}" | sed -e '/^$/d' >"${__UAC_TEMP_DATA_DIR}/artifact_list.tmp"
 
-# shellcheck disable=SC2162
-while read __ua_artifact || [ -n "${__ua_artifact}" ]; do
-  __ua_artifact_without_uac_dir=`echo "${__ua_artifact}" | sed -e "s|^${__UAC_DIR}/artifacts/||"`
-  # shellcheck disable=SC2003,SC2086
-  __ua_collection_progress=`expr ${__ua_collection_progress} + 1`
-  __ua_collection_progress_timestamp=`date "+%Y-%m-%d %H:%M:%S %z"`
-  printf "[%03d/%03d] %s %s\n" "${__ua_collection_progress}" "${__ua_collection_progress_total}" "${__ua_collection_progress_timestamp}" "${__ua_artifact_without_uac_dir}"
-  _log_msg INF "Parsing ${__ua_artifact_without_uac_dir}"
-  _parse_artifact "${__ua_artifact}"
-done <"${__UAC_TEMP_DATA_DIR}/artifact_list.tmp"
+if [ ! -s "${__UAC_TEMP_DATA_DIR}/artifact_list.tmp" ]; then
+  printf "%s\n" "No compatible artifacts found for the target operating system."
+  _log_msg INF "No compatible artifacts found for the target operating system."
+else
+  printf "%s\n" "Artifacts collection started..."
+  _log_msg INF "Artifacts collection started..."
+
+  # shellcheck disable=SC2162
+  while read __ua_artifact || [ -n "${__ua_artifact}" ]; do
+    __ua_artifact_without_uac_dir=`echo "${__ua_artifact}" | sed -e "s|^${__UAC_DIR}/artifacts/||"`
+    # shellcheck disable=SC2003,SC2086
+    __ua_collection_progress=`expr ${__ua_collection_progress} + 1`
+    __ua_collection_progress_timestamp=`date "+%Y-%m-%d %H:%M:%S %z"`
+    printf "[%03d/%03d] %s %s\n" "${__ua_collection_progress}" "${__ua_collection_progress_total}" "${__ua_collection_progress_timestamp}" "${__ua_artifact_without_uac_dir}"
+    _log_msg INF "Parsing ${__ua_artifact_without_uac_dir}"
+    _parse_artifact "${__ua_artifact}"
+  done <"${__UAC_TEMP_DATA_DIR}/artifact_list.tmp"
+fi
 
 # acquisition start date
 __ua_acquisition_end_date=`date "+%a %b %d %H:%M:%S %Y %z"`
@@ -452,11 +475,11 @@ __ua_acquisition_end_date_epoch=`_get_epoch_date`
 __ua_total_execution_time=`expr "${__ua_acquisition_end_date_epoch}" - "${__ua_acquisition_start_date_epoch}"`
 
 printf "%s\n" "--------------------------------------------------------------------------------"
-printf "Artifacts collection complete. Total execution time: %d seconds\n" "${__ua_total_execution_time}"
-_log_msg INF "Artifacts collection complete. Total execution time: ${__ua_total_execution_time} seconds"
+printf "Artifacts collection completed in %d seconds\n" "${__ua_total_execution_time}"
+_log_msg INF "Artifacts collection completed in ${__ua_total_execution_time} seconds"
 
 # prepare output
-printf "Filtering out non-regular files. Please wait...\n"
+printf "Filtering non-regular files...\n"
 
 # get a list of all files and directories whithin __UAC_TEMP_DATA_DIR/collected directory
 find "${__UAC_TEMP_DATA_DIR}/collected" -print >"${__UAC_TEMP_DATA_DIR}/find_collected.tmp" 2>/dev/null
@@ -482,12 +505,12 @@ sed -e "s|^${__UAC_MOUNT_POINT}|\[root\]/|" \
 mv "${__UAC_TEMP_DATA_DIR}/${__UAC_LOG_FILE}" "${__UAC_TEMP_DATA_DIR}/collected" 2>/dev/null
 
 if [ "${__UAC_OUTPUT_FORMAT}" = "none" ] || ${__UAC_HASH_COLLECTED} || ${__UAC_TEMP_DATA_DIR_NO_SYMLINK_SUPPORT} || ${__UAC_TOOL_TAR_NO_FROM_FILE_SUPPORT}; then
-  printf "Copying files to '%s'. Please wait...\n" "${__UAC_TEMP_DATA_DIR}/collected/[root]"
+  printf "Copying files to '%s'...\n" "${__UAC_TEMP_DATA_DIR}/collected/[root]"
   _copy_data "${__UAC_TEMP_DATA_DIR}/file_collector.tmp" "${__UAC_TEMP_DATA_DIR}/collected/[root]" \
     2>>"${__UAC_TEMP_DATA_DIR}/copy_data.stderr.txt"
 
   if ${__UAC_HASH_COLLECTED}; then
-    printf "Hashing collected files. Please wait...\n"
+    printf "Calculating hashes for collected files...\n"
     cd "${__UAC_TEMP_DATA_DIR}/collected" || _exit_fatal "cd: ${__UAC_TEMP_DATA_DIR}/collected: No such file or directory"
 
     _find_based_collector \
@@ -517,17 +540,17 @@ else
 fi
 
 if [ "${__UAC_OUTPUT_FORMAT}" = "none" ]; then
-  printf "Moving files to output directory. Please wait...\n"
+  printf "Moving files to the output directory...\n"
   mv "${__UAC_TEMP_DATA_DIR}/collected" "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}"
   if [ -d "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}" ]; then
-    printf "Output directory created '%s'\n" "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}"
+    printf "Output directory successfully created: '%s'\n" "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}"
     _remove_temp_data_dir
   else
-    _error_msg "cannot create output directory '%s'\nPlease check collected artifacts in '%s'\n" \
-      "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}" "${__UAC_TEMP_DATA_DIR}"
+    _error_msg "Failed to create output directory: '${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}'"
+    _error_msg "Check the collected artifacts in '${__UAC_TEMP_DATA_DIR}' for issues."
   fi
 else
-  printf "Creating output file. Please wait...\n"
+  printf "Creating the output file...\n"
   cd "${__UAC_TEMP_DATA_DIR}/collected" || _exit_fatal "cd: ${__UAC_DIR}: No such file or directory"
 
   # add files to the beginning of the archive file
@@ -556,11 +579,11 @@ else
   esac
   cd "${__UAC_DIR}" || _exit_fatal "cd: ${__UAC_DIR}: No such file or directory"
   if [ -f "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}.${__UAC_OUTPUT_EXTENSION}" ]; then
-    printf "Output file created '%s'\n" "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}.${__UAC_OUTPUT_EXTENSION}"
+    printf "Output file created: '%s'\n" "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}.${__UAC_OUTPUT_EXTENSION}"
     _remove_temp_data_dir
   else
-    _error_msg "cannot create output file '%s'\nPlease check collected artifacts in '%s'\n" \
-      "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}.${__UAC_OUTPUT_EXTENSION}" "${__UAC_TEMP_DATA_DIR}"
+    _error_msg "Failed to create output file: '${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}.${__UAC_OUTPUT_EXTENSION}'"
+    _error_msg "Check the collected artifacts in '${__UAC_TEMP_DATA_DIR}' for issues."
   fi
 fi
 
@@ -569,7 +592,7 @@ __ua_output_file_md5_hash=""
 __ua_output_file_sha1_hash=""
 __ua_output_file_sha256_hash=""
 if [ "${__UAC_OUTPUT_FORMAT}" != "none" ]; then
-  printf "Hashing output file. Please wait...\n"
+  printf "Calculating output file hash...\n"
   if _is_in_list "md5" "${__UAC_CONF_HASH_ALGORITHM}" && [ -n "${__UAC_TOOL_MD5_BIN}" ]; then
     __ua_hash_command="${__UAC_TOOL_MD5_BIN} \"${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}.${__UAC_OUTPUT_EXTENSION}\""
     _verbose_msg "${__UAC_VERBOSE_CMD_PREFIX}${__ua_hash_command}"
@@ -595,15 +618,15 @@ if _create_acquisition_log \
   "${__ua_output_file_md5_hash}" \
   "${__ua_output_file_sha1_hash}" \
   "${__ua_output_file_sha256_hash}"; then
-  printf "Acquisition log created '%s'\n" "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}.log"
+  printf "Acquisition log created: '%s'\n" "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}.log"
 else
-  _error_msg "cannot create acquisition log\n"
+  _error_msg "Failed to create acquisition log."
 fi
 
 # transfer output and log file to SFTP server
 if [ -n "${__UAC_SFTP}" ]; then
   cd "${__UAC_DESTINATION_DIR}" || _exit_fatal "cd: ${__UAC_DESTINATION_DIR}: No such file or directory"
-  printf "Transferring '%s' to remote SFTP server. Please wait...\n" \
+  printf "Transferring '%s' to SFTP server...\n" \
     "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}${__UAC_OUTPUT_EXTENSION:+.}${__UAC_OUTPUT_EXTENSION}"
   if _sftp_transfer \
       "${__UAC_OUTPUT_BASE_NAME}${__UAC_OUTPUT_EXTENSION:+.}${__UAC_OUTPUT_EXTENSION}" \
@@ -611,22 +634,22 @@ if [ -n "${__UAC_SFTP}" ]; then
       "${__UAC_SFTP_PORT}" \
       "${__UAC_SFTP_IDENTITY_FILE}" \
       "${__UAC_SFTP_SSH_OPTIONS}"; then
-    printf "Transfer complete!\n"
+    printf "Transfer completed successfully.\n"
     ${__UAC_DELETE_LOCAL_ON_SUCCESSFUL_TRANSFER} && rm -rf "${__UAC_OUTPUT_BASE_NAME}${__UAC_OUTPUT_EXTENSION:+.}${__UAC_OUTPUT_EXTENSION}"
   else
-    _error_msg "could not transfer output file to remote SFTP server"
+    _error_msg "Failed to transfer output file to the SFTP server."
   fi
-  printf "Transferring '%s' to remote S3 server. Please wait...\n" "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}.log"
+  printf "Transferring '%s' to SFTP server...\n" "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}.log"
   if _sftp_transfer \
       "${__UAC_OUTPUT_BASE_NAME}.log" \
       "${__UAC_SFTP}" \
       "${__UAC_SFTP_PORT}" \
       "${__UAC_SFTP_IDENTITY_FILE}" \
       "${__UAC_SFTP_SSH_OPTIONS}"; then
-    printf "Transfer complete!\n"
+    printf "Transfer completed successfully.\n"
     ${__UAC_DELETE_LOCAL_ON_SUCCESSFUL_TRANSFER} && rm -rf "${__UAC_OUTPUT_BASE_NAME}.log"
   else
-    _error_msg "could not transfer log file to remote SFTP server"
+    _error_msg "Failed to transfer log file to the SFTP server."
   fi
   cd "${__UAC_DIR}" || _exit_fatal "cd: ${__UAC_DIR}: No such file or directory"
 fi
@@ -636,7 +659,7 @@ if [ -n "${__UAC_S3_PROVIDER}" ] && [ -n "${__UAC_S3_BUCKET}" ]; then
   cd "${__UAC_DESTINATION_DIR}" || _exit_fatal "cd: ${__UAC_DESTINATION_DIR}: No such file or directory"
   case "${__UAC_S3_PROVIDER}" in
     "amazon")
-      printf "Transferring '%s' to remote S3 server. Please wait...\n" \
+      printf "Transferring '%s' to S3 server...\n" \
         "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}${__UAC_OUTPUT_EXTENSION:+.}${__UAC_OUTPUT_EXTENSION}"
       if _s3_transfer_amazon \
           "${__UAC_OUTPUT_BASE_NAME}${__UAC_OUTPUT_EXTENSION:+.}${__UAC_OUTPUT_EXTENSION}" \
@@ -644,70 +667,70 @@ if [ -n "${__UAC_S3_PROVIDER}" ] && [ -n "${__UAC_S3_BUCKET}" ]; then
           "${__UAC_S3_BUCKET}" \
           "${__UAC_S3_ACCESS_KEY}" \
           "${__UAC_S3_SECRET_KEY}"; then
-        printf "Transfer complete!\n"
+        printf "Transfer completed successfully.\n"
         ${__UAC_DELETE_LOCAL_ON_SUCCESSFUL_TRANSFER} && rm -rf "${__UAC_OUTPUT_BASE_NAME}${__UAC_OUTPUT_EXTENSION:+.}${__UAC_OUTPUT_EXTENSION}"
       else
-        _error_msg "could not transfer output file to remote S3 server"
+        _error_msg "Failed to transfer output file to the S3 server."
       fi
-      printf "Transferring '%s' to remote S3 server. Please wait...\n" "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}.log"
+      printf "Transferring '%s' to S3 server...\n" "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}.log"
       if _s3_transfer_amazon \
           "${__UAC_OUTPUT_BASE_NAME}.log" \
           "${__UAC_S3_REGION}" \
           "${__UAC_S3_BUCKET}" \
           "${__UAC_S3_ACCESS_KEY}" \
           "${__UAC_S3_SECRET_KEY}"; then
-        printf "Transfer complete!\n"
+        printf "Transfer completed successfully.\n"
         ${__UAC_DELETE_LOCAL_ON_SUCCESSFUL_TRANSFER} && rm -rf "${__UAC_OUTPUT_BASE_NAME}.log"
       else
-        _error_msg "could not transfer log file to S3 server"
+        _error_msg "Failed to transfer log file to the S3 server."
       fi
       ;;
     "google")
-      printf "Transferring '%s' to remote S3 server. Please wait...\n" \
+      printf "Transferring '%s' to S3 server...\n" \
         "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}${__UAC_OUTPUT_EXTENSION:+.}${__UAC_OUTPUT_EXTENSION}"
       if _s3_transfer_google \
           "${__UAC_OUTPUT_BASE_NAME}${__UAC_OUTPUT_EXTENSION:+.}${__UAC_OUTPUT_EXTENSION}" \
           "${__UAC_S3_BUCKET}" \
           "${__UAC_S3_TOKEN}"; then
-        printf "Transfer complete!\n"
+        printf "Transfer completed successfully.\n"
         ${__UAC_DELETE_LOCAL_ON_SUCCESSFUL_TRANSFER} && rm -rf "${__UAC_OUTPUT_BASE_NAME}${__UAC_OUTPUT_EXTENSION:+.}${__UAC_OUTPUT_EXTENSION}"
       else
-        _error_msg "could not transfer output file to remote S3 server"
+        _error_msg "Failed to transfer output file to the S3 server."
       fi
-      printf "Transferring '%s' to remote S3 server. Please wait...\n" "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}.log"
+      printf "Transferring '%s' to S3 server...\n" "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}.log"
       if _s3_transfer_google \
           "${__UAC_OUTPUT_BASE_NAME}.log" \
           "${__UAC_S3_BUCKET}" \
           "${__UAC_S3_TOKEN}"; then
-        printf "Transfer complete!\n"
+        printf "Transfer completed successfully.\n"
         ${__UAC_DELETE_LOCAL_ON_SUCCESSFUL_TRANSFER} && rm -rf "${__UAC_OUTPUT_BASE_NAME}.log"
       else
-        _error_msg "could not transfer log file to S3 server"
+        _error_msg "Failed to transfer log file to the S3 server."
       fi
       ;;
     "ibm")
-      printf "Transferring '%s' to remote S3 server. Please wait...\n" \
+      printf "Transferring '%s' to S3 server...\n" \
         "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}${__UAC_OUTPUT_EXTENSION:+.}${__UAC_OUTPUT_EXTENSION}"
       if _s3_transfer_ibm \
           "${__UAC_OUTPUT_BASE_NAME}${__UAC_OUTPUT_EXTENSION:+.}${__UAC_OUTPUT_EXTENSION}" \
           "${__UAC_S3_REGION}" \
           "${__UAC_S3_BUCKET}" \
           "${__UAC_S3_TOKEN}"; then
-        printf "Transfer complete!\n"
+        printf "Transfer completed successfully.\n"
         ${__UAC_DELETE_LOCAL_ON_SUCCESSFUL_TRANSFER} && rm -rf "${__UAC_OUTPUT_BASE_NAME}${__UAC_OUTPUT_EXTENSION:+.}${__UAC_OUTPUT_EXTENSION}"
       else
-        _error_msg "could not transfer output file to remote S3 server"
+        _error_msg "Failed to transfer output file to the S3 server."
       fi
-      printf "Transferring '%s' to remote S3 server. Please wait...\n" "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}.log"
+      printf "Transferring '%s' to S3 server...\n" "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}.log"
       if _s3_transfer_ibm \
           "${__UAC_OUTPUT_BASE_NAME}.log" \
           "${__UAC_S3_REGION}" \
           "${__UAC_S3_BUCKET}" \
           "${__UAC_S3_TOKEN}"; then
-        printf "Transfer complete!\n"
+        printf "Transfer completed successfully.\n"
         ${__UAC_DELETE_LOCAL_ON_SUCCESSFUL_TRANSFER} && rm -rf "${__UAC_OUTPUT_BASE_NAME}.log"
       else
-        _error_msg "could not transfer log file to S3 server"
+        _error_msg "Failed to transfer log file to the S3 server."
       fi
       ;;
   esac
@@ -717,25 +740,29 @@ fi
 # transfer output and log file to Amazon S3 presigned URL
 if [ -n "${__UAC_AWS_S3_PRESIGNED_URL}" ]; then
   cd "${__UAC_DESTINATION_DIR}" || _exit_fatal "cd: ${__UAC_DESTINATION_DIR}: No such file or directory"
-  printf "Transferring '%s' to Amazon S3 presigned URL. Please wait...\n" \
+  printf "Transferring '%s' to Amazon S3 presigned URL...\n" \
     "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}${__UAC_OUTPUT_EXTENSION:+.}${__UAC_OUTPUT_EXTENSION}"
   if _aws_s3_presigned_url_transfer \
       "${__UAC_OUTPUT_BASE_NAME}${__UAC_OUTPUT_EXTENSION:+.}${__UAC_OUTPUT_EXTENSION}" \
       "${__UAC_AWS_S3_PRESIGNED_URL}"; then
-    printf "Transfer complete!\n"
+    printf "Transfer completed successfully.\n"
     ${__UAC_DELETE_LOCAL_ON_SUCCESSFUL_TRANSFER} && rm -rf "${__UAC_OUTPUT_BASE_NAME}${__UAC_OUTPUT_EXTENSION:+.}${__UAC_OUTPUT_EXTENSION}"
   else
-    _error_msg "could not transfer output file to Amazon S3 presigned URL"
+    _error_msg "Failed to transfer output file to the S3 server."
   fi
   if [ -n "${__UAC_AWS_S3_PRESIGNED_URL_LOG_FILE}" ]; then
-    printf "Transferring '%s' to Amazon S3 presigned URL. Please wait...\n" "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}.log"
+    __UAC_AWS_S3_PRESIGNED_URL_LOG_FILE=`echo "${__UAC_AWS_S3_PRESIGNED_URL_LOG_FILE}" \
+      | sed -e "s|%hostname%|${__UAC_HOSTNAME}|g" \
+            -e "s|%os%|${__UAC_OPERATING_SYSTEM}|g" \
+            -e "s|%timestamp%|${__ua_current_date_time}|g"`
+    printf "Transferring '%s' to Amazon S3 presigned URL...\n" "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}.log"
     if _aws_s3_presigned_url_transfer \
         "${__UAC_OUTPUT_BASE_NAME}.log" \
         "${__UAC_AWS_S3_PRESIGNED_URL_LOG_FILE}"; then
-      printf "Transfer complete!\n"
+      printf "Transfer completed successfully.\n"
       ${__UAC_DELETE_LOCAL_ON_SUCCESSFUL_TRANSFER} && rm -rf "${__UAC_OUTPUT_BASE_NAME}${__UAC_OUTPUT_EXTENSION:+.}${__UAC_OUTPUT_EXTENSION}"
     else
-      _error_msg "could not transfer log file to Amazon S3 presigned URL"
+      _error_msg "Failed to transfer output file to the S3 server."
     fi
   fi
   cd "${__UAC_DIR}" || _exit_fatal "cd: ${__UAC_DIR}: No such file or directory"
@@ -744,25 +771,29 @@ fi
 # transfer output and log file to Azure Storage SAS URL
 if [ -n "${__UAC_AZURE_STORAGE_SAS_URL}" ]; then
   cd "${__UAC_DESTINATION_DIR}" || _exit_fatal "cd: ${__UAC_DESTINATION_DIR}: No such file or directory"
-  printf "Transferring '%s' to Azure Storage SAS URL. Please wait...\n" \
+  printf "Transferring '%s' to Azure Storage SAS URL...\n" \
     "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}${__UAC_OUTPUT_EXTENSION:+.}${__UAC_OUTPUT_EXTENSION}"
   if _azure_storage_sas_url_transfer \
       "${__UAC_OUTPUT_BASE_NAME}${__UAC_OUTPUT_EXTENSION:+.}${__UAC_OUTPUT_EXTENSION}" \
       "${__UAC_AZURE_STORAGE_SAS_URL}";then
-    printf "Transfer complete!\n"
+    printf "Transfer completed successfully.\n"
     ${__UAC_DELETE_LOCAL_ON_SUCCESSFUL_TRANSFER} && rm -rf "${__UAC_OUTPUT_BASE_NAME}${__UAC_OUTPUT_EXTENSION:+.}${__UAC_OUTPUT_EXTENSION}"
   else
-    _error_msg "could not transfer output file to Azure Storage SAS URL"
+    _error_msg "Failed to transfer output file to Azure Storage SAS URL."
   fi
   if [ -n "${__UAC_AZURE_STORAGE_SAS_URL_LOG_FILE}" ]; then
-    printf "Transferring '%s' to Azure Storage SAS URL. Please wait...\n" "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}.log"
+    __UAC_AZURE_STORAGE_SAS_URL_LOG_FILE=`echo "${__UAC_AZURE_STORAGE_SAS_URL_LOG_FILE}" \
+      | sed -e "s|%hostname%|${__UAC_HOSTNAME}|g" \
+            -e "s|%os%|${__UAC_OPERATING_SYSTEM}|g" \
+            -e "s|%timestamp%|${__ua_current_date_time}|g"`
+    printf "Transferring '%s' to Azure Storage SAS URL...\n" "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}.log"
     if _azure_storage_sas_url_transfer \
         "${__UAC_OUTPUT_BASE_NAME}.log" \
         "${__UAC_AZURE_STORAGE_SAS_URL_LOG_FILE}"; then
-      printf "Transfer complete!\n"
+      printf "Transfer completed successfully.\n"
       ${__UAC_DELETE_LOCAL_ON_SUCCESSFUL_TRANSFER} && rm -rf "${__UAC_OUTPUT_BASE_NAME}.log"
     else
-      _error_msg "could not transfer log file to Azure Storage SAS URL"
+      _error_msg "Failed to transfer output file to Azure Storage SAS URL."
     fi
   fi
   cd "${__UAC_DIR}" || _exit_fatal "cd: ${__UAC_DIR}: No such file or directory"

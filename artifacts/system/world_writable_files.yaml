@@ -1,0 +1,13 @@
+version: 2.1
+output_directory: /system
+artifacts:
+  -
+    description: List all world writable files.
+    supported_os: [all]
+    collector: find
+    path: /
+    file_type: [f]
+    permissions: [777]
+    exclude_file_system: [proc, procfs]
+    output_file: world_writable_files.txt
+  

@@ -8,6 +8,6 @@
 #   none
 _error_msg()
 {
-  __em_message="${1:-unexpected error}"
-  printf "uac: %b" "${__em_message}\n" >&2
+  __em_message="${1:-Unexpected error}"
+  printf "%b" "${__em_message}\n" >&2
 }

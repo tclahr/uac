@@ -21,6 +21,7 @@ _sanitize_output_file()
     # remove trailing slashes
     # replace slash by underscore
     # replace invalid characters (Windows only) \ * ? : " < > by underscore
+    # remove double underscores
     # add underscore if empty filename
     sed -e 's|^  *||' \
         -e 's|  *$||' \
@@ -34,6 +35,7 @@ _sanitize_output_file()
         -e 's|"|_|g' \
         -e 's|<|_|g' \
         -e 's|>|_|g' \
+        -e 's|__*|_|g' \
         -e 's|^$|_|'
   }
 
@@ -50,5 +52,5 @@ _sanitize_output_file()
   else
     echo "${__sf_filename}"
   fi
-  
+
 }

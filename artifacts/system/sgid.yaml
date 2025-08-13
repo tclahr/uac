@@ -1,0 +1,13 @@
+version: 2.1
+output_directory: /system
+artifacts:
+  -
+    description: Search for files that have SGID bit set.
+    supported_os: [all]
+    collector: find
+    path: /
+    exclude_file_system: [proc, procfs]
+    file_type: [f]
+    permissions: [-2000]
+    output_file: sgid.txt
+  

@@ -1,0 +1,39 @@
+version: 1.0
+condition: command_exists "utmpdump"
+output_directory: /live_response/system
+artifacts:
+# utmpdump might be useful for detecting log file tampering.
+# Reference: https://sandflysecurity.com/blog/using-linux-utmpdump-for-forensics-and-detecting-log-file-tampering/
+  -
+    description: List utmp and wtmp files.
+    supported_os: [linux]
+    collector: find
+    path: /var/log /var/run
+    name_pattern: ["utmp*", "wtmp*"]
+    exclude_name_pattern: ["*.gz"]
+    output_directory: /%temp_directory%/live_response/system
+    output_file: utmpdump_utmp_wtmp_files.txt
+  -
+    description: Parse utmp and wtmp files using utmpdump tool.
+    supported_os: [linux]
+    collector: command
+    foreach: cat "/%temp_directory%/live_response/system/utmpdump_utmp_wtmp_files.txt"
+    command: utmpdump "%line%"
+    output_file: utmpdump_%line%.txt
+  -
+    description: List compressed utmp and wtmp files.
+    supported_os: [linux]
+    collector: find
+    condition: command_exists "zcat"
+    path: /var/log /var/run
+    name_pattern: ["utmp*.gz", "wtmp*.gz"]
+    output_directory: /%temp_directory%/live_response/system
+    output_file: utmpdump_compressed_utmp_wtmp_files.txt
+  -
+    description: Parse compressed utmp and wtmp files using utmpdump tool.
+    supported_os: [linux]
+    collector: command
+    condition: command_exists "zcat"
+    foreach: cat "/%temp_directory%/live_response/system/utmpdump_compressed_utmp_wtmp_files.txt"
+    command: zcat "%line%" | utmpdump
+    output_file: utmpdump_%line%.txt

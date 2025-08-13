@@ -1,4 +1,4 @@
-version: 1.0
+version: 1.2
 artifacts:
   -
     description: Collect metadata about recently opened files in Geany text editor.
@@ -6,27 +6,12 @@ artifacts:
     collector: file
     path: /%user_home%/.config/geany
     name_pattern: ["session.conf"]
-    file_type: [f]
     exclude_nologin_users: true
   -
-    description: Collect metadata about recently opened files in Geany text editor (Flatpak version).
+    description: Collect metadata about recently opened files in Geany text editor (Flatpak and Snap versions).
     supported_os: [linux]
     collector: file
-    path: /%user_home%/.var/app
+    path: /%user_home%/.var/app /%user_home%/snap
     path_pattern: ["*/config/geany/*"]
     name_pattern: ["session.conf"]
-    file_type: [f]
     exclude_nologin_users: true
-  -
-    description: Collect metadata about recently opened files in Geany text editor (Snap version).
-    supported_os: [linux]
-    collector: file
-    path: /%user_home%/snap
-    path_pattern: ["*/.config/geany/*"]
-    name_pattern: ["session.conf"]
-    file_type: [f]
-    exclude_nologin_users: true
-  
-
-
-  

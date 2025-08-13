@@ -13,7 +13,7 @@ _tar_data()
   __td_destination_file="${2:-}"
 
   if [ ! -f "${__td_from_file}" ]; then
-    _error_msg "_tar_data: no such file or directory: '${__td_from_file}'"
+    _error_msg "File containing the list of files to be archived '${__td_from_file}' does not exist."
     return 1
   fi
 

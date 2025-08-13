@@ -40,9 +40,11 @@ _validate_artifact_list()
     case "${__vl_artifact}" in
       \!/*)
         __vl_artifact=`echo "${__vl_artifact}" | sed -e 's|^!||' 2>/dev/null`
+
         __vl_exclude_list=`find ${__vl_artifact} -print 2>/dev/null`
+
         if [ -z "${__vl_exclude_list}" ]; then
-          _error_msg "artifact not found '${__vl_artifact}'"
+          _error_msg "Artifact '${__vl_artifact}' does not exist.\nTry 'uac --artifact list' to list all available artifacts."
           IFS="${__vl_OIFS}"
           return 1
         fi
@@ -53,9 +55,11 @@ _validate_artifact_list()
         # remove leading ./
         # remove leading artifacts/
         __vl_artifact=`echo "${__vl_artifact}" | sed -e 's|^!||' -e 's|^\./||' -e 's|^artifacts/||' 2>/dev/null`
+
         __vl_exclude_list=`find "${__UAC_DIR}/artifacts"/${__vl_artifact} -print 2>/dev/null`
+
         if [ -z "${__vl_exclude_list}" ]; then
-          _error_msg "artifact not found '${__vl_artifact}'"
+          _error_msg "Artifact '${__vl_artifact}' does not exist.\nTry 'uac --artifact list' to list all available artifacts."
           IFS="${__vl_OIFS}"
           return 1
         fi
@@ -63,8 +67,9 @@ _validate_artifact_list()
         ;;
       /*)
         __vl_include_list=`find ${__vl_artifact} -print 2>/dev/null`
+
         if [ -z "${__vl_include_list}" ]; then
-          _error_msg "artifact not found '${__vl_artifact}'"
+          _error_msg "Artifact '${__vl_artifact}' does not exist.\nTry 'uac --artifact list' to list all available artifacts."
           IFS="${__vl_OIFS}"
           return 1
         fi
@@ -76,9 +81,11 @@ _validate_artifact_list()
         # remove leading ./
         # remove leading artifacts/
         __vl_artifact=`echo "${__vl_artifact}" | sed -e 's|^!||' -e 's|^\./||' -e 's|^artifacts/||' 2>/dev/null`
+
         __vl_include_list=`find "${__UAC_DIR}/artifacts"/${__vl_artifact} -print 2>/dev/null`
+        
         if [ -z "${__vl_include_list}" ]; then
-          _error_msg "artifact not found '${__vl_artifact}'"
+          _error_msg "Artifact '${__vl_artifact}' does not exist.\nTry 'uac --artifact list' to list all available artifacts."
           IFS="${__vl_OIFS}"
           return 1
         fi

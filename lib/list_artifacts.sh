@@ -14,7 +14,7 @@ _list_artifacts()
   __la_os="${2:-all}"
   
   if [ ! -d "${__la_artifacts_dir}" ]; then
-    _error_msg "list artifacts: no such file or directory: '${__la_artifacts_dir}'"
+    _error_msg "Artifacts directory '${__la_artifacts_dir}' does not exist."
     return 1
   fi
 
@@ -22,7 +22,7 @@ _list_artifacts()
     all|aix|esxi|freebsd|linux|macos|netbsd|netscaler|openbsd|solaris)
       ;;
     *)
-      _error_msg "list artifacts: invalid operating system '${__la_os}'"
+      _error_msg "Unsupported operating system: '${__la_os}'"
       return 1
       ;;
   esac
