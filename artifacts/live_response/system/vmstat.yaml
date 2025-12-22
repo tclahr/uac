@@ -1,10 +1,10 @@
-version: 2.0
+version: 2.1
 condition: command_exists "vmstat"
 output_directory: /live_response/system
 artifacts:
   -
     description: Display virtual memory statistics.
-    supported_os: [aix, freebsd, linux, netbsd, netscaler, openbsd, solaris]
+    supported_os: [aix, freebsd, haiku, linux, netbsd, netscaler, openbsd, solaris]
     collector: command
     command: vmstat
     output_file: vmstat.txt

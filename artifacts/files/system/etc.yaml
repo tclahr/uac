@@ -20,6 +20,13 @@ artifacts:
     path: /private/etc
     exclude_name_pattern: ["shadow", "shadow-"]
     ignore_date_range: true
+  -
+    description: Collect system configuration files.
+    supported_os: [haiku]
+    collector: file
+    path: /boot/system/settings
+    exclude_name_pattern: ["shadow", "shadow-"]
+    ignore_date_range: true
 
 # References:
 # https://www.elastic.co/security-labs/primer-on-persistence-mechanisms

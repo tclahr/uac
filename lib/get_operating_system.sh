@@ -40,6 +40,9 @@ _get_operating_system()
     "VMkernel")
       echo "esxi"
       ;;
+    "Haiku")
+      echo "haiku"
+      ;;
     *)
       echo "${__go_kernel_name}"
       ;;

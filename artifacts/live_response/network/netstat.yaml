@@ -62,3 +62,15 @@ artifacts:
     collector: command
     command: netstat -lpeanut
     output_file: netstat_-lpeanut.txt
+  -
+    description: Collect both listening and non-listening (for TCP this means established connections) sockets.
+    supported_os: [haiku]
+    collector: command
+    command: netstat
+    output_file: netstat.txt
+  -
+    description: Collect both listening and non-listening (for TCP this means established connections) sockets with numerical addresses instead of trying to determine symbolic host, port or user names.
+    supported_os: [haiku]
+    collector: command
+    command: netstat -n
+    output_file: netstat_-n.txt

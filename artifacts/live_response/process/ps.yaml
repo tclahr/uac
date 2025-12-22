@@ -1,4 +1,4 @@
-version: 4.0
+version: 4.1
 output_directory: /live_response/process
 artifacts:
   -
@@ -95,3 +95,9 @@ artifacts:
     collector: command
     command: ps -P -T -c -g -s -t -J
     output_file: ps_-P_-T_-c_-g_-s_-t_-J.txt
+  -
+    description: Report a snapshot of the current processes including threads and semaphores.
+    supported_os: [haiku]
+    collector: command
+    command: ps -as
+    output_file: ps_-as.txt

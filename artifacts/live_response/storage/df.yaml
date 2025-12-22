@@ -1,4 +1,4 @@
-version: 2.0
+version: 2.1
 condition: command_exists "df"
 output_directory: /live_response/storage
 artifacts:
@@ -20,3 +20,9 @@ artifacts:
     collector: command
     command: df -n
     output_file: df_-n.txt
+  -
+    description: Report file system disk space usage, including those not visible from Tracker.
+    supported_os: [haiku]
+    collector: command
+    command: df -a
+    output_file: df_-a.txt

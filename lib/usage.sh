@@ -58,8 +58,8 @@ Collection Arguments:
                     Specify the mount point (default: /).
   -s, --operating-system OPERATING_SYSTEM
                     Specify the operating system.
-                    Options: aix, esxi, freebsd, linux, macos, netbsd
-                      netscaler, openbsd, solaris
+                    Options: aix, esxi, freebsd, haiku, linux, macos
+                      netbsd, netscaler, openbsd, solaris
   -H, --hash-collected
                     Hash all collected files.
   -u, --run-as-non-root

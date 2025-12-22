@@ -19,7 +19,7 @@ _list_artifacts()
   fi
 
   case "${__la_os}" in
-    all|aix|esxi|freebsd|linux|macos|netbsd|netscaler|openbsd|solaris)
+    all|aix|esxi|freebsd|haiku|linux|macos|netbsd|netscaler|openbsd|solaris)
       ;;
     *)
       _error_msg "Unsupported operating system: '${__la_os}'"

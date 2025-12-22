@@ -1,0 +1,9 @@
+version: 1.0
+output_directory: /live_response/process
+artifacts:
+  -
+    description: Collect information on used file descriptors.
+    supported_os: [haiku]
+    collector: command
+    command: fdinfo
+    output_file: fdinfo.txt

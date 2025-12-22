@@ -1,4 +1,4 @@
-version: 4.1
+version: 4.2
 artifacts:
   -
     description: Collect system temporary files.
@@ -12,5 +12,12 @@ artifacts:
     supported_os: [macos]
     collector: file
     path: /private/tmp
+    file_type: [f, l]
+    max_file_size: 10485760 # 10MB
+  -
+    description: Collect system temporary files.
+    supported_os: [haiku]
+    collector: file
+    path: /boot/system/cache/tmp
     file_type: [f, l]
     max_file_size: 10485760 # 10MB

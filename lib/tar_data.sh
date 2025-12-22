@@ -25,7 +25,7 @@ _tar_data()
     "freebsd"|"netbsd"|"netscaler"|"openbsd")
       __td_tar_command="tar -I \"${__td_from_file}\" -cf \"${__td_destination_file}\""
       ;;
-    "esxi"|"linux")
+    "esxi"|"haiku"|"linux")
       if ${__UAC_TOOL_TAR_NO_FROM_FILE_SUPPORT}; then
         __tg_tar_command="tar -cf \"${__td_destination_file}\" *"
       fi

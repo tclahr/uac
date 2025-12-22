@@ -100,6 +100,24 @@ _get_mount_point_by_file_system()
           }' 2>/dev/null \
         | sed -e 's:|$::' 2>/dev/null
       ;;
+    "haiku")
+      df -a \
+        | awk -v __gm_file_systems="${__gm_file_systems}" \
+          'BEGIN {
+            gsub(/[ ]+/, "", __gm_file_systems);
+            gsub("\"", "", __gm_file_systems);
+            split(__gm_file_systems, __gm_file_system_array, "|");
+            for (i in __gm_file_system_array) {
+              __gm_file_system_dict[__gm_file_system_array[i]]="";
+            }
+          }
+          {
+            if ($1 in __gm_file_system_dict) {
+              printf "%s|", $NF;
+            }
+          }' \
+        | sed -e 's:|$::' 2>/dev/null
+      ;;
   esac
 
 }

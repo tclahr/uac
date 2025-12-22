@@ -1,0 +1,15 @@
+version: 1.0
+output_directory: /live_response/hardware
+artifacts:
+  -
+    description: Display information about USB devices.
+    supported_os: [haiku]
+    collector: command
+    command: listusb
+    output_file: listusb.txt
+  -
+    description: Display detailed information about USB devices.
+    supported_os: [haiku]
+    collector: command
+    command: listusb -v
+    output_file: listusb_-v.txt

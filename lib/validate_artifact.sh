@@ -383,7 +383,7 @@ _validate_artifact()
               _error_msg "Missing field value: 'supported_os' must not be empty."
               return 1
             fi
-            __va_valid_values="all|aix|esxi|freebsd|linux|macos|netbsd|netscaler|openbsd|solaris"
+            __va_valid_values="all|aix|esxi|freebsd|haiku|linux|macos|netbsd|netscaler|openbsd|solaris"
             for __va_item in `echo "${__va_value}" | sed -e 's:|: :g'`; do
               if _is_in_list "${__va_item}" "${__va_valid_values}"; then
                 true

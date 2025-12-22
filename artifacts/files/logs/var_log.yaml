@@ -14,3 +14,10 @@ artifacts:
     path: /private/var/log
     file_type: [f, l]
     max_file_size: 1073741824 # 1GB
+  -
+    description: Collect /boot/system/var/log logs.
+    supported_os: [haiku]
+    collector: file
+    path: /boot/system/var/log
+    file_type: [f, l]
+    max_file_size: 1073741824 # 1GB

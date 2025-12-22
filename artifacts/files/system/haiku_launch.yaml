@@ -1,0 +1,26 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect Daemons configured to start after boot.
+    supported_os: [haiku]
+    collector: file
+    path: /boot/system/data/launch
+    ignore_date_range: true
+  -
+    description: Collect Daemons configured to start after user logon.
+    supported_os: [haiku]
+    collector: file
+    path: /boot/home/config/data/launch
+    ignore_date_range: true
+  -
+    description: Collect UserBootScript.
+    supported_os: [haiku]
+    collector: file
+    path: /boot/home/config/settings/boot/UserBootscript
+    ignore_date_range: true
+  -
+    description: Collect directory referenced in default UserBootScript.
+    supported_os: [haiku]
+    collector: file
+    path: /boot/home/config/settings/boot/launch
+    ignore_date_range: true

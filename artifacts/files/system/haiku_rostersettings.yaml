@@ -1,0 +1,10 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect Haiku recently accessed files, folders and applications.
+    supported_os: [haiku]
+    collector: file
+    path: /%user_home%
+    name_pattern: ["RosterSettings"]
+    ignore_date_range: true
+    exclude_nologin_users: true

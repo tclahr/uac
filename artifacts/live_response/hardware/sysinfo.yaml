@@ -1,0 +1,9 @@
+version: 1.0
+output_directory: /live_response/hardware
+artifacts:
+  -
+    description: Display a selection of hardware and kernel information.
+    supported_os: [haiku]
+    collector: command
+    command: sysinfo
+    output_file: sysinfo.txt

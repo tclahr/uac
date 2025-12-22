@@ -1,0 +1,10 @@
+version: 1.0
+output_directory: /live_response/hardware
+artifacts:
+  -
+    description: Display information about disk devices.
+    supported_os: [haiku]
+    collector: command
+    foreach: find /dev/disk/ -not -type d
+    command: echo "collecting driveinfo for %line%" && driveinfo %line% && echo '---'
+    output_file: driveinfo_dev_disks.txt

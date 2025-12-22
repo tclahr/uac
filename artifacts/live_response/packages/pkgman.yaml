@@ -1,0 +1,15 @@
+version: 1.0
+output_directory: /live_response/packages
+artifacts:
+  -
+    description: Display installed packages.
+    supported_os: [haiku]
+    collector: command
+    command: pkgman search -a -i
+    output_file: pkgman_search_-a_-i.txt
+  -
+    description: Display installed packages with details.
+    supported_os: [haiku]
+    collector: command
+    command: pkgman search -a -i -D
+    output_file: pkgman_search_-a_-i_-D.txt

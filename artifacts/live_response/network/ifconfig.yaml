@@ -4,7 +4,7 @@ output_directory: /live_response/network
 artifacts:
   -
     description: Collect information about all interfaces which are currently available, even if down.
-    supported_os: [aix, freebsd, linux, openbsd, netbsd, netscaler, openbsd, solaris]
+    supported_os: [aix, freebsd, haiku, linux, openbsd, netbsd, netscaler, openbsd, solaris]
     collector: command
     command: ifconfig -a
     output_file: ifconfig_-a.txt

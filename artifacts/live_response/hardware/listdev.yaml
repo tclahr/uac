@@ -1,0 +1,15 @@
+version: 1.0
+output_directory: /live_response/hardware
+artifacts:
+  -
+    description: Display hardware devices.
+    supported_os: [haiku]
+    collector: command
+    command: listdev
+    output_file: listdev.txt
+  -
+    description: Display tree structure for hardware devices.
+    supported_os: [haiku]
+    collector: command
+    command: listdev -d
+    output_file: listdev_-d.txt

@@ -128,7 +128,7 @@ if [ -z "${__UAC_OPERATING_SYSTEM}" ]; then
 fi
 
 # check if operating system is supported
-if _is_in_list "${__UAC_OPERATING_SYSTEM}" "aix|esxi|freebsd|linux|macos|netbsd|netscaler|openbsd|solaris"; then
+if _is_in_list "${__UAC_OPERATING_SYSTEM}" "aix|esxi|freebsd|haiku|linux|macos|netbsd|netscaler|openbsd|solaris"; then
   # get system arch
   __UAC_SYSTEM_ARCH=`_get_system_arch "${__UAC_OPERATING_SYSTEM}"`
 else

@@ -1,0 +1,16 @@
+version: 1.0
+output_directory: /live_response/system
+artifacts:
+  -
+    description: Display information on services managed by launch_daemon.
+    supported_os: [haiku]
+    collector: command
+    command: launch_roster list
+    output_file: launch_roster_list.txt
+  -
+    description: Display information on services managed by launch_daemon.
+    supported_os: [haiku]
+    collector: command
+    command: launch_roster list-targets
+    output_file: launch_roster_list-targets.txt
+  

@@ -8,3 +8,9 @@ artifacts:
     # lesshst: less command history file
     name_pattern: [".*_history", ".*history", ".cosh_history", ".dash_history", ".esh_history", ".lesshst", ".nash_history", ".sash_history", ".scsh_history", ".xonsh_history", ".zhistory", "*.historynew", "fish_history"]
     max_depth: 4
+  -
+    description: Collect shell history file for haiku user.
+    supported_os: [haiku]
+    # haiku gets its own definition for the bash history file because the directory /boot/home/config is a special file system that uac is not descending through by default
+    collector: file
+    path: /boot/home/config/settings/bash_history

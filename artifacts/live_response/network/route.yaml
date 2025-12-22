@@ -1,0 +1,9 @@
+version: 1.0
+output_directory: /live_response/network
+artifacts:
+  -
+    description: Collect routing tables.
+    supported_os: [haiku]
+    collector: command
+    command: route
+    output_file: route.txt

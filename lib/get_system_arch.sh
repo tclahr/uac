@@ -14,7 +14,7 @@ _get_system_arch()
     "aix"|"solaris")
       uname -p
       ;;
-    "esxi"|"freebsd"|"linux"|"macos"|"netbsd"|"netscaler"|"openbsd")
+    "esxi"|"freebsd"|"haiku"|"linux"|"macos"|"netbsd"|"netscaler"|"openbsd")
       uname -m
       ;;
   esac
