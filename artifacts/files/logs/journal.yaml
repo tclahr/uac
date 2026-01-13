@@ -6,4 +6,3 @@ artifacts:
     collector: file
     path: /var/log
     name_pattern: ["*.journal", "*.journal~"]
-    exclude_path_pattern: []
