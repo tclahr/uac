@@ -72,10 +72,11 @@ __UAC_HOSTNAME=""
 __UAC_TEMP_DIR=""
 __UAC_START_DATE=""
 __UAC_START_DATE_DAYS=0
-__UAC_START_DATE_EPOCH=0
+__UAC_START_DATE_EPOCH=""
 __UAC_END_DATE=""
 __UAC_END_DATE_DAYS=0
-__UAC_END_DATE_EPOCH=0
+__UAC_END_DATE_EPOCH=""
+__UAC_TIMESTAMP=""
 __UAC_CASE_NUMBER=""
 __UAC_EVIDENCE_DESCRIPTION=""
 __UAC_EVIDENCE_NUMBER=""
@@ -186,12 +187,12 @@ fi
 __UAC_OUTPUT_EXTENSION=`_is_output_format_supported "${__UAC_OUTPUT_FORMAT}" "${__UAC_OUTPUT_PASSWORD}"` || _exit_fatal
 
 # set output file basename
-__ua_current_date_time=`date "+%Y%m%d%H%M%S"`
+__UAC_TIMESTAMP=`date "+%Y%m%d%H%M%S"`
 # shellcheck disable=SC2153
 __UAC_OUTPUT_BASE_NAME=`echo "${__UAC_OUTPUT_BASE_NAME}" \
   | sed -e "s|%hostname%|${__UAC_HOSTNAME}|g" \
         -e "s|%os%|${__UAC_OPERATING_SYSTEM}|g" \
-        -e "s|%timestamp%|${__ua_current_date_time}|g"`
+        -e "s|%timestamp%|${__UAC_TIMESTAMP}|g"`
 __UAC_OUTPUT_BASE_NAME=`_sanitize_output_file "${__UAC_OUTPUT_BASE_NAME}"`
 
 _output_exists "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}${__UAC_OUTPUT_EXTENSION:+.}${__UAC_OUTPUT_EXTENSION}" && _exit_fatal
@@ -271,7 +272,7 @@ if [ -n "${__UAC_AWS_S3_PRESIGNED_URL}" ]; then
     __UAC_AWS_S3_PRESIGNED_URL=`echo "${__UAC_AWS_S3_PRESIGNED_URL}" \
       | sed -e "s|%hostname%|${__UAC_HOSTNAME}|g" \
             -e "s|%os%|${__UAC_OPERATING_SYSTEM}|g" \
-            -e "s|%timestamp%|${__ua_current_date_time}|g"`
+            -e "s|%timestamp%|${__UAC_TIMESTAMP}|g"`
     printf "Validating connectivity to the AWS S3 presigned URL...\n"
     _aws_s3_presigned_url_transfer \
       "" \
@@ -313,6 +314,7 @@ else
   __UAC_TEMP_DATA_DIR="${__UAC_DESTINATION_DIR}/uac-data.tmp"
 fi
 
+__UAC_ARTIFACTS_OUTPUT_DIR="${__UAC_TEMP_DATA_DIR}/collected"
 _verbose_msg "Creating uac-data.tmp directory..."
 _init_temp_data_dir || _exit_fatal
 
@@ -493,13 +495,13 @@ _log_msg INF "Artifacts collection completed in ${__ua_total_execution_time} sec
 printf "Filtering non-regular files...\n"
 
 # get a list of all files and directories whithin __UAC_TEMP_DATA_DIR/collected directory
-find "${__UAC_TEMP_DATA_DIR}/collected" -print >"${__UAC_TEMP_DATA_DIR}/find_collected.tmp" 2>/dev/null
+find "${__UAC_ARTIFACTS_OUTPUT_DIR}" -print >"${__UAC_TEMP_DATA_DIR}/find_collected.tmp" 2>/dev/null
 
 _remove_non_regular_files "${__UAC_TEMP_DATA_DIR}/find_collected.tmp"
 _remove_non_regular_files "${__UAC_TEMP_DATA_DIR}/file_collector.tmp"
 
-# remove ${__UAC_TEMP_DATA_DIR}/collected from the beginning of any entry
-sed -e "s|^${__UAC_TEMP_DATA_DIR}/collected||" \
+# remove ${__UAC_ARTIFACTS_OUTPUT_DIR} from the beginning of any entry
+sed -e "s|^${__UAC_ARTIFACTS_OUTPUT_DIR}||" \
     -e 's|//*|/|g' \
     -e 's|^/||' \
     "${__UAC_TEMP_DATA_DIR}/find_collected.tmp" \
@@ -518,16 +520,16 @@ awk -v mount="${__UAC_MOUNT_POINT}" -v repl="[root]/" '
   | grep -v -E "${__UAC_DIR}|/uac-data.tmp/|uac-[0-9]+.[0-9]+.[0-9]+-?|uac-[[:print:]]+-[[:print:]]+[0-9]{14}" \
     >>"${__UAC_TEMP_DATA_DIR}/pre_output.tmp"
 
-mv "${__UAC_TEMP_DATA_DIR}/${__UAC_LOG_FILE}" "${__UAC_TEMP_DATA_DIR}/collected" 2>/dev/null
+mv "${__UAC_TEMP_DATA_DIR}/${__UAC_LOG_FILE}" "${__UAC_ARTIFACTS_OUTPUT_DIR}" 2>/dev/null
 
 if [ "${__UAC_OUTPUT_FORMAT}" = "none" ] || ${__UAC_HASH_COLLECTED} || ${__UAC_TEMP_DATA_DIR_NO_SYMLINK_SUPPORT} || ${__UAC_TOOL_TAR_NO_FROM_FILE_SUPPORT}; then
-  printf "Copying files to '%s'...\n" "${__UAC_TEMP_DATA_DIR}/collected/[root]"
-  _copy_data "${__UAC_TEMP_DATA_DIR}/file_collector.tmp" "${__UAC_TEMP_DATA_DIR}/collected/[root]" \
+  printf "Copying files to '%s'...\n" "${__UAC_ARTIFACTS_OUTPUT_DIR}/[root]"
+  _copy_data "${__UAC_TEMP_DATA_DIR}/file_collector.tmp" "${__UAC_ARTIFACTS_OUTPUT_DIR}/[root]" \
     2>>"${__UAC_TEMP_DATA_DIR}/copy_data.stderr.txt"
 
   if ${__UAC_HASH_COLLECTED}; then
     printf "Calculating hashes for collected files...\n"
-    cd "${__UAC_TEMP_DATA_DIR}/collected" || _exit_fatal "cd: ${__UAC_TEMP_DATA_DIR}/collected: No such file or directory"
+    cd "${__UAC_ARTIFACTS_OUTPUT_DIR}" || _exit_fatal "cd: ${__UAC_ARTIFACTS_OUTPUT_DIR}: No such file or directory"
 
     _find_based_collector \
       "hash" \
@@ -546,18 +548,19 @@ if [ "${__UAC_OUTPUT_FORMAT}" = "none" ] || ${__UAC_HASH_COLLECTED} || ${__UAC_T
       "" \
       "" \
       "" \
-      "${__UAC_TEMP_DATA_DIR}/collected" \
+      "" \
+      "${__UAC_ARTIFACTS_OUTPUT_DIR}" \
       "hash_list"
 
     cd "${__UAC_DIR}" || _exit_fatal "cd: ${__UAC_DIR}: No such file or directory"
   fi
 else
-  ln -s "${__UAC_MOUNT_POINT}" "${__UAC_TEMP_DATA_DIR}/collected/[root]"
+  ln -s "${__UAC_MOUNT_POINT}" "${__UAC_ARTIFACTS_OUTPUT_DIR}/[root]"
 fi
 
 if [ "${__UAC_OUTPUT_FORMAT}" = "none" ]; then
   printf "Moving files to the output directory...\n"
-  mv "${__UAC_TEMP_DATA_DIR}/collected" "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}"
+  mv "${__UAC_ARTIFACTS_OUTPUT_DIR}" "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}"
   if [ -d "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}" ]; then
     printf "Output directory successfully created: '%s'\n" "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}"
     _remove_temp_data_dir
@@ -567,7 +570,7 @@ if [ "${__UAC_OUTPUT_FORMAT}" = "none" ]; then
   fi
 else
   printf "Creating the output file...\n"
-  cd "${__UAC_TEMP_DATA_DIR}/collected" || _exit_fatal "cd: ${__UAC_DIR}: No such file or directory"
+  cd "${__UAC_ARTIFACTS_OUTPUT_DIR}" || _exit_fatal "cd: ${__UAC_DIR}: No such file or directory"
 
   # add files to the beginning of the archive file
   {
@@ -788,7 +791,7 @@ if [ -n "${__UAC_AZURE_STORAGE_SAS_URL}" ]; then
   __UAC_AZURE_STORAGE_SAS_URL_TEMP=`echo "${__UAC_AZURE_STORAGE_SAS_URL_TEMP}" \
       | sed -e "s|%hostname%|${__UAC_HOSTNAME}|g" \
             -e "s|%os%|${__UAC_OPERATING_SYSTEM}|g" \
-            -e "s|%timestamp%|${__ua_current_date_time}|g"`
+            -e "s|%timestamp%|${__UAC_TIMESTAMP}|g"`
   
   cd "${__UAC_DESTINATION_DIR}" || _exit_fatal "cd: ${__UAC_DESTINATION_DIR}: No such file or directory"
   printf "Transferring '%s' to Azure Storage SAS URL...\n" \
@@ -807,7 +810,7 @@ if [ -n "${__UAC_AZURE_STORAGE_SAS_URL}" ]; then
   __UAC_AZURE_STORAGE_SAS_URL_TEMP=`echo "${__UAC_AZURE_STORAGE_SAS_URL_TEMP}" \
     | sed -e "s|%hostname%|${__UAC_HOSTNAME}|g" \
           -e "s|%os%|${__UAC_OPERATING_SYSTEM}|g" \
-          -e "s|%timestamp%|${__ua_current_date_time}|g"`
+          -e "s|%timestamp%|${__UAC_TIMESTAMP}|g"`
   printf "Transferring '%s' to Azure Storage SAS URL...\n" "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}.log"
   if _azure_storage_sas_url_transfer \
       "${__UAC_OUTPUT_BASE_NAME}.log" \

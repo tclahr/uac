@@ -503,7 +503,7 @@ _validate_artifact()
                 _error_msg "Missing required field: 'path' is not set for '${__va_collector}' collector."
                 return 1
               fi
-              if [ -n "${__va_command}" ]; then
+              if [ -n "${__va_command}" ] && [ "${__va_collector}" != "find" ]; then
                 _error_msg "Invalid field: 'command' is not applicable for the '${__va_collector}' collector."
                 return 1
               fi

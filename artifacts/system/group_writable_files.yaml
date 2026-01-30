@@ -1,13 +1,13 @@
-version: 2.2
+version: 1.0
 output_directory: /system
 artifacts:
   -
-    description: List all world writable files.
+    description: List all group writable files.
     supported_os: [all]
     collector: find
     path: /
     file_type: [f]
-    permissions: [-0004]
+    permissions: [-0040]
     exclude_file_system: [proc, procfs]
-    output_file: world_writable_files.txt
+    output_file: group_writable_files.txt
   

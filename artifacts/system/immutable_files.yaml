@@ -1,18 +1,13 @@
-version: 2.1
+version: 3.0
 condition: command_exists "lsattr"
 output_directory: /system
 artifacts:
   -
-    description: List immutable files (no recursion, parent top-level directories only).
+    description: List immutable files.
     supported_os: [linux]
-    collector: command
-    foreach: dirwalk.sh parents "%mount_point%" "/dev|/proc|/run|/sys|%non_local_mount_points%"
-    command: lsattr "%line%" | awk '{if ($1 ~ /i/ && $1 !~ /^\\//) print $0}'
-    output_file: immutable_files.txt
-  -
-    description: List immutable files (recursion, children directories only).
-    supported_os: [linux]
-    collector: command
-    foreach: dirwalk.sh children "%mount_point%" "/dev|/proc|/run|/sys|%non_local_mount_points%"
-    command: lsattr -R "%line%" | awk '{if ($1 ~ /i/ && $1 !~ /^\\//) print $0}'
+    collector: find
+    path: /
+    exclude_path_pattern: ["/dev", "/proc", "/run", "/sys"]
+    file_type: [f]
+    command: lsattr -d | awk '$1 ~ /i/ && $1 !~ /^\\//'
     output_file: immutable_files.txt

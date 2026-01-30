@@ -1,0 +1,10 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect PolKit config files, a possible persistence mechanism.
+    supported_os: [linux]
+    collector: file
+    path: /etc/polkit-1 /usr/share/polkit-1 /usr/lib/polkit-1 /var/lib/polkit-1
+
+# References:
+# https://www.elastic.co/security-labs/the-grand-finale-on-linux-persistence
