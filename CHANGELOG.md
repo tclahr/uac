@@ -22,6 +22,8 @@ All notable changes to this project will be documented in this file.
 - `files/browsers/opera.yaml`: Added collection of affiliation database file [linux, macos].
 - `files/browsers/safari.yaml`: Added collection of affiliation database file [linux, macos].
 - `files/browsers/vivaldi.yaml`: Added collection of affiliation database file [linux, macos].
+- `files/logs/journal.yaml`: Updated collection of systemd journal artifacts to search files in `/var/log` only [linux]. (by [halpomeranz](https://github.com/halpomeranz))
+- `files/logs/tomcat.yaml`: Updated collection of Apache Tomcat logs to also search in the $CATALINA_BASE and $CATALINA_HOME locations [all].
 - `files/ssh/public_keys.yaml`: Added collection of SSH public keys [all]. (by [halpomeranz](https://github.com/halpomeranz))
 - `files/system/biome.yaml`: Updated collection of Biome artifacts [macos].
 - `files/system/boot.yaml`: Added collection of boot config, initramfs/initrd, sysvers, System.map, and GRUB config files, possible persistence mechanisms [linux]. (by [halpomeranz](https://github.com/halpomeranz))
