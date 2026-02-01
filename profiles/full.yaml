@@ -27,6 +27,7 @@ artifacts:
   - chkrootkit/*
   - hash_executables/hash_executables.yaml
   - system/*
+  - ssh/*
   - packages/*
   - osquery/osquery.yaml
   - files/*

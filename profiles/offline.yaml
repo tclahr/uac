@@ -5,6 +5,7 @@ artifacts:
   - chkrootkit/*
   - hash_executables/hash_executables.yaml
   - system/*
+  - ssh/*
   - packages/*
   - files/*
   - !files/browsers/cache.yaml
