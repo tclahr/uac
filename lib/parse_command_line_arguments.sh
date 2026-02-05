@@ -130,6 +130,39 @@ _parse_command_line_arguments()
           return 1
         fi
         ;;
+      "--define"|"-D")
+        if [ "${2:-}" = "list" ]; then
+          _list_user_defined_variables "${__UAC_DIR}/artifacts"
+          _exit_success
+        fi
+        case "${2:-}" in
+          *"="*)
+            __pc_var_name=`echo "${2}" | cut -f1 -d=`
+            __pc_var_value=`echo "${2}" | cut -f2 -d=`
+            if [ -z "${__pc_var_name}" ] || [ -z "${__pc_var_value}" ]; then
+              _error_msg "Expected var=value after --define/-D"
+              return 1
+            elif echo "${__pc_var_name}" | grep -q -E "^[A-Za-z_][A-Za-z0-9_]*$"; then
+              true
+            else
+              _error_msg "Invalid variable name '${__pc_var_name}'. Variable names must start with a letter or underscore and contain only letters, digits, or underscores."
+              return 1
+            fi
+            case "${__pc_var_name}" in
+              "hostname"|"os"|"timestamp"|"uac_directory"|"mount_point"|"temp_directory"|"artifacts_output_directory"|"non_local_mount_points"|"start_date"|"start_date_epoch"|"end_date"|"end_date_epoch"|"user"|"user_home"|"line")
+                _error_msg "Cannot override reserved runtime variable '${__pc_var_name}'."
+                return 1
+              ;;
+            esac
+            eval "__UAC_USER_DEFINED_VAR_${__pc_var_name}=\$__pc_var_value"
+            ;;
+          *)
+            _error_msg "Expected var=value after --define/-D"
+            return 1
+            ;;
+          esac
+        shift
+        ;;
       "-H"|"--hash-collected")
         __UAC_HASH_COLLECTED=true
         ;;

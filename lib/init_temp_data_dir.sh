@@ -19,7 +19,7 @@ _init_temp_data_dir()
   mkdir -p "${__UAC_TEMP_DATA_DIR}" >/dev/null 2>/dev/null \
     || { _error_msg "Cannot create temporary directory: '${__UAC_TEMP_DATA_DIR}'"; return 1; }
   # directory where collected data that goes to the output file will be temporarily stored
-  mkdir -p "${__UAC_TEMP_DATA_DIR}/collected" >/dev/null 2>/dev/null
+  mkdir -p "${__UAC_ARTIFACTS_OUTPUT_DIR}" >/dev/null 2>/dev/null
   # directory where collected data using %temp_directory% will be temporarily stored
   mkdir -p "${__UAC_TEMP_DATA_DIR}/tmp" >/dev/null 2>/dev/null
 

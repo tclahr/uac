@@ -1,20 +1,15 @@
-version: 2.1
+version: 3.0
 condition: command_exists "getcap"
 output_directory: /system
 # abuse process capabilities
 # ref: https://www.elastic.co/security-labs/sequel-on-persistence-mechanisms
 artifacts:
   -
-    description: List files that have process capabilities (no recursion, parent top-level directories only).
+    description: List all files with Linux capabilities.
     supported_os: [linux]
-    collector: command
-    foreach: dirwalk.sh parents "%mount_point%" "/proc|/sys|%non_local_mount_points%"
-    command: getcap "%line%"/*
-    output_file: getcap.txt
-  -
-    description: List files that have process capabilities (recursion, children directories only).
-    supported_os: [linux]
-    collector: command
-    foreach: dirwalk.sh children "%mount_point%" "/proc|/sys|%non_local_mount_points%"
-    command: getcap -r "%line%"/*
+    collector: find
+    path: /
+    exclude_path_pattern: ["/proc", "/sys"]
+    file_type: [f]
+    command: getcap
     output_file: getcap.txt

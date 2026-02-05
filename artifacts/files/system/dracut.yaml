@@ -1,0 +1,10 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect Dracut config files, a possible persistence mechanism.
+    supported_os: [linux]
+    collector: file
+    path: /lib/dracut /usr/lib/dracut
+
+# References:
+# https://www.elastic.co/security-labs/the-grand-finale-on-linux-persistence

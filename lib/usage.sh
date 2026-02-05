@@ -60,6 +60,9 @@ Collection Arguments:
                     Specify the operating system.
                     Options: aix, esxi, freebsd, linux, macos, netbsd
                       netscaler, openbsd, solaris
+  -D, --define      VAR=VALUE
+                    Define a user-defined variable.
+                    Use '--define list' to list all available user-defined variables.
   -H, --hash-collected
                     Hash all collected files.
   -u, --run-as-non-root
