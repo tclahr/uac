@@ -1,13 +1,11 @@
 version: 1.0
 condition: command_exists "ssh-keygen"
-output_directory: /ssh
 artifacts:
   -
     description: Find SSH private keys with null passphrases and print their public keys.
     supported_os: [all]
     collector: command
-    # some busybox versionsdo not support 'find -type f'
-    foreach: find "/%user_home%/.ssh" | grep -v -E '(/\.ssh$|/\.ssh/authorized_keys|/\.ssh/known_hosts|/\.ssh/config|\.pub$)'
-    command: ssh-keygen -P '' -y -f "%line%"
-    output_directory: /ssh/%user%
+    foreach: ls /%user_home%/.ssh | grep -v -E '(^authorized_keys$|^known_hosts$|^config$|\.pub$)'
+    command: ssh-keygen -P '' -y -f "/%user_home%/.ssh/%line%"
+    output_directory: /ssh/private_keys_with_null_passphrases/%user%
     output_file: ssh-keygen_-P_-y_-f_%line%.txt
