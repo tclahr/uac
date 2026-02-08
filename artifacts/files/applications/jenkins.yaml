@@ -1,0 +1,10 @@
+version: 3.0
+artifacts:
+  -
+    description: Collect Jenkins {build,config}.xml files
+    supported_os: [linux]
+    collector: file
+    path: /
+    exclude_path_pattern: ["/dev", "/proc", "/run", "/sys"]
+    path_pattern: ["*/jenkins/nodes/*/config.xml","*/jenkins/jobs/*/config.xml","*/jenkins/jobs/*/build.xml"]
+    file_type: [f]
