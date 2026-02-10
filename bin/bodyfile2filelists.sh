@@ -76,10 +76,10 @@ awk -F\| -v uidlist="$uidlist" -v gidlist="$gidlist" '
     $4 ~ /^d....w/ {print "group_writable_directories.txt", $2}
 
     # Unknown user/group files and directories
-    !($5 in uids) && $4 ~ /^-/ {print "user_name_unknown_files.txt", $2}
-    !($5 in uids) && $4 ~ /^d/ {print "user_name_unknown_directories.txt", $2}
-    !($6 in gids) && $4 ~ /^-/ {print "group_name_unknown_files.txt", $2}
-    !($6 in gids) && $4 ~ /^d/ {print "group_name_unknown_directories.txt", $2}' "$BodyFile" |
+    length(uidlist) && !($5 in uids) && $4 ~ /^-/ {print "user_name_unknown_files.txt", $2}
+    length(uidlist) && !($5 in uids) && $4 ~ /^d/ {print "user_name_unknown_directories.txt", $2}
+    length(gidlist) && !($6 in gids) && $4 ~ /^-/ {print "group_name_unknown_files.txt", $2}
+    length(gidlist) && !($6 in gids) && $4 ~ /^d/ {print "group_name_unknown_directories.txt", $2}' "$BodyFile" |
     sort | while read -r outfile filepath; do
                # Input lines are sorted by the output file, so just
                # switch the output destination when that file name changes
