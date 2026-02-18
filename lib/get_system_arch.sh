@@ -3,14 +3,14 @@
 
 # Get the system's architecture.
 # Arguments:
-#   string os: operating system name
+#   string operating_system: operating system name
 # Returns:
 #   string: system's architecture
 _get_system_arch()
 {
-  __sa_os="${1:-}"
+  __sa_operating_system="${1:-}"
 
-  case "${__sa_os}" in
+  case "${__sa_operating_system}" in
     "aix"|"solaris")
       uname -p
       ;;
