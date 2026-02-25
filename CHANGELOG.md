@@ -14,6 +14,7 @@ All notable changes to this project will be documented in this file.
 ### Artifacts
 
 - `files/applications/imessage.yaml`: Renamed to `files/applications/messages.yaml` to better reflect its contents.
+- `files/applications/jenkins.yaml`: Added collection of Jenkins config.xml and build.xml files [linux, macos]. (by [halpomeranz](https://github.com/halpomeranz))
 - `files/applications/microsoft_teams.yaml`: Updated collection of Microsoft Teams artifacts [linux, macos].
 - `files/browsers/brave.yaml`: Added collection of affiliation database file [linux, macos].
 - `files/browsers/chrome.yaml`: Added collection of affiliation database file [linux, macos].
