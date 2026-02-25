@@ -4,7 +4,7 @@ artifacts:
     description: Collect Jenkins {build,config}.xml files.
     supported_os: [linux, macos]
     collector: file
-    path: /var /opt/homebrew/var
+    path: /var /opt
     path_pattern: ["*/jenkins/*"]
     name_pattern: ["config.xml","build.xml"]
     file_type: [f]
