@@ -9,7 +9,7 @@
 . "${__UAC_DIR}/lib/build_find_command.sh"
 . "${__UAC_DIR}/lib/command_collector.sh"
 . "${__UAC_DIR}/lib/command_exists.sh"
-. "${__UAC_DIR}/lib/convert_size_to_kb.sh"
+. "${__UAC_DIR}/lib/convert_size.sh"
 . "${__UAC_DIR}/lib/copy_data.sh"
 . "${__UAC_DIR}/lib/create_acquisition_log.sh"
 . "${__UAC_DIR}/lib/error_msg.sh"
