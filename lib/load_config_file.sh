@@ -19,6 +19,7 @@ _load_config_file()
   __UAC_CONF_EXCLUDE_PATH_PATTERN="${__UAC_CONF_EXCLUDE_PATH_PATTERN:-}"
   __UAC_CONF_EXCLUDE_NAME_PATTERN="${__UAC_CONF_EXCLUDE_NAME_PATTERN:-}"
   __UAC_CONF_EXCLUDE_FILE_SYSTEM="${__UAC_CONF_EXCLUDE_FILE_SYSTEM:-9p|afs|autofs|cifs|davfs|fuse|kernfs|nfs|nfs4|rpc_pipefs|smbfs|sysfs}"
+  __UAC_CONF_EXCLUDE_MOUNT_POINT_SIZE="${__UAC_CONF_EXCLUDE_MOUNT_POINT_SIZE:-0}"
   __UAC_CONF_HASH_ALGORITHM="${__UAC_CONF_HASH_ALGORITHM:-md5|sha1}"
   __UAC_CONF_MAX_DEPTH="${__UAC_CONF_MAX_DEPTH:-0}"
   __UAC_CONF_ENABLE_FIND_MTIME="${__UAC_CONF_ENABLE_FIND_MTIME:-true}"
@@ -63,6 +64,12 @@ _load_config_file()
     __UAC_CONF_EXCLUDE_FILE_SYSTEM=`echo "${__lc_value}" | _array_to_psv 2>/dev/null`
   fi
 
+  # load exclude_mount_size option
+  if echo "${__lc_config_file_content}" | grep -q "exclude_mount_point_size:"; then
+    __lc_value=`echo "${__lc_config_file_content}" | sed -n -e 's|exclude_mount_point_size\: *\(.*\)|\1|p'`
+    __UAC_CONF_EXCLUDE_MOUNT_POINT_SIZE=`_convert_size "${__lc_value}" "Kb"`
+  fi
+  
   # load hash_algorithm option
   if echo "${__lc_config_file_content}" | grep -q "hash_algorithm:"; then
     __lc_value=`echo "${__lc_config_file_content}" | sed -n -e 's|hash_algorithm\: *\(.*\)|\1|p'`
