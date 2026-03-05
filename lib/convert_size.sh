@@ -1,13 +1,14 @@
 #!/bin/sh
+# SPDX-License-Identifier: Apache-2.0
 # shellcheck disable=SC2006
 
 # Take a string like "10T" and convert to the target unit.
 # Valid units are:
-# b|c bytes
-# k|K|kb|KB|Kb|kB kilobytes
-# m|M|mb|MB|Mb|mB mega-bytes
-# g|G|gb|GB|Gb|gB giga-bytes
-# t|T|tb|TB|Tb|tB tera-bytes
+# b|c               bytes
+# k|K|kb|KB|Kb|kB   kilobytes
+# m|M|mb|MB|Mb|mB   megabytes
+# g|G|gb|GB|Gb|gB   gigabytes
+# t|T|tb|TB|Tb|tB   terabytes
 # Null unit specifier means bytes.
 # Arguments:
 #   string input: input string
@@ -57,6 +58,6 @@ _convert_size() {
       ;;
   esac
 
-  awk "BEGIN { printf \"%d\", int(((${__cs_number} * ${__cs_multiplier}) / ${__cs_divider}) + 0.5) }"
+  awk "BEGIN { printf \"%.0f\", ((${__cs_number} * ${__cs_multiplier}) / ${__cs_divider}) }"
 
 }

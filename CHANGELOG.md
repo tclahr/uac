@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file.
 - The output and log file names are now automatically appended to the URL provided in `--azure-storage-sas-url` ([#389](https://github.com/tclahr/uac/issues/389)). Consequently, the `--azure-storage-sas-url-log-file` option is no longer needed and has been removed.
 - Introduced the `statf` tool, which leverages the `stat` system call to produce file status information in bodyfile format for FreeBSD-based systems lacking the `stat` and `perl` tools.
 - You can now use the `find` collector to run a specified `command` once for each matched file ([#420](https://github.com/tclahr/uac/issues/420)). Please check the [documentation](https://tclahr.github.io/uac-docs/artifacts/#field-reference-and-examples) for more information. (by [halpomeranz](https://github.com/halpomeranz))
+- Added `exclude_mount_point_size` configuration option (uac.conf) to specify the mount points that will be excluded from the collection if their used size is greater than the specified value ([#415](https://github.com/tclahr/uac/issues/415)). (by [halpomeranz](https://github.com/halpomeranz))
 
 ### Artifacts
 

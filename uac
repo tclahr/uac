@@ -357,6 +357,7 @@ _log_msg INF "PATH: ${PATH}"
 _log_msg INF "Loading configuration file(s)"
 _log_msg INF "Exclude path pattern: ${__UAC_CONF_EXCLUDE_PATH_PATTERN}"
 _log_msg INF "Exclude name pattern: ${__UAC_CONF_EXCLUDE_NAME_PATTERN}"
+_log_msg INF "Exclude mount point size: ${__UAC_CONF_EXCLUDE_MOUNT_POINT_SIZE}"
 _log_msg INF "Hash algorithm: ${__UAC_CONF_HASH_ALGORITHM}"
 _log_msg INF "Max depth: ${__UAC_CONF_MAX_DEPTH}"
 _log_msg INF "Enable find mtime: ${__UAC_CONF_ENABLE_FIND_MTIME}"
@@ -383,10 +384,10 @@ if [ -n "${__UAC_CONF_EXCLUDE_FILE_SYSTEM}" ]; then
   __UAC_EXCLUDE_MOUNT_POINTS=`_get_mount_point_by_file_system "${__UAC_CONF_EXCLUDE_FILE_SYSTEM}" "${__UAC_OPERATING_SYSTEM}"`
 fi
 
-# add in file systems excluded by size
-if [ "${__UAC_CONF_EXCLUDE_MOUNT_SIZE}" -gt 0 ]; then
-  __ua_large_mounts=`_get_large_file_systems`
-  __UAC_EXCLUDE_MOUNT_POINTS=`echo "${__UAC_EXCLUDE_MOUNT_POINTS}|${__ua_large_mounts}" | sed 's/^|//; s/|$//'`
+# add in mount points excluded by size
+if [ "${__UAC_CONF_EXCLUDE_MOUNT_POINT_SIZE}" -gt 0 ]; then
+  __ua_large_mount_points=`_get_large_mount_points "${__UAC_OPERATING_SYSTEM}" "${__UAC_CONF_EXCLUDE_MOUNT_POINT_SIZE}"`
+  __UAC_EXCLUDE_MOUNT_POINTS="${__UAC_EXCLUDE_MOUNT_POINTS}${__UAC_EXCLUDE_MOUNT_POINTS:+|}${__ua_large_mount_points}"
 fi
 
 # check whether temp data dir's file system supports symlink creation.
@@ -443,7 +444,7 @@ if ${__UAC_TEMP_DATA_DIR_NO_SYMLINK_SUPPORT}; then
 else
   _log_msg INF "Temp directory symlink creation support: true"
 fi
-_log_msg INF "Exclude file system size: ${__UAC_CONF_EXCLUDE_MOUNT_SIZE} kb"
+_log_msg INF "Exclude file systems: ${__UAC_CONF_EXCLUDE_FILE_SYSTEM}"
 _log_msg INF "Exclude mount points: ${__UAC_EXCLUDE_MOUNT_POINTS}"
 
 _verbose_msg "Building artifact list..."
