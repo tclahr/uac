@@ -26,5 +26,41 @@ _system_info()
   printf "Hostname            : %s\n" "${__si_hostname}"
   printf "Running as          : %s\n" "${__si_current_user}"
   printf "%s\n" "--------------------------------------------------------------------------------"
+  printf "%-69s %10s\n" "Mount Point" "Used Size"
+  printf "%s\n" "--------------------------------------------------------------------------------"
+  _get_mount_point_used_size "${__si_operating_system}" \
+    | awk -F'|' '
+        {
+          mount[NR] = $1
+          kb[NR] = $2
+        }
 
+        END {
+          # simple numeric sort (descending)
+          for (i=1;i<=NR;i++) {
+            for (j=i+1;j<=NR;j++) {
+              if (kb[i] < kb[j]) {
+                t=kb[i]; kb[i]=kb[j]; kb[j]=t
+                m=mount[i]; mount[i]=mount[j]; mount[j]=m
+              }
+            }
+          }
+
+          for (i=1;i<=NR;i++) {
+            size = kb[i]
+
+            if (size >= 1024*1024*1024) {
+              val = size/(1024*1024*1024); unit="TB"
+            } else if (size >= 1024*1024) {
+              val = size/(1024*1024); unit="GB"
+            } else if (size >= 1024) {
+              val = size/1024; unit="MB"
+            } else {
+              val = size; unit="KB"
+            }
+            printf "%-66s %10.2f %s\n", mount[i], val, unit
+          }
+        }
+        '
+  
 }
