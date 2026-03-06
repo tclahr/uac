@@ -29,6 +29,10 @@ _parse_command_line_arguments()
         printf "UAC (Unix-like Artifacts Collector) %s\n" "${__UAC_VERSION}"
         _exit_success
         ;;
+      # system information arguments
+      "--system-info")
+        __UAC_SYSTEM_INFO_MODE=true
+        ;;
       # profiling arguments
       "-p"|"--profile")
         if [ -n "${2:-}" ]; then
@@ -209,7 +213,7 @@ _parse_command_line_arguments()
           return 1
         fi
         ;;
-      # informational arguments
+      # case information arguments
       "--case-number")
         if [ -n "${2:-}" ]; then
           __UAC_CASE_NUMBER="${2}"
