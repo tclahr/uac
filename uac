@@ -336,9 +336,9 @@ trap _terminate INT
 # get current user
 __ua_current_user=`_get_current_user`
 # get CPU information
-__ua_cpu_info=`_get_cpu_info`
+__ua_cpu_info=`_get_cpu_info "${__UAC_OPERATING_SYSTEM}"`
 # get memory size
-__ua_memory_size=`_get_memory_size`
+__ua_memory_size=`_get_memory_size "${__UAC_OPERATING_SYSTEM}"`
 
 # show UAC banner and system information
 printf "%s\n" "--------------------------------------------------------------------------------"
@@ -353,6 +353,8 @@ printf " Unix-like Artifacts Collector %s\n" "${__UAC_VERSION}"
 printf "%s\n" "--------------------------------------------------------------------------------"
 printf "Operating System    : %s\n" "${__UAC_OPERATING_SYSTEM}"
 printf "System Architecture : %s\n" "${__UAC_SYSTEM_ARCH}"
+printf "CPU                 : %s\n" "${__ua_cpu_info}"
+printf "Memory Size         : %s MB\n" "${__ua_memory_size}"
 printf "Hostname            : %s\n" "${__UAC_HOSTNAME}"
 printf "Mount Point         : %s\n" "${__UAC_MOUNT_POINT}"
 printf "Running as          : %s\n" "${__ua_current_user}"
