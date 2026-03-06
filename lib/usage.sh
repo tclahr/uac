@@ -8,7 +8,7 @@
 #   none
 _usage()
 {
-  printf "%s" "Usage: $0 [-h] [-V] [--debug] {-p PROFILE | -a ARTIFACT} DESTINATION
+  printf "%s" "Usage: $0 [-h] [-V] [--system-info] {-p PROFILE | -a ARTIFACT} DESTINATION
 
   or: $0 --validate-artifact FILE
   or: $0 --validate-profile FILE
@@ -19,6 +19,10 @@ Optional Arguments:
       --debug       Enable debug mode.
       --trace       Enable trace messages.
   -V, --version     Output version information and exit.
+
+System Information:
+      --system-info
+                    Display system information.
 
 Profiling Arguments:
   -p, --profile   PROFILE
@@ -83,7 +87,7 @@ Filter Arguments:
                     Only collects files that were last modified/accessed/changed
                     before the given date.
 
-Informational Arguments:
+Case Information Arguments:
       --case-number CASE_NUMBER
                     Specify the case number.
       --description DESCRIPTION

@@ -56,6 +56,7 @@ __UAC_VERBOSE_CMD_PREFIX=" > "
 __UAC_VERBOSE_MODE=false
 __UAC_DEBUG_MODE=false
 __UAC_TRACE_MODE=false
+__UAC_SYSTEM_INFO_MODE=false
 __UAC_ARTIFACT_LIST=""
 __UAC_OUTPUT_BASE_NAME="uac-%hostname%-%os%-%timestamp%"
 __UAC_OUTPUT_FORMAT=""
@@ -110,6 +111,34 @@ set -u
 
 ${__UAC_TRACE_MODE} && set -x
 
+# get operating system if not set by --operating-system
+if [ -z "${__UAC_OPERATING_SYSTEM}" ]; then
+  __UAC_OPERATING_SYSTEM=`_get_operating_system`
+fi
+
+# check if operating system is supported
+if _is_in_list "${__UAC_OPERATING_SYSTEM}" "aix|esxi|freebsd|linux|macos|netbsd|netscaler|openbsd|solaris"; then
+  true
+else
+  _exit_fatal "Unsupported operating system: '${__UAC_OPERATING_SYSTEM}'."
+fi
+
+# check if mount point exists
+if [ ! -d "${__UAC_MOUNT_POINT}" ]; then
+  _exit_fatal "Mount point '${__UAC_MOUNT_POINT}' does not exist."
+fi
+# get absolute mount point path
+__UAC_MOUNT_POINT=`_get_absolute_path "${__UAC_MOUNT_POINT}" 2>/dev/null`
+
+# print system information and exit
+if ${__UAC_SYSTEM_INFO_MODE}; then
+  if [ "${__UAC_MOUNT_POINT}" != "/" ]; then
+    _exit_fatal "System information is available only when running on a live system."
+  fi
+  _system_info "${__UAC_OPERATING_SYSTEM}" "${__UAC_MOUNT_POINT}"
+  _exit_success
+fi
+
 # exit whether list of artifacts or destination directory is empty
 if [ -z "${__UAC_ARTIFACT_LIST}" ] || [ -z "${__UAC_DESTINATION_DIR}" ] ; then
   _usage
@@ -123,25 +152,8 @@ fi
 # get absolute destination directory path
 __UAC_DESTINATION_DIR=`_get_absolute_path "${__UAC_DESTINATION_DIR}" 2>/dev/null`
 
-# get operating system if not set by --operating-system
-if [ -z "${__UAC_OPERATING_SYSTEM}" ]; then
-  __UAC_OPERATING_SYSTEM=`_get_operating_system`
-fi
-
-# check if operating system is supported
-if _is_in_list "${__UAC_OPERATING_SYSTEM}" "aix|esxi|freebsd|linux|macos|netbsd|netscaler|openbsd|solaris"; then
-  # get system arch
-  __UAC_SYSTEM_ARCH=`_get_system_arch "${__UAC_OPERATING_SYSTEM}"`
-else
-  _exit_fatal "Unsupported operating system: '${__UAC_OPERATING_SYSTEM}'."
-fi
-
-# check if mount point exists
-if [ ! -d "${__UAC_MOUNT_POINT}" ]; then
-  _exit_fatal "Mount point '${__UAC_MOUNT_POINT}' does not exist."
-fi
-# get absolute mount point path
-__UAC_MOUNT_POINT=`_get_absolute_path "${__UAC_MOUNT_POINT}" 2>/dev/null`
+# get system arch
+__UAC_SYSTEM_ARCH=`_get_system_arch "${__UAC_OPERATING_SYSTEM}"`
 
 # get hostname if not set by --hostname
 # useful when running UAC against a mounted image file/disk
@@ -323,6 +335,10 @@ trap _terminate INT
 
 # get current user
 __ua_current_user=`_get_current_user`
+# get CPU information
+__ua_cpu_info=`_get_cpu_info`
+# get memory size
+__ua_memory_size=`_get_memory_size`
 
 # show UAC banner and system information
 printf "%s\n" "--------------------------------------------------------------------------------"
@@ -347,6 +363,8 @@ _log_msg INF "UAC directory: ${__UAC_DIR}"
 _log_msg INF "Command line: ${__ua_command_line}"
 _log_msg INF "Operating system: ${__UAC_OPERATING_SYSTEM}"
 _log_msg INF "System architecture: ${__UAC_SYSTEM_ARCH}"
+_log_msg INF "CPU: ${__ua_cpu_info}"
+_log_msg INF "Memory size: ${__ua_memory_size} MB"
 _log_msg INF "Hostname: ${__UAC_HOSTNAME}"
 _log_msg INF "Mount point: ${__UAC_MOUNT_POINT}"
 _log_msg INF "Running as: ${__ua_current_user}"
