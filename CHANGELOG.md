@@ -10,11 +10,13 @@ All notable changes to this project will be documented in this file.
 - The output and log file names are now automatically appended to the URL provided in `--azure-storage-sas-url` ([#389](https://github.com/tclahr/uac/issues/389)). Consequently, the `--azure-storage-sas-url-log-file` option is no longer needed and has been removed.
 - Introduced the `statf` tool, which leverages the `stat` system call to produce file status information in bodyfile format for FreeBSD-based systems lacking the `stat` and `perl` tools.
 - You can now use the `find` collector to run a specified `command` once for each matched file ([#420](https://github.com/tclahr/uac/issues/420)). Please check the [documentation](https://tclahr.github.io/uac-docs/artifacts/#field-reference-and-examples) for more information. (by [halpomeranz](https://github.com/halpomeranz))
+- Added `exclude_mount_point_size` configuration option (uac.conf) to specify the mount points that will be excluded from the collection if their used size is greater than the specified value ([#415](https://github.com/tclahr/uac/issues/415)). (by [halpomeranz](https://github.com/halpomeranz))
 - Now you can use `--system-info` command line option to show system information such as CPU information, memory size, hostname, etc. ([#430](https://github.com/tclahr/uac/issues/430)).
 
 ### Artifacts
 
 - `files/applications/imessage.yaml`: Renamed to `files/applications/messages.yaml` to better reflect its contents.
+- `files/applications/jenkins.yaml`: Added collection of Jenkins config.xml and build.xml files [linux, macos]. (by [halpomeranz](https://github.com/halpomeranz))
 - `files/applications/microsoft_teams.yaml`: Updated collection of Microsoft Teams artifacts [linux, macos].
 - `files/browsers/brave.yaml`: Added collection of affiliation database file [linux, macos].
 - `files/browsers/chrome.yaml`: Added collection of affiliation database file [linux, macos].
