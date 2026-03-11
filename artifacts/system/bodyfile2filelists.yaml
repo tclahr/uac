@@ -1,0 +1,9 @@
+version: 1.0
+condition: if [ -s "/%artifacts_output_directory%/bodyfile/bodyfile.txt" ]; then true; else false; fi
+output_directory: /system
+artifacts:
+  -
+    description: Extract lists of different file and directory types from mactime bodyfile.
+    supported_os: [all]
+    collector: command
+    command: bodyfile2filelists.sh "/%artifacts_output_directory%/bodyfile/bodyfile.txt" "%mount_point%"

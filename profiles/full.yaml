@@ -26,6 +26,7 @@ artifacts:
   - live_response/vms/*
   - chkrootkit/*
   - hash_executables/hash_executables.yaml
+  - system/bodyfile2filelists.yaml
   - system/*
   - ssh/*
   - packages/*
