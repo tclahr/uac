@@ -1,4 +1,5 @@
-version: 2.0
+version: 2.1
+condition: if [ "%mount_point%" == "/" ]; then true; else false; fi
 output_directory: /live_response/system
 artifacts:
   -

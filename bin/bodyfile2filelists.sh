@@ -1,91 +1,157 @@
 #!/bin/sh
-# shellcheck disable=SC2006
+# SPDX-License-Identifier: Apache-2.0
 
 usage() {
     cat <<EOM
 Extract lists of different file and directory types from mactime bodyfile
 during UAC collection.
 
-Usage: $0 <directory> [<mountpoint>]
+Usage: $0 BODYFILE [MOUNT_POINT] [DESTINATION]
 
-<directory> should be a UAC output directory with "bodyfile/bodyfile.txt".
-Output files will be written to the "system" directory.
+Positional Arguments:
+  BODYFILE        Path to the bodyfile file.
 
-Supply <mountpoint> if collecting from directory rather than live system.
+Optional Arguments:
+  MOUNT_POINT     Specify the mount point (default: /).
+  DESTINATION     Specify the directory the output files should be written to.
+                  Default is the current directory.
 EOM
-    exit 1;
 }
 
-# Abort if we can't read bodyfile.txt
-UACDir=$1
-[ -r "$UACDir/bodyfile/bodyfile.txt" ] || usage
-MountDir=$2
-
-BodyFile="$UACDir/bodyfile/bodyfile.txt"
-OutputDir="$UACDir/system"
-mkdir -p "$OutputDir"
-
-# Create lists of UIDs and GIDs which will be passed into awk later
-uidlist=
-if [ -r "$MountDir/etc/passwd" ]; then
-    uidlist=`cut -f3 -d: "$MountDir/etc/passwd" | tr '\n' \| | sed 's/|$//'`
+if [ ${#} -lt 1 ]; then
+    usage
+    exit 1;
 fi
 
-gidlist=
-if [ -r "$MountDir/etc/passwd" ]; then
-    gidlist=`cut -f3 -d: "$MountDir/etc/group" | tr '\n' \| | sed 's/|$//'`
+BODYFILE="${1}"
+MOUNT_POINT="${2:-/}"
+DESTINATION="${3:-.}"
+
+if [ ! -f "${BODYFILE}" ]; then
+    echo "'${BODYFILE}': No such file or directory." >&2
+    exit 1
 fi
 
-# mactime style bodyfile fields are:
-# MD5|name|inode|mode_as_string|UID|GID|size|atime|mtime|ctime|crtime
+if [ ! -d "${MOUNT_POINT}" ]; then
+    echo "'${MOUNT_POINT}': No such file or directory." >&2
+    exit 1
+fi
 
-# Pattern matching in the bodyfile is done in an awk script. For each match,
-# the awk code outputs a filename the match should be written to and the
-# matching path. A shell "while read" loop consumes the awk output and
-# handles actually writing the matches to the appropriate files.
-lastoutfile=
-awk -F\| -v uidlist="$uidlist" -v gidlist="$gidlist" '
-    # Turn the UID and GID lists that were supplied into arrays
-    # indexed by UID and GID for fast lookups
-    BEGIN { split(uidlist, temp)
-            for (i in temp) { uids[temp[i]]=1 }
-	    split(gidlist, temp)
-	    for (i in temp) { gids[temp[i]]=1 }
+if [ ! -d "${DESTINATION}" ]; then
+    echo "'${DESTINATION}': No such file or directory." >&2
+    exit 1
+fi
+
+PASSWD_FILE="${MOUNT_POINT}/etc/passwd"
+GROUP_FILE="${MOUNT_POINT}/etc/group"
+
+awk -F'|' -v passwd_file="${PASSWD_FILE}" -v group_file="${GROUP_FILE}" -v destination="${DESTINATION}" '
+
+BEGIN {
+
+    # Turn the UIDs and GIDs into arrays
+    while ((getline < passwd_file) > 0) {
+        split($0,a,":")
+        uids[a[3]] = 1
     }
+    close(passwd_file)
 
-    # file type "s", socket_files.txt
-    $4 ~ /^s/ {print "socket_files.txt", $2}
-    
-    # name starts with "." && file type "d", hidden_directories.txt
-    $4 ~ /^d/ && $2 ~ /\/\.[^\/]*$/ {print "hidden_directories.txt", $2}
-    # name starts with "." && file type "-", hidden_files.txt
-    $4 ~ /^-/ && $2 ~ /\/\.[^\/]*$/ {print "hidden_files.txt", $2}
+    while ((getline < group_file) > 0) {
+        split($0,a,":")
+        gids[a[3]] = 1
+    }
+    close(group_file)
 
-    # file type "-" && perms match "^...[sS]", suid.txt
-    $4 ~ /^-..[sS]/ {print "suid.txt", $2}
-    # type "-" && matches "^......[sS]", sgid.txt
-    $4 ~ /^-.....[sS]/ {print "sgid.txt", $2}
+    # Define output files
+    # This is required as some awk versions do not support output redirection to variable and string concatenation
+    # i.e. print "sample" > destination "/file.txt"
+    socket_files = destination "/socket_files.txt"
+    hidden_files = destination "/hidden_files.txt"
+    hidden_directories = destination "/hidden_directories.txt"
+    suid = destination "/suid.txt"
+    sgid = destination "/sgid.txt"
+    world_writable_files = destination "/world_writable_files.txt"
+    world_writable_directories = destination "/world_writable_directories.txt"
+    world_writable_not_sticky_directories = destination "/world_writable_not_sticky_directories.txt"
+    group_writable_files = destination "/group_writable_files.txt"
+    group_writable_directories = destination "/group_writable_directories.txt"
+    user_name_unknown_files = destination "/user_name_unknown_files.txt"
+    user_name_unknown_directories = destination "/user_name_unknown_directories.txt"
+    group_name_unknown_files = destination "/group_name_unknown_files.txt"
+    group_name_unknown_directories = destination "/group_name_unknown_directories.txt"
 
-    # World writable files and directories
-    $4 ~ /^-.......w/ {print "world_writable_files.txt", $2}
-    $4 ~ /^d.......w/ {print "world_writable_directories.txt", $2}
-    $4 ~ /^d.......w[^t]/ {print "world_writable_not_sticky_directories.txt", $2}
+    # Create empty output files
+    printf "" > socket_files
+    printf "" > hidden_files
+    printf "" > hidden_directories
+    printf "" > suid
+    printf "" > sgid
+    printf "" > world_writable_files
+    printf "" > world_writable_directories
+    printf "" > world_writable_not_sticky_directories
+    printf "" > group_writable_files
+    printf "" > group_writable_directories
+    printf "" > user_name_unknown_files
+    printf "" > user_name_unknown_directories
+    printf "" > group_name_unknown_files
+    printf "" > group_name_unknown_directories
+}
 
-    # Group writable files and directories
-    $4 ~ /^-....w/ {print "group_writable_files.txt", $2}
-    $4 ~ /^d....w/ {print "group_writable_directories.txt", $2}
+{
+    path=$2
+    mode=$4
+    uid=$5
+    gid=$6
 
-    # Unknown user/group files and directories
-    length(uidlist) && !($5 in uids) && $4 ~ /^-/ {print "user_name_unknown_files.txt", $2}
-    length(uidlist) && !($5 in uids) && $4 ~ /^d/ {print "user_name_unknown_directories.txt", $2}
-    length(gidlist) && !($6 in gids) && $4 ~ /^-/ {print "group_name_unknown_files.txt", $2}
-    length(gidlist) && !($6 in gids) && $4 ~ /^d/ {print "group_name_unknown_directories.txt", $2}' "$BodyFile" |
-    sort | while read -r outfile filepath; do
-               # Input lines are sorted by the output file, so just
-               # switch the output destination when that file name changes
-               if [ "$outfile" != "$lastoutfile" ]; then
-		   exec >"$OutputDir/$outfile"
-		   lastoutfile="$outfile"
-	       fi
-	       echo "$filepath"
-           done
+    file_type=substr(mode,1,1)
+
+    user_exec_mode=substr(mode,4,1)
+    group_write_mode=substr(mode,6,1)
+    group_exec_mode=substr(mode,7,1)
+    others_write_mode=substr(mode,9,1)
+    others_exec_mode=substr(mode,10,1)
+
+    if (file_type == "s")
+        print path >> socket_files
+
+    if (path ~ /\/\.[^\/]*$/ && file_type == "-")
+        print path >> hidden_files
+
+    if (path ~ /\/\.[^\/]*$/ && file_type == "d")
+        print path >> hidden_directories
+
+    if ((user_exec_mode == "s" || user_exec_mode == "S") && file_type == "-")
+        print path >> suid
+
+    if ((group_exec_mode == "s" || group_exec_mode == "S") && file_type == "-")
+        print path >> sgid
+
+    if (others_write_mode == "w" && file_type == "-")
+        print path >> world_writable_files
+
+    if (others_write_mode == "w" && file_type == "d")
+        print path >> world_writable_directories
+
+    if (others_write_mode == "w" && file_type == "d" && others_exec_mode != "t" && others_exec_mode != "T")
+        print path >> world_writable_not_sticky_directories
+
+    if (group_write_mode == "w" && file_type == "-")
+        print path >> group_writable_files
+
+    if (group_write_mode == "w" && file_type == "d")
+        print path >> group_writable_directories
+
+    if (!(uid in uids) && file_type == "-")
+        print path >> user_name_unknown_files
+
+    if (!(uid in uids) && file_type == "d")
+        print path >> user_name_unknown_directories
+
+    if (!(gid in gids) && file_type == "-")
+        print path >> group_name_unknown_files
+
+    if (!(gid in gids) && file_type == "d")
+        print path >> group_name_unknown_directories
+}
+
+' "${BODYFILE}"

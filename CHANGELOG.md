@@ -41,11 +41,37 @@ All notable changes to this project will be documented in this file.
 - `memory_dump/avml.yaml`: Updated to collect dumps when memory size is 256GB or less. This behavior can be changed using the `avml_max_memory` variable [linux].
 - `memory_dump/avml.yaml`: Updated to collect vmlinu\* and System.map* files to help build Volatility profiles [linux]. (by [halpomeranz](https://github.com/halpomeranz))
 - `ssh/private_keys_with_null_passphrases.yaml`: Added collection of SSH public keys when the associated private key has a null (empty) passphrase [all]. (by [halpomeranz](https://github.com/halpomeranz))
+- `system/bodyfile2filelists.yaml`: Extracts the following artifacts from a previously collected bodyfile [all]. (by [halpomeranz](https://github.com/halpomeranz))
+  - `group_name_unknown_directories.txt`
+  - `group_name_unknown_files.txt`
+  - `group_writable_directories.txt`
+  - `group_writable_files.txt`
+  - `hidden_directories.txt`
+  - `hidden_files.txt`
+  - `sgid.txt`
+  - `suid.txt`
+  - `user_name_unknown_directories.txt`
+  - `user_name_unknown_files.txt`
+  - `world_writable_directories.txt`
+  - `world_writable_files.txt`
+  - `world_writable_not_sticky_directories.txt`
 - `system/group_name_unknown_directories.yaml`: List directories with an unknown group ID name [aix, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris]. ([#418](https://github.com/tclahr/uac/issues/418))
+- `system/group_name_unknown_directories.yaml`: Now runs only when `system/bodyfile2filelists.yaml` has not already been executed [all].
+- `system/group_name_unknown_files.yaml`: Now runs only when `system/bodyfile2filelists.yaml` has not already been executed [all].
 - `system/group_writable_directories.yaml`: List group writable directories using permission bits mode -0040 [all]. ([#417](https://github.com/tclahr/uac/issues/417))
+- `system/group_writable_directories.yaml`: Now runs only when `system/bodyfile2filelists.yaml` has not already been executed [all].
 - `system/group_writable_files.yaml`: List group writable files using permission bits mode -0040 [all]. ([#417](https://github.com/tclahr/uac/issues/417))
+- `system/group_writable_files.yaml`: Now runs only when `system/bodyfile2filelists.yaml` has not already been executed [all].
+- `system/hidden_directories.yaml`: Now runs only when `system/bodyfile2filelists.yaml` has not already been executed [all].
+- `system/hidden_files.yaml`: Now runs only when `system/bodyfile2filelists.yaml` has not already been executed [all].
+- `system/sgid.yaml`: Now runs only when `system/bodyfile2filelists.yaml` has not already been executed [all].
+- `system/suid.yaml`: Now runs only when `system/bodyfile2filelists.yaml` has not already been executed [all].
 - `system/user_name_unknown_directories.yaml`: List directories with an unknown user ID name [aix, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris]. ([#418](https://github.com/tclahr/uac/issues/418))
+- `system/user_name_unknown_directories.yaml`: Now runs only when `system/bodyfile2filelists.yaml` has not already been executed [all].
+- `system/user_name_unknown_files.yaml`
+- `system/world_writable_directories.yaml`: Now runs only when `system/bodyfile2filelists.yaml` has not already been executed [all].
 - `system/world_writable_directories.yaml`: Updated collection to use permission bits mode -0004 [all]. ([#417](https://github.com/tclahr/uac/issues/417))
+- `system/world_writable_files.yaml`: Now runs only when `system/bodyfile2filelists.yaml` has not already been executed [all].
 - `system/world_writable_files.yaml`: Updated collection to use permission bits mode -0004 [all]. ([#417](https://github.com/tclahr/uac/issues/417))
 
 ### Fixed

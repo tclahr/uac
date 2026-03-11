@@ -1,4 +1,5 @@
-version: 2.1
+version: 2.2
+condition: if [ ! -f "/%artifacts_output_directory%/system/hidden_files.txt" ]; then true; else false; fi
 output_directory: /system
 artifacts:
   -
