@@ -12,7 +12,7 @@
 # Null unit specifier means bytes.
 # Arguments:
 #   string input: input string
-#   string target: target unit
+#   string target: target unit (default: bytes)
 # Returns:
 #   integer: converted value
 #            returns zero on any errors
