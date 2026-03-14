@@ -286,9 +286,10 @@ _parse_artifact()
 
                     # replace %user% and %user_home% in path
                     __pa_new_path=`echo "${__pa_path}" \
-                      | sed -e "s|%user%|${__pa_user}|g" \
-                            -e "s|/%user_home%|${__pa_home}|g" \
-                            -e "s|%user_home%|${__pa_no_slash_home}|g" 2>/dev/null`
+                      | sed -e "s|%user%|\"${__pa_user}\"|g" \
+                            -e "s|/%user_home%|\"${__pa_home}\"|g" \
+                            -e "s|%user_home%|\"${__pa_no_slash_home}\"|g" \
+                            -e "s|\"\"|\"|g" 2>/dev/null`
 
                     if [ "${__pa_collector}" = "file" ]; then
                       if echo "${__pa_processed_home}" | grep -q -E "\|${__pa_new_path}\|"; then
@@ -301,15 +302,17 @@ _parse_artifact()
 
                     # replace %user% and %user_home% in command
                     __pa_new_command=`echo "${__pa_command}" \
-                      | sed -e "s|%user%|${__pa_user}|g" \
-                            -e "s|/%user_home%|${__pa_home}|g" \
-                            -e "s|%user_home%|${__pa_no_slash_home}|g" 2>/dev/null`
+                      | sed -e "s|%user%|\"${__pa_user}\"|g" \
+                            -e "s|/%user_home%|\"${__pa_home}\"|g" \
+                            -e "s|%user_home%|\"${__pa_no_slash_home}\"|g" \
+                            -e "s|\"\"|\"|g" 2>/dev/null`
 
                     # replace %user% and %user_home% in foreach
                     __pa_new_foreach=`echo "${__pa_foreach}" \
-                      | sed -e "s|%user%|${__pa_user}|g" \
-                            -e "s|/%user_home%|${__pa_home}|g" \
-                            -e "s|%user_home%|${__pa_no_slash_home}|g" 2>/dev/null`
+                      | sed -e "s|%user%|\"${__pa_user}\"|g" \
+                            -e "s|/%user_home%|\"${__pa_home}\"|g" \
+                            -e "s|%user_home%|\"${__pa_no_slash_home}\"|g" \
+                            -e "s|\"\"|\"|g" 2>/dev/null`
 
                     # replace %user% and %user_home% in output_directory
                     __pa_new_output_directory=`echo "${__pa_output_directory}" \

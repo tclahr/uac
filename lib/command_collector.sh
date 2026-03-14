@@ -42,7 +42,7 @@ _command_collector()
       | while IFS= read __cc_line && [ -n "${__cc_line}" ]; do
 
           # replace %line% by __cc_line value
-          __cc_new_command=`echo "${__cc_command}" | sed -e "s|%line%|${__cc_line}|g"`
+          __cc_new_command=`echo "${__cc_command}" | sed -e "s|%line%|\"${__cc_line}\"|g" -e "s|\"\"|\"|g"`
           __cc_new_output_directory=`echo "${__cc_output_directory}" | sed -e "s|%line%|${__cc_line}|g"`
           
           __cc_new_output_directory=`_sanitize_output_directory "${__cc_new_output_directory}"`
