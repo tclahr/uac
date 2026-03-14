@@ -11,7 +11,8 @@ All notable changes to this project will be documented in this file.
 - Introduced the `statf` tool, which leverages the `stat` system call to produce file status information in bodyfile format for FreeBSD-based systems lacking the `stat` and `perl` tools.
 - You can now use the `find` collector to run a specified `command` once for each matched file ([#420](https://github.com/tclahr/uac/issues/420)). Please check the [documentation](https://tclahr.github.io/uac-docs/artifacts/#field-reference-and-examples) for more information. (by [halpomeranz](https://github.com/halpomeranz))
 - Added `exclude_mount_point_size` configuration option (uac.conf) to specify the mount points that will be excluded from the collection if their used size is greater than the specified value ([#415](https://github.com/tclahr/uac/issues/415)). (by [halpomeranz](https://github.com/halpomeranz))
-- Now you can use `--system-info` command line option to show system information such as CPU information, memory size, hostname, etc. ([#430](https://github.com/tclahr/uac/issues/430)).
+- Now you can use `--system-info` command line option to show system information such as CPU information, memory size, hostname etc. ([#430](https://github.com/tclahr/uac/issues/430)).
+- Added support for specifying file sizes in the `max_file_size` and `min_file_size` artifact fields using multiple units. Sizes can now be defined in bytes, kilobytes (KB), megabytes (MB), gigabytes (GB), and terabytes (TB) ([#439](https://github.com/tclahr/uac/issues/439)).
 
 ### Artifacts
 
