@@ -166,10 +166,10 @@ _parse_artifact()
             __pa_max_depth="${__pa_value}"
             ;;
           "max_file_size:")
-            __pa_max_file_size="${__pa_value}"
+            __pa_max_file_size=`_convert_size "${__pa_value}"`
             ;;
           "min_file_size:")
-            __pa_min_file_size="${__pa_value}"
+            __pa_min_file_size=`_convert_size "${__pa_value}"`
             ;;
           "name_pattern:")
             __pa_name_pattern=`echo "${__pa_value}" | _array_to_psv 2>/dev/null`
