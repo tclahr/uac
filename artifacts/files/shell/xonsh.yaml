@@ -1,0 +1,31 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect history files (including logrotate and backup files).
+    supported_os: [all]
+    collector: file
+    path: /%user_home%/.local/share/xonsh/xonsh_history.sqlite*
+  -
+    description: Collect user config files.
+    supported_os: [all]
+    collector: file
+    path: /%user_home%/.xonshrc
+  -
+    description: Collect system config files.
+    supported_os: [all]
+    collector: file
+    path: /etc/xonshrc
+  -
+    description: Parse config files to determine $XONSH_HISTORY_FILE.
+    supported_os: [all]
+    collector: command
+    command: grep -E "XONSH_HISTORY_FILE=.*" /%user_home%/.xonshrc /etc/xonshrc | sed -e 's|.*XONSH_HISTORY_FILE=||' -e 's|^~/|/%user_home%/|'
+    output_directory: /%temp_directory%/files/shell
+    output_file: xonsh_history_file.txt
+  -
+    description: Collect $XONSH_HISTORY_FILE.
+    supported_os: [all]
+    collector: file
+    path: /%temp_directory%/files/shell/xonsh_history_file.txt
+    is_file_list: true
+  

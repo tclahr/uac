@@ -15,9 +15,15 @@ All notable changes to this project will be documented in this file.
 
 ### Artifacts
 
+- `files/applications/calc.yaml`: Added collection of calc history files [all].
 - `files/applications/imessage.yaml`: Renamed to `files/applications/messages.yaml` to better reflect its contents.
 - `files/applications/jenkins.yaml`: Added collection of Jenkins config.xml and build.xml files [linux, macos]. (by [halpomeranz](https://github.com/halpomeranz))
+- `files/applications/mail.yaml`: Added collection of .mailrc and .mail_aliases files [all].
 - `files/applications/microsoft_teams.yaml`: Updated collection of Microsoft Teams artifacts [linux, macos].
+- `files/applications/nano.yaml`: Added collection of nano history and config files [all].
+- `files/applications/python.yaml`: Added collection of python history files [all].
+- `files/applications/screen.yaml`: Added collection of .screenrc file [all].
+- `files/applications/sqlite.yaml`: Added collection of sqlite history files [all].
 - `files/browsers/brave.yaml`: Added collection of affiliation database file [linux, macos].
 - `files/browsers/chrome.yaml`: Added collection of affiliation database file [linux, macos].
 - `files/browsers/chromium.yaml`: Added collection of affiliation database file [linux, macos].
@@ -27,6 +33,22 @@ All notable changes to this project will be documented in this file.
 - `files/browsers/vivaldi.yaml`: Added collection of affiliation database file [linux, macos].
 - `files/logs/journal.yaml`: Updated collection of systemd journal artifacts to search files in `/var/log` only [linux]. (by [halpomeranz](https://github.com/halpomeranz))
 - `files/logs/tomcat.yaml`: Updated collection of Apache Tomcat logs to also search in the $CATALINA_BASE and $CATALINA_HOME locations [all].
+- `files/shell/config.yaml`, `files/shell/history.yaml`, and `files/shell/sessions.yaml` were replaced by the following artifacts:
+  - `files/shell/ash.yaml`: Added collection of ash history and config files [all].
+  - `files/shell/bash.yaml`: Added collection of bash history and config files [all].
+  - `files/shell/common.yaml`: Added collection of common shell config files [all].
+  - `files/shell/dash.yaml`: Added collection of dash history and config files [all].
+  - `files/shell/elvish.yaml`: Added collection of elvish history and config files [all].
+  - `files/shell/fish.yaml`: Added collection of fish history and config files [all].
+  - `files/shell/ion.yaml`: Added collection of ion history and config files [all].
+  - `files/shell/ksh.yaml`: Added collection of ksh history and config files [all].
+  - `files/shell/mksh.yaml`: Added collection of mksh history and config files [all].
+  - `files/shell/nscli.yaml`: Added collection of nscli history and config files [netscaler].
+  - `files/shell/osh.yaml`: Added collection of osh history and config files [all].
+  - `files/shell/powershell.yaml`: Added collection of powershell history and config files [all].
+  - `files/shell/tcsh.yaml`: Added collection of tcsh history and config files [all].
+  - `files/shell/xonsh.yaml`: Added collection of xonsh history and config files [all].
+  - `files/shell/zsh.yaml`: Added collection of zsh history and config files [all].
 - `files/ssh/public_keys.yaml`: Added collection of SSH public keys [all]. (by [halpomeranz](https://github.com/halpomeranz))
 - `files/system/biome.yaml`: Updated collection of Biome artifacts [macos].
 - `files/system/boot.yaml`: Added collection of boot config, initramfs/initrd, sysvers, System.map, and GRUB config files, possible persistence mechanisms [linux]. (by [halpomeranz](https://github.com/halpomeranz))

@@ -1,0 +1,30 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect history files (including logrotate and backup files).
+    supported_os: [all]
+    collector: file
+    path: /%user_home%/.sh_history /%user_home%/.sh_history.*
+  -
+    description: Collect user config files.
+    supported_os: [all]
+    collector: file
+    path: /%user_home%/.shrc /%user_home%/.kshrc /%user_home%/.profile
+  -
+    description: Collect system config files.
+    supported_os: [all]
+    collector: file
+    path: /etc/environment
+  -
+    description: Parse config files to determine $HISTFILE.
+    supported_os: [all]
+    collector: command
+    command: grep -E "^HISTFILE=.*" /%user_home%/.shrc /%user_home%/.kshrc /%user_home%/.profile  | sed -e 's|.*HISTFILE=||' -e 's|^~/|/%user_home%/|'
+    output_directory: /%temp_directory%/files/shell
+    output_file: ksh_histfile.txt
+  -
+    description: Collect $HISTFILE.
+    supported_os: [all]
+    collector: file
+    path: /%temp_directory%/files/shell/ksh_histfile.txt
+    is_file_list: true
