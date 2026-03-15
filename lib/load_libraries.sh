@@ -46,6 +46,7 @@
 . "${__UAC_DIR}/lib/parse_command_line_arguments.sh"
 . "${__UAC_DIR}/lib/parse_profile.sh"
 . "${__UAC_DIR}/lib/prepend_mount_point.sh"
+. "${__UAC_DIR}/lib/replace_eval_safe_placeholder.sh"
 . "${__UAC_DIR}/lib/remove_non_regular_files.sh"
 . "${__UAC_DIR}/lib/remove_temp_data_dir.sh"
 . "${__UAC_DIR}/lib/run_command.sh"

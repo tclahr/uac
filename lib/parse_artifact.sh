@@ -291,10 +291,8 @@ _parse_artifact()
                     _log_msg INF "Collecting data for user ${__pa_user}"
 
                     # replace %user% and %user_home% in path
-                    __pa_new_path=`echo "${__pa_path}" \
-                      | sed -e "s|%user%|${__pa_user}|g" \
-                            -e "s|/%user_home%|${__pa_home}|g" \
-                            -e "s|%user_home%|${__pa_no_slash_home}|g" 2>/dev/null`
+                    __pa_new_path=`_replace_eval_safe_placeholder "${__pa_path}" "user_home" "${__pa_no_slash_home}"`
+                    __pa_new_path=`_replace_eval_safe_placeholder "${__pa_new_path}" "user" "${__pa_user}"`
 
                     if [ "${__pa_collector}" = "file" ]; then
                       if echo "${__pa_processed_home}" | grep -q -E "\|${__pa_new_path}\|"; then
@@ -306,28 +304,20 @@ _parse_artifact()
                     fi
 
                     # replace %user% and %user_home% in command
-                    __pa_new_command=`echo "${__pa_command}" \
-                      | sed -e "s|%user%|${__pa_user}|g" \
-                            -e "s|/%user_home%|${__pa_home}|g" \
-                            -e "s|%user_home%|${__pa_no_slash_home}|g" 2>/dev/null`
+                    __pa_new_command=`_replace_eval_safe_placeholder "${__pa_command}" "user_home" "${__pa_no_slash_home}"`
+                    __pa_new_command=`_replace_eval_safe_placeholder "${__pa_new_command}" "user" "${__pa_user}"`
 
                     # replace %user% and %user_home% in foreach
-                    __pa_new_foreach=`echo "${__pa_foreach}" \
-                      | sed -e "s|%user%|${__pa_user}|g" \
-                            -e "s|/%user_home%|${__pa_home}|g" \
-                            -e "s|%user_home%|${__pa_no_slash_home}|g" 2>/dev/null`
+                    __pa_new_foreach=`_replace_eval_safe_placeholder "${__pa_foreach}" "user_home" "${__pa_no_slash_home}"`
+                    __pa_new_foreach=`_replace_eval_safe_placeholder "${__pa_new_foreach}" "user" "${__pa_user}"`
 
                     # replace %user% and %user_home% in output_directory
-                    __pa_new_output_directory=`echo "${__pa_output_directory}" \
-                      | sed -e "s|%user%|${__pa_user}|g" \
-                            -e "s|/%user_home%|${__pa_home}|g" \
-                            -e "s|%user_home%|${__pa_no_slash_home}|g" 2>/dev/null`
+                    __pa_new_output_directory=`_replace_plain_placeholder "${__pa_output_directory}" "user_home" "${__pa_no_slash_home}"`
+                    __pa_new_output_directory=`_replace_plain_placeholder "${__pa_new_output_directory}" "user" "${__pa_user}"`
 
                     # replace %user% and %user_home% in output_file
-                    __pa_new_output_file=`echo "${__pa_output_file}" \
-                      | sed -e "s|%user%|${__pa_user}|g" \
-                            -e "s|/%user_home%|${__pa_home}|g" \
-                            -e "s|%user_home%|${__pa_no_slash_home}|g" 2>/dev/null`
+                    __pa_new_output_file=`_replace_plain_placeholder "${__pa_output_file}" "user_home" "${__pa_no_slash_home}"`
+                    __pa_new_output_file=`_replace_plain_placeholder "${__pa_new_output_file}" "user" "${__pa_user}"`
 
                     __pa_new_max_depth="${__pa_max_depth}"
                     # if home directory is / (root in some systems),

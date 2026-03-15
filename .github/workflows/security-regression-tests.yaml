@@ -1,0 +1,24 @@
+name: Security regression tests
+
+on:
+  pull_request:
+    branches:
+      - develop
+      - main
+    paths:
+      - 'lib/**'
+      - 'tests/security/**'
+      - '.github/workflows/security-regression-tests.yaml'
+  workflow_dispatch:
+
+jobs:
+  security-regressions:
+    name: Placeholder injection regressions
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout uac repository
+        uses: actions/checkout@v4
+
+      - name: Run placeholder injection regressions
+        run: /bin/sh tests/security/test_placeholder_injection.sh
