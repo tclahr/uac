@@ -31,10 +31,19 @@ _command_collector()
     return 1
   fi
 
+  _command_collector_run_shell_command()
+  {
+    if command -v _run_shell_command >/dev/null 2>/dev/null; then
+      _run_shell_command "${1:-}" "${2:-false}"
+    else
+      _run_command "${1:-}" "${2:-false}"
+    fi
+  }
+
   if [ -n "${__cc_foreach}" ]; then
 
     _verbose_msg "${__UAC_VERBOSE_CMD_PREFIX}${__cc_foreach}"
-    __cc_foreach_stdout=`_run_command "${__cc_foreach}"`
+    __cc_foreach_stdout=`_command_collector_run_shell_command "${__cc_foreach}"`
 
     # shellcheck disable=SC2162
     echo "${__cc_foreach_stdout}" \
@@ -61,7 +70,7 @@ _command_collector()
             fi
 
             _verbose_msg "${__UAC_VERBOSE_CMD_PREFIX}${__cc_new_command}"
-            _run_command "${__cc_new_command}" "${__cc_redirect_stderr_to_stdout}" \
+            _command_collector_run_shell_command "${__cc_new_command}" "${__cc_redirect_stderr_to_stdout}" \
               >>"${__cc_new_output_directory}/${__cc_new_output_file}"
 
             # remove output file if it is empty
@@ -79,7 +88,7 @@ _command_collector()
             _verbose_msg "${__UAC_VERBOSE_CMD_PREFIX}${__cc_new_command}"
             (
               cd "${__cc_new_output_directory}" \
-              && _run_command "${__cc_new_command}" "${__cc_redirect_stderr_to_stdout}"
+              && _command_collector_run_shell_command "${__cc_new_command}" "${__cc_redirect_stderr_to_stdout}"
             )
           fi
         done
@@ -98,7 +107,7 @@ _command_collector()
         __cc_command="${__cc_command} | gzip - | cat -"
       fi
       _verbose_msg "${__UAC_VERBOSE_CMD_PREFIX}${__cc_command}"
-      _run_command "${__cc_command}" "${__cc_redirect_stderr_to_stdout}" \
+      _command_collector_run_shell_command "${__cc_command}" "${__cc_redirect_stderr_to_stdout}" \
         >>"${__cc_output_directory}/${__cc_output_file}"
 
       # remove output file if it is empty
@@ -116,7 +125,7 @@ _command_collector()
       _verbose_msg "${__UAC_VERBOSE_CMD_PREFIX}${__cc_command}"
       ( 
         cd "${__cc_output_directory}" \
-        && _run_command "${__cc_command}" "${__cc_redirect_stderr_to_stdout}"
+        && _command_collector_run_shell_command "${__cc_command}" "${__cc_redirect_stderr_to_stdout}"
       )
     fi
 

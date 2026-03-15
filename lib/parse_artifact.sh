@@ -49,6 +49,15 @@ _parse_artifact()
 
   __pa_global_output_directory=""
 
+  _parse_artifact_run_shell_command()
+  {
+    if command -v _run_shell_command >/dev/null 2>/dev/null; then
+      _run_shell_command "${1:-}" "${2:-false}"
+    else
+      _run_command "${1:-}" "${2:-false}"
+    fi
+  }
+
   _replace_exposed_variables()
   {
     __re_value="${1:-}"
@@ -97,14 +106,14 @@ _parse_artifact()
               # run global condition command and skip collection if exit code is greater than 0
               if echo "${__pa_condition}" | grep -q -E "^!"; then
                 __pa_condition=`echo "${__pa_condition}" | sed -e 's|^! *||' 2>/dev/null`
-                if _run_command "${__pa_condition}" true >/dev/null; then
+                if _parse_artifact_run_shell_command "${__pa_condition}" true >/dev/null; then
                   _log_msg INF "Global condition '${__pa_condition}' not satisfied. Skipping..."
                   return 1
                 else
                   _log_msg DBG "Global condition '${__pa_condition}' satisfied"
                 fi
               else
-                if _run_command "${__pa_condition}" true >/dev/null; then
+                if _parse_artifact_run_shell_command "${__pa_condition}" true >/dev/null; then
                   _log_msg DBG "Global condition '${__pa_condition}' satisfied"
                 else
                   _log_msg INF "Global condition '${__pa_condition}' not satisfied. Skipping..."
@@ -245,7 +254,7 @@ _parse_artifact()
               # run local condition command and skip collection if exit code greater than 0
               if echo "${__pa_condition}" | grep -q -E "^!"; then
                 __pa_condition=`echo "${__pa_condition}" | sed -e 's|^! *||' 2>/dev/null`
-                if _run_command "${__pa_condition}" true >/dev/null; then
+                if _parse_artifact_run_shell_command "${__pa_condition}" true >/dev/null; then
                   _log_msg INF "Condition '${__pa_condition}' not satisfied. Skipping..."
                   _cleanup_local_vars
                   continue
@@ -253,7 +262,7 @@ _parse_artifact()
                   _log_msg DBG "Condition '${__pa_condition}' satisfied"
                 fi
               else
-                if _run_command "${__pa_condition}" true >/dev/null; then
+                if _parse_artifact_run_shell_command "${__pa_condition}" true >/dev/null; then
                   _log_msg DBG "Condition '${__pa_condition}' satisfied"
                 else
                   _log_msg INF "Condition '${__pa_condition}' not satisfied. Skipping..."

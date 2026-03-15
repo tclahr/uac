@@ -1,0 +1,24 @@
+name: Security regression tests
+
+on:
+  pull_request:
+    branches:
+      - develop
+      - main
+    paths:
+      - ".github/workflows/security-regression-tests.yaml"
+      - "lib/**"
+      - "tests/security/**"
+  workflow_dispatch:
+
+jobs:
+  run-command-eval-injection:
+    name: Run command eval injection regression
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout uac repository
+        uses: actions/checkout@v4
+
+      - name: Run regression test
+        run: sh tests/security/test_run_command_injection.sh

@@ -144,6 +144,15 @@ _find_based_collector()
     mkdir -p "${__fc_output_directory}" >/dev/null
   fi
 
+  _find_based_collector_run_shell_command()
+  {
+    if command -v _run_shell_command >/dev/null 2>/dev/null; then
+      _run_shell_command "${1:-}" "${2:-false}"
+    else
+      _run_command "${1:-}" "${2:-false}"
+    fi
+  }
+
   case "${__fc_collector}" in
     "file"|"find")
       if ${__fc_is_file_list}; then
@@ -167,7 +176,7 @@ _find_based_collector()
           "${__fc_end_date_days}"`
       fi
       _verbose_msg "${__UAC_VERBOSE_CMD_PREFIX}${__fc_find_command}"
-      _run_command "${__fc_find_command}" \
+      _find_based_collector_run_shell_command "${__fc_find_command}" \
         >>"${__fc_output_directory}/${__fc_output_file}"
       ;;
     "hash")
@@ -229,7 +238,7 @@ _find_based_collector()
             __fc_hash_command="${__fc_find_command} | sed 's|.|\\\\&|g' | xargs ${__fc_hashing_tool}"
           fi
           _verbose_msg "${__UAC_VERBOSE_CMD_PREFIX}${__fc_hash_command}"
-          _run_command "${__fc_hash_command}" \
+          _find_based_collector_run_shell_command "${__fc_hash_command}" \
             >>"${__fc_output_directory}/${__fc_output_file}.${__fc_algorithm}"
           if [ ! -s "${__fc_output_directory}/${__fc_output_file}.${__fc_algorithm}" ]; then
             rm -f "${__fc_output_directory}/${__fc_output_file}.${__fc_algorithm}" >/dev/null
@@ -286,7 +295,7 @@ _find_based_collector()
           __fc_stat_command="${__fc_find_command} | sed 's|.|\\\\&|g' | xargs ${__UAC_TOOL_STAT_BIN}${__UAC_TOOL_STAT_PARAMS:+ }${__UAC_TOOL_STAT_PARAMS}"
         fi
         _verbose_msg "${__UAC_VERBOSE_CMD_PREFIX}${__fc_stat_command}"
-        _run_command "${__fc_stat_command}" \
+        _find_based_collector_run_shell_command "${__fc_stat_command}" \
           | sed -e "s:|':|:g" \
                 -e "s:'|:|:g" \
                 -e "s:' -> ': -> :" \
