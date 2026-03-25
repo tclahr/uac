@@ -117,8 +117,9 @@ _replace_plain_placeholder()
     return 0
   fi
 
-  __rpp_escaped_value=$(printf "%s" "${__rpp_value}" \
-    | sed -e 's|[\\&|]|\\&|g' 2>/dev/null)
+  # shellcheck disable=SC2006
+  __rpp_escaped_value=`printf "%s" "${__rpp_value}" \
+    | sed -e 's|[\\&|]|\\&|g' 2>/dev/null`
 
   printf "%s" "${__rpp_input}" \
     | sed -e "s|%${__rpp_placeholder}%|${__rpp_escaped_value}|g" 2>/dev/null
