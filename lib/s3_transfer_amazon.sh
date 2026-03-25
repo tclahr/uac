@@ -31,6 +31,13 @@ _s3_transfer_amazon()
     __s3a_payload_hash=`printf "%s" "${__s3a_payload}" | openssl dgst -sha256 | sed 's/^.* //'`
   fi
 
+  __s3a_prefix=`echo "${__s3a_bucket}" | sed 's|^[^/]*/*||;s|/*$||'`
+
+  if [ -n "${__s3a_prefix}" ]; then
+    __s3a_object_key="${__s3a_prefix}/${__s3a_object_key}"
+    __s3a_bucket=`echo "${__s3a_bucket}" | sed 's|/.*||'`
+  fi
+
   __s3a_host="${__s3a_bucket}.s3.${__s3a_region}.amazonaws.com"
   __s3a_url="https://${__s3a_host}/${__s3a_object_key}"
 
