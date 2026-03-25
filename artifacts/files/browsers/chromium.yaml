@@ -1,11 +1,11 @@
-version: 2.2
+version: 2.3
 artifacts:
   -
     description: Collect Chromium browser files (Flatpak and Snap versions).
     supported_os: [linux]
     collector: file
     path: /%user_home%/.var/app/org.chromium.Chromium /%user_home%/snap/chromium
-    name_pattern: ["Bookmarks*", "Cookies*", "DownloadMetadata", "Extension Cookies*", "Favicons*", "History*", "Login Data*", "Media History*", "Network Action Predictor*", "Network Persistent State", "Preferences", "QuotaManager*", "Reporting and NEL*", "SecurePreferences", "Shortcuts*", "SyncData.sqlite3", "Top Sites*", "Trust Tokens*", "Visited Links", "WebAssistDatabase*", "Web Data*"]
+    name_pattern: ["Affiliation Database*", "Bookmarks*", "Cookies*", "DownloadMetadata", "Extension Cookies*", "Favicons*", "History*", "Login Data*", "Media History*", "Network Action Predictor*", "Network Persistent State", "Preferences", "QuotaManager*", "Reporting and NEL*", "SecurePreferences", "Shortcuts*", "SyncData.sqlite3", "Top Sites*", "Trust Tokens*", "Visited Links", "WebAssistDatabase*", "Web Data*"]
     ignore_date_range: true
     exclude_nologin_users: true
   -

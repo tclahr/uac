@@ -8,7 +8,7 @@ artifacts:
     name_pattern: ["com.apple.spotlight.Shortcuts.v3"]
     ignore_date_range: true
     exclude_nologin_users: true
--
+  -
     description: Collect information about the searches that a user performed in the Spotlight application.
     supported_os: [macos]
     collector: file

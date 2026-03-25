@@ -1,11 +1,11 @@
-version: 3.2
+version: 3.3
 artifacts:
   -
     description: Collect Chrome browser files (including Flatpak version).
     supported_os: [linux]
     collector: file
     path: /%user_home%/.config/google-chrome /%user_home%/.var/app/com.google.Chrome
-    name_pattern: ["Bookmarks*", "Cookies*", "DownloadMetadata", "Extension Cookies*", "Favicons*", "History*", "Login Data*", "Media History*", "Network Action Predictor*", "Network Persistent State", "Preferences", "QuotaManager*", "Reporting and NEL*", "SecurePreferences", "Shortcuts*", "SyncData.sqlite3", "Top Sites*", "Trust Tokens*", "Visited Links", "WebAssistDatabase*", "Web Data*"]
+    name_pattern: ["Affiliation Database*", "Bookmarks*", "Cookies*", "DownloadMetadata", "Extension Cookies*", "Favicons*", "History*", "Login Data*", "Media History*", "Network Action Predictor*", "Network Persistent State", "Preferences", "QuotaManager*", "Reporting and NEL*", "SecurePreferences", "Shortcuts*", "SyncData.sqlite3", "Top Sites*", "Trust Tokens*", "Visited Links", "WebAssistDatabase*", "Web Data*"]
     ignore_date_range: true
     exclude_nologin_users: true
   -
@@ -22,7 +22,7 @@ artifacts:
     supported_os: [macos]
     collector: file
     path: /%user_home%/Library/"Application Support"/Google/Chrome
-    name_pattern: ["Bookmarks*", "Cookies*", "DownloadMetadata", "Extension Cookies*", "Favicons*", "History*", "Login Data*", "Media History*", "Network Action Predictor*", "Network Persistent State", "Preferences", "QuotaManager*", "Reporting and NEL*", "SecurePreferences", "Shortcuts*", "SyncData.sqlite3", "Top Sites*", "Trust Tokens*", "Visited Links", "WebAssistDatabase*", "Web Data*"]
+    name_pattern: ["Affiliation Database*", "Bookmarks*", "Cookies*", "DownloadMetadata", "Extension Cookies*", "Favicons*", "History*", "Login Data*", "Media History*", "Network Action Predictor*", "Network Persistent State", "Preferences", "QuotaManager*", "Reporting and NEL*", "SecurePreferences", "Shortcuts*", "SyncData.sqlite3", "Top Sites*", "Trust Tokens*", "Visited Links", "WebAssistDatabase*", "Web Data*"]
     ignore_date_range: true
     exclude_nologin_users: true
   -

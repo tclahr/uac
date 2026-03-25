@@ -49,27 +49,6 @@ _parse_artifact()
 
   __pa_global_output_directory=""
 
-  _replace_exposed_variables()
-  {
-    __re_value="${1:-}"
-
-    if [ -n "${__UAC_START_DATE}" ]; then
-      __re_value=`printf "%s" "${__re_value}" \
-        | sed -e "s|%start_date%|${__UAC_START_DATE}|g" \
-              -e "s|%start_date_epoch%|${__UAC_START_DATE_EPOCH}|g" 2>/dev/null`
-    fi
-    if [ -n "${__UAC_END_DATE}" ]; then
-      __re_value=`printf "%s" "${__re_value}" \
-        | sed -e "s|%end_date%|${__UAC_END_DATE}|g" \
-              -e "s|%end_date_epoch%|${__UAC_END_DATE_EPOCH}|g" 2>/dev/null`
-    fi
-    printf "%s" "${__re_value}" \
-      | sed -e "s|%uac_directory%|${__UAC_DIR}|g" \
-            -e "s|%mount_point%|${__UAC_MOUNT_POINT}|g" \
-            -e "s:%non_local_mount_points%:${__UAC_EXCLUDE_MOUNT_POINTS}:g" \
-            -e "s|%temp_directory%|${__UAC_TEMP_DATA_DIR}/tmp|g" 2>/dev/null
-  }
-
   # remove lines starting with # (comments) and any inline comments
   # remove leading and trailing space characters
   # remove blank lines
@@ -125,7 +104,10 @@ _parse_artifact()
 "
               done
             fi
-            __pa_command=`_replace_exposed_variables "${__pa_value}"`
+            __pa_command="${__pa_value}"
+            if printf "%s" "${__pa_command}" | grep -q -E "%[a-zA-Z_]"; then
+              __pa_command=`_replace_runtime_user_defined_variables "${__pa_command}"`
+            fi
             ;;
           "compress_output_file:")
             __pa_compress_output_file="${__pa_value}"
@@ -138,7 +120,10 @@ _parse_artifact()
 "
               done
             fi
-            __pa_condition=`_replace_exposed_variables "${__pa_value}"`
+            __pa_condition="${__pa_value}"
+            if printf "%s" "${__pa_condition}" | grep -q -E "%[a-zA-Z_]"; then
+              __pa_condition=`_replace_runtime_user_defined_variables "${__pa_condition}"`
+            fi
             ;;
           "description:")
             __pa_description="${__pa_value}"
@@ -166,7 +151,10 @@ _parse_artifact()
 "
               done
             fi
-            __pa_foreach=`_replace_exposed_variables "${__pa_value}"`
+            __pa_foreach="${__pa_value}"
+            if printf "%s" "${__pa_foreach}" | grep -q -E "%[a-zA-Z_]"; then
+              __pa_foreach=`_replace_runtime_user_defined_variables "${__pa_foreach}"`
+            fi
             ;;
           "ignore_date_range:")
             __pa_ignore_date_range="${__pa_value}"
@@ -178,10 +166,10 @@ _parse_artifact()
             __pa_max_depth="${__pa_value}"
             ;;
           "max_file_size:")
-            __pa_max_file_size="${__pa_value}"
+            __pa_max_file_size=`_convert_size "${__pa_value}"`
             ;;
           "min_file_size:")
-            __pa_min_file_size="${__pa_value}"
+            __pa_min_file_size=`_convert_size "${__pa_value}"`
             ;;
           "name_pattern:")
             __pa_name_pattern=`echo "${__pa_value}" | _array_to_psv 2>/dev/null`
@@ -196,14 +184,20 @@ _parse_artifact()
             if echo "${__pa_value}" | grep -q -E "%temp_directory%"; then
               __pa_output_directory=`echo "${__pa_value}" | sed -e "s|%temp_directory%|${__UAC_TEMP_DATA_DIR}/tmp|g" 2>/dev/null`
             else
-              __pa_output_directory="${__UAC_TEMP_DATA_DIR}/collected/${__pa_value}"
+              __pa_output_directory="${__UAC_ARTIFACTS_OUTPUT_DIR}/${__pa_value}"
             fi
             ;;
           "output_file:")
             __pa_output_file="${__pa_value}"
+            if printf "%s" "${__pa_output_file}" | grep -q -E "%[a-zA-Z_]"; then
+              __pa_output_file=`_replace_runtime_user_defined_variables "${__pa_output_file}"`
+            fi
             ;;
           "path:")
-              __pa_path=`_replace_exposed_variables "${__pa_value}"`
+            __pa_path="${__pa_value}"
+            if printf "%s" "${__pa_path}" | grep -q -E "%[a-zA-Z_]"; then
+              __pa_path=`_replace_runtime_user_defined_variables "${__pa_path}"`
+            fi
             ;;
           "path_pattern:")
             __pa_path_pattern=`echo "${__pa_value}" | _array_to_psv 2>/dev/null`
@@ -352,6 +346,7 @@ _parse_artifact()
                         "${__pa_no_group}" \
                         "${__pa_no_user}" \
                         "${__pa_ignore_date_range}" \
+                        "" \
                         "${__UAC_TEMP_DATA_DIR}" \
                         "file_collector.tmp"
                     elif [ "${__pa_collector}" = "find" ]; then
@@ -372,6 +367,7 @@ _parse_artifact()
                         "${__pa_no_group}" \
                         "${__pa_no_user}" \
                         "${__pa_ignore_date_range}" \
+                        "${__pa_new_command}" \
                         "${__pa_new_output_directory}" \
                         "${__pa_new_output_file}"
                     elif [ "${__pa_collector}" = "hash" ]; then
@@ -392,6 +388,7 @@ _parse_artifact()
                         "${__pa_no_group}" \
                         "${__pa_no_user}" \
                         "${__pa_ignore_date_range}" \
+                        "" \
                         "${__pa_new_output_directory}" \
                         "${__pa_new_output_file}"
                     elif [ "${__pa_collector}" = "stat" ]; then
@@ -412,6 +409,7 @@ _parse_artifact()
                         "${__pa_no_group}" \
                         "${__pa_no_user}" \
                         "${__pa_ignore_date_range}" \
+                        "" \
                         "${__pa_new_output_directory}" \
                         "${__pa_new_output_file}"
                     fi
@@ -443,6 +441,7 @@ _parse_artifact()
                   "${__pa_no_group}" \
                   "${__pa_no_user}" \
                   "${__pa_ignore_date_range}" \
+                  "" \
                   "${__UAC_TEMP_DATA_DIR}" \
                   "file_collector.tmp"
               elif [ "${__pa_collector}" = "find" ]; then
@@ -463,6 +462,7 @@ _parse_artifact()
                   "${__pa_no_group}" \
                   "${__pa_no_user}" \
                   "${__pa_ignore_date_range}" \
+                  "${__pa_command}" \
                   "${__pa_output_directory}" \
                   "${__pa_output_file}"
               elif [ "${__pa_collector}" = "hash" ]; then
@@ -483,6 +483,7 @@ _parse_artifact()
                   "${__pa_no_group}" \
                   "${__pa_no_user}" \
                   "${__pa_ignore_date_range}" \
+                  "" \
                   "${__pa_output_directory}" \
                   "${__pa_output_file}"
               elif [ "${__pa_collector}" = "stat" ]; then
@@ -503,6 +504,7 @@ _parse_artifact()
                   "${__pa_no_group}" \
                   "${__pa_no_user}" \
                   "${__pa_ignore_date_range}" \
+                  "" \
                   "${__pa_output_directory}" \
                   "${__pa_output_file}"
               fi

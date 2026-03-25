@@ -53,16 +53,9 @@ _get_user_home_list()
     # let's skip home directories that are symlinks to avoid data dupplication
     if [ ! -h "${__gu_mount_point}${__gu_parent_home_dir}" ]; then
       for __gu_user_home_dir in "${__gu_mount_point}${__gu_parent_home_dir}"/*; do
-        __gu_user_home_from_dir_temp=`echo "${__gu_user_home_dir}" \
-        | sed -e "s|^${__gu_mount_point}||" \
-        | awk  '{
-                  split($1, parts, "/");
-                  size = 0;
-                  for (i in parts) size++;
-                  printf "%s:%s\n",parts[size],$1;
-                }'`
+        __gu_user_home_from_dir_temp=`echo "${__gu_user_home_dir}" | sed -e 's|.*/||'`
         __gu_user_home_from_dir="${__gu_user_home_from_dir}
-${__gu_user_home_from_dir_temp}"
+${__gu_user_home_from_dir_temp}:${__gu_parent_home_dir}/${__gu_user_home_from_dir_temp}"
       done
     fi
   done

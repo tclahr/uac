@@ -1,0 +1,16 @@
+version: 1.0
+output_directory: /live_response/system
+artifacts:
+  -
+    description: Collect binfmt_misc files.
+    supported_os: [linux]
+    collector: command
+    foreach: ls -a /proc/sys/fs/binfmt_misc | grep -vE '^(\.\.?|register|status)$'
+    command: cat /proc/sys/fs/binfmt_misc/%line%
+    output_directory: /live_response/system/binfmt_misc
+    output_file: %line%.txt
+
+# References:
+# https://dfir.ch/posts/today_i_learned_binfmt_misc/
+# https://www.sentinelone.com/blog/shadow-suid-for-privilege-persistence-part-1/
+# https://www.sentinelone.com/blog/shadow-suid-privilege-persistence-part-2/

@@ -10,6 +10,7 @@ Use of the following Third-Party Software is subject to the license agreements a
 |find.pl|Use rights in accordance with the information displayed at: <https://github.com/tclahr/find.pl/blob/main/LICENSE>|<https://github.com/tclahr/find.pl>|
 |linux_procmemdump.sh|Use rights in accordance with the information displayed at: <https://creativecommons.org/licenses/by-sa/4.0>|<https://github.com/halpomeranz/dfis>|
 |stat.pl|Use rights in accordance with the information displayed at: <https://github.com/tclahr/stat.pl/blob/main/LICENSE>|<https://github.com/tclahr/stat.pl>|
+|statf|Use rights in accordance with the information displayed at: <https://github.com/tclahr/statfgit/blob/main/LICENSE>|<https://github.com/tclahr/statf>|
 |statx|Use rights in accordance with the information displayed at: <https://github.com/tclahr/statx/blob/main/LICENSE>|<https://github.com/tclahr/statx>|
 |strings.sh|Use rights in accordance with the information displayed at: <https://github.com/tclahr/strings.sh/blob/main/LICENSE>|<https://github.com/tclahr/strings.sh>|
 |timeout.sh|Use rights in accordance with the information displayed at: <https://github.com/tclahr/timeout.sh/blob/main/LICENSE>|<https://github.com/tclahr/timeout.sh>|

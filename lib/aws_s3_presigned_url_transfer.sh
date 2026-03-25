@@ -11,7 +11,7 @@
 #            false on fail
 _aws_s3_presigned_url_transfer()
 {
-  __aw_payload="${1:-Testing S3 upload from shell script.}"
+  __aw_payload="${1:-Testing upload from shell script.}"
   __aw_url="${2:-}"
 
   __aw_date=`date "+%a, %d %b %Y %H:%M:%S %z"`

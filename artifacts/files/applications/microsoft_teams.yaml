@@ -1,4 +1,4 @@
-version: 1.1
+version: 1.2
 artifacts:
   -
     description: Collect Microsoft Teams cache files (including Flatpak and Snap versions).
@@ -20,7 +20,7 @@ artifacts:
     supported_os: [linux]
     collector: file
     path: /%user_home%/.config/Microsoft/"Microsoft Teams" /%user_home%/.var/app/com.microsoft.Teams /%user_home%/snap/teams
-    path_pattern: ["*/Local Storage/leveldb/*"]
+    name_pattern: ["*.leveldb"]
     exclude_nologin_users: true
   -
     description: Collect Microsoft Teams config file (including Flatpak and Snap versions).
@@ -47,38 +47,44 @@ artifacts:
     description: Collect Microsoft Teams cache files.
     supported_os: [macos]
     collector: file
-    path: /%user_home%/Library/"Application Support"/Microsoft/Teams/Cache
+    path: /%user_home%/Library/Containers/com.microsoft.teams2/Data/Library/"Application Support"/Microsoft/MSTeams /%user_home%/Library/"Application Support"/Microsoft/Teams
+    path_pattern: ["*/Cache/*"]
     exclude_nologin_users: true
   -
     description: Collect Microsoft Teams chat log files.
     supported_os: [macos]
     collector: file
-    path: /%user_home%/Library/"Application Support"/Microsoft/Teams/IndexedDB
+    path: /%user_home%/Library/Containers/com.microsoft.teams2/Data/Library/"Application Support"/Microsoft/MSTeams /%user_home%/Library/"Application Support"/Microsoft/Teams
+    path_pattern: ["*/IndexedDB/*"]
     name_pattern: ["*.log"]
     exclude_nologin_users: true
   -
     description: Collect Microsoft Teams leveldb files.
     supported_os: [macos]
     collector: file
-    path: /%user_home%/Library/"Application Support"/Microsoft/Teams/"Local Storage"/leveldb
+    path: /%user_home%/Library/Containers/com.microsoft.teams2/Data/Library/"Application Support"/Microsoft/MSTeams /%user_home%/Library/"Application Support"/Microsoft/Teams
+    name_pattern: ["*.leveldb"]
     exclude_nologin_users: true
   -
     description: Collect Microsoft Teams config file.
     supported_os: [macos]
     collector: file
-    path: /%user_home%/Library/"Application Support"/Microsoft/Teams/desktop-config.json
+    path: /%user_home%/Library/Containers/com.microsoft.teams2/Data/Library/"Application Support"/Microsoft/MSTeams /%user_home%/Library/"Application Support"/Microsoft/Teams
+    name_pattern: ["desktop-config.json"]
     exclude_nologin_users: true
   -
     description: Collect Microsoft Teams logs directory.
     supported_os: [macos]
     collector: file
-    path: /%user_home%/Library/"Application Support"/Microsoft/Teams/logs
+    path: /%user_home%/Library/Containers/com.microsoft.teams2/Data/Library/"Application Support"/Microsoft/MSTeams /%user_home%/Library/"Application Support"/Microsoft/Teams
+    path_pattern: ["*/logs/*"]
     exclude_nologin_users: true
   -
     description: Collect Microsoft Teams log file.
     supported_os: [macos]
     collector: file
-    path: /%user_home%/Library/"Application Support"/Microsoft/Teams/logs.txt
+    path: /%user_home%/Library/Containers/com.microsoft.teams2/Data/Library/"Application Support"/Microsoft/MSTeams /%user_home%/Library/"Application Support"/Microsoft/Teams
+    name_pattern: ["logs.txt"]
     exclude_nologin_users: true
 
 # References:

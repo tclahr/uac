@@ -1,0 +1,15 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect D-Bus config files, a possible persistence mechanism.
+    supported_os: [linux]
+    collector: file
+    path: /etc/dbus-1 /usr/share/dbus-1
+  -
+    description: Collect user-specific D-Bus config files.
+    supported_os: [linux]
+    collector: file
+    path: /%user_home%/.local/share/dbus-1
+
+# References:
+# https://www.elastic.co/security-labs/the-grand-finale-on-linux-persistence

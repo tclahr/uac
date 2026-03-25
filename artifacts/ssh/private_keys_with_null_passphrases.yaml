@@ -1,0 +1,11 @@
+version: 1.0
+condition: command_exists "ssh-keygen"
+artifacts:
+  -
+    description: Find SSH private keys with null passphrases and print their public keys.
+    supported_os: [all]
+    collector: command
+    foreach: ls /%user_home%/.ssh | grep -v -E '(^authorized_keys$|^known_hosts$|^config$|\.pub$)'
+    command: ssh-keygen -P '' -y -f "/%user_home%/.ssh/%line%"
+    output_directory: /ssh/private_keys_with_null_passphrases/%user%
+    output_file: ssh-keygen_-P_-y_-f_%line%.txt

@@ -1,0 +1,21 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect /boot files.
+    supported_os: [linux]
+    collector: file
+    path: /boot/config* /boot/initramfs* /boot/initrd* /boot/symvers* /boot/System.map*
+  -
+    description: Collect GRUB config files, a possible persistence mechanism.
+    supported_os: [linux]
+    collector: file
+    path: /boot
+    name_pattern: ["grub.cfg"]
+  -
+    description: Collect GRUB config files, a possible persistence mechanism.
+    supported_os: [linux]
+    collector: file
+    path: /etc/default/grub /etc/default/grub.d /etc/grub.d
+
+# References:
+# https://www.elastic.co/security-labs/the-grand-finale-on-linux-persistence

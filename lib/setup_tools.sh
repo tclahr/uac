@@ -25,7 +25,6 @@ _setup_tools()
   __UAC_TOOL_XARGS_NULL_DELIMITER_SUPPORT=false
   __UAC_TOOL_STAT_BIN=""
   __UAC_TOOL_STAT_PARAMS=""
-  __UAC_TOOL_STAT_BTIME=false
   __UAC_TOOL_TAR_NO_FROM_FILE_SUPPORT=false
   __UAC_MAX_FILENAME_SIZE=118
   __UAC_TOOL_MD5_BIN=""
@@ -80,23 +79,16 @@ _setup_tools()
   # check which stat tool and options are available for the target system
   if statx "${__UAC_MOUNT_POINT}" | grep -q -E "\|[0-9]+\|[0-9]+\|[0-9]+$"; then
     __UAC_TOOL_STAT_BIN="statx"
-    __UAC_TOOL_STAT_PARAMS=""
-    __UAC_TOOL_STAT_BTIME=true
   elif stat -c "0|%N|%i|%A|%u|%g|%s|%X|%Y|%Z|%W" "${__UAC_MOUNT_POINT}" | grep -q -E "\|[0-9]+\|[0-9]+\|[0-9]+\|"; then
     __UAC_TOOL_STAT_BIN="stat"
     __UAC_TOOL_STAT_PARAMS="-c \"0|%N|%i|%A|%u|%g|%s|%X|%Y|%Z|%W\""
-    if stat -c "0|%N|%i|%A|%u|%g|%s|%X|%Y|%Z|%W" "${__UAC_MOUNT_POINT}" | grep -q -E "\|[0-9]+\|[0-9]+\|[0-9][0-9]+$"; then
-      __UAC_TOOL_STAT_BTIME=true
-    fi
   elif stat -f "0|%N%SY|%i|%Sp|%u|%g|%z|%a|%m|%c|%B" "${__UAC_MOUNT_POINT}" | grep -q -E "\|[0-9]+\|[0-9]+\|[0-9]+\|"; then
     __UAC_TOOL_STAT_BIN="stat"
     __UAC_TOOL_STAT_PARAMS="-f \"0|%N%SY|%i|%Sp|%u|%g|%z|%a|%m|%c|%B\""
-    if stat -f "0|%N%SY|%i|%Sp|%u|%g|%z|%a|%m|%c|%B" "${__UAC_MOUNT_POINT}" | grep -q -E "\|[0-9]+\|[0-9]+\|[0-9][0-9]+$"; then
-      __UAC_TOOL_STAT_BTIME=true
-    fi
   elif stat.pl "${__UAC_MOUNT_POINT}" | grep -q -E "\|[0-9]+\|[0-9]+\|[0-9]+$"; then
     __UAC_TOOL_STAT_BIN="stat.pl"
-    __UAC_TOOL_STAT_PARAMS=""
+  elif statf "${__UAC_MOUNT_POINT}" | grep -q -E "\|[0-9]+\|[0-9]+\|[0-9]+\|"; then
+    __UAC_TOOL_STAT_BIN="statf"
   fi
 
   case "${__UAC_OPERATING_SYSTEM}" in

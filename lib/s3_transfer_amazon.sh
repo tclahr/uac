@@ -14,7 +14,7 @@
 #            false on fail
 _s3_transfer_amazon()
 {
-  __s3a_payload="${1:-Testing S3 upload from shell script.}"
+  __s3a_payload="${1:-Testing upload from shell script.}"
   __s3a_region="${2:-us-east-1}"
   __s3a_bucket="${3:-}"
   __s3a_access_key="${4:-}"

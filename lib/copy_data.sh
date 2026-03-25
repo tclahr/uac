@@ -20,7 +20,7 @@ _copy_data()
   # shellcheck disable=SC2162  
   while read __cd_line && [ -n "${__cd_line}" ]; do
     # shellcheck disable=SC2006
-    __cd_dirname=`dirname "${__cd_line}" | sed -e "s|^${__UAC_MOUNT_POINT}|/|" -e "s|^${__UAC_TEMP_DATA_DIR}/collected|/|"`
+    __cd_dirname=`dirname "${__cd_line}" | sed -e "s|^${__UAC_MOUNT_POINT}|/|" -e "s|^${__UAC_ARTIFACTS_OUTPUT_DIR}|/|"`
     mkdir -p "${__cd_destination_directory}/${__cd_dirname}"
     cp -r "${__cd_line}" "${__cd_destination_directory}/${__cd_dirname}"
   done <"${__cd_from_file}"

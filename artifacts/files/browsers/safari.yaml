@@ -1,4 +1,4 @@
-version: 3.1
+version: 3.2
 artifacts:
   -
     description: Collect Safari browser files.
@@ -12,7 +12,7 @@ artifacts:
     description: Collect Safari browser files.
     supported_os: [macos]
     collector: file
-    path: /%user_home%/Library/Containers/com.apple.Safari*/Data/Library/Safari*
+    path: /%user_home%/Library/Containers/com.apple.Safari*/Data/Library
     name_pattern: ["AutoFillCorrections*", "AutoFillQuirks.plist", "AutomaticBookmarksBackup.html", "Bookmarks.plist", "com.apple.Safari.plist", "CloudAutoFillCorrections*", "CloudExtensions.db*", "CloudTabs*", "ContentBlockerStatistics*", "Cookies.plist", "Downloads.plist", "Extensions.plist", "History*", "LastSession.plist", "PerSitePreferences*", "RecentlyClosedTabs.plist", "SafariTabs.db*", "TopSites.plist"]
     ignore_date_range: true
     exclude_nologin_users: true

@@ -254,22 +254,22 @@ _validate_artifact()
             __va_max_depth="${__va_value}"
             ;;
           "max_file_size:")
-            if _is_digit "${__va_value}" && [ "${__va_value}" -gt 0 ]; then
+            if _convert_size "${__va_value}" >/dev/null; then
               true
             else
-              _error_msg "Invalid value for 'max_file_size': expected integer greater than zero."
+              _error_msg "Invalid value for 'max_file_size'."
               return 1
             fi
-            __va_max_file_size="${__va_value}"
+            __va_max_file_size=`_convert_size "${__va_value}"`
             ;;
           "min_file_size:")
-            if _is_digit "${__va_value}" && [ "${__va_value}" -gt 0 ]; then
+            if _convert_size "${__va_value}" >/dev/null; then
               true
             else
-              _error_msg "Invalid value for 'min_file_size': expected integer greater than zero."
+              _error_msg "Invalid value for 'min_file_size'."
               return 1
             fi
-            __va_min_file_size="${__va_value}"
+            __va_min_file_size=`_convert_size "${__va_value}"`
             ;;
           "modifier:")
             if [ "${__va_value}" != true ] && [ "${__va_value}" != false ]; then
@@ -503,7 +503,7 @@ _validate_artifact()
                 _error_msg "Missing required field: 'path' is not set for '${__va_collector}' collector."
                 return 1
               fi
-              if [ -n "${__va_command}" ]; then
+              if [ -n "${__va_command}" ] && [ "${__va_collector}" != "find" ]; then
                 _error_msg "Invalid field: 'command' is not applicable for the '${__va_collector}' collector."
                 return 1
               fi

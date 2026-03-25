@@ -1,0 +1,14 @@
+version: 1.1
+condition: if [ ! -f "/%artifacts_output_directory%/system/group_writable_directories.txt" ]; then true; else false; fi
+output_directory: /system
+artifacts:
+  -
+    description: List all group writable directories.
+    supported_os: [all]
+    collector: find
+    path: /
+    file_type: [d]
+    permissions: [-0040]
+    exclude_file_system: [proc, procfs]
+    output_file: group_writable_directories.txt
+  

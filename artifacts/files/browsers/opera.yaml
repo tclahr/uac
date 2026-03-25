@@ -1,11 +1,11 @@
-version: 3.2
+version: 3.3
 artifacts:
   -
     description: Collect Opera browser files (including Flatpak and Snap versions).
     supported_os: [linux]
     collector: file
     path: /%user_home%/.config/opera /%user_home%/.var/app/com.opera.Opera /%user_home%/snap/opera
-    name_pattern: ["Bookmarks*", "Cookies*", "DownloadMetadata", "Extension Cookies*", "Favicons*", "History*", "Login Data*", "Media History*", "Network Action Predictor*", "Network Persistent State", "Preferences", "QuotaManager*", "Reporting and NEL*", "SecurePreferences", "Shortcuts*", "SyncData.sqlite3", "Top Sites*", "Trust Tokens*", "Visited Links", "WebAssistDatabase*", "Web Data*"]
+    name_pattern: ["Affiliation Database*", "Bookmarks*", "Cookies*", "DownloadMetadata", "Extension Cookies*", "Favicons*", "History*", "Login Data*", "Media History*", "Network Action Predictor*", "Network Persistent State", "Preferences", "QuotaManager*", "Reporting and NEL*", "SecurePreferences", "Shortcuts*", "SyncData.sqlite3", "Top Sites*", "Trust Tokens*", "Visited Links", "WebAssistDatabase*", "Web Data*"]
     ignore_date_range: true
     exclude_nologin_users: true
   -
@@ -23,7 +23,7 @@ artifacts:
     collector: file
     # will match com.operasoftware.Opera and Opera
     path: /%user_home%/Library/"Application Support"/*Opera
-    name_pattern: ["Bookmarks*", "Cookies*", "DownloadMetadata", "Extension Cookies*", "Favicons*", "History*", "Login Data*", "Media History*", "Network Action Predictor*", "Network Persistent State", "Preferences", "QuotaManager*", "Reporting and NEL*", "SecurePreferences", "Shortcuts*", "SyncData.sqlite3", "Top Sites*", "Trust Tokens*", "Visited Links", "WebAssistDatabase*", "Web Data*"]
+    name_pattern: ["Affiliation Database*", "Bookmarks*", "Cookies*", "DownloadMetadata", "Extension Cookies*", "Favicons*", "History*", "Login Data*", "Media History*", "Network Action Predictor*", "Network Persistent State", "Preferences", "QuotaManager*", "Reporting and NEL*", "SecurePreferences", "Shortcuts*", "SyncData.sqlite3", "Top Sites*", "Trust Tokens*", "Visited Links", "WebAssistDatabase*", "Web Data*"]
     ignore_date_range: true
     exclude_nologin_users: true
   -

@@ -1,13 +1,13 @@
-version: 1.0
+version: 1.1
 artifacts:
   -
-    description: Collect iMessage chat database.
+    description: Collect Apple Messages application chat database.
     supported_os: [macos]
     collector: file
     path: /%user_home%/Library/Messages/chat.db*
     exclude_nologin_users: true
   -
-    description: Collect iMessage attachments.
+    description: Collect Apple Messages application attachments.
     supported_os: [macos]
     collector: file
     path: /%user_home%/Library/Messages/Attachments
