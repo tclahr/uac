@@ -12,6 +12,6 @@ artifacts:
     description: Collect Jenkins {build,config}.xml files from home directory.
     supported_os: [linux, macos]
     collector: file
-    path: /%user_home%/.jenkins
+    path: %user_home%/.jenkins
     name_pattern: ["config.xml","build.xml"]
     file_type: [f]

@@ -4,7 +4,7 @@ artifacts:
     description: Collect shell history files.
     supported_os: [all]
     collector: file
-    path: /%user_home%
+    path: %user_home%
     # lesshst: less command history file
     name_pattern: [".*_history", ".*history", ".cosh_history", ".dash_history", ".esh_history", ".lesshst", ".nash_history", ".sash_history", ".scsh_history", ".xonsh_history", ".zhistory", "*.historynew", "fish_history"]
     max_depth: 4

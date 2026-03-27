@@ -277,16 +277,13 @@ _parse_artifact()
               echo "${__pa_user_home_list}" \
                 | while read __pa_line && [ -n "${__pa_line}" ]; do
                     __pa_user=`echo "${__pa_line}" | cut -d ":" -f 1`
-
                     __pa_home=`echo "${__pa_line}" | cut -d ":" -f 2`
-
-                    __pa_no_slash_home=`echo "${__pa_line}" | cut -d ":" -f 2 | sed -e 's|^/||' 2>/dev/null`
-                    
+                   
                     _log_msg INF "Collecting data for user ${__pa_user}"
 
                     # replace %user% and %user_home% in path
-                    __pa_new_path=`_replace_eval_safe_placeholder "${__pa_path}" "user_home" "${__pa_no_slash_home}"`
-                    __pa_new_path=`_replace_eval_safe_placeholder "${__pa_new_path}" "user" "${__pa_user}"`
+                    __pa_new_path=`_replace_placeholder_shell_fragment "${__pa_path}" "%user_home%" "${__pa_home}"`
+                    __pa_new_path=`_replace_placeholder_shell_fragment "${__pa_new_path}" "%user%" "${__pa_user}"`
 
                     if [ "${__pa_collector}" = "file" ]; then
                       if echo "${__pa_processed_home}" | grep -q -E "\|${__pa_new_path}\|"; then
@@ -298,25 +295,25 @@ _parse_artifact()
                     fi
 
                     # replace %user% and %user_home% in command
-                    __pa_new_command=`_replace_eval_safe_placeholder "${__pa_command}" "user_home" "${__pa_no_slash_home}"`
-                    __pa_new_command=`_replace_eval_safe_placeholder "${__pa_new_command}" "user" "${__pa_user}"`
+                    __pa_new_command=`_replace_placeholder_shell_fragment "${__pa_command}" "%user_home%" "${__pa_home}"`
+                    __pa_new_command=`_replace_placeholder_shell_fragment "${__pa_new_command}" "%user%" "${__pa_user}"`
 
                     # replace %user% and %user_home% in foreach
-                    __pa_new_foreach=`_replace_eval_safe_placeholder "${__pa_foreach}" "user_home" "${__pa_no_slash_home}"`
-                    __pa_new_foreach=`_replace_eval_safe_placeholder "${__pa_new_foreach}" "user" "${__pa_user}"`
+                    __pa_new_foreach=`_replace_placeholder_shell_fragment "${__pa_foreach}" "%user_home%" "${__pa_home}"`
+                    __pa_new_foreach=`_replace_placeholder_shell_fragment "${__pa_new_foreach}" "%user%" "${__pa_user}"`
 
                     # replace %user% and %user_home% in output_directory
-                    __pa_new_output_directory=`_replace_plain_placeholder "${__pa_output_directory}" "user_home" "${__pa_no_slash_home}"`
-                    __pa_new_output_directory=`_replace_plain_placeholder "${__pa_new_output_directory}" "user" "${__pa_user}"`
+                    __pa_new_output_directory=`_replace_placeholder_plain_text "${__pa_output_directory}" "%user_home%" "${__pa_home}"`
+                    __pa_new_output_directory=`_replace_placeholder_plain_text "${__pa_new_output_directory}" "%user%" "${__pa_user}"`
 
                     # replace %user% and %user_home% in output_file
-                    __pa_new_output_file=`_replace_plain_placeholder "${__pa_output_file}" "user_home" "${__pa_no_slash_home}"`
-                    __pa_new_output_file=`_replace_plain_placeholder "${__pa_new_output_file}" "user" "${__pa_user}"`
+                    __pa_new_output_file=`_replace_placeholder_plain_text "${__pa_output_file}" "%user_home%" "${__pa_home}"`
+                    __pa_new_output_file=`_replace_placeholder_plain_text "${__pa_new_output_file}" "%user%" "${__pa_user}"`
 
                     __pa_new_max_depth="${__pa_max_depth}"
                     # if home directory is / (root in some systems),
                     # maxdepth will be set to 2
-                    if [ "${__pa_new_path}" = "${__UAC_MOUNT_POINT}" ]; then
+                    if [ "${__pa_new_path}" = "${__UAC_MOUNT_POINT}" ] || [ "${__pa_new_path}" = "\"${__UAC_MOUNT_POINT}\"" ]; then
                       __pa_new_max_depth=2
                     fi
 

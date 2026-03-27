@@ -4,7 +4,7 @@ artifacts:
     description: Collect shell sessions files.
     supported_os: [all]
     collector: file
-    path: /%user_home%
+    path: %user_home%
     name_pattern: ["*.session", "*.sessions", ".*_sessions"]
     max_depth: 2
     

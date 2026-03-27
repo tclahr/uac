@@ -4,14 +4,14 @@ artifacts:
     description: Collect Viber database files (including Flatpak and Snap versions).
     supported_os: [linux]
     collector: file
-    path: /%user_home%/.ViberPC /%user_home%/.var/app/com.viber.Viber /%user_home%/snap/viber
+    path: %user_home%/.ViberPC %user_home%/.var/app/com.viber.Viber %user_home%/snap/viber
     name_pattern: ["config.db*", "viber.db*"]
     exclude_nologin_users: true
   -
     description: Collect Viber avatar files (including Flatpak and Snap versions).
     supported_os: [linux]
     collector: file
-    path: /%user_home%/.ViberPC /%user_home%/.var/app/com.viber.Viber /%user_home%/snap/viber
+    path: %user_home%/.ViberPC %user_home%/.var/app/com.viber.Viber %user_home%/snap/viber
     path_pattern: ["*/Avatars/*"]
     ignore_date_range: true
     exclude_nologin_users: true
@@ -19,7 +19,7 @@ artifacts:
     description: Collect Viber thumbnails files (including Flatpak and Snap versions).
     supported_os: [linux]
     collector: file
-    path: /%user_home%/.ViberPC /%user_home%/.var/app/com.viber.Viber /%user_home%/snap/viber
+    path: %user_home%/.ViberPC %user_home%/.var/app/com.viber.Viber %user_home%/snap/viber
     path_pattern: ["*/Thumbnails/*"]
     ignore_date_range: true
     exclude_nologin_users: true
@@ -27,14 +27,14 @@ artifacts:
     description: Collect Viber database files.
     supported_os: [macos]
     collector: file
-    path: /%user_home%/Library/"Application Support"/ViberPC
+    path: %user_home%/Library/"Application Support"/ViberPC
     name_pattern: ["config.db*", "viber.db*"]
     exclude_nologin_users: true
   -
     description: Collect Viber avatar files.
     supported_os: [macos]
     collector: file
-    path: /%user_home%/Library/"Application Support"/ViberPC
+    path: %user_home%/Library/"Application Support"/ViberPC
     path_pattern: ["*/Avatars/*"]
     ignore_date_range: true
     exclude_nologin_users: true
@@ -42,7 +42,7 @@ artifacts:
     description: Collect Viber thumbnails files.
     supported_os: [macos]
     collector: file
-    path: /%user_home%/Library/"Application Support"/ViberPC
+    path: %user_home%/Library/"Application Support"/ViberPC
     path_pattern: ["*/Thumbnails/*"]
     ignore_date_range: true
     exclude_nologin_users: true

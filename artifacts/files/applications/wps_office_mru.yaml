@@ -4,7 +4,7 @@ artifacts:
     description: Collect WPS Office Most Recently Used (including Flatpak and Snap versions).
     supported_os: [linux]
     collector: file
-    path: /%user_home%/.config/Kingsoft /%user_home%/.var/app/com.wps.Office /%user_home%/snap/wps-office
+    path: %user_home%/.config/Kingsoft %user_home%/.var/app/com.wps.Office %user_home%/snap/wps-office
     name_pattern: ["Office.conf", "recently-used.xbel", "workarea.cfg"]
     ignore_date_range: true
     exclude_nologin_users: true
@@ -12,7 +12,7 @@ artifacts:
     description: Collect WPS Office Most Recently Used.
     supported_os: [macos]
     collector: file
-    path: /%user_home%/Library/"Group Containers"/*.wpsoffice
+    path: %user_home%/Library/"Group Containers"/*.wpsoffice
     name_pattern: ["recentlocalfile.xml"]
     ignore_date_range: true
     exclude_nologin_users: true
