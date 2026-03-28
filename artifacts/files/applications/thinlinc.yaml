@@ -4,7 +4,7 @@ artifacts:
     description: Collect client logs and configuration files.
     supported_os: [linux, macos]
     collector: file
-    path: /%user_home%/.thinlinc
+    path: %user_home%/.thinlinc
     exclude_nologin_users: true
   -
     description: Collect VSM server, agent and Web Administration Interface logs.

@@ -4,7 +4,7 @@ artifacts:
     description: Collect Thunderbird configuration and preference files (including Flatpak and Snap versions).
     supported_os: [linux]
     collector: file
-    path: /%user_home%/.thunderbird /%user_home%/.var/app/org.mozilla.Thunderbird /%user_home%/snap/thunderbird
+    path: %user_home%/.thunderbird %user_home%/.var/app/org.mozilla.Thunderbird %user_home%/snap/thunderbird
     name_pattern: ["*.ini", "InstallTime*", "logins.json", "prefs.js"]
     ignore_date_range: true
     exclude_nologin_users: true
@@ -12,21 +12,21 @@ artifacts:
     description: Collect Thunderbird sqlite database files (including Flatpak and Snap versions).
     supported_os: [linux]
     collector: file
-    path: /%user_home%/.thunderbird /%user_home%/.var/app/org.mozilla.Thunderbird /%user_home%/snap/thunderbird
+    path: %user_home%/.thunderbird %user_home%/.var/app/org.mozilla.Thunderbird %user_home%/snap/thunderbird
     name_pattern: ["abook.sqlite*", "global-messages-db.sqlite*", "places.sqlite*"]
     exclude_nologin_users: true
   -
     description: Collect Thunderbird Attachments, ImapMail, and Mail files (including Flatpak and Snap versions).
     supported_os: [linux]
     collector: file
-    path: /%user_home%/.thunderbird /%user_home%/.var/app/org.mozilla.Thunderbird /%user_home%/snap/thunderbird
+    path: %user_home%/.thunderbird %user_home%/.var/app/org.mozilla.Thunderbird %user_home%/snap/thunderbird
     path_pattern: ["*/Attachments/*", "*/ImapMail/*", "*/Mail/*"]
     exclude_nologin_users: true
   -
     description: Collect Thunderbird configuration and preference files.
     supported_os: [macos]
     collector: file
-    path: /%user_home%/Library/Thunderbird
+    path: %user_home%/Library/Thunderbird
     name_pattern: ["*.ini", "InstallTime*", "logins.json", "prefs.js"]
     ignore_date_range: true
     exclude_nologin_users: true
@@ -34,14 +34,14 @@ artifacts:
     description: Collect Thunderbird sqlite database files.
     supported_os: [macos]
     collector: file
-    path: /%user_home%/Library/Thunderbird
+    path: %user_home%/Library/Thunderbird
     name_pattern: ["abook.sqlite*", "global-messages-db.sqlite*", "places.sqlite*"]
     exclude_nologin_users: true
   -
     description: Collect Thunderbird Attachments, ImapMail, and Mail files.
     supported_os: [macos]
     collector: file
-    path: /%user_home%/Library/Thunderbird
+    path: %user_home%/Library/Thunderbird
     path_pattern: ["*/Attachments/*", "*/ImapMail/*", "*/Mail/*"]
     exclude_nologin_users: true
   

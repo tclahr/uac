@@ -10,7 +10,7 @@ artifacts:
     description: Collect information about the permissions that a user is prompted to accept or decline while using macOS applications.
     supported_os: [macos]
     collector: file
-    path: /%user_home%/Library/"Application Support"/com.apple.TCC/TCC.db
+    path: %user_home%/Library/"Application Support"/com.apple.TCC/TCC.db
     ignore_date_range: true
     exclude_nologin_users: true
   

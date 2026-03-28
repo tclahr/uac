@@ -10,7 +10,7 @@ artifacts:
     description: Collect Biome application intents.
     supported_os: [macos]
     collector: file
-    path: /%user_home%/Library/Biome/streams/restricted/App.Intent/local
+    path: %user_home%/Library/Biome/streams/restricted/App.Intent/local
     ignore_date_range: true
   
 # References:

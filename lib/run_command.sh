@@ -23,12 +23,14 @@ _run_command()
     return 1
   fi
 
+  # empty stderr file
+  cat /dev/null >"${__rc_stderr_file}"
+
   if ${__rc_redirect_stderr_to_stdout}; then
     eval "${__rc_command}" 2>&1
-    return $?
+  else
+    eval "${__rc_command}" 2>"${__rc_stderr_file}"
   fi
-
-  eval "${__rc_command}" 2>"${__rc_stderr_file}"
   __rc_exit_code="$?"
 
   __rc_stderr=""

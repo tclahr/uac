@@ -9,7 +9,7 @@ artifacts:
     description: Collect user-specific D-Bus config files.
     supported_os: [linux]
     collector: file
-    path: /%user_home%/.local/share/dbus-1
+    path: %user_home%/.local/share/dbus-1
 
 # References:
 # https://www.elastic.co/security-labs/the-grand-finale-on-linux-persistence

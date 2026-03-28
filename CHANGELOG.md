@@ -77,6 +77,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- Fixed a command injection vulnerability related to the use of eval with the `%user%`, `%user_home%`, and `%line%` placeholders. Untrusted input passed through these placeholders could allow injection of shell metacharacters or command substitutions, potentially leading to arbitrary command execution. ([#429](https://github.com/tclahr/uac/issues/429)) (by [mobasi-team](https://github.com/mobasi-team))
 - Resolved a bug that prevented proper artifact collection when the mountpoint of a mounted disk image included spaces or special characters.
 
 ### Tools

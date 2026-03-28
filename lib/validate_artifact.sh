@@ -323,8 +323,11 @@ _validate_artifact()
             if [ -z "${__va_value}" ]; then
               _error_msg "Missing field value: 'path' must not be empty."
               return 1
-            elif echo "${__va_value}" | grep -q -v -E "^/"; then
-              _error_msg "Invalid value for 'output_directory': path must be absolute (start with '/')."
+            elif {
+                { echo "${__va_value}" | grep -q -E "^[^/]"; } &&
+                { echo "${__va_value}" | grep -q -E "^[^%]"; }
+              }; then
+              _error_msg "Invalid value for 'output_directory': path must be absolute (start with '/' or placeholder %home_user%, %mount_point% etc)."
               return 1
             fi
             __va_path="${__va_value}"
