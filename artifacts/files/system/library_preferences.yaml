@@ -11,7 +11,7 @@ artifacts:
     description: Collect user's preferences and configuration plist files.
     supported_os: [macos]
     collector: file
-    path: /%user_home%/Library/Preferences
+    path: %user_home%/Library/Preferences
     name_pattern: ["*.plist", ".*.plist"]
     ignore_date_range: true
     exclude_nologin_users: true

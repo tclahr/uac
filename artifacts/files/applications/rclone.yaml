@@ -4,6 +4,6 @@ artifacts:
     description: Collect configuration and log files.
     supported_os: [freebsd, linux, macos, netbsd, openbsd, solaris]
     collector: file
-    path: /%user_home%/.config/rclone
+    path: %user_home%/.config/rclone
     exclude_nologin_users: true
   

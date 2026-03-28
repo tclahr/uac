@@ -4,7 +4,7 @@ artifacts:
     description: Collect VLC configuration file which contains the list of recently opened files.
     supported_os: [linux]
     collector: file
-    path: /%user_home%/.config/vlc /%user_home%/.var/app/org.videolan.VLC /%user_home%/snap/vlc
+    path: %user_home%/.config/vlc %user_home%/.var/app/org.videolan.VLC %user_home%/snap/vlc
     name_pattern: ["vlc-qt-interface.conf"]
     exclude_nologin_users: true
 

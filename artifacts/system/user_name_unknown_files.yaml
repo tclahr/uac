@@ -24,7 +24,7 @@ artifacts:
     description: List files under user home directories (no recursion, top-level only) with an unknown user ID name.
     supported_os: [aix, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris]
     collector: find
-    path: /%user_home%
+    path: %user_home%
     max_depth: 1
     file_type: [f]
     no_user: true

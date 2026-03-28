@@ -14,13 +14,13 @@ artifacts:
     description: Collect log files.
     supported_os: [macos]
     collector: file
-    path: /Library/"Application Support"/Splashtop*/Logs /%user_home%/Library/"Application Support"/Splashtop*/Logs
+    path: /Library/"Application Support"/Splashtop*/Logs %user_home%/Library/"Application Support"/Splashtop*/Logs
     exclude_nologin_users: true
   -
     description: Collect STServerList file.
     supported_os: [macos]
     collector: file
-    path: /%user_home%/Library/"Application Support"/Splashtop*/STServerList
+    path: %user_home%/Library/"Application Support"/Splashtop*/STServerList
     exclude_nologin_users: true
   -
     description: Collect diagnostic report files.

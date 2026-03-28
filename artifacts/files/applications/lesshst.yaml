@@ -8,19 +8,19 @@ artifacts:
     description: Collect less history file. This file is used to store search string.
     supported_os: [aix, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris]
     collector: file
-    path: /%user_home%/.lesshst
+    path: %user_home%/.lesshst
     exclude_nologin_users: true
   -
     description: Collect less history file. This file is used to store search string.
     supported_os: [aix, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris]
     collector: file
     # $XDG_STATE_HOME/lesshst
-    path: /%user_home%/.local/state/lesshst
+    path: %user_home%/.local/state/lesshst
     exclude_nologin_users: true
   -
     description: Collect less history file. This file is used to store search string.
     supported_os: [aix, freebsd, linux, macos, netbsd, netscaler, openbsd, solaris]
     collector: file
     # $XDG_DATA_HOME/lesshst
-    path: /%user_home%/.local/share/lesshst
+    path: %user_home%/.local/share/lesshst
     exclude_nologin_users: true
