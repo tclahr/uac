@@ -101,6 +101,7 @@ All notable changes to this project will be documented in this file.
 
 - Fixed a command injection vulnerability related to the use of eval with the `%user%`, `%user_home%`, and `%line%` placeholders. Untrusted input passed through these placeholders could allow injection of shell metacharacters or command substitutions, potentially leading to arbitrary command execution. ([#429](https://github.com/tclahr/uac/issues/429)) (by [mobasi-team](https://github.com/mobasi-team))
 - Resolved a bug that prevented proper artifact collection when the mountpoint of a mounted disk image included spaces or special characters.
+- Added logic to correctly parse S3 bucket prefixes and append them to the object key during uploads. This fixes an issue where subdirectory paths in the destination were ignored, causing “Could not resolve host” errors and forcing uploads to the bucket root instead of the specified prefix. ([#445](https://github.com/tclahr/uac/issues/445)) (by [hulkmode](https://github.com/hulkmode))
 
 ### Tools
 
