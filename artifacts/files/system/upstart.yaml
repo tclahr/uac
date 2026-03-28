@@ -9,7 +9,7 @@ artifacts:
     description: Collect user-session Upstart configuration files.
     supported_os: [linux]
     collector: file
-    path: /%user_home%/.config/upstart
+    path: %user_home%/.config/upstart
 
 # References:
 # https://www.elastic.co/security-labs/sequel-on-persistence-mechanisms

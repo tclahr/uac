@@ -4,6 +4,6 @@ artifacts:
     description: Collect Facebook Messenger calls, groups, user contacted and messages files.
     supported_os: [macos]
     collector: file
-    path: /%user_home%/Library/"Application Support"/Messenger
+    path: %user_home%/Library/"Application Support"/Messenger
     name_pattern: ["*.db*"]
     exclude_nologin_users: true

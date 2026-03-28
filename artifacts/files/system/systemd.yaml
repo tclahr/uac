@@ -25,7 +25,7 @@ artifacts:
     description: Collect systemd per-user configuration.
     supported_os: [linux]
     collector: file
-    path: /%user_home%/.config/systemd /%user_home%/.local/share/systemd
+    path: %user_home%/.config/systemd %user_home%/.local/share/systemd
   -
     description: Collect systemd per-user transient timers.
     supported_os: [linux]

@@ -4,9 +4,9 @@ artifacts:
     description: Collect nano history files.
     supported_os: [all]
     collector: file
-    path: /%user_home%/.nano_history
+    path: %user_home%/.nano_history
   -
     description: Collect nano config files.
     supported_os: [all]
     collector: file
-    path: /%user_home%/.nanorc
+    path: %user_home%/.nanorc

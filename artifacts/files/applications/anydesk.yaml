@@ -5,7 +5,7 @@ artifacts:
     description: Collect AnyDesk configuration, session recordings, screenshot, chat and trace files.
     supported_os: [freebsd, linux, macos]
     collector: file
-    path: /%user_home%/.anydesk
+    path: %user_home%/.anydesk
     exclude_nologin_users: true
   -
     # some Linux and FreeBSD Session Recordings can be stored in /home/<user>/Videos/AnyDesk
@@ -14,13 +14,13 @@ artifacts:
     description: Collect AnyDesk session recordings, screenshots and chat log files.
     supported_os: [freebsd, linux]
     collector: file
-    path: /%user_home%/*/AnyDesk
+    path: %user_home%/*/AnyDesk
     exclude_nologin_users: true
   -
     description: Collect AnyDesk screenshot files.
     supported_os: [freebsd, linux, macos]
     collector: file
-    path: /%user_home%/
+    path: %user_home%/
     name_pattern: ["anydesk*.png"]
     max_depth: 4
     exclude_nologin_users: true
@@ -28,7 +28,7 @@ artifacts:
     description: Collect AnyDesk session recording files.
     supported_os: [freebsd, linux, macos]
     collector: file
-    path: /%user_home%/
+    path: %user_home%/
     name_pattern: ["*.anydesk"]
     max_depth: 4
     exclude_nologin_users: true
