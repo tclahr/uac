@@ -1,0 +1,18 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect history files (including logrotate and backup files).
+    supported_os: [all]
+    collector: file
+    path: /%user_home%/.local/share/powershell/PSReadLine/ConsoleHost_history.txt /%user_home%/.local/share/powershell/PSReadLine/ConsoleHost_history.txt.*
+  -
+    description: Collect user config files.
+    supported_os: [all]
+    collector: file
+    path: /%user_home%/.config/powershell/profile.ps1
+  -
+    description: Collect system config files.
+    supported_os: [all]
+    collector: file
+    path: /etc/powershell/profile.ps1
+  

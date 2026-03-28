@@ -1,0 +1,12 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect history files (including logrotate and backup files).
+    supported_os: [all]
+    collector: file
+    path: /%user_home%/.ash_history /var/log/shell.log
+  -
+    description: Collect system config files.
+    supported_os: [all]
+    collector: file
+    path: /etc/profile.local /etc/rc.local.d/local.sh
