@@ -4,17 +4,17 @@ artifacts:
     description: Collect history files (including logrotate and backup files).
     supported_os: [all]
     collector: file
-    path: /%user_home%/.zsh_history /%user_home%/.zhistory /%user_home%/.zsh_history~ /%user_home%/.zsh_history.* /%user_home%/.zhistory~ /%user_home%/.zhistory.*
+    path: %user_home%/.zsh_history %user_home%/.zhistory %user_home%/.zsh_history~ %user_home%/.zsh_history.* %user_home%/.zhistory~ %user_home%/.zhistory.*
   -
     description: Collect user config files.
     supported_os: [all]
     collector: file
-    path: /%user_home%/.zlogin /%user_home%/.zprofile /%user_home%/.zshenv /%user_home%/.zshrc
+    path: %user_home%/.zlogin %user_home%/.zprofile %user_home%/.zshenv %user_home%/.zshrc
   -
     description: Collect user session files.
     supported_os: [all]
     collector: file
-    path: /%user_home%/.zsh_sessions
+    path: %user_home%/.zsh_sessions
   -
     description: Collect system config files.
     supported_os: [all]
@@ -24,7 +24,7 @@ artifacts:
     description: Parse config files to determine $HISTFILE.
     supported_os: [all]
     collector: command
-    command: grep -E "^HISTFILE=.*" /%user_home%/.zlogin /%user_home%/.zprofile /%user_home%/.zshenv /%user_home%/.zshrc /etc/zshenv /etc/zprofile /etc/zshrc /etc/zlogin | sed -e 's|.*HISTFILE=||' -e 's|^~/|/%user_home%/|'
+    command: grep -E "^HISTFILE=.*" %user_home%/.zlogin %user_home%/.zprofile %user_home%/.zshenv %user_home%/.zshrc /etc/zshenv /etc/zprofile /etc/zshrc /etc/zlogin | sed -e 's|.*HISTFILE=||' -e 's|^~/|%user_home%/|'
     output_directory: /%temp_directory%/files/shell
     output_file: zsh_histfile.txt
   -

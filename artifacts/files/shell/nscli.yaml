@@ -4,5 +4,5 @@ artifacts:
     description: Collect history files.
     supported_os: [netscaler]
     collector: file
-    path: /%user_home%/.nscli_history
+    path: %user_home%/.nscli_history
 

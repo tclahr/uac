@@ -4,17 +4,17 @@ artifacts:
     description: Collect history files (including logrotate and backup files).
     supported_os: [all]
     collector: file
-    path: /%user_home%/.bash_history /%user_home%/.bash_history~ /%user_home%/.bash_history.*
+    path: %user_home%/.bash_history %user_home%/.bash_history~ %user_home%/.bash_history.*
   -
     description: Collect user config files.
     supported_os: [all]
     collector: file
-    path: /%user_home%/.bashrc /%user_home%/.profile /%user_home%/.bash_login /%user_home%/.bash_profile
+    path: %user_home%/.bashrc %user_home%/.profile %user_home%/.bash_login %user_home%/.bash_profile
   -
     description: Collect user session files.
     supported_os: [all]
     collector: file
-    path: /%user_home%/.bash_sessions
+    path: %user_home%/.bash_sessions
   -
     description: Collect system config files.
     supported_os: [all]
@@ -24,12 +24,12 @@ artifacts:
     description: Collect additional user files.
     supported_os: [all]
     collector: file
-    path: /%user_home%/.bash_aliases /%user_home%/.bash_logout /%user_home%/.inputrc
+    path: %user_home%/.bash_aliases %user_home%/.bash_logout %user_home%/.inputrc
   -
     description: Parse config files to determine $HISTFILE.
     supported_os: [all]
     collector: command
-    command: grep -E "HISTFILE=.*" /%user_home%/.bashrc /%user_home%/.bash_profile /%user_home%/.profile /etc/bash.bashrc | sed -e 's|.*HISTFILE=||' -e 's|^~/|/%user_home%/|'
+    command: grep -E "HISTFILE=.*" %user_home%/.bashrc %user_home%/.bash_profile %user_home%/.profile /etc/bash.bashrc | sed -e 's|.*HISTFILE=||' -e 's|^~/|%user_home%/|'
     output_directory: /%temp_directory%/files/shell
     output_file: bash_histfile.txt
   -

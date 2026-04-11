@@ -4,17 +4,17 @@ artifacts:
     description: Collect history files.
     supported_os: [all]
     collector: file
-    path: /%user_home%/.osh_history
+    path: %user_home%/.osh_history
   -
     description: Collect user config files.
     supported_os: [all]
     collector: file
-    path: /%user_home%/.config/oil/oshrc /%user_home%/.config/oil/yshrc
+    path: %user_home%/.config/oil/oshrc %user_home%/.config/oil/yshrc
   -
     description: Parse config files to determine $HISTFILE.
     supported_os: [all]
     collector: command
-    command: grep -E "HISTFILE=.*" /%user_home%/.config/oil/oshrc /%user_home%/.config/oil/yshrc | sed -e 's|.*HISTFILE=||' -e 's|^~/|/%user_home%/|'
+    command: grep -E "HISTFILE=.*" %user_home%/.config/oil/oshrc %user_home%/.config/oil/yshrc | sed -e 's|.*HISTFILE=||' -e 's|^~/|%user_home%/|'
     output_directory: /%temp_directory%/files/shell
     output_file: osh_histfile.txt
   -
