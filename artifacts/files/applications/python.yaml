@@ -1,7 +1,7 @@
-version: 1.0
+version: 1.1
 artifacts:
   -
     description: Collect python history files.
     supported_os: [all]
     collector: file
-    path: /%user_home%/.python_history
+    path: %user_home%/.python_history

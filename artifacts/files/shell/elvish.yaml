@@ -4,10 +4,10 @@ artifacts:
     description: Collect history files.
     supported_os: [all]
     collector: file
-    path: /%user_home%/.local/share/elvish/db.bolt
+    path: %user_home%/.local/share/elvish/db.bolt
   -
     description: Collect user config files.
     supported_os: [all]
     collector: file
-    path: /%user_home%/.config/elvish/rc.elv
+    path: %user_home%/.config/elvish/rc.elv
   

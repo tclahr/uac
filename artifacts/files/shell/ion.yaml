@@ -4,10 +4,10 @@ artifacts:
     description: Collect history files.
     supported_os: [all]
     collector: file
-    path: /%user_home%/.local/share/ion/history
+    path: %user_home%/.local/share/ion/history
   -
     description: Collect user config files.
     supported_os: [all]
     collector: file
-    path: /%user_home%/.config/ion/initrc
+    path: %user_home%/.config/ion/initrc
   
