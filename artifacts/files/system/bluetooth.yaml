@@ -1,0 +1,9 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect cached records of observed Bluetooth devices, including identifiers, metadata, and last-seen activity.
+    supported_os: [macos]
+    collector: file
+    path: /Library/Bluetooth/com.apple.MobileBluetooth.ledevices.*
+    ignore_date_range: true
+  

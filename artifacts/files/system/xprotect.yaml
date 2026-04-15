@@ -1,0 +1,9 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect property list files containing versioning and metadata for XProtect and MRT security components on macOS.
+    supported_os: [macos]
+    collector: file
+    path: /private/var/protected/xprotect/XProtect.bundle/Contents/Info.plist /Library/Apple/System/Library/CoreServices/XProtect.bundle/Contents/Info.plist /Library/Apple/System/Library/CoreServices/XProtect.app/Contents/Info.plist /Library/Apple/System/Library/CoreServices/MRT.app/Contents/Info.plist
+    ignore_date_range: true
+  

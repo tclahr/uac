@@ -18,7 +18,7 @@ artifacts:
     description: Collect the databases that contain information about the items stored in the cloud using Google Drive, deleted items, as well as information related to the user’s account.
     supported_os: [macos]
     collector: file
-    path: %user_home%/Library/"Application Support"/Google/DriveFS/*/metadata_sqlite_db* /Library/Application\ Support/Google/DriveFS/*/mirror_metadata_sqlite.db*
+    path: %user_home%/Library/"Application Support"/Google/DriveFS/*/metadata_sqlite_db* /Library/"Application Support"/Google/DriveFS/*/mirror_metadata_sqlite.db*
     exclude_nologin_users: true
   -
     description: Collect Google Drive logs.

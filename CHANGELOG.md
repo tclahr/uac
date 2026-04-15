@@ -52,12 +52,15 @@ All notable changes to this project will be documented in this file.
   - `files/shell/zsh.yaml`: Added collection of zsh history and config files [all].
 - `files/ssh/public_keys.yaml`: Added collection of SSH public keys [all]. (by [halpomeranz](https://github.com/halpomeranz))
 - `files/system/biome.yaml`: Updated collection of Biome artifacts [macos].
+- `files/system/bluetooth.yaml`: Added collection of cached records of observed Bluetooth devices, including identifiers, metadata, and last-seen activity [macos].
 - `files/system/boot.yaml`: Added collection of boot config, initramfs/initrd, sysvers, System.map, and GRUB config files, possible persistence mechanisms [linux]. (by [halpomeranz](https://github.com/halpomeranz))
 - `files/system/dbus.yaml`: Added collection of D-Bus config files, a possible persistence mechanism [linux]. (by [halpomeranz](https://github.com/halpomeranz))
 - `files/system/dracut.yaml`: Added collection of dracut config files, a possible persistence mechanism [linux]. (by [halpomeranz](https://github.com/halpomeranz))
+- `files/system/macos_keychain_devicelist.yaml`: Added collection of trusted device records from com.apple.akd devicelist.db used by iCloud Keychain. [macos].
 - `files/system/keychain.yaml`: Updated collection of macOS keychain artifacts [macos].
 - `files/system/polkit.yaml`: Added collection of polkit config files, a possible persistence mechanism [linux]. (by [halpomeranz](https://github.com/halpomeranz))
 - `files/system/startup_items.yaml`: Updated collection of macOS startup items [macos].
+- `files/system/xprotect.yaml`: Added collection of property list files containing versioning and metadata for XProtect and MRT security components on macOS [macos].
 - `live_response/network/esxcli.yaml`: Updated collection of network firewall artifacts [esxi].
 - `live_response/network/ss.yaml`: Updated to show PACKET sockets, socket classic BPF filters, and show the process name and PID of the program to which socket belongs [linux]. (by [ekt0-syn](https://github.com/ekt0-syn))
 - `live_response/system/binfmt_misc`: Added collection of binfmt_misc handlers [linux]. (by [mnrkbys](https://github.com/mnrkbys))
