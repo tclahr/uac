@@ -333,12 +333,18 @@ _init_temp_data_dir || _exit_fatal
 # clean up and exit if SIGINT (ctrl-c) is sent
 trap _terminate INT
 
+# setup tools
+_verbose_msg "Setting up tools and parameters..."
+_setup_tools 2>"${__UAC_TEMP_DATA_DIR}/setup_tools.stderr.txt"
+
 # get current user
 __ua_current_user=`_get_current_user`
 # get CPU information
 __ua_cpu_info=`_get_cpu_info "${__UAC_OPERATING_SYSTEM}"`
 # get memory size
 __ua_memory_size=`_get_memory_size "${__UAC_OPERATING_SYSTEM}"`
+# get timezone
+__ua_timezone=`_get_timezone "${__UAC_MOUNT_POINT}" "${__UAC_OPERATING_SYSTEM}"`
 
 # show UAC banner and system information
 printf "%s\n" "--------------------------------------------------------------------------------"
@@ -356,6 +362,7 @@ printf "System Architecture : %s\n" "${__UAC_SYSTEM_ARCH}"
 printf "CPU                 : %s\n" "${__ua_cpu_info}"
 printf "Memory Size         : %s MB\n" "${__ua_memory_size}"
 printf "Hostname            : %s\n" "${__UAC_HOSTNAME}"
+printf "Time Zone           : %s\n" "${__ua_timezone}"
 printf "Mount Point         : %s\n" "${__UAC_MOUNT_POINT}"
 printf "Running as          : %s\n" "${__ua_current_user}"
 printf "Temp Directory      : %s\n" "${__UAC_TEMP_DATA_DIR}"
@@ -368,9 +375,10 @@ _log_msg INF "System architecture: ${__UAC_SYSTEM_ARCH}"
 _log_msg INF "CPU: ${__ua_cpu_info}"
 _log_msg INF "Memory size: ${__ua_memory_size} MB"
 _log_msg INF "Hostname: ${__UAC_HOSTNAME}"
+_log_msg INF "Time zone: ${__ua_timezone}"
 _log_msg INF "Mount point: ${__UAC_MOUNT_POINT}"
 _log_msg INF "Running as: ${__ua_current_user}"
-_log_msg INF "Temp Directory: ${__UAC_TEMP_DATA_DIR}"
+_log_msg INF "Temp directory: ${__UAC_TEMP_DATA_DIR}"
 _log_msg INF "Output format: ${__UAC_OUTPUT_FORMAT}"
 _log_msg INF "Current PID: ${$}"
 _log_msg INF "PATH: ${PATH}"
@@ -383,12 +391,6 @@ _log_msg INF "Max depth: ${__UAC_CONF_MAX_DEPTH}"
 _log_msg INF "Enable find mtime: ${__UAC_CONF_ENABLE_FIND_MTIME}"
 _log_msg INF "Enable find atime: ${__UAC_CONF_ENABLE_FIND_ATIME}"
 _log_msg INF "Enable find ctime: ${__UAC_CONF_ENABLE_FIND_CTIME}"
-
-_verbose_msg "Setting up tools and parameters..."
-_log_msg INF "Setting up tools and parameters"
-
-# setup tools
-_setup_tools 2>"${__UAC_TEMP_DATA_DIR}/setup_tools.stderr.txt"
 
 # get user list and their home directories (user:home)
 if [ "${__UAC_OPERATING_SYSTEM}" = "macos" ]; then
