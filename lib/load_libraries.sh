@@ -71,6 +71,7 @@
 . "${__UAC_DIR}/lib/tar_data.sh"
 . "${__UAC_DIR}/lib/tar_gz_data.sh"
 . "${__UAC_DIR}/lib/terminate.sh"
+. "${__UAC_DIR}/lib/get_timezone.sh"
 . "${__UAC_DIR}/lib/usage.sh"
 . "${__UAC_DIR}/lib/validate_artifact_list.sh"
 . "${__UAC_DIR}/lib/validate_artifact.sh"
