@@ -17,6 +17,7 @@ _system_info()
   __si_cpu_info=`_get_cpu_info "${__si_operating_system}"`
   __si_hostname=`_get_hostname "/"`
   __si_current_user=`_get_current_user`
+  __si_timezone=`_get_timezone "/" "${__si_operating_system}"`
 
   printf "%s\n" "--------------------------------------------------------------------------------"
   printf "Operating System    : %s\n" "${__si_operating_system}"
@@ -24,6 +25,7 @@ _system_info()
   printf "CPU                 : %s\n" "${__si_cpu_info}"
   printf "Memory Size         : %s MB\n" "${__si_memory_size}"
   printf "Hostname            : %s\n" "${__si_hostname}"
+  printf "Time Zone           : %s\n" "${__si_timezone}"
   printf "Running as          : %s\n" "${__si_current_user}"
   printf "%s\n" "--------------------------------------------------------------------------------"
   printf "%-69s %10s\n" "Mount Point" "Used Size"
