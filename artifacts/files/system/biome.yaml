@@ -1,10 +1,16 @@
-version: 1.0
+version: 1.1
 artifacts:
   -
     description: Collect Biome data files. Note that this artifact will only be collected if System Integrity Protection (SIP) is disabled.
     supported_os: [macos]
     collector: file
     path: /private/var/db/biome
+    ignore_date_range: true
+  -
+    description: Collect Biome event streams capturing detailed user behavior, app usage, connectivity, location, device state activity etc.
+    supported_os: [macos]
+    collector: file
+    path: %user_home%/Library/Biome/streams/restricted/*/local
     ignore_date_range: true
   
 # References:

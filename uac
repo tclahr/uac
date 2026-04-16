@@ -15,7 +15,7 @@ LC_ALL=C
 export LC_ALL
 
 # UAC version information
-__UAC_VERSION="3.2.0"
+__UAC_VERSION="3.3.0"
 
 # get UAC working dir
 __UAC_DIR=`pwd`
@@ -56,6 +56,7 @@ __UAC_VERBOSE_CMD_PREFIX=" > "
 __UAC_VERBOSE_MODE=false
 __UAC_DEBUG_MODE=false
 __UAC_TRACE_MODE=false
+__UAC_SYSTEM_INFO_MODE=false
 __UAC_ARTIFACT_LIST=""
 __UAC_OUTPUT_BASE_NAME="uac-%hostname%-%os%-%timestamp%"
 __UAC_OUTPUT_FORMAT=""
@@ -72,10 +73,11 @@ __UAC_HOSTNAME=""
 __UAC_TEMP_DIR=""
 __UAC_START_DATE=""
 __UAC_START_DATE_DAYS=0
-__UAC_START_DATE_EPOCH=0
+__UAC_START_DATE_EPOCH=""
 __UAC_END_DATE=""
 __UAC_END_DATE_DAYS=0
-__UAC_END_DATE_EPOCH=0
+__UAC_END_DATE_EPOCH=""
+__UAC_TIMESTAMP=""
 __UAC_CASE_NUMBER=""
 __UAC_EVIDENCE_DESCRIPTION=""
 __UAC_EVIDENCE_NUMBER=""
@@ -94,7 +96,6 @@ __UAC_S3_TOKEN=""
 __UAC_AWS_S3_PRESIGNED_URL=""
 __UAC_AWS_S3_PRESIGNED_URL_LOG_FILE=""
 __UAC_AZURE_STORAGE_SAS_URL=""
-__UAC_AZURE_STORAGE_SAS_URL_LOG_FILE=""
 __UAC_DELETE_LOCAL_ON_SUCCESSFUL_TRANSFER=false
 __UAC_DESTINATION_DIR=""
 __UAC_USER_HOME_LIST=""
@@ -110,6 +111,34 @@ set -u
 
 ${__UAC_TRACE_MODE} && set -x
 
+# get operating system if not set by --operating-system
+if [ -z "${__UAC_OPERATING_SYSTEM}" ]; then
+  __UAC_OPERATING_SYSTEM=`_get_operating_system`
+fi
+
+# check if operating system is supported
+if _is_in_list "${__UAC_OPERATING_SYSTEM}" "aix|esxi|freebsd|linux|macos|netbsd|netscaler|openbsd|solaris"; then
+  true
+else
+  _exit_fatal "Unsupported operating system: '${__UAC_OPERATING_SYSTEM}'."
+fi
+
+# check if mount point exists
+if [ ! -d "${__UAC_MOUNT_POINT}" ]; then
+  _exit_fatal "Mount point '${__UAC_MOUNT_POINT}' does not exist."
+fi
+# get absolute mount point path
+__UAC_MOUNT_POINT=`_get_absolute_path "${__UAC_MOUNT_POINT}" 2>/dev/null`
+
+# print system information and exit
+if ${__UAC_SYSTEM_INFO_MODE}; then
+  if [ "${__UAC_MOUNT_POINT}" != "/" ]; then
+    _exit_fatal "System information is available only when running on a live system."
+  fi
+  _system_info "${__UAC_OPERATING_SYSTEM}" "${__UAC_MOUNT_POINT}"
+  _exit_success
+fi
+
 # exit whether list of artifacts or destination directory is empty
 if [ -z "${__UAC_ARTIFACT_LIST}" ] || [ -z "${__UAC_DESTINATION_DIR}" ] ; then
   _usage
@@ -123,25 +152,8 @@ fi
 # get absolute destination directory path
 __UAC_DESTINATION_DIR=`_get_absolute_path "${__UAC_DESTINATION_DIR}" 2>/dev/null`
 
-# get operating system if not set by --operating-system
-if [ -z "${__UAC_OPERATING_SYSTEM}" ]; then
-  __UAC_OPERATING_SYSTEM=`_get_operating_system`
-fi
-
-# check if operating system is supported
-if _is_in_list "${__UAC_OPERATING_SYSTEM}" "aix|esxi|freebsd|linux|macos|netbsd|netscaler|openbsd|solaris"; then
-  # get system arch
-  __UAC_SYSTEM_ARCH=`_get_system_arch "${__UAC_OPERATING_SYSTEM}"`
-else
-  _exit_fatal "Unsupported operating system: '${__UAC_OPERATING_SYSTEM}'."
-fi
-
-# check if mount point exists
-if [ ! -d "${__UAC_MOUNT_POINT}" ]; then
-  _exit_fatal "Mount point '${__UAC_MOUNT_POINT}' does not exist."
-fi
-# get absolute mount point path
-__UAC_MOUNT_POINT=`_get_absolute_path "${__UAC_MOUNT_POINT}" 2>/dev/null`
+# get system arch
+__UAC_SYSTEM_ARCH=`_get_system_arch "${__UAC_OPERATING_SYSTEM}"`
 
 # get hostname if not set by --hostname
 # useful when running UAC against a mounted image file/disk
@@ -187,12 +199,12 @@ fi
 __UAC_OUTPUT_EXTENSION=`_is_output_format_supported "${__UAC_OUTPUT_FORMAT}" "${__UAC_OUTPUT_PASSWORD}"` || _exit_fatal
 
 # set output file basename
-__ua_current_date_time=`date "+%Y%m%d%H%M%S"`
+__UAC_TIMESTAMP=`date "+%Y%m%d%H%M%S"`
 # shellcheck disable=SC2153
 __UAC_OUTPUT_BASE_NAME=`echo "${__UAC_OUTPUT_BASE_NAME}" \
   | sed -e "s|%hostname%|${__UAC_HOSTNAME}|g" \
         -e "s|%os%|${__UAC_OPERATING_SYSTEM}|g" \
-        -e "s|%timestamp%|${__ua_current_date_time}|g"`
+        -e "s|%timestamp%|${__UAC_TIMESTAMP}|g"`
 __UAC_OUTPUT_BASE_NAME=`_sanitize_output_file "${__UAC_OUTPUT_BASE_NAME}"`
 
 _output_exists "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}${__UAC_OUTPUT_EXTENSION:+.}${__UAC_OUTPUT_EXTENSION}" && _exit_fatal
@@ -268,15 +280,19 @@ if [ -n "${__UAC_AWS_S3_PRESIGNED_URL}" ]; then
   if [ "${__UAC_OUTPUT_FORMAT}" = "none" ]; then
     _exit_fatal "AWS S3 transfer aborted: Output format is set to 'none'."
   fi
-  __UAC_AWS_S3_PRESIGNED_URL=`echo "${__UAC_AWS_S3_PRESIGNED_URL}" \
-    | sed -e "s|%hostname%|${__UAC_HOSTNAME}|g" \
-          -e "s|%os%|${__UAC_OPERATING_SYSTEM}|g" \
-          -e "s|%timestamp%|${__ua_current_date_time}|g"`
-  printf "Validating connectivity to the AWS S3 presigned URL...\n"
-  _aws_s3_presigned_url_transfer \
-    "" \
-    "${__UAC_AWS_S3_PRESIGNED_URL}" \
-    || _exit_fatal "Failed to connect to the AWS S3 presigned URL."
+  if command_exists "curl" || command_exists "wget"; then
+    __UAC_AWS_S3_PRESIGNED_URL=`echo "${__UAC_AWS_S3_PRESIGNED_URL}" \
+      | sed -e "s|%hostname%|${__UAC_HOSTNAME}|g" \
+            -e "s|%os%|${__UAC_OPERATING_SYSTEM}|g" \
+            -e "s|%timestamp%|${__UAC_TIMESTAMP}|g"`
+    printf "Validating connectivity to the AWS S3 presigned URL...\n"
+    _aws_s3_presigned_url_transfer \
+      "" \
+      "${__UAC_AWS_S3_PRESIGNED_URL}" \
+      || _exit_fatal "Failed to connect to the AWS S3 presigned URL."
+  else
+    _exit_fatal "Cannot transfer to AWS S3 presigned URL: neither 'curl' nor 'wget' is available."
+  fi
 fi
 
 # test the connectivity to Azure Storage SAS URL
@@ -284,15 +300,18 @@ if [ -n "${__UAC_AZURE_STORAGE_SAS_URL}" ]; then
   if [ "${__UAC_OUTPUT_FORMAT}" = "none" ]; then
     _exit_fatal "Azure Storage SAS URL transfer aborted: Output format is set to 'none'."
   fi
-  __UAC_AZURE_STORAGE_SAS_URL=`echo "${__UAC_AZURE_STORAGE_SAS_URL}" \
-    | sed -e "s|%hostname%|${__UAC_HOSTNAME}|g" \
-          -e "s|%os%|${__UAC_OPERATING_SYSTEM}|g" \
-          -e "s|%timestamp%|${__ua_current_date_time}|g"`
-  printf "Validating connectivity to the Azure Storage SAS URL...\n"
-  _azure_storage_sas_url_transfer \
-    "" \
-    "${__UAC_AZURE_STORAGE_SAS_URL}" \
-    || _exit_fatal "Failed to connect to the Azure Storage SAS URL."
+  if command_exists "curl" || command_exists "wget"; then
+    # add output file name to Azure Storage SAS URL
+    __UAC_AZURE_STORAGE_SAS_URL_TEMP=`echo "${__UAC_AZURE_STORAGE_SAS_URL}" | sed -e "s|?|/transfer_test_from_uac.txt?|"`
+
+    printf "Validating connectivity to the Azure Storage SAS URL...\n"
+    _azure_storage_sas_url_transfer \
+      "" \
+      "${__UAC_AZURE_STORAGE_SAS_URL_TEMP}" \
+      || _exit_fatal "Failed to connect to the Azure Storage SAS URL."
+  else
+    _exit_fatal "Cannot transfer to Azure Storage SAS URL: neither 'curl' nor 'wget' is available."
+  fi
 fi
 
 # check whether temp-dir exists
@@ -307,14 +326,25 @@ else
   __UAC_TEMP_DATA_DIR="${__UAC_DESTINATION_DIR}/uac-data.tmp"
 fi
 
+__UAC_ARTIFACTS_OUTPUT_DIR="${__UAC_TEMP_DATA_DIR}/collected"
 _verbose_msg "Creating uac-data.tmp directory..."
 _init_temp_data_dir || _exit_fatal
 
 # clean up and exit if SIGINT (ctrl-c) is sent
 trap _terminate INT
 
+# setup tools
+_verbose_msg "Setting up tools and parameters..."
+_setup_tools 2>"${__UAC_TEMP_DATA_DIR}/setup_tools.stderr.txt"
+
 # get current user
 __ua_current_user=`_get_current_user`
+# get CPU information
+__ua_cpu_info=`_get_cpu_info "${__UAC_OPERATING_SYSTEM}"`
+# get memory size
+__ua_memory_size=`_get_memory_size "${__UAC_OPERATING_SYSTEM}"`
+# get timezone
+__ua_timezone=`_get_timezone "${__UAC_MOUNT_POINT}" "${__UAC_OPERATING_SYSTEM}"`
 
 # show UAC banner and system information
 printf "%s\n" "--------------------------------------------------------------------------------"
@@ -329,7 +359,10 @@ printf " Unix-like Artifacts Collector %s\n" "${__UAC_VERSION}"
 printf "%s\n" "--------------------------------------------------------------------------------"
 printf "Operating System    : %s\n" "${__UAC_OPERATING_SYSTEM}"
 printf "System Architecture : %s\n" "${__UAC_SYSTEM_ARCH}"
+printf "CPU                 : %s\n" "${__ua_cpu_info}"
+printf "Memory Size         : %s MB\n" "${__ua_memory_size}"
 printf "Hostname            : %s\n" "${__UAC_HOSTNAME}"
+printf "Time Zone           : %s\n" "${__ua_timezone}"
 printf "Mount Point         : %s\n" "${__UAC_MOUNT_POINT}"
 printf "Running as          : %s\n" "${__ua_current_user}"
 printf "Temp Directory      : %s\n" "${__UAC_TEMP_DATA_DIR}"
@@ -339,36 +372,44 @@ _log_msg INF "UAC directory: ${__UAC_DIR}"
 _log_msg INF "Command line: ${__ua_command_line}"
 _log_msg INF "Operating system: ${__UAC_OPERATING_SYSTEM}"
 _log_msg INF "System architecture: ${__UAC_SYSTEM_ARCH}"
+_log_msg INF "CPU: ${__ua_cpu_info}"
+_log_msg INF "Memory size: ${__ua_memory_size} MB"
 _log_msg INF "Hostname: ${__UAC_HOSTNAME}"
+_log_msg INF "Time zone: ${__ua_timezone}"
 _log_msg INF "Mount point: ${__UAC_MOUNT_POINT}"
 _log_msg INF "Running as: ${__ua_current_user}"
-_log_msg INF "Temp Directory: ${__UAC_TEMP_DATA_DIR}"
+_log_msg INF "Temp directory: ${__UAC_TEMP_DATA_DIR}"
 _log_msg INF "Output format: ${__UAC_OUTPUT_FORMAT}"
 _log_msg INF "Current PID: ${$}"
 _log_msg INF "PATH: ${PATH}"
 _log_msg INF "Loading configuration file(s)"
 _log_msg INF "Exclude path pattern: ${__UAC_CONF_EXCLUDE_PATH_PATTERN}"
 _log_msg INF "Exclude name pattern: ${__UAC_CONF_EXCLUDE_NAME_PATTERN}"
-_log_msg INF "Exclude file system: ${__UAC_CONF_EXCLUDE_FILE_SYSTEM}"
+_log_msg INF "Exclude mount point size: ${__UAC_CONF_EXCLUDE_MOUNT_POINT_SIZE}"
 _log_msg INF "Hash algorithm: ${__UAC_CONF_HASH_ALGORITHM}"
 _log_msg INF "Max depth: ${__UAC_CONF_MAX_DEPTH}"
 _log_msg INF "Enable find mtime: ${__UAC_CONF_ENABLE_FIND_MTIME}"
 _log_msg INF "Enable find atime: ${__UAC_CONF_ENABLE_FIND_ATIME}"
 _log_msg INF "Enable find ctime: ${__UAC_CONF_ENABLE_FIND_CTIME}"
 
-_verbose_msg "Setting up tools and parameters..."
-_log_msg INF "Setting up tools and parameters"
-
-# setup tools
-_setup_tools 2>"${__UAC_TEMP_DATA_DIR}/setup_tools.stderr.txt"
-
 # get user list and their home directories (user:home)
-__UAC_USER_HOME_LIST=`_get_user_home_list false "${__UAC_MOUNT_POINT}"`
-__UAC_VALID_SHELL_ONLY_USER_HOME_LIST=`_get_user_home_list true "${__UAC_MOUNT_POINT}"`
+if [ "${__UAC_OPERATING_SYSTEM}" = "macos" ]; then
+  __UAC_USER_HOME_LIST=`_get_user_home_list false "${__UAC_MOUNT_POINT}" "/private/etc/passwd"`
+  __UAC_VALID_SHELL_ONLY_USER_HOME_LIST=`_get_user_home_list true "${__UAC_MOUNT_POINT}" "/private/etc/passwd"`
+else
+  __UAC_USER_HOME_LIST=`_get_user_home_list false "${__UAC_MOUNT_POINT}"`
+  __UAC_VALID_SHELL_ONLY_USER_HOME_LIST=`_get_user_home_list true "${__UAC_MOUNT_POINT}"`
+fi
 
 # exclude file systems / mount points (global)
 if [ -n "${__UAC_CONF_EXCLUDE_FILE_SYSTEM}" ]; then
   __UAC_EXCLUDE_MOUNT_POINTS=`_get_mount_point_by_file_system "${__UAC_CONF_EXCLUDE_FILE_SYSTEM}" "${__UAC_OPERATING_SYSTEM}"`
+fi
+
+# add in mount points excluded by size
+if [ "${__UAC_CONF_EXCLUDE_MOUNT_POINT_SIZE}" -gt 0 ]; then
+  __ua_large_mount_points=`_get_large_mount_points "${__UAC_OPERATING_SYSTEM}" "${__UAC_CONF_EXCLUDE_MOUNT_POINT_SIZE}"`
+  __UAC_EXCLUDE_MOUNT_POINTS="${__UAC_EXCLUDE_MOUNT_POINTS}${__UAC_EXCLUDE_MOUNT_POINTS:+|}${__ua_large_mount_points}"
 fi
 
 # check whether temp data dir's file system supports symlink creation.
@@ -425,6 +466,7 @@ if ${__UAC_TEMP_DATA_DIR_NO_SYMLINK_SUPPORT}; then
 else
   _log_msg INF "Temp directory symlink creation support: true"
 fi
+_log_msg INF "Exclude file systems: ${__UAC_CONF_EXCLUDE_FILE_SYSTEM}"
 _log_msg INF "Exclude mount points: ${__UAC_EXCLUDE_MOUNT_POINTS}"
 
 _verbose_msg "Building artifact list..."
@@ -482,36 +524,41 @@ _log_msg INF "Artifacts collection completed in ${__ua_total_execution_time} sec
 printf "Filtering non-regular files...\n"
 
 # get a list of all files and directories whithin __UAC_TEMP_DATA_DIR/collected directory
-find "${__UAC_TEMP_DATA_DIR}/collected" -print >"${__UAC_TEMP_DATA_DIR}/find_collected.tmp" 2>/dev/null
+find "${__UAC_ARTIFACTS_OUTPUT_DIR}" -print >"${__UAC_TEMP_DATA_DIR}/find_collected.tmp" 2>/dev/null
 
 _remove_non_regular_files "${__UAC_TEMP_DATA_DIR}/find_collected.tmp"
 _remove_non_regular_files "${__UAC_TEMP_DATA_DIR}/file_collector.tmp"
 
-# remove ${__UAC_TEMP_DATA_DIR}/collected from the beginning of any entry
-sed -e "s|^${__UAC_TEMP_DATA_DIR}/collected||" \
+# remove ${__UAC_ARTIFACTS_OUTPUT_DIR} from the beginning of any entry
+sed -e "s|^${__UAC_ARTIFACTS_OUTPUT_DIR}||" \
     -e 's|//*|/|g' \
     -e 's|^/||' \
     "${__UAC_TEMP_DATA_DIR}/find_collected.tmp" \
     >"${__UAC_TEMP_DATA_DIR}/pre_output.tmp"
-# remove ${__UAC_MOUNT_POINT}|\[root\]/ from the beginning of any entry
+# awk is required to replace ${__UAC_MOUNT_POINT} by [root]/ as sed cannot handle special characters
 # remove entries that match ${__UAC_DIR}, /uac-data.tmp/, uac-x-x-x, and uac-%os%-%hostname%-%timestamp%
-sed -e "s|^${__UAC_MOUNT_POINT}|\[root\]/|" \
-    -e 's|//*|/|g' \
-    -e 's|^/||' \
-    "${__UAC_TEMP_DATA_DIR}/file_collector.tmp" \
+awk -v mount="${__UAC_MOUNT_POINT}" -v repl="[root]/" '
+  index($0, mount) == 1 {
+    print repl substr($0, length(mount) + 1)
+    next
+  }
+  {print}
+' "${__UAC_TEMP_DATA_DIR}/file_collector.tmp" \
+  | sed -e 's|//*|/|g' \
+        -e 's|^/||' \
   | grep -v -E "${__UAC_DIR}|/uac-data.tmp/|uac-[0-9]+.[0-9]+.[0-9]+-?|uac-[[:print:]]+-[[:print:]]+[0-9]{14}" \
     >>"${__UAC_TEMP_DATA_DIR}/pre_output.tmp"
 
-mv "${__UAC_TEMP_DATA_DIR}/${__UAC_LOG_FILE}" "${__UAC_TEMP_DATA_DIR}/collected" 2>/dev/null
+mv "${__UAC_TEMP_DATA_DIR}/${__UAC_LOG_FILE}" "${__UAC_ARTIFACTS_OUTPUT_DIR}" 2>/dev/null
 
 if [ "${__UAC_OUTPUT_FORMAT}" = "none" ] || ${__UAC_HASH_COLLECTED} || ${__UAC_TEMP_DATA_DIR_NO_SYMLINK_SUPPORT} || ${__UAC_TOOL_TAR_NO_FROM_FILE_SUPPORT}; then
-  printf "Copying files to '%s'...\n" "${__UAC_TEMP_DATA_DIR}/collected/[root]"
-  _copy_data "${__UAC_TEMP_DATA_DIR}/file_collector.tmp" "${__UAC_TEMP_DATA_DIR}/collected/[root]" \
+  printf "Copying files to '%s'...\n" "${__UAC_ARTIFACTS_OUTPUT_DIR}/[root]"
+  _copy_data "${__UAC_TEMP_DATA_DIR}/file_collector.tmp" "${__UAC_ARTIFACTS_OUTPUT_DIR}/[root]" \
     2>>"${__UAC_TEMP_DATA_DIR}/copy_data.stderr.txt"
 
   if ${__UAC_HASH_COLLECTED}; then
     printf "Calculating hashes for collected files...\n"
-    cd "${__UAC_TEMP_DATA_DIR}/collected" || _exit_fatal "cd: ${__UAC_TEMP_DATA_DIR}/collected: No such file or directory"
+    cd "${__UAC_ARTIFACTS_OUTPUT_DIR}" || _exit_fatal "cd: ${__UAC_ARTIFACTS_OUTPUT_DIR}: No such file or directory"
 
     _find_based_collector \
       "hash" \
@@ -530,18 +577,19 @@ if [ "${__UAC_OUTPUT_FORMAT}" = "none" ] || ${__UAC_HASH_COLLECTED} || ${__UAC_T
       "" \
       "" \
       "" \
-      "${__UAC_TEMP_DATA_DIR}/collected" \
+      "" \
+      "${__UAC_ARTIFACTS_OUTPUT_DIR}" \
       "hash_list"
 
     cd "${__UAC_DIR}" || _exit_fatal "cd: ${__UAC_DIR}: No such file or directory"
   fi
 else
-  ln -s "${__UAC_MOUNT_POINT}" "${__UAC_TEMP_DATA_DIR}/collected/[root]"
+  ln -s "${__UAC_MOUNT_POINT}" "${__UAC_ARTIFACTS_OUTPUT_DIR}/[root]"
 fi
 
 if [ "${__UAC_OUTPUT_FORMAT}" = "none" ]; then
   printf "Moving files to the output directory...\n"
-  mv "${__UAC_TEMP_DATA_DIR}/collected" "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}"
+  mv "${__UAC_ARTIFACTS_OUTPUT_DIR}" "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}"
   if [ -d "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}" ]; then
     printf "Output directory successfully created: '%s'\n" "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}"
     _remove_temp_data_dir
@@ -551,7 +599,7 @@ if [ "${__UAC_OUTPUT_FORMAT}" = "none" ]; then
   fi
 else
   printf "Creating the output file...\n"
-  cd "${__UAC_TEMP_DATA_DIR}/collected" || _exit_fatal "cd: ${__UAC_DIR}: No such file or directory"
+  cd "${__UAC_ARTIFACTS_OUTPUT_DIR}" || _exit_fatal "cd: ${__UAC_DIR}: No such file or directory"
 
   # add files to the beginning of the archive file
   {
@@ -660,15 +708,15 @@ if [ -n "${__UAC_S3_PROVIDER}" ] && [ -n "${__UAC_S3_BUCKET}" ]; then
   case "${__UAC_S3_PROVIDER}" in
     "amazon")
       printf "Transferring '%s' to S3 server...\n" \
-        "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}${__UAC_OUTPUT_EXTENSION:+.}${__UAC_OUTPUT_EXTENSION}"
+        "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}.${__UAC_OUTPUT_EXTENSION}"
       if _s3_transfer_amazon \
-          "${__UAC_OUTPUT_BASE_NAME}${__UAC_OUTPUT_EXTENSION:+.}${__UAC_OUTPUT_EXTENSION}" \
+          "${__UAC_OUTPUT_BASE_NAME}.${__UAC_OUTPUT_EXTENSION}" \
           "${__UAC_S3_REGION}" \
           "${__UAC_S3_BUCKET}" \
           "${__UAC_S3_ACCESS_KEY}" \
           "${__UAC_S3_SECRET_KEY}"; then
         printf "Transfer completed successfully.\n"
-        ${__UAC_DELETE_LOCAL_ON_SUCCESSFUL_TRANSFER} && rm -rf "${__UAC_OUTPUT_BASE_NAME}${__UAC_OUTPUT_EXTENSION:+.}${__UAC_OUTPUT_EXTENSION}"
+        ${__UAC_DELETE_LOCAL_ON_SUCCESSFUL_TRANSFER} && rm -rf "${__UAC_OUTPUT_BASE_NAME}.${__UAC_OUTPUT_EXTENSION}"
       else
         _error_msg "Failed to transfer output file to the S3 server."
       fi
@@ -687,13 +735,13 @@ if [ -n "${__UAC_S3_PROVIDER}" ] && [ -n "${__UAC_S3_BUCKET}" ]; then
       ;;
     "google")
       printf "Transferring '%s' to S3 server...\n" \
-        "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}${__UAC_OUTPUT_EXTENSION:+.}${__UAC_OUTPUT_EXTENSION}"
+        "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}.${__UAC_OUTPUT_EXTENSION}"
       if _s3_transfer_google \
-          "${__UAC_OUTPUT_BASE_NAME}${__UAC_OUTPUT_EXTENSION:+.}${__UAC_OUTPUT_EXTENSION}" \
+          "${__UAC_OUTPUT_BASE_NAME}.${__UAC_OUTPUT_EXTENSION}" \
           "${__UAC_S3_BUCKET}" \
           "${__UAC_S3_TOKEN}"; then
         printf "Transfer completed successfully.\n"
-        ${__UAC_DELETE_LOCAL_ON_SUCCESSFUL_TRANSFER} && rm -rf "${__UAC_OUTPUT_BASE_NAME}${__UAC_OUTPUT_EXTENSION:+.}${__UAC_OUTPUT_EXTENSION}"
+        ${__UAC_DELETE_LOCAL_ON_SUCCESSFUL_TRANSFER} && rm -rf "${__UAC_OUTPUT_BASE_NAME}.${__UAC_OUTPUT_EXTENSION}"
       else
         _error_msg "Failed to transfer output file to the S3 server."
       fi
@@ -710,14 +758,14 @@ if [ -n "${__UAC_S3_PROVIDER}" ] && [ -n "${__UAC_S3_BUCKET}" ]; then
       ;;
     "ibm")
       printf "Transferring '%s' to S3 server...\n" \
-        "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}${__UAC_OUTPUT_EXTENSION:+.}${__UAC_OUTPUT_EXTENSION}"
+        "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}.${__UAC_OUTPUT_EXTENSION}"
       if _s3_transfer_ibm \
-          "${__UAC_OUTPUT_BASE_NAME}${__UAC_OUTPUT_EXTENSION:+.}${__UAC_OUTPUT_EXTENSION}" \
+          "${__UAC_OUTPUT_BASE_NAME}.${__UAC_OUTPUT_EXTENSION}" \
           "${__UAC_S3_REGION}" \
           "${__UAC_S3_BUCKET}" \
           "${__UAC_S3_TOKEN}"; then
         printf "Transfer completed successfully.\n"
-        ${__UAC_DELETE_LOCAL_ON_SUCCESSFUL_TRANSFER} && rm -rf "${__UAC_OUTPUT_BASE_NAME}${__UAC_OUTPUT_EXTENSION:+.}${__UAC_OUTPUT_EXTENSION}"
+        ${__UAC_DELETE_LOCAL_ON_SUCCESSFUL_TRANSFER} && rm -rf "${__UAC_OUTPUT_BASE_NAME}.${__UAC_OUTPUT_EXTENSION}"
       else
         _error_msg "Failed to transfer output file to the S3 server."
       fi
@@ -741,28 +789,24 @@ fi
 if [ -n "${__UAC_AWS_S3_PRESIGNED_URL}" ]; then
   cd "${__UAC_DESTINATION_DIR}" || _exit_fatal "cd: ${__UAC_DESTINATION_DIR}: No such file or directory"
   printf "Transferring '%s' to Amazon S3 presigned URL...\n" \
-    "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}${__UAC_OUTPUT_EXTENSION:+.}${__UAC_OUTPUT_EXTENSION}"
+    "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}.${__UAC_OUTPUT_EXTENSION}"
   if _aws_s3_presigned_url_transfer \
-      "${__UAC_OUTPUT_BASE_NAME}${__UAC_OUTPUT_EXTENSION:+.}${__UAC_OUTPUT_EXTENSION}" \
+      "${__UAC_OUTPUT_BASE_NAME}.${__UAC_OUTPUT_EXTENSION}" \
       "${__UAC_AWS_S3_PRESIGNED_URL}"; then
     printf "Transfer completed successfully.\n"
-    ${__UAC_DELETE_LOCAL_ON_SUCCESSFUL_TRANSFER} && rm -rf "${__UAC_OUTPUT_BASE_NAME}${__UAC_OUTPUT_EXTENSION:+.}${__UAC_OUTPUT_EXTENSION}"
+    ${__UAC_DELETE_LOCAL_ON_SUCCESSFUL_TRANSFER} && rm -rf "${__UAC_OUTPUT_BASE_NAME}.${__UAC_OUTPUT_EXTENSION}"
   else
     _error_msg "Failed to transfer output file to the S3 server."
   fi
   if [ -n "${__UAC_AWS_S3_PRESIGNED_URL_LOG_FILE}" ]; then
-    __UAC_AWS_S3_PRESIGNED_URL_LOG_FILE=`echo "${__UAC_AWS_S3_PRESIGNED_URL_LOG_FILE}" \
-      | sed -e "s|%hostname%|${__UAC_HOSTNAME}|g" \
-            -e "s|%os%|${__UAC_OPERATING_SYSTEM}|g" \
-            -e "s|%timestamp%|${__ua_current_date_time}|g"`
     printf "Transferring '%s' to Amazon S3 presigned URL...\n" "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}.log"
     if _aws_s3_presigned_url_transfer \
         "${__UAC_OUTPUT_BASE_NAME}.log" \
         "${__UAC_AWS_S3_PRESIGNED_URL_LOG_FILE}"; then
       printf "Transfer completed successfully.\n"
-      ${__UAC_DELETE_LOCAL_ON_SUCCESSFUL_TRANSFER} && rm -rf "${__UAC_OUTPUT_BASE_NAME}${__UAC_OUTPUT_EXTENSION:+.}${__UAC_OUTPUT_EXTENSION}"
+      ${__UAC_DELETE_LOCAL_ON_SUCCESSFUL_TRANSFER} && rm -rf "${__UAC_OUTPUT_BASE_NAME}.log"
     else
-      _error_msg "Failed to transfer output file to the S3 server."
+      _error_msg "Failed to transfer log file to the S3 server."
     fi
   fi
   cd "${__UAC_DIR}" || _exit_fatal "cd: ${__UAC_DIR}: No such file or directory"
@@ -770,31 +814,40 @@ fi
 
 # transfer output and log file to Azure Storage SAS URL
 if [ -n "${__UAC_AZURE_STORAGE_SAS_URL}" ]; then
+  # add output file name to Azure Storage SAS URL
+  __UAC_AZURE_STORAGE_SAS_URL_TEMP=`echo "${__UAC_AZURE_STORAGE_SAS_URL}" | sed -e "s|?|/${__UAC_OUTPUT_BASE_NAME}.${__UAC_OUTPUT_EXTENSION}?|"`
+  
+  __UAC_AZURE_STORAGE_SAS_URL_TEMP=`echo "${__UAC_AZURE_STORAGE_SAS_URL_TEMP}" \
+      | sed -e "s|%hostname%|${__UAC_HOSTNAME}|g" \
+            -e "s|%os%|${__UAC_OPERATING_SYSTEM}|g" \
+            -e "s|%timestamp%|${__UAC_TIMESTAMP}|g"`
+  
   cd "${__UAC_DESTINATION_DIR}" || _exit_fatal "cd: ${__UAC_DESTINATION_DIR}: No such file or directory"
   printf "Transferring '%s' to Azure Storage SAS URL...\n" \
-    "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}${__UAC_OUTPUT_EXTENSION:+.}${__UAC_OUTPUT_EXTENSION}"
+    "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}.${__UAC_OUTPUT_EXTENSION}"
   if _azure_storage_sas_url_transfer \
-      "${__UAC_OUTPUT_BASE_NAME}${__UAC_OUTPUT_EXTENSION:+.}${__UAC_OUTPUT_EXTENSION}" \
-      "${__UAC_AZURE_STORAGE_SAS_URL}";then
+      "${__UAC_OUTPUT_BASE_NAME}.${__UAC_OUTPUT_EXTENSION}" \
+      "${__UAC_AZURE_STORAGE_SAS_URL_TEMP}";then
     printf "Transfer completed successfully.\n"
-    ${__UAC_DELETE_LOCAL_ON_SUCCESSFUL_TRANSFER} && rm -rf "${__UAC_OUTPUT_BASE_NAME}${__UAC_OUTPUT_EXTENSION:+.}${__UAC_OUTPUT_EXTENSION}"
+    ${__UAC_DELETE_LOCAL_ON_SUCCESSFUL_TRANSFER} && rm -rf "${__UAC_OUTPUT_BASE_NAME}.${__UAC_OUTPUT_EXTENSION}"
   else
     _error_msg "Failed to transfer output file to Azure Storage SAS URL."
   fi
-  if [ -n "${__UAC_AZURE_STORAGE_SAS_URL_LOG_FILE}" ]; then
-    __UAC_AZURE_STORAGE_SAS_URL_LOG_FILE=`echo "${__UAC_AZURE_STORAGE_SAS_URL_LOG_FILE}" \
-      | sed -e "s|%hostname%|${__UAC_HOSTNAME}|g" \
-            -e "s|%os%|${__UAC_OPERATING_SYSTEM}|g" \
-            -e "s|%timestamp%|${__ua_current_date_time}|g"`
-    printf "Transferring '%s' to Azure Storage SAS URL...\n" "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}.log"
-    if _azure_storage_sas_url_transfer \
-        "${__UAC_OUTPUT_BASE_NAME}.log" \
-        "${__UAC_AZURE_STORAGE_SAS_URL_LOG_FILE}"; then
-      printf "Transfer completed successfully.\n"
-      ${__UAC_DELETE_LOCAL_ON_SUCCESSFUL_TRANSFER} && rm -rf "${__UAC_OUTPUT_BASE_NAME}.log"
-    else
-      _error_msg "Failed to transfer output file to Azure Storage SAS URL."
-    fi
+  # add output file name to Azure Storage SAS URL
+  __UAC_AZURE_STORAGE_SAS_URL_TEMP=`echo "${__UAC_AZURE_STORAGE_SAS_URL}" | sed -e "s|?|/${__UAC_OUTPUT_BASE_NAME}.log?|"`
+
+  __UAC_AZURE_STORAGE_SAS_URL_TEMP=`echo "${__UAC_AZURE_STORAGE_SAS_URL_TEMP}" \
+    | sed -e "s|%hostname%|${__UAC_HOSTNAME}|g" \
+          -e "s|%os%|${__UAC_OPERATING_SYSTEM}|g" \
+          -e "s|%timestamp%|${__UAC_TIMESTAMP}|g"`
+  printf "Transferring '%s' to Azure Storage SAS URL...\n" "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}.log"
+  if _azure_storage_sas_url_transfer \
+      "${__UAC_OUTPUT_BASE_NAME}.log" \
+      "${__UAC_AZURE_STORAGE_SAS_URL_TEMP}"; then
+    printf "Transfer completed successfully.\n"
+    ${__UAC_DELETE_LOCAL_ON_SUCCESSFUL_TRANSFER} && rm -rf "${__UAC_OUTPUT_BASE_NAME}.log"
+  else
+    _error_msg "Failed to transfer log file to Azure Storage SAS URL."
   fi
   cd "${__UAC_DIR}" || _exit_fatal "cd: ${__UAC_DIR}: No such file or directory"
 fi

@@ -11,7 +11,7 @@
 #            false on fail
 _azure_storage_sas_url_transfer()
 {
-  __au_payload="${1:-Testing S3 upload from shell script.}"
+  __au_payload="${1:-Testing upload from shell script.}"
   __au_url="${2:-}"
 
   __au_date=`date "+%a, %d %b %Y %H:%M:%S %z"`

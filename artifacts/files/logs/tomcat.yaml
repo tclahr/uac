@@ -1,11 +1,26 @@
-version: 2.2
+version: 2.3
 artifacts:
   -
     description: Collect Apache Tomcat logs.
     supported_os: [all]
     collector: file
-    path: /
+    path: /var/log/tomcat*
     name_pattern: ["access_log*", "error_log*", "httpd-access.log*", "httpd-error.log*", "catalina.out"]
-    exclude_path_pattern: ["/dev", "/proc", "/run", "/sys"]
+    file_type: [f, l]
+    max_file_size: 1073741824 # 1GB
+  -
+    description: Collect Apache Tomcat logs from $CATALINA_BASE location.
+    supported_os: [all]
+    collector: file
+    condition: if [ -d "${CATALINA_BASE:-}" ]; then true; else false; fi
+    path: /"${CATALINA_BASE}"/logs
+    file_type: [f, l]
+    max_file_size: 1073741824 # 1GB
+  -
+    description: Collect Apache Tomcat logs from $CATALINA_HOME location.
+    supported_os: [all]
+    collector: file
+    condition: if [ -d "${CATALINA_HOME:-}" ]; then true; else false; fi
+    path: /"${CATALINA_HOME}"/logs
     file_type: [f, l]
     max_file_size: 1073741824 # 1GB

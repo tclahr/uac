@@ -14,7 +14,7 @@
 #            false on fail
 _s3_transfer_amazon()
 {
-  __s3a_payload="${1:-Testing S3 upload from shell script.}"
+  __s3a_payload="${1:-Testing upload from shell script.}"
   __s3a_region="${2:-us-east-1}"
   __s3a_bucket="${3:-}"
   __s3a_access_key="${4:-}"
@@ -29,6 +29,13 @@ _s3_transfer_amazon()
   else
     __s3a_object_key="transfer_test_from_uac.txt"
     __s3a_payload_hash=`printf "%s" "${__s3a_payload}" | openssl dgst -sha256 | sed 's/^.* //'`
+  fi
+
+  __s3a_prefix=`echo "${__s3a_bucket}" | sed 's|^[^/]*/*||;s|/*$||'`
+
+  if [ -n "${__s3a_prefix}" ]; then
+    __s3a_object_key="${__s3a_prefix}/${__s3a_object_key}"
+    __s3a_bucket=`echo "${__s3a_bucket}" | sed 's|/.*||'`
   fi
 
   __s3a_host="${__s3a_bucket}.s3.${__s3a_region}.amazonaws.com"

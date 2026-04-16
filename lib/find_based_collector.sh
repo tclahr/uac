@@ -21,6 +21,7 @@
 #   boolean no_group: no group corresponds to file's numeric group ID (optional)
 #   boolean no_user: No user corresponds to file's numeric user ID (optional)
 #   boolean ignore_date_range: ignore date range (optional) (default: false)
+#   string command: command passed to xargs to execute on find output
 #   string output_directory: full path to the output directory
 #   string output_file: output file name
 # Returns:
@@ -31,8 +32,6 @@ _find_based_collector()
   __fc_collector="${1:-}"
   shift
   __fc_path="${1:-}"
-  #shift
-  #__fc_mount_point="${1:-/}"
   shift
   __fc_is_file_list="${1:-false}"
   shift
@@ -61,6 +60,8 @@ _find_based_collector()
   __fc_no_user="${1:-false}"
   shift
   __fc_ignore_date_range="${1:-false}"
+  shift
+  __fc_command="${1:-}"
   shift
   __fc_output_directory="${1:-}"
   shift
@@ -92,7 +93,7 @@ _find_based_collector()
   if ${__fc_is_file_list}; then
     # prepend __UAC_TEMP_DATA_DIR/collected if path does not start with /
     if echo "${__fc_path}" | grep -q -v -E "^/"; then
-      __fc_path="${__UAC_TEMP_DATA_DIR}/collected/${__fc_path}"
+      __fc_path="${__UAC_ARTIFACTS_OUTPUT_DIR}/${__fc_path}"
     fi
     __fc_path=`_sanitize_path "${__fc_path}"`
     if [ ! -f "${__fc_path}" ]; then
@@ -145,7 +146,7 @@ _find_based_collector()
   fi
 
   case "${__fc_collector}" in
-    "file"|"find")
+    "file")
       if ${__fc_is_file_list}; then
         __fc_find_command="cat \"${__fc_path}\""
       else
@@ -169,6 +170,86 @@ _find_based_collector()
       _verbose_msg "${__UAC_VERBOSE_CMD_PREFIX}${__fc_find_command}"
       _run_command "${__fc_find_command}" \
         >>"${__fc_output_directory}/${__fc_output_file}"
+      ;;
+    "find")
+      if [ -n "${__fc_command}" ]; then
+        if ${__fc_is_file_list}; then
+            __fc_command="sed 's|.|\\\\&|g' \"${__fc_path}\" | xargs ${__fc_command}"
+        elif ${__UAC_TOOL_FIND_PRINT0_SUPPORT} && ${__UAC_TOOL_XARGS_NULL_DELIMITER_SUPPORT}; then
+          __fc_find_command=`_build_find_command \
+            "${__fc_path}" \
+            "${__fc_path_pattern}" \
+            "${__fc_name_pattern}" \
+            "${__fc_exclude_path_pattern}" \
+            "${__fc_exclude_name_pattern}" \
+            "${__fc_max_depth}" \
+            "${__fc_file_type}" \
+            "${__fc_min_file_size}" \
+            "${__fc_max_file_size}" \
+            "${__fc_permissions}" \
+            "${__fc_no_group}" \
+            "${__fc_no_user}" \
+            "true" \
+            "${__fc_start_date_days}" \
+            "${__fc_end_date_days}"`
+          if echo "${__fc_find_command}" | grep -q -E "; $"; then
+            __fc_find_command="{ ${__fc_find_command} }"
+          fi
+          __fc_command="${__fc_find_command} | xargs -0 ${__fc_command}"
+        else
+          __fc_find_command=`_build_find_command \
+            "${__fc_path}" \
+            "${__fc_path_pattern}" \
+            "${__fc_name_pattern}" \
+            "${__fc_exclude_path_pattern}" \
+            "${__fc_exclude_name_pattern}" \
+            "${__fc_max_depth}" \
+            "${__fc_file_type}" \
+            "${__fc_min_file_size}" \
+            "${__fc_max_file_size}" \
+            "${__fc_permissions}" \
+            "${__fc_no_group}" \
+            "${__fc_no_user}" \
+            "" \
+            "${__fc_start_date_days}" \
+            "${__fc_end_date_days}"`
+          if echo "${__fc_find_command}" | grep -q -E "; $"; then
+            __fc_find_command="{ ${__fc_find_command} }"
+          fi
+          __fc_command="${__fc_find_command} | sed 's|.|\\\\&|g' | xargs ${__fc_command}"
+        fi
+        _verbose_msg "${__UAC_VERBOSE_CMD_PREFIX}${__fc_command}"
+        _run_command "${__fc_command}" \
+          >>"${__fc_output_directory}/${__fc_output_file}"
+        if [ ! -s "${__fc_output_directory}/${__fc_output_file}" ]; then
+          rm -f "${__fc_output_directory}/${__fc_output_file}" >/dev/null
+          _log_msg DBG "Empty output file: '${__fc_output_file}'"
+        fi
+      else
+        if ${__fc_is_file_list}; then
+          __fc_find_command="cat \"${__fc_path}\""
+        else
+          __fc_find_command=`_build_find_command \
+            "${__fc_path}" \
+            "${__fc_path_pattern}" \
+            "${__fc_name_pattern}" \
+            "${__fc_exclude_path_pattern}" \
+            "${__fc_exclude_name_pattern}" \
+            "${__fc_max_depth}" \
+            "${__fc_file_type}" \
+            "${__fc_min_file_size}" \
+            "${__fc_max_file_size}" \
+            "${__fc_permissions}" \
+            "${__fc_no_group}" \
+            "${__fc_no_user}" \
+            "" \
+            "${__fc_start_date_days}" \
+            "${__fc_end_date_days}"`
+        fi
+        _verbose_msg "${__UAC_VERBOSE_CMD_PREFIX}${__fc_find_command}"
+        _run_command "${__fc_find_command}" \
+          >>"${__fc_output_directory}/${__fc_output_file}"
+      fi
       ;;
     "hash")
       for __fc_algorithm in `echo "${__UAC_CONF_HASH_ALGORITHM}" | sed -e 's:|: :g'`; do
@@ -235,6 +316,9 @@ _find_based_collector()
             rm -f "${__fc_output_directory}/${__fc_output_file}.${__fc_algorithm}" >/dev/null
             _log_msg DBG "Empty output file: '${__fc_output_file}.${__fc_algorithm}'"
           fi
+        else
+          _log_msg ERR "_find_based_collector: Cannot run hash collector. Target system does not have any hashing tool available"
+          return 1
         fi
       done
       ;;

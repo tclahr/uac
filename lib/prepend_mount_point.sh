@@ -15,6 +15,12 @@ _prepend_mount_point() {
   __pm_word=""
   __pm_inquote=0
 
+  # add quotes to mount point if not /
+  # required as some mount points/paths could have spaces or special characters
+  if [ "${__pm_mount_point}" != "/" ]; then
+    __pm_mount_point=`echo "${__pm_mount_point}" | sed -e 's|^"||' -e 's|"$||' -e 's|^/|/"|' -e 's|$|"|'`
+  fi
+
   __pm_i=1
   while :; do
     __pm_char=`printf '%s' "${__pm_path_list}" | cut -c "${__pm_i}"`

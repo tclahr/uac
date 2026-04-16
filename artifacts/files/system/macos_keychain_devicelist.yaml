@@ -1,0 +1,10 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect trusted device records from com.apple.akd devicelist.db used by iCloud Keychain.
+    supported_os: [macos]
+    collector: file
+    path: %user_home%/Library/"Application Support"/com.apple.akd/devicelist.db
+    ignore_date_range: true
+    exclude_nologin_users: true
+  

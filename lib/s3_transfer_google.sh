@@ -12,7 +12,7 @@
 #            false on fail
 _s3_transfer_google()
 {
-  __s3g_payload="${1:-Testing S3 upload from shell script.}"
+  __s3g_payload="${1:-Testing upload from shell script.}"
   __s3g_bucket="${2:-}"
   __s3g_token="${3:-}"
 

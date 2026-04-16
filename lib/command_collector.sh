@@ -42,8 +42,8 @@ _command_collector()
       | while IFS= read __cc_line && [ -n "${__cc_line}" ]; do
 
           # replace %line% by __cc_line value
-          __cc_new_command=`echo "${__cc_command}" | sed -e "s|%line%|${__cc_line}|g"`
-          __cc_new_output_directory=`echo "${__cc_output_directory}" | sed -e "s|%line%|${__cc_line}|g"`
+          __cc_new_command=`_replace_placeholder_shell_fragment "${__cc_command}" "%line%" "${__cc_line}"`
+          __cc_new_output_directory=`_replace_placeholder_plain_text "${__cc_output_directory}" "%line%" "${__cc_line}"`
           
           __cc_new_output_directory=`_sanitize_output_directory "${__cc_new_output_directory}"`
 
@@ -52,7 +52,7 @@ _command_collector()
           fi
 
           if [ -n "${__cc_output_file}" ]; then
-            __cc_new_output_file=`echo "${__cc_output_file}" | sed -e "s|%line%|${__cc_line}|g"`
+            __cc_new_output_file=`_replace_placeholder_plain_text "${__cc_output_file}" "%line%" "${__cc_line}"`
             __cc_new_output_file=`_sanitize_output_file "${__cc_new_output_file}" "${__cc_new_output_directory}" 240`
             
             if ${__cc_compress_output_file} && command_exists "gzip"; then

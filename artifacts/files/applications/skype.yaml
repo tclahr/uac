@@ -4,28 +4,28 @@ artifacts:
     description: Collect Skype database files (including Flatpak and Snap versions).
     supported_os: [linux]
     collector: file
-    path: /%user_home%/.config/skypeforlinux /%user_home%/.var/app/com.skype.Client /%user_home%/snap/skype
+    path: %user_home%/.config/skypeforlinux %user_home%/.var/app/com.skype.Client %user_home%/snap/skype
     name_pattern: ["*.db*"]
     exclude_nologin_users: true
   -
     description: Collect Skype cache and leveldb files (including Flatpak and Snap versions).
     supported_os: [linux]
     collector: file
-    path: /%user_home%/.config/skypeforlinux /%user_home%/.var/app/com.skype.Client /%user_home%/snap/skype
+    path: %user_home%/.config/skypeforlinux %user_home%/.var/app/com.skype.Client %user_home%/snap/skype
     path_pattern: ["*/Cache/*", "*/Local Storage/leveldb/*"]
     exclude_nologin_users: true
   -
     description: Collect Skype database files.
     supported_os: [macos]
     collector: file
-    path: /%user_home%/Library/"Application Support"/Microsoft/"Skype for Desktop"
+    path: %user_home%/Library/"Application Support"/Microsoft/"Skype for Desktop"
     name_pattern: ["*.db*"]
     exclude_nologin_users: true
   -
     description: Collect Skype cache and leveldb files.
     supported_os: [macos]
     collector: file
-    path: /%user_home%/Library/"Application Support"/Microsoft/"Skype for Desktop"
+    path: %user_home%/Library/"Application Support"/Microsoft/"Skype for Desktop"
     path_pattern: ["*/Cache/*", "*/Local Storage/leveldb/*"]
     exclude_nologin_users: true  
 

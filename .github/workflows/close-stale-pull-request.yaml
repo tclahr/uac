@@ -1,0 +1,24 @@
+name: Close Stale Pull Requests
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # Runs daily at midnight UTC
+
+jobs:
+  close_stale_prs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Close stale pull requests
+        uses: actions/stale@v9 # Use the latest version of the action
+        with:
+          days-before-stale: 180 # Mark PRs as stale after 30 days of inactivity
+          days-before-close: 15 # Close stale PRs after 7 more days of inactivity
+          stale-pr-message: >
+            This pull request has been marked as stale because it has been open
+            for 180 days with no activity. If you still intend to merge this PR,
+            please push a new commit or comment on this PR. Otherwise, it will
+            be closed in 15 days.
+          close-pr-message: >
+            This pull request was closed because it has been marked as stale
+            and received no further activity.
+          repo-token: ${{ secrets.GITHUB_TOKEN }} # Required for the action to interact with GitHub API

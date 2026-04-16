@@ -1,4 +1,4 @@
-version: 2.0
+version: 2.1
 condition: command_exists "esxcli"
 output_directory: /live_response/network
 artifacts:
@@ -56,6 +56,18 @@ artifacts:
     collector: command
     command: esxcli network firewall ruleset list
     output_file: esxcli_network_firewall_ruleset_list.txt
+  -
+    description: List the rules in the ruleset.
+    supported_os: [esxi]
+    collector: command
+    command: esxcli network firewall ruleset rule list
+    output_file: esxcli_network_firewall_ruleset_rule_list.txt
+  -
+    description: List the firewall status.
+    supported_os: [esxi]
+    collector: command
+    command: esxcli network firewall get
+    output_file: esxcli_network_firewall_get.txt
   -
     description: This command will list the Physical NICs currently installed and loaded on the system.
     supported_os: [esxi]

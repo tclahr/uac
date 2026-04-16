@@ -8,7 +8,7 @@
 #   none
 _usage()
 {
-  printf "%s" "Usage: $0 [-h] [-V] [--debug] {-p PROFILE | -a ARTIFACT} DESTINATION
+  printf "%s" "Usage: $0 [-h] [-V] [--system-info] {-p PROFILE | -a ARTIFACT} DESTINATION
 
   or: $0 --validate-artifact FILE
   or: $0 --validate-profile FILE
@@ -19,6 +19,10 @@ Optional Arguments:
       --debug       Enable debug mode.
       --trace       Enable trace messages.
   -V, --version     Output version information and exit.
+
+System Information:
+      --system-info
+                    Display system information.
 
 Profiling Arguments:
   -p, --profile   PROFILE
@@ -60,6 +64,9 @@ Collection Arguments:
                     Specify the operating system.
                     Options: aix, esxi, freebsd, linux, macos, netbsd
                       netscaler, openbsd, solaris
+  -D, --define      VAR=VALUE
+                    Define a user-defined variable.
+                    Use '--define list' to list all available user-defined variables.
   -H, --hash-collected
                     Hash all collected files.
   -u, --run-as-non-root
@@ -80,7 +87,7 @@ Filter Arguments:
                     Only collects files that were last modified/accessed/changed
                     before the given date.
 
-Informational Arguments:
+Case Information Arguments:
       --case-number CASE_NUMBER
                     Specify the case number.
       --description DESCRIPTION
@@ -94,7 +101,7 @@ Informational Arguments:
 
 Remote Transfer Arguments:
       --sftp SERVER
-                    Transfer the output file to remote SFTP server.
+                    Transfer the output and log file to remote SFTP server.
                     SERVER must be specified in the form [user@]host:[path]
       --sftp-port PORT
                     Remote SFTP server port (default: 22).
@@ -105,7 +112,7 @@ Remote Transfer Arguments:
                     Allow setting SSH options as key=value pairs.
                     Can be used multiple times to set multiple options.
       --s3-provider
-                    Transfer the output and log files to S3 service.
+                    Transfer the output and log file to S3 service.
                     Options: amazon, google, ibm
       --s3-region
                     S3 region name (default: us-east-1 [amazon], us-south [ibm]).
@@ -124,10 +131,7 @@ Remote Transfer Arguments:
                     Transfer the log file to AWS S3 using a pre-signed URL.
                     Use single quotes to enclose the URL.
       --azure-storage-sas-url URL
-                    Transfer the output file to Azure Storage using a SAS URL.
-                    Use single quotes to enclose the URL.
-      --azure-storage-sas-url-log-file URL
-                    Transfer the log file to Azure Storage using a SAS URL.
+                    Transfer the output and log file to Azure Storage using a SAS URL.
                     Use single quotes to enclose the URL.
       --delete-local-on-successful-transfer
                     Delete local output and log files on successful transfer.

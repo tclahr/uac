@@ -1,0 +1,7 @@
+version: 1.1
+artifacts:
+  -
+    description: Collect mail config files.
+    supported_os: [all]
+    collector: file
+    path: %user_home%/.mailrc %user_home%/.mail_aliases

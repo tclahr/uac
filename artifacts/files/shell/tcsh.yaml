@@ -1,0 +1,31 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect history files (including logrotate and backup files).
+    supported_os: [all]
+    collector: file
+    path: %user_home%/.history %user_home%/.history.*
+  -
+    description: Collect user config files.
+    supported_os: [all]
+    collector: file
+    path: %user_home%/.cshrc %user_home%/.tcshrc %user_home%/.login %user_home%/.login_conf %user_home%/.logout
+  -
+    description: Collect system config files.
+    supported_os: [all]
+    collector: file
+    path: /etc/csh.cshrc /etc/csh.login /etc/csh.logout
+  -
+    description: Parse config files to determine $HISTFILE.
+    supported_os: [all]
+    collector: command
+    command: grep -E "HISTFILE=.*" %user_home%/.cshrc %user_home%/.tcshrc %user_home%/.login %user_home%/.login_conf %user_home%/.logout /etc/csh.cshrc /etc/csh.login /etc/csh.logout | sed -e 's|.*HISTFILE=||' -e 's|^~/|%user_home%/|'
+    output_directory: /%temp_directory%/files/shell
+    output_file: tcsh_histfile.txt
+  -
+    description: Collect $HISTFILE.
+    supported_os: [all]
+    collector: file
+    path: /%temp_directory%/files/shell/tcsh_histfile.txt
+    is_file_list: true
+  

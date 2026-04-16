@@ -1,0 +1,20 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect system files.
+    supported_os: [all]
+    collector: file
+    path: /etc/.login /etc/profile /etc/shells /etc/profile.d/*
+  -
+    description: Parse config files to determine $HISTFILE.
+    supported_os: [all]
+    collector: command
+    command: grep -E "^HISTFILE=.*" /etc/profile | sed -e 's|.*HISTFILE=||' -e 's|^~/|%user_home%/|'
+    output_directory: /%temp_directory%/files/shell
+    output_file: common_histfile.txt
+  -
+    description: Collect $HISTFILE.
+    supported_os: [all]
+    collector: file
+    path: /%temp_directory%/files/shell/common_histfile.txt
+    is_file_list: true
