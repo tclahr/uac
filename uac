@@ -535,25 +535,21 @@ sed -e "s|^${__UAC_ARTIFACTS_OUTPUT_DIR}||" \
     -e 's|^/||' \
     "${__UAC_TEMP_DATA_DIR}/find_collected.tmp" \
     >"${__UAC_TEMP_DATA_DIR}/pre_output.tmp"
-# awk is required to replace ${__UAC_MOUNT_POINT} by [root]/ as sed cannot handle special characters
+
+# Replace ${__UAC_MOUNT_POINT} with "collected_files/"
 # remove entries that match ${__UAC_DIR}, /uac-data.tmp/, uac-x-x-x, and uac-%os%-%hostname%-%timestamp%
-awk -v mount="${__UAC_MOUNT_POINT}" -v repl="[root]/" '
-  index($0, mount) == 1 {
-    print repl substr($0, length(mount) + 1)
-    next
-  }
-  {print}
-' "${__UAC_TEMP_DATA_DIR}/file_collector.tmp" \
-  | sed -e 's|//*|/|g' \
-        -e 's|^/||' \
-  | grep -v -E "${__UAC_DIR}|/uac-data.tmp/|uac-[0-9]+.[0-9]+.[0-9]+-?|uac-[[:print:]]+-[[:print:]]+[0-9]{14}" \
+sed -e "s|^${__UAC_MOUNT_POINT}|collected_files/|" \
+    -e 's|//*|/|g' \
+    -e 's|^/||' \
+    "${__UAC_TEMP_DATA_DIR}/file_collector.tmp" |
+  grep -v -E "${__UAC_DIR}|/uac-data.tmp/|uac-[0-9]+.[0-9]+.[0-9]+-?|uac-[[:print:]]+-[[:print:]]+[0-9]{14}" \
     >>"${__UAC_TEMP_DATA_DIR}/pre_output.tmp"
 
 mv "${__UAC_TEMP_DATA_DIR}/${__UAC_LOG_FILE}" "${__UAC_ARTIFACTS_OUTPUT_DIR}" 2>/dev/null
 
 if [ "${__UAC_OUTPUT_FORMAT}" = "none" ] || ${__UAC_HASH_COLLECTED} || ${__UAC_TEMP_DATA_DIR_NO_SYMLINK_SUPPORT} || ${__UAC_TOOL_TAR_NO_FROM_FILE_SUPPORT}; then
-  printf "Copying files to '%s'...\n" "${__UAC_ARTIFACTS_OUTPUT_DIR}/[root]"
-  _copy_data "${__UAC_TEMP_DATA_DIR}/file_collector.tmp" "${__UAC_ARTIFACTS_OUTPUT_DIR}/[root]" \
+  printf "Copying files to '%s'...\n" "${__UAC_ARTIFACTS_OUTPUT_DIR}/collected_files"
+  _copy_data "${__UAC_TEMP_DATA_DIR}/file_collector.tmp" "${__UAC_ARTIFACTS_OUTPUT_DIR}/collected_files" \
     2>>"${__UAC_TEMP_DATA_DIR}/copy_data.stderr.txt"
 
   if ${__UAC_HASH_COLLECTED}; then
@@ -584,7 +580,7 @@ if [ "${__UAC_OUTPUT_FORMAT}" = "none" ] || ${__UAC_HASH_COLLECTED} || ${__UAC_T
     cd "${__UAC_DIR}" || _exit_fatal "cd: ${__UAC_DIR}: No such file or directory"
   fi
 else
-  ln -s "${__UAC_MOUNT_POINT}" "${__UAC_ARTIFACTS_OUTPUT_DIR}/[root]"
+  ln -s "${__UAC_MOUNT_POINT}" "${__UAC_ARTIFACTS_OUTPUT_DIR}/collected_files"
 fi
 
 if [ "${__UAC_OUTPUT_FORMAT}" = "none" ]; then
