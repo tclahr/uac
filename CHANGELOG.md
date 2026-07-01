@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 
 ### Artifacts
 
+- `live_response/containers/docker.yaml`: Updated to extend docker artifacts collection on macos [macos]. (by [sudesh0sudesh](https://github.com/sudesh0sudesh))
 - `live_response/network/netstat.yaml`: Updated to include `netstat -Aan` [aix].
 - `live_response/network/rmsock.yaml`: Identify process ownership for TCP network connections. Used to associate PIDs with network activity on AIX systems where lsof is unavailable [aix].
 - `live_response/process/fstat.yaml`: Updated to include `fstat -n` [freebsd, netbsd, netscaler, openbsd].
