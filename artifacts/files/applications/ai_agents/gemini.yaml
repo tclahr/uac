@@ -1,0 +1,13 @@
+version: 1.0
+
+artifacts:
+  -
+    description: Collect Gemini CLI chat logs, config and OAuth credentials.
+    supported_os: [linux, macos]
+    collector: file
+    path: %user_home%/.gemini
+    name_pattern: ["*.jsonl", "*.json", "settings.json", "oauth_creds.json", "google_accounts.json", "installation_id"]
+    file_type: [f]
+    max_file_size: 1g
+    ignore_date_range: true
+    exclude_nologin_users: true

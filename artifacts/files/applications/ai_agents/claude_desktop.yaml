@@ -1,0 +1,23 @@
+version: 1.0
+
+artifacts:
+  -
+    description: Collect Claude Desktop transcripts, config, credentials, storage and skill/plugin defs (macOS).
+    supported_os: [macos]
+    collector: file
+    path: %user_home%/Library/"Application Support"/Claude
+    name_pattern: ["*.jsonl", "*.json", "*.md", "*.yaml", "*.yml", "*.toml", "*.ldb", "*.log", "*.old", "LOG*", "MANIFEST*", "*.audit-key", "*.pem", "*.db", "*.sqlite", "*.sqlite3", "*-journal", "*-wal", "Cookies*", "Local State", "Preferences", "Trust Tokens*", "ant-did", "Network Persistent State", "vmIP"]
+    file_type: [f]
+    exclude_path_pattern: ["*/Cache/*", "*/Code Cache/*", "*/GPUCache/*", "*/DawnGraphiteCache/*", "*/DawnWebGPUCache/*", "*/fcache/*", "*/blob_storage/*", "*/Crashpad/*", "*/sentry/*", "*/.git/*", "*/.venv/*", "*/node_modules/*", "*/__pycache__/*", "*/site-packages/*"]
+    max_file_size: 1g
+    ignore_date_range: true
+    exclude_nologin_users: true
+  -
+    description: Collect Claude Desktop app logs (macOS).
+    supported_os: [macos]
+    collector: file
+    path: %user_home%/Library/Logs/Claude
+    name_pattern: ["*.log", "*.json", "*.txt"]
+    file_type: [f]
+    ignore_date_range: true
+    exclude_nologin_users: true

@@ -1,0 +1,13 @@
+version: 1.0
+
+artifacts:
+  -
+    description: Collect Droid (Factory) session settings, config and auth.
+    supported_os: [linux, macos]
+    collector: file
+    path: %user_home%/.factory
+    name_pattern: ["*.settings.json", "*.json", "auth*", "*.jsonl"]
+    file_type: [f]
+    max_file_size: 1g
+    ignore_date_range: true
+    exclude_nologin_users: true

@@ -1,0 +1,10 @@
+version: 1.0
+
+artifacts:
+  -
+    description: Record AI coding-agent environment-variable overrides per user.
+    supported_os: [linux, macos]
+    collector: command
+    command: env | grep -E '^(CLAUDE_CONFIG_DIR|XDG_CONFIG_HOME|CODEX_HOME|GEMINI_DATA_DIR|AMP_DATA_DIR|CODEBUFF_DATA_DIR|COPILOT_OTEL_FILE_EXPORTER_PATH|DROID_SESSIONS_DIR|GOOSE_PATH_ROOT|HERMES_HOME|KILO_DATA_DIR|KIMI_DATA_DIR|OPENCLAW_DIR|OPENCODE_DATA_DIR|PI_AGENT_DIR|QWEN_DATA_DIR|KIRO_HOME)='
+    output_directory: /live_response/ai_agents
+    output_file: ai_agent_env_overrides.txt
