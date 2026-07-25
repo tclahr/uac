@@ -1,0 +1,16 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect macOS user trash.
+    supported_os: [macos]
+    collector: file
+    path: %user_home%/.Trash
+    ignore_date_range: true
+    exclude_nologin_users: true
+  -
+    description: Collect macOS Volumes Trash.
+    supported_os: [macos]
+    collector: file
+    path: /Volumes/<VolumeName>/.Trashes
+    ignore_date_range: true
+    exclude_nologin_users: true
