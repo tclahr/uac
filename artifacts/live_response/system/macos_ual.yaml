@@ -1,0 +1,12 @@
+version: 1.0
+condition: command_exists "log"
+output_directory: /live_response/system
+artifacts:
+  -
+    description: Collect the macOS Unified Logs into a logarchive.
+    supported_os: [macos]
+    collector: command
+    command: log collect --output macos_unified_logs.logarchive --size %macos_unified_logs_max_size=10240m%
+
+# References:
+# https://ss64.com/mac/log.html
