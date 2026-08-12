@@ -1,0 +1,17 @@
+version: 1.1
+output_directory: /live_response/system
+artifacts:
+  -
+    description: Classify files in common Linux executable directories without following symbolic links.
+    supported_os: [linux]
+    collector: command
+    condition: command_exists "file"
+    command: file -h /bin/* /sbin/* /usr/bin/* /usr/sbin/*
+    output_file: binary_file_types.txt
+  -
+    description: Calculate hashes for files in common Linux executable directories.
+    supported_os: [linux]
+    collector: hash
+    path: /bin/* /sbin/* /usr/bin/* /usr/sbin/*
+    file_type: [f]
+    output_file: binary_file_hashes
