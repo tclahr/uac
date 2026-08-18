@@ -1,0 +1,13 @@
+version: 1.0
+
+artifacts:
+  -
+    description: Collect Kimi session wire logs, config and credentials.
+    supported_os: [linux, macos]
+    collector: file
+    path: %user_home%/.kimi
+    name_pattern: ["wire.jsonl", "*.jsonl", "*.json", "config*", "*.toml"]
+    file_type: [f]
+    max_file_size: 1g
+    ignore_date_range: true
+    exclude_nologin_users: true

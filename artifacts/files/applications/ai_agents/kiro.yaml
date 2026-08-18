@@ -1,0 +1,35 @@
+version: 1.0
+
+artifacts:
+  -
+    description: Collect Kiro global config, MCP, agents, steering, prompts, skills and sessions.
+    supported_os: [linux, macos]
+    collector: file
+    path: %user_home%/.kiro
+    name_pattern: ["*.json", "*.jsonl", "*.md", "*.yaml", "*.yml", "*.toml", "*.db", "*.sqlite", "*.sqlite3", "*.log", "mcp.json", "cli.json"]
+    file_type: [f]
+    exclude_path_pattern: ["*/.git/*", "*/node_modules/*", "*/__pycache__/*"]
+    max_file_size: 1g
+    ignore_date_range: true
+    exclude_nologin_users: true
+  -
+    description: Collect Kiro CLI data and knowledge bases (macOS).
+    supported_os: [macos]
+    collector: file
+    path: %user_home%/Library/"Application Support"/kiro-cli
+    name_pattern: ["*.json", "*.jsonl", "*.md", "*.db", "*.sqlite", "*.sqlite3", "*.log", "*.yaml", "*.yml"]
+    file_type: [f]
+    max_file_size: 1g
+    ignore_date_range: true
+    exclude_nologin_users: true
+  -
+    description: Collect Kiro IDE settings, global/workspace storage, file History and logs (macOS).
+    supported_os: [macos]
+    collector: file
+    path: %user_home%/Library/"Application Support"/Kiro/User %user_home%/Library/"Application Support"/Kiro/logs %user_home%/Library/Logs/Kiro
+    name_pattern: ["*.json", "*.jsonl", "*.md", "*.yaml", "*.yml", "*.log", "*.vscdb", "*.vscdb.backup", "*.db", "*.sqlite", "*.sqlite3"]
+    file_type: [f]
+    exclude_path_pattern: ["*/Cache/*", "*/CachedData/*", "*/Code Cache/*", "*/GPUCache/*", "*/blob_storage/*", "*/.git/*", "*/node_modules/*"]
+    max_file_size: 1g
+    ignore_date_range: true
+    exclude_nologin_users: true

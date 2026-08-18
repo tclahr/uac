@@ -1,0 +1,26 @@
+version: 1.0
+
+artifacts:
+  -
+    description: Collect Claude Code session logs, config and credentials.
+    supported_os: [linux, macos]
+    collector: file
+    path: %user_home%/.claude %user_home%/.config/claude
+    name_pattern: ["*.jsonl", "settings.json", "settings.local.json", ".credentials.json", "*.json", "CLAUDE.md", "*.mcp.json", ".mcp.json"]
+    file_type: [f]
+    max_file_size: 1g
+    ignore_date_range: true
+    exclude_nologin_users: true
+  -
+    description: Collect Claude Code top-level user config (~/.claude.json).
+    supported_os: [linux, macos]
+    collector: file
+    path: %user_home%/.claude.json %user_home%/.claude.json.backup
+    ignore_date_range: true
+    exclude_nologin_users: true
+  -
+    description: Collect Claude Code managed MCP config and MDM-managed preferences (macOS, system-wide).
+    supported_os: [macos]
+    collector: file
+    path: /Library/"Application Support"/ClaudeCode/managed-mcp.json /Library/"Managed Preferences"/com.anthropic.claudecode.plist
+    ignore_date_range: true

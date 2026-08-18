@@ -1,0 +1,13 @@
+version: 1.0
+
+artifacts:
+  -
+    description: Collect Hermes Agent state database and config.
+    supported_os: [linux, macos]
+    collector: file
+    path: %user_home%/.hermes
+    name_pattern: ["state.db", "*.db", "*.sqlite", "*.json", "*.toml", "*.yaml"]
+    file_type: [f]
+    max_file_size: 1g
+    ignore_date_range: true
+    exclude_nologin_users: true
