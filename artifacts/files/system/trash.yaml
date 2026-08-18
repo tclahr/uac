@@ -1,6 +1,12 @@
 version: 2.0
 artifacts:
   -
+    description: Collect linux user trash (file & info).
+    supported_os: [freebsd, linux, netbsd, openbsd]
+    collector: file
+    path: %user_home%/.local/share/Trash
+    exclude_nologin_users: true
+  -
     description: Collect macOS user trash.
     supported_os: [macos]
     collector: file
@@ -8,22 +14,9 @@ artifacts:
     ignore_date_range: true
     exclude_nologin_users: true
   -
-    description: Collect macOS Volumes Trash.
+    description: Collect macOS Volumes Trash. On macOS, /Volumes/[DriveName]/.Trashes is a hidden system folder where deleted files from external drives, USB sticks, or secondary partitions are temporarily stored before you empty the Trash.
     supported_os: [macos]
     collector: file
-    path: /Volumes/<VolumeName>/.Trashes
+    path: /Volumes/*/.Trashes
     ignore_date_range: true
-    exclude_nologin_users: true
-  -
-    description: Collect linux user trash (file & info).
-    supported_os: [freebsd, linux, netbsd, openbsd]
-    collector: file
-    path: %user_home%/.local/share/Trash
-    exclude_nologin_users: true
-  -
-    description: Collect linux trash from removable media (file & info).
-    supported_os: [freebsd, linux, netbsd, openbsd]
-    collector: file
-    path: /
-    path_pattern: ["/.Trash-[0-9]*/*"]
-    exclude_nologin_users: true
+  
