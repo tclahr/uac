@@ -6,4 +6,3 @@ artifacts:
     collector: file
     path: /Library/PrivilegedHelperTools
     ignore_date_range: true
-    exclude_nologin_users: true
