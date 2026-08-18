@@ -22,7 +22,7 @@ artifacts:
     collector: command
     foreach: ls -l /proc/[0-9]*/exe | grep -E "\(deleted\)" | awk -F"/proc/|/exe" '{print $2}'
     command: ls -l /proc/%line%/fd/[0-9]* | grep -E "\(deleted\)" | grep -v -E "> /dev/|> /proc/" | awk -F"/proc/%line%/fd/| ->" '{print "%line%/fd/"$2}'
-    output_directory: /%temp_directory%/process
+    output_directory: %temp_directory%/process
     output_file: file_descriptors_of_deleted_processes.txt
   -
     description: Collect the list of deleted files located in /dev/shm of (malicious) processes if they are shown up as being (deleted).
@@ -30,7 +30,7 @@ artifacts:
     collector: command
     foreach: ls -l /proc/[0-9]*/exe | grep -E "\(deleted\)" | awk -F"/proc/|/exe" '{print $2}'
     command: ls -l /proc/%line%/fd/[0-9]* | grep -E "\(deleted\)" | grep -E "> /dev/shm" | awk -F"/proc/%line%/fd/| ->" '{print "%line%/fd/"$2}'
-    output_directory: /%temp_directory%/process
+    output_directory: %temp_directory%/process
     output_file: file_descriptors_of_deleted_processes.txt
   -
     description: Collect open files of (malicious) processes if they are shown up as being (deleted).
@@ -38,7 +38,7 @@ artifacts:
     # this is to avoid dd hitting an invalid file descriptor (such as /dev/null) and generating an endless output file
     supported_os: [linux]
     collector: command
-    foreach: cat "/%temp_directory%/process/file_descriptors_of_deleted_processes.txt"
+    foreach: cat "%temp_directory%/process/file_descriptors_of_deleted_processes.txt"
     command: dd if=/proc/%line% of=recovered_file bs=1024 count=20000
     output_directory: /live_response/process/proc/%line%
   -
@@ -47,7 +47,7 @@ artifacts:
     collector: command
     foreach: ls -l /proc/[0-9]*/exe | awk -F"/proc/|/exe" '{print $2}'
     command: ls -l /proc/%line%/fd/[0-9]* | grep "memfd" | grep -E "\(deleted\)" | awk -F"/proc/%line%/fd/| ->" '{print "%line%/fd/"$2}'
-    output_directory: /%temp_directory%/process
+    output_directory: %temp_directory%/process
     output_file: files_hidden_in_memfd_socket.txt
   -
     description: Collect open files of (malicious) processes if they are being hidden in a memfd socket.
@@ -55,7 +55,7 @@ artifacts:
     # this is to avoid dd hitting an invalid file descriptor (such as /dev/null) and generating an endless output file
     supported_os: [linux]
     collector: command
-    foreach: cat "/%temp_directory%/process/files_hidden_in_memfd_socket.txt"
+    foreach: cat "%temp_directory%/process/files_hidden_in_memfd_socket.txt"
     command: dd if=/proc/%line% of=recovered_file bs=1024 count=20000
     output_directory: /live_response/process/proc/%line%
   -
@@ -64,13 +64,13 @@ artifacts:
     collector: command
     foreach: ls -l /proc/[0-9]*/exe | grep -E "\(deleted\)" | awk -F"/proc/|/exe" '{print $2}'
     command: ls -l /proc/%line%/fd/[0-9]* | grep -v -E "\(deleted\)" | awk -F'-> ' '{print $2}' | sed -e "s:^'::" -e "s:'$::" -e ':^"::' -e ':"$::'
-    output_directory: /%temp_directory%/process
+    output_directory: %temp_directory%/process
     output_file: list_open_file_descriptors.txt
   -
     description: Collect open files of (malicious) processes.
     supported_os: [linux]
     collector: file
-    path: /%temp_directory%/process/list_open_file_descriptors.txt
+    path: %temp_directory%/process/list_open_file_descriptors.txt
     is_file_list: true
   -
     description: Collect the binary of (malicious) processes if they are shown up as being (deleted).

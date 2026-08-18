@@ -1,0 +1,13 @@
+version: 1.0
+
+artifacts:
+  -
+    description: Collect Qwen Code chat logs, config and OAuth credentials.
+    supported_os: [linux, macos]
+    collector: file
+    path: %user_home%/.qwen
+    name_pattern: ["*.jsonl", "settings.json", "oauth_creds.json", "*.json"]
+    file_type: [f]
+    max_file_size: 1g
+    ignore_date_range: true
+    exclude_nologin_users: true

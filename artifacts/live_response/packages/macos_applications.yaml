@@ -5,7 +5,7 @@ artifacts:
     description: Display all applications located at /Applications directory.
     supported_os: [macos]
     collector: command
-    command: ls -l -a /%mount_point%/Applications
+    command: ls -l -a %mount_point%/Applications
     output_file: ls_-l_-a_Applications.txt
   -
     description: Display all applications located at /Users/%user%/Applications directory.

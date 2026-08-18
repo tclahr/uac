@@ -1,0 +1,13 @@
+version: 1.0
+
+artifacts:
+  -
+    description: Collect Amp session data, config and credentials.
+    supported_os: [linux, macos]
+    collector: file
+    path: %user_home%/.local/share/amp %user_home%/.config/amp
+    name_pattern: ["*.jsonl", "*.json", "*.db", "*.sqlite", "*.toml", "*.yaml"]
+    file_type: [f]
+    max_file_size: 1g
+    ignore_date_range: true
+    exclude_nologin_users: true

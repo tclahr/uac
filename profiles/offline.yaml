@@ -10,3 +10,4 @@ artifacts:
   - packages/*
   - files/*
   - !files/browsers/cache.yaml
+  - !files/system/trash.yaml

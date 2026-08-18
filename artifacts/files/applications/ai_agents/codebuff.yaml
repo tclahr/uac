@@ -1,0 +1,13 @@
+version: 1.0
+
+artifacts:
+  -
+    description: Collect Codebuff (manicode) chat logs, config and credentials.
+    supported_os: [linux, macos]
+    collector: file
+    path: %user_home%/.config/manicode %user_home%/.config/manicode-dev %user_home%/.config/manicode-staging
+    name_pattern: ["chat-messages.json", "*.json", "credentials*", "*.jsonl"]
+    file_type: [f]
+    max_file_size: 1g
+    ignore_date_range: true
+    exclude_nologin_users: true

@@ -1,0 +1,8 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect macOS PrivilegedHelperTools, can be used for persistence.
+    supported_os: [macos]
+    collector: file
+    path: /Library/PrivilegedHelperTools
+    ignore_date_range: true

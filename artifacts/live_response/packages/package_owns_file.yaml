@@ -8,14 +8,14 @@ artifacts:
     collector: find
     path: /bin/* /sbin/* /usr/bin/* /usr/sbin/* /usr/local/bin/* /usr/local/sbin/* /opt/bin/* /opt/sbin/*
     file_type: [f, l]
-    output_directory: /%temp_directory%/live_response/packages
+    output_directory: %temp_directory%/live_response/packages
     output_file: binary_files.txt
   -
     description: Determine which installed package owns a specific file or command.
     supported_os: [linux]
     collector: command
     condition: command_exists "dpkg"
-    foreach: sort -u /%temp_directory%/live_response/packages/binary_files.txt
+    foreach: sort -u %temp_directory%/live_response/packages/binary_files.txt
     command: dpkg -S "%line%"
     output_directory: /live_response/packages
     output_file: dpkg_-S.txt
@@ -25,7 +25,7 @@ artifacts:
     supported_os: [linux]
     collector: command
     condition: command_exists "pacman"
-    foreach: sort -u /%temp_directory%/live_response/packages/binary_files.txt
+    foreach: sort -u %temp_directory%/live_response/packages/binary_files.txt
     command: pacman -Q -o "%line%"
     output_directory: /live_response/packages
     output_file: pacman_-Q_-o.txt
@@ -35,7 +35,7 @@ artifacts:
     supported_os: [linux]
     collector: command
     condition: command_exists "rpm"
-    foreach: sort -u /%temp_directory%/live_response/packages/binary_files.txt
+    foreach: sort -u %temp_directory%/live_response/packages/binary_files.txt
     command: rpm -q -f "%line%" | sed -e "s|$|: %line%|"
     output_directory: /live_response/packages
     output_file: rpm_-q_-f.txt

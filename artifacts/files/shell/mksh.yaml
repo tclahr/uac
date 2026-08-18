@@ -15,11 +15,11 @@ artifacts:
     supported_os: [all]
     collector: command
     command: grep -E "^HISTFILE=.*" %user_home%/.profile  | sed -e 's|.*HISTFILE=||' -e 's|^~/|%user_home%/|'
-    output_directory: /%temp_directory%/files/shell
+    output_directory: %temp_directory%/files/shell
     output_file: mksh_histfile.txt
   -
     description: Collect $HISTFILE.
     supported_os: [all]
     collector: file
-    path: /%temp_directory%/files/shell/mksh_histfile.txt
+    path: %temp_directory%/files/shell/mksh_histfile.txt
     is_file_list: true
