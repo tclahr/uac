@@ -1,0 +1,13 @@
+version: 1.0
+
+artifacts:
+  -
+    description: Collect OpenAI Codex CLI session logs, config and auth.
+    supported_os: [linux, macos]
+    collector: file
+    path: %user_home%/.codex
+    name_pattern: ["*.jsonl", "config.toml", "auth.json", "version.json", "*.json", "*.log", "*.toml"]
+    file_type: [f]
+    max_file_size: 1g
+    ignore_date_range: true
+    exclude_nologin_users: true

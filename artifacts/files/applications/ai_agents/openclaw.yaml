@@ -1,0 +1,13 @@
+version: 1.0
+
+artifacts:
+  -
+    description: Collect OpenClaw session logs (incl. deleted/reset), config and auth.
+    supported_os: [linux, macos]
+    collector: file
+    path: %user_home%/.openclaw %user_home%/.clawdbot %user_home%/.moltbot %user_home%/.moldbot
+    name_pattern: ["*.jsonl", "*.jsonl.deleted.*", "*.jsonl.reset.*", "*.json", "config*"]
+    file_type: [f]
+    max_file_size: 1g
+    ignore_date_range: true
+    exclude_nologin_users: true

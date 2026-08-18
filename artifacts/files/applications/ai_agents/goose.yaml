@@ -1,0 +1,23 @@
+version: 1.0
+
+artifacts:
+  -
+    description: Collect Goose session database and config (Linux).
+    supported_os: [linux]
+    collector: file
+    path: %user_home%/.local/share/goose %user_home%/.local/share/Block/goose %user_home%/.config/goose
+    name_pattern: ["sessions.db", "*.db", "*.sqlite", "config.yaml", "*.yaml", "*.json"]
+    file_type: [f]
+    max_file_size: 1g
+    ignore_date_range: true
+    exclude_nologin_users: true
+  -
+    description: Collect Goose session database and config (macOS).
+    supported_os: [macos]
+    collector: file
+    path: %user_home%/Library/"Application Support"/goose %user_home%/.config/goose
+    name_pattern: ["sessions.db", "*.db", "*.sqlite", "config.yaml", "*.yaml", "*.json"]
+    file_type: [f]
+    max_file_size: 1g
+    ignore_date_range: true
+    exclude_nologin_users: true

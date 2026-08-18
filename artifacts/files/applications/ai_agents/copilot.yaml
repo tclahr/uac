@@ -1,0 +1,22 @@
+version: 1.0
+
+artifacts:
+  -
+    description: Collect GitHub Copilot CLI OTEL usage logs and config.
+    supported_os: [linux, macos]
+    collector: file
+    path: %user_home%/.copilot
+    name_pattern: ["*.jsonl", "*.json"]
+    file_type: [f]
+    max_file_size: 1g
+    ignore_date_range: true
+    exclude_nologin_users: true
+  -
+    description: Collect GitHub Copilot host token/config store.
+    supported_os: [linux, macos]
+    collector: file
+    path: %user_home%/.config/github-copilot
+    name_pattern: ["*.json", "hosts.json", "apps.json", "versions.json"]
+    file_type: [f]
+    ignore_date_range: true
+    exclude_nologin_users: true
