@@ -45,4 +45,6 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- Fixed `xargs` backslash escape issue. (#458)
+
 ### Tools
