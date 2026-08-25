@@ -456,6 +456,7 @@ else
   _log_msg INF "perl command exists: false"
 fi
 _log_msg INF "xargs -0 support: ${__UAC_TOOL_XARGS_NULL_DELIMITER_SUPPORT}"
+_log_msg INF "xargs backslash escape support: ${__UAC_TOOL_XARGS_BACKSLASH_ESCAPE_SUPPORT}"
 _log_msg INF "MD5 hashing tool: ${__UAC_TOOL_MD5_BIN}"
 _log_msg INF "SHA1 hashing tool: ${__UAC_TOOL_SHA1_BIN}"
 _log_msg INF "SHA256 hashing tool: ${__UAC_TOOL_SHA256_BIN}"

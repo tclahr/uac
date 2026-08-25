@@ -23,6 +23,7 @@ _setup_tools()
   __UAC_TOOL_FIND_CTIME_SUPPORT=false
   __UAC_TOOL_FIND_PRINT0_SUPPORT=false
   __UAC_TOOL_XARGS_NULL_DELIMITER_SUPPORT=false
+  __UAC_TOOL_XARGS_BACKSLASH_ESCAPE_SUPPORT=false
   __UAC_TOOL_STAT_BIN=""
   __UAC_TOOL_STAT_PARAMS=""
   __UAC_TOOL_TAR_NO_FROM_FILE_SUPPORT=false
@@ -74,6 +75,10 @@ _setup_tools()
   
   if echo "uac" | xargs -0 echo >/dev/null; then
     __UAC_TOOL_XARGS_NULL_DELIMITER_SUPPORT=true
+  fi
+
+  if echo '\/tmp' | xargs echo | grep -q -E "^/"; then
+    __UAC_TOOL_XARGS_BACKSLASH_ESCAPE_SUPPORT=true
   fi
   
   # check which stat tool and options are available for the target system
