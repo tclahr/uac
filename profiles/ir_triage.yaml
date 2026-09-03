@@ -31,6 +31,7 @@ artifacts:
   - ssh/*
   - packages/*
   - osquery/osquery.yaml
+  - !files/applications/ai_tools/*
   - files/applications/git.yaml
   - files/applications/lesshst.yaml
   - files/applications/nano.yaml
