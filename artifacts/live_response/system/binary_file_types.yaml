@@ -8,10 +8,4 @@ artifacts:
     condition: command_exists "file"
     command: file -h /bin/* /sbin/* /usr/bin/* /usr/sbin/*
     output_file: binary_file_types.txt
-  -
-    description: Calculate hashes for files in common Linux executable directories.
-    supported_os: [linux]
-    collector: hash
-    path: /bin/* /sbin/* /usr/bin/* /usr/sbin/*
-    file_type: [f]
-    output_file: binary_file_hashes
+
