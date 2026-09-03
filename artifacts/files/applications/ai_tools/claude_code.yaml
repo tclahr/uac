@@ -1,13 +1,25 @@
-version: 1.0
+version: 1.1
 
 artifacts:
   -
-    description: Collect Claude Code session logs, config and credentials.
+    description: Collect Claude Code session transcripts, tool results, auto-memory, plans, pre-edit file history, shell snapshots, hooks, config and credentials.
     supported_os: [linux, macos]
     collector: file
     path: %user_home%/.claude %user_home%/.config/claude
-    name_pattern: ["*.jsonl", "settings.json", "settings.local.json", ".credentials.json", "*.json", "CLAUDE.md", "*.mcp.json", ".mcp.json"]
+    name_pattern: ["*.jsonl", "settings.json", "settings.local.json", ".credentials.json", "*.json", "CLAUDE.md", "*.mcp.json", ".mcp.json", "*.md", "*.txt", "*.sh", "*@v*", "*.lock"]
+    exclude_path_pattern: ["*/plugins/cache/*", "*/plugins/repos/*", "*/plugins/marketplaces/*", "*/node_modules/*", "*/.git/*", "*/.venv/*", "*/site-packages/*", "*/__pycache__/*"]
     file_type: [f]
+    max_file_size: 1g
+    ignore_date_range: true
+    exclude_nologin_users: true
+  -
+    description: Collect Claude Code plugin manifests and plugin hook definitions from installed plugin caches and marketplaces.
+    supported_os: [linux, macos]
+    collector: file
+    path: %user_home%/.claude/plugins
+    name_pattern: ["*.json", "*.jsonl"]
+    file_type: [f]
+    exclude_path_pattern: ["*/node_modules/*", "*/.git/*"]
     max_file_size: 1g
     ignore_date_range: true
     exclude_nologin_users: true

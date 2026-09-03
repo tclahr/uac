@@ -1,13 +1,14 @@
-version: 1.0
+version: 1.1
 
 artifacts:
   -
-    description: Collect OpenCode session data, config and credentials.
+    description: Collect OpenCode session database (with WAL/SHM sidecars), logs, state, config, agents, commands and credentials.
     supported_os: [linux, macos]
     collector: file
-    path: %user_home%/.local/share/opencode %user_home%/.config/opencode
-    name_pattern: ["*.jsonl", "*.json", "*.db", "*.sqlite", "auth*", "*.toml", "*.yaml"]
+    path: %user_home%/.local/share/opencode %user_home%/.config/opencode %user_home%/.local/state/opencode
+    name_pattern: ["*.jsonl", "*.json", "*.jsonc", "*.db", "*.db-wal", "*.db-shm", "*.sqlite", "auth*", "*.toml", "*.yaml", "*.log", "*.md"]
     file_type: [f]
+    exclude_path_pattern: ["*/node_modules/*", "*/repos/*", "*/snapshot/*"]
     max_file_size: 1g
     ignore_date_range: true
     exclude_nologin_users: true

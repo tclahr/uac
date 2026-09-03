@@ -8,6 +8,11 @@ All notable changes to this project will be documented in this file.
 
 ### Artifacts
 
+- `files/applications/ai_tools/claude_code.yaml`: Updated to also collect pre-edit file history, tool results, auto-memory, plans, shell snapshots, hook scripts and IDE lock files [linux, macos]. (by [ecapuano](https://github.com/ecapuano))
+- `files/applications/ai_tools/codex.yaml`: Updated to also collect state, thread-history and log SQLite databases with WAL/SHM sidecars, legacy sqlite databases, AGENTS.md, rules, shell snapshots and installation_id; excludes tmp and cache trees [linux, macos]. (by [ecapuano](https://github.com/ecapuano))
+- `files/applications/ai_tools/copilot.yaml`: Updated to also collect session workspace metadata, plans and checkpoints, the session store database with WAL/SHM sidecars and logs; adds VS Code Copilot Chat conversation transcripts, agent-mode edit snapshots and extension session store [linux, macos]. (by [ecapuano](https://github.com/ecapuano))
+- `files/applications/ai_tools/gemini.yaml`: Updated to also collect custom commands and policies (TOML), GEMINI.md and memory files, and per-project root markers; excludes downloaded binaries, shadow git checkpoints and the browser profile [linux, macos]. (by [ecapuano](https://github.com/ecapuano))
+- `files/applications/ai_tools/opencode.yaml`: Updated to also collect SQLite WAL/SHM sidecars, logs, JSONC config, agent and command definitions and the state directory; excludes node_modules, cloned repos and snapshots [linux, macos]. (by [ecapuano](https://github.com/ecapuano))
 - `files/applications/ai_tools/amp.yaml`: Adds collection of Amp session data, config, and credentials [linux, macos]. (by [walkingawire](https://github.com/walkingawire))
 - `files/applications/ai_tools/claude_code.yaml`: Adds collection of Claude Code session logs, config, and credentials [linux, macos]. (by [walkingawire](https://github.com/walkingawire))
 - `files/applications/ai_tools/claude_desktop.yaml`: Adds collection of Claude Desktop transcripts, config, credentials, storage, skill/plugin definitions, and app logs [macos]. (by [walkingawire](https://github.com/walkingawire))
