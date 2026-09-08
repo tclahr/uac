@@ -41,6 +41,7 @@ All notable changes to this project will be documented in this file.
   - Updated to include `ps -eo user,pid,ppid,pcpu,pmem,tty,stat,lstart,args` [freebsd, linux, macos, netbsd, netscaler, openbsd].
   - Updated to include `ps -eo user,pid,ppid,pcpu,pmem,tty,stat,etime,args` [aix, freebsd, linux, macos, netbsd, netscaler, openbsd].
   - Updated to include `ps -eo user,pid,ppid,pcpu,pmem,tty,s,etime,args` [solaris].
+- `memory_dump/avml.yaml`: Adjusted to work with the new `avml` command-line arguments [linux].
 
 ### Removed Artifacts
 
