@@ -2,9 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
-## DEVELOPMENT VERSION
+## 3.4.0 (2026-09-08)
 
 ### Highlights
+
+- New AI tool artifacts — collect forensic artifacts from modern AI-assisted development environments.
 
 ### Artifacts
 
