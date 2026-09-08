@@ -53,3 +53,5 @@ All notable changes to this project will be documented in this file.
 - Fixed `xargs` backslash escape issue. (#458)
 
 ### Tools
+
+- Updated `avml` to v0.20.0 and moved it to the `bin/linux/x86_64` directory, as it is a specific binary for x86 64-bit CPUs.
