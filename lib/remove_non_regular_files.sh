@@ -20,7 +20,11 @@ _remove_non_regular_files()
     return 1
   fi
 
-  __rn_command="sed 's|.|\\\\&|g' \"${__rn_file}\" | xargs find"
+  if ${__UAC_TOOL_XARGS_BACKSLASH_ESCAPE_SUPPORT}; then
+    __rn_command="sed 's|.|\\\\&|g' \"${__rn_file}\" | xargs find"
+  else
+    __rn_command="while IFS= read -r __rn_line; do find \"\${__rn_line}\"; done <\"${__rn_file}\""
+  fi
 
   _verbose_msg "${__UAC_VERBOSE_CMD_PREFIX}${__rn_command}"
   eval "${__rn_command}" \

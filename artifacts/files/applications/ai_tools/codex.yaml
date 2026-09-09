@@ -1,0 +1,14 @@
+version: 1.1
+
+artifacts:
+  -
+    description: Collect OpenAI Codex CLI session rollouts, history, state/thread-history/log SQLite databases, config, instructions, rules, shell snapshots and auth.
+    supported_os: [linux, macos]
+    collector: file
+    path: %user_home%/.codex
+    name_pattern: ["*.jsonl", "config.toml", "auth.json", "version.json", "*.json", "*.log", "*.toml", "*.sqlite", "*.sqlite-wal", "*.sqlite-shm", "*.db", "*.db-wal", "*.db-shm", "*.md", "*.rules", "*.sh", "installation_id"]
+    exclude_path_pattern: ["*/tmp/*", "*/.tmp/*", "*/cache/*", "*/plugins/*", "*/computer-use/*", "*/node_modules/*", "*/.git/*"]
+    file_type: [f]
+    max_file_size: 1g
+    ignore_date_range: true
+    exclude_nologin_users: true

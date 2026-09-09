@@ -1,0 +1,13 @@
+version: 1.0
+
+artifacts:
+  -
+    description: Collect Kilo session database and config.
+    supported_os: [linux, macos]
+    collector: file
+    path: %user_home%/.local/share/kilo %user_home%/.config/kilo
+    name_pattern: ["kilo.db", "*.db", "*.sqlite", "*.json", "*.yaml", "*.toml"]
+    file_type: [f]
+    max_file_size: 1g
+    ignore_date_range: true
+    exclude_nologin_users: true

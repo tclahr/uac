@@ -12,7 +12,7 @@ artifacts:
     supported_os: [aix, freebsd, linux, netbsd, netscaler, solaris]
     collector: command
     command: cat /proc/modules
-    output_directory: /live_response/process/proc/
+    output_directory: /live_response/process/proc
     output_file: modules.txt
 
   # each operating system has its own particularities and artifacts available in /proc

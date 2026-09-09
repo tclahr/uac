@@ -30,11 +30,11 @@ artifacts:
     supported_os: [all]
     collector: command
     command: grep -E "HISTFILE=.*" %user_home%/.bashrc %user_home%/.bash_profile %user_home%/.profile /etc/bash.bashrc | sed -e 's|.*HISTFILE=||' -e 's|^~/|%user_home%/|'
-    output_directory: /%temp_directory%/files/shell
+    output_directory: %temp_directory%/files/shell
     output_file: bash_histfile.txt
   -
     description: Collect $HISTFILE.
     supported_os: [all]
     collector: file
-    path: /%temp_directory%/files/shell/bash_histfile.txt
+    path: %temp_directory%/files/shell/bash_histfile.txt
     is_file_list: true

@@ -1,4 +1,4 @@
-version: 2.0
+version: 2.1
 condition: command_exists "fstat"
 output_directory: /live_response/process
 artifacts:
@@ -8,3 +8,9 @@ artifacts:
     collector: command
     command: fstat
     output_file: fstat.txt
+  -
+    description: Collect status of open files.
+    supported_os: [freebsd, netbsd, netscaler, openbsd]
+    collector: command
+    command: fstat -n
+    output_file: fstat_-n.txt

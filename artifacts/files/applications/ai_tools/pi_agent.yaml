@@ -1,0 +1,13 @@
+version: 1.0
+
+artifacts:
+  -
+    description: Collect pi-agent session logs, config and credentials.
+    supported_os: [linux, macos]
+    collector: file
+    path: %user_home%/.pi
+    name_pattern: ["*.jsonl", "*.json", "config*", "auth*", "*.toml", "*.yaml"]
+    file_type: [f]
+    max_file_size: 1g
+    ignore_date_range: true
+    exclude_nologin_users: true

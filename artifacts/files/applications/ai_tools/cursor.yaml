@@ -1,0 +1,36 @@
+version: 1.0
+
+artifacts:
+  -
+    description: Collect Cursor global data - chat DBs, agent transcripts, prompt history, MCP and AI-tracking.
+    supported_os: [linux, macos]
+    collector: file
+    path: %user_home%/.cursor
+    name_pattern: ["*.db", "*.sqlite", "*.sqlite3", "*.jsonl", "*.json", "*.txt", "*.md", "*.mdc", "store.db", "mcp.json", "prompt_history.json"]
+    file_type: [f]
+    exclude_path_pattern: ["*/.git/*", "*/node_modules/*", "*/__pycache__/*"]
+    max_file_size: 2g
+    ignore_date_range: true
+    exclude_nologin_users: true
+  -
+    description: Collect Cursor IDE settings, global/workspace state.vscdb (chat/composer), file History and logs (macOS).
+    supported_os: [macos]
+    collector: file
+    path: %user_home%/Library/"Application Support"/Cursor/User %user_home%/Library/"Application Support"/Cursor/logs
+    name_pattern: ["*.vscdb", "*.vscdb.backup", "*.db", "*.sqlite", "*.sqlite3", "*.json", "*.jsonl", "*.log", "*.md", "*.mdc"]
+    file_type: [f]
+    exclude_path_pattern: ["*/Cache/*", "*/CachedData/*", "*/Code Cache/*", "*/GPUCache/*", "*/blob_storage/*", "*/.git/*", "*/node_modules/*"]
+    max_file_size: 2g
+    ignore_date_range: true
+    exclude_nologin_users: true
+  -
+    description: Collect Cursor IDE settings, global/workspace state.vscdb (chat/composer), file History and logs (Linux).
+    supported_os: [linux]
+    collector: file
+    path: %user_home%/.config/Cursor/User %user_home%/.config/Cursor/logs
+    name_pattern: ["*.vscdb", "*.vscdb.backup", "*.db", "*.sqlite", "*.sqlite3", "*.json", "*.jsonl", "*.log", "*.md", "*.mdc"]
+    file_type: [f]
+    exclude_path_pattern: ["*/Cache/*", "*/CachedData/*", "*/Code Cache/*", "*/GPUCache/*", "*/blob_storage/*", "*/.git/*", "*/node_modules/*"]
+    max_file_size: 2g
+    ignore_date_range: true
+    exclude_nologin_users: true

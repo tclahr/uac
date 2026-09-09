@@ -20,12 +20,12 @@ artifacts:
     supported_os: [all]
     collector: command
     command: grep -E "HISTFILE=.*" %user_home%/.config/fish/config.fish /etc/fish/config.fish | sed -e 's|.*HISTFILE=||' -e 's|^~/|%user_home%/|'
-    output_directory: /%temp_directory%/files/shell
+    output_directory: %temp_directory%/files/shell
     output_file: fish_histfile.txt
   -
     description: Collect $HISTFILE.
     supported_os: [all]
     collector: file
-    path: /%temp_directory%/files/shell/fish_histfile.txt
+    path: %temp_directory%/files/shell/fish_histfile.txt
     is_file_list: true
   

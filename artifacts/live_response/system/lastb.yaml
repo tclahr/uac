@@ -27,14 +27,14 @@ artifacts:
     path: /var/log /var/run
     name_pattern: ["btmp*"]
     exclude_name_pattern: ["*.gz"]
-    output_directory: /%temp_directory%/live_response/system
+    output_directory: %temp_directory%/live_response/system
     output_file: lastb_btmp_files.txt
   -
     description: Parse btmp files using lastb tool, printing the full date and time.
     supported_os: [linux]
     collector: command
     condition: lastb -a -F
-    foreach: cat "/%temp_directory%/live_response/system/lastb_btmp_files.txt"
+    foreach: cat "%temp_directory%/live_response/system/lastb_btmp_files.txt"
     command: lastb -a -F -f "%line%"
     output_file: lastb_-a_-F_-f_%line%.txt
   -
@@ -42,7 +42,7 @@ artifacts:
     supported_os: [linux]
     collector: command
     condition: ! lastb -a -F
-    foreach: cat "/%temp_directory%/live_response/system/lastb_btmp_files.txt"
+    foreach: cat "%temp_directory%/live_response/system/lastb_btmp_files.txt"
     command: lastb -f "%line%"
     output_file: lastb_-f_%line%.txt
   -
@@ -52,14 +52,14 @@ artifacts:
     collector: find
     path: /var/log /var/run
     name_pattern: ["btmp*.gz"]
-    output_directory: /%temp_directory%/live_response/system
+    output_directory: %temp_directory%/live_response/system
     output_file: lastb_compressed_btmp_files.txt
   -
     description: Parse compressed btmp files using lastb tool, printing the full date and time.
     supported_os: [linux]
     collector: command
     condition: lastb -a -F
-    foreach: cat "/%temp_directory%/live_response/system/lastb_compressed_btmp_files.txt"
+    foreach: cat "%temp_directory%/live_response/system/lastb_compressed_btmp_files.txt"
     command: zcat "%line%" | lastb -a -F
     output_file: lastb_-a_-F_-f_%line%.txt
   -
@@ -67,6 +67,6 @@ artifacts:
     supported_os: [linux]
     collector: command
     condition: ! lastb -a -F
-    foreach: cat "/%temp_directory%/live_response/system/lastb_compressed_btmp_files.txt"
+    foreach: cat "%temp_directory%/live_response/system/lastb_compressed_btmp_files.txt"
     command: zcat "%line%" | lastb
     output_file: lastb_-f_%line%.txt

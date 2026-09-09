@@ -25,11 +25,11 @@ artifacts:
     supported_os: [all]
     collector: command
     command: grep -E "^HISTFILE=.*" %user_home%/.zlogin %user_home%/.zprofile %user_home%/.zshenv %user_home%/.zshrc /etc/zshenv /etc/zprofile /etc/zshrc /etc/zlogin | sed -e 's|.*HISTFILE=||' -e 's|^~/|%user_home%/|'
-    output_directory: /%temp_directory%/files/shell
+    output_directory: %temp_directory%/files/shell
     output_file: zsh_histfile.txt
   -
     description: Collect $HISTFILE.
     supported_os: [all]
     collector: file
-    path: /%temp_directory%/files/shell/zsh_histfile.txt
+    path: %temp_directory%/files/shell/zsh_histfile.txt
     is_file_list: true

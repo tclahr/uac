@@ -1,0 +1,12 @@
+version: 1.0
+condition: command_exists "rmsock"
+output_directory: /live_response/network
+artifacts:
+  -
+    description: Identify process ownership for TCP network connections. Used to associate PIDs with network activity on AIX systems where lsof is unavailable.
+    supported_os: [aix]
+    collector: command
+    condition: command_exists "netstat"
+    foreach: netstat -Aan | awk '$2 ~ /tcp/ {print $1}'
+    command: rmsock "%line%" tcpcb 2>/dev/null | awk -v pcb="%line%" '{print "PCB/ADDR:" pcb " " $0}'
+    output_file: rmsock_tcpcb.txt

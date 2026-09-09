@@ -1,4 +1,4 @@
-version: 3.0
+version: 3.1
 condition: command_exists "netstat"
 output_directory: /live_response/network
 artifacts:
@@ -14,6 +14,12 @@ artifacts:
     collector: command
     command: netstat -an
     output_file: netstat_-an.txt
+  -
+    description: Collect both listening and non-listening (for TCP this means established connections) sockets, including the protocol control blocks (PCB), with numerical addresses instead of trying to determine symbolic host, port or user names.
+    supported_os: [aix]
+    collector: command
+    command: netstat -Aan
+    output_file: netstat_-Aan.txt
   -
     description: Collect a table of all network interfaces.
     supported_os: [aix, freebsd, linux, netbsd, netscaler, openbsd, solaris]
