@@ -1,0 +1,303 @@
+# =============================================================================
+# hosting_panel.yaml — UAC artifact for Linux web hosting control panels
+# =============================================================================
+# Covers: cPanel/WHM, Plesk, DirectAdmin, and the shared infrastructure
+#         they all deploy (Exim/Postfix, Dovecot, ProFTPD/PureFTPD,
+#         LiteSpeed, ModSecurity, CloudLinux/CageFS, Fail2ban)
+#
+# Usage (combine with full profile):
+#   ./uac -p full -a ./hosting_panel.yaml /destination
+#
+# Usage (standalone triage — hosting-only):
+#   ./uac -a ./hosting_panel.yaml /destination
+# =============================================================================
+
+version: 1.0
+
+# ── cPanel / WHM ─────────────────────────────────────────────────────────────
+
+artifacts:
+
+  - 
+    description: cPanel application error and access logs
+    supported_os: [linux]
+    collector: file
+    path: /usr/local/cpanel/logs
+    name_pattern: ["*error*", "*access*", "*.log", "*.log.gz"]
+    max_depth: 2
+    file_type: [f]
+    max_file_size: 500MB
+
+  - 
+    description: cPanel bundled Apache (non-standard path)
+    supported_os: [linux]
+    collector: file
+    path: /usr/local/apache/logs
+    name_pattern: ["*access*", "*error*", "*.log", "*.log.gz"]
+    max_depth: 3
+    file_type: [f]
+    max_file_size: 500MB
+
+  -  
+    description: cPanel per-account domain logs (domlogs)
+    supported_os: [linux]
+    collector: file
+    path: /home
+    name_pattern: ["*access*", "*error*", "*.log", "*.log.gz"]
+    exclude_path_pattern: ["/home/virtfs", "/home/.cagefs"]
+    max_depth: 5
+    file_type: [f]
+    max_file_size: 500MB
+
+  -  
+    description: cPhulk brute-force protection and CSF/LFD firewall logs (in /var/log)
+    supported_os: [linux]
+    collector: file
+    path: /var/log
+    name_pattern: ["cphulk*", "lfd*", "csf*", "cxs*"]
+    max_depth: 2
+    file_type: [f]
+    max_file_size: 200MB
+
+  -  
+    description: WHM account transfer and backup logs
+    supported_os: [linux]
+    collector: file
+    path: /var/cpanel
+    name_pattern: ["*.log", "*.log.gz"]
+    exclude_path_pattern: ["/var/cpanel/cache"]
+    max_depth: 4
+    file_type: [f]
+    max_file_size: 200MB
+
+# ── Plesk ─────────────────────────────────────────────────────────────────────
+
+  -  
+    description: Plesk control panel and sw-cp-server logs
+    supported_os: [linux]
+    collector: file
+    path: /var/log/sw-cp-server
+    name_pattern: ["*.log", "*.log.gz", "error_log", "sw-engine.log"]
+    max_depth: 2
+    file_type: [f]
+    max_file_size: 200MB
+
+  -  
+    description: Plesk admin logs (panel, httpsd access, health monitor)
+    supported_os: [linux]
+    collector: file
+    path: /usr/local/psa/admin/logs
+    name_pattern: ["*.log", "*.log.gz", "*access*", "*error*", "panel.log"]
+    max_depth: 2
+    file_type: [f]
+    max_file_size: 200MB
+
+  -  
+    description: Plesk installer, backup manager, and SSO logs
+    supported_os: [linux]
+    collector: file
+    path: /var/log/plesk
+    name_pattern: ["*.log", "*.log.gz"]
+    max_depth: 4
+    file_type: [f]
+    max_file_size: 200MB
+
+  -  
+    description: Plesk per-domain vhost logs (/var/www/vhosts/system/<domain>/logs)
+    supported_os: [linux]
+    collector: file
+    path: /var/www/vhosts
+    name_pattern: ["*access*", "*error*", "*.log", "*.log.gz"]
+    max_depth: 5
+    file_type: [f]
+    max_file_size: 500MB
+
+# ── DirectAdmin ───────────────────────────────────────────────────────────────
+
+  -  
+    description: DirectAdmin control panel logs (error, security, system, task queue)
+    supported_os: [linux]
+    collector: file
+    path: /var/log/directadmin
+    name_pattern: ["*.log", "*.log.gz", "error.log", "security.log", "system.log", "errortaskq.log"]
+    max_depth: 2
+    file_type: [f]
+    max_file_size: 200MB
+
+  -  
+    description: DirectAdmin per-domain Apache logs (/var/log/httpd/domains/)
+    supported_os: [linux]
+    collector: file
+    path: /var/log/httpd/domains
+    name_pattern: ["*.log", "*.log.gz", "*.error.log"]
+    max_depth: 2
+    file_type: [f]
+    max_file_size: 500MB
+
+  -  
+    description: DirectAdmin CustomBuild and PHP-FPM logs
+    supported_os: [linux]
+    collector: file
+    path: /usr/local/directadmin/custombuild/logs
+    name_pattern: ["*.log", "*.log.gz"]
+    max_depth: 2
+    file_type: [f]
+    max_file_size: 100MB
+
+# ── Shared mail infrastructure (all panels) ───────────────────────────────────
+
+  -  
+    description: Exim mail logs — main, reject, and panic (cPanel, DA, generic)
+    supported_os: [linux]
+    collector: file
+    path: /var/log
+    name_pattern: ["exim*", "maillog*", "mail.log*"]
+    max_depth: 2
+    file_type: [f]
+    max_file_size: 500MB
+
+  -  
+    description: Postfix mail logs (Plesk default MTA)
+    supported_os: [linux]
+    collector: file
+    path: /var/log
+    name_pattern: ["mail*", "postfix*"]
+    max_depth: 2
+    file_type: [f]
+    max_file_size: 500MB
+
+  -  
+    description: Dovecot IMAP/POP3 logs
+    supported_os: [linux]
+    collector: file
+    path: /var/log
+    name_pattern: ["dovecot*"]
+    max_depth: 2
+    file_type: [f]
+    max_file_size: 200MB
+
+# ── Shared FTP infrastructure ─────────────────────────────────────────────────
+
+  -  
+    description: ProFTPD logs (DirectAdmin default)
+    supported_os: [linux]
+    collector: file
+    path: /var/log/proftpd
+    name_pattern: ["*.log", "*.log.gz", "access.log", "auth.log"]
+    max_depth: 2
+    file_type: [f]
+    max_file_size: 200MB
+
+  -  
+    description: PureFTPD logs (cPanel/Plesk common)
+    supported_os: [linux]
+    collector: file
+    path: /var/log
+    name_pattern: ["pure-ftpd*", "pureftpd*", "vsftpd*", "ftp*"]
+    max_depth: 2
+    file_type: [f]
+    max_file_size: 200MB
+
+# ── WAF and security tooling ──────────────────────────────────────────────────
+
+  -  
+    description: ModSecurity audit log (Apache/LiteSpeed WAF)
+    supported_os: [linux]
+    collector: file
+    path: /var/log
+    name_pattern: ["modsec*", "modsecurity*"]
+    max_depth: 3
+    file_type: [f]
+    max_file_size: 500MB
+
+  -  
+    description: ModSecurity audit log (Plesk/Imunify alternative path)
+    supported_os: [linux]
+    collector: file
+    path: /var/log/modsec_audit.log
+    max_depth: 1
+    file_type: [f]
+    max_file_size: 500MB
+
+  -  
+    description: Imunify360 / ImunifyAV logs (CloudLinux security suite)
+    supported_os: [linux]
+    collector: file
+    path: /var/log/imunify360
+    name_pattern: ["*.log", "*.log.gz"]
+    max_depth: 2
+    file_type: [f]
+    max_file_size: 200MB
+
+  -  
+    description: Fail2ban logs (used by all panels for brute-force blocking)
+    supported_os: [linux]
+    collector: file
+    path: /var/log
+    name_pattern: ["fail2ban*"]
+    max_depth: 2
+    file_type: [f]
+    max_file_size: 200MB
+
+# ── CloudLinux / CageFS ───────────────────────────────────────────────────────
+
+  -  
+    description: CloudLinux and CageFS governor/resource logs
+    supported_os: [linux]
+    collector: file
+    path: /var/log
+    name_pattern: ["cloudlinux*", "lve*", "cagefs*"]
+    max_depth: 2
+    file_type: [f]
+    max_file_size: 100MB
+
+# ── LiteSpeed web server ──────────────────────────────────────────────────────
+
+  -  
+    description: LiteSpeed Enterprise and OpenLiteSpeed logs
+    supported_os: [linux]
+    collector: file
+    path: /usr/local/lsws/logs
+    name_pattern: ["*.log", "*.log.gz", "error.log", "access.log", "stderr.log"]
+    max_depth: 2
+    file_type: [f]
+    max_file_size: 500MB
+
+# ── Panel-agnostic: web root suspicious file hunting ─────────────────────────
+
+  -  
+    description: Find web shells and suspicious scripts in common web roots
+    supported_os: [linux]
+    collector: find
+    path: /var/www
+    name_pattern: ["*.php", "*.php7", "*.phtml", "*.shtml", "*.cgi", "*.pl"]
+    exclude_path_pattern: ["/var/www/vhosts/default"]
+    max_depth: 8
+    file_type: [f]
+    max_file_size: 10MB
+    output_directory: /live_response/hosting
+    output_file: webroot_php_files_var_www.txt
+
+  -  
+    description: Find web shells and suspicious scripts in cPanel home dirs
+    supported_os: [linux]
+    collector: find
+    path: /home
+    name_pattern: ["*.php", "*.php7", "*.phtml", "*.shtml"]
+    exclude_path_pattern: ["/home/virtfs", "/home/.cagefs"]
+    max_depth: 8
+    file_type: [f]
+    max_file_size: 10MB
+    output_directory: /live_response/hosting
+    output_file: webroot_php_files_home.txt
+
+  -  
+    description: Find recently modified files in web roots (mtime within collection window)
+    supported_os: [linux]
+    collector: find
+    path: /var/www
+    exclude_path_pattern: ["/var/www/vhosts/default", "/sys", "/proc"]
+    max_depth: 8
+    file_type: [f]
+    output_directory: /live_response/hosting
+    output_file: webroot_recent_files.txt
