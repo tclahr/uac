@@ -132,6 +132,8 @@ Remote Transfer Arguments:
                     Use single quotes to enclose the URL.
       --azure-storage-sas-url URL
                     Transfer the output and log file to Azure Storage using a SAS URL.
+                    Files larger than 5000 MiB are uploaded as a single block blob
+                    using multiple requests (requires curl).
                     Use single quotes to enclose the URL.
       --delete-local-on-successful-transfer
                     Delete local output and log files on successful transfer.

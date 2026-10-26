@@ -14,4 +14,6 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- `lib/azure_storage_sas_url_transfer.sh`: Added block blob upload for output files larger than the Azure Storage 5,000 MiB single-request limit. The output remains a single blob and is not split; `curl` is required for large files.
+
 ### Tools
