@@ -36,6 +36,7 @@
 . "${__UAC_DIR}/lib/get_user_home_list.sh"
 . "${__UAC_DIR}/lib/grep_o.sh"
 . "${__UAC_DIR}/lib/http_transfer.sh"
+. "${__UAC_DIR}/lib/http_transfer_retry.sh"
 . "${__UAC_DIR}/lib/init_temp_data_dir.sh"
 . "${__UAC_DIR}/lib/is_digit.sh"
 . "${__UAC_DIR}/lib/is_in_list.sh"

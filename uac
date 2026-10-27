@@ -97,6 +97,8 @@ __UAC_AWS_S3_PRESIGNED_URL=""
 __UAC_AWS_S3_PRESIGNED_URL_LOG_FILE=""
 __UAC_AZURE_STORAGE_SAS_URL=""
 __UAC_DELETE_LOCAL_ON_SUCCESSFUL_TRANSFER=false
+__UAC_TRANSFER_MAX_ATTEMPTS=3
+__UAC_TRANSFER_RETRY_DELAY=10
 __UAC_DESTINATION_DIR=""
 __UAC_USER_HOME_LIST=""
 __UAC_VALID_SHELL_ONLY_USER_HOME_LIST=""
@@ -710,7 +712,8 @@ if [ -n "${__UAC_S3_PROVIDER}" ] && [ -n "${__UAC_S3_BUCKET}" ]; then
     "amazon")
       printf "Transferring '%s' to S3 server...\n" \
         "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}.${__UAC_OUTPUT_EXTENSION}"
-      if _s3_transfer_amazon \
+      if _http_transfer_retry "${__UAC_TRANSFER_MAX_ATTEMPTS}" "${__UAC_TRANSFER_RETRY_DELAY}" \
+          _s3_transfer_amazon \
           "${__UAC_OUTPUT_BASE_NAME}.${__UAC_OUTPUT_EXTENSION}" \
           "${__UAC_S3_REGION}" \
           "${__UAC_S3_BUCKET}" \
@@ -722,7 +725,8 @@ if [ -n "${__UAC_S3_PROVIDER}" ] && [ -n "${__UAC_S3_BUCKET}" ]; then
         _error_msg "Failed to transfer output file to the S3 server."
       fi
       printf "Transferring '%s' to S3 server...\n" "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}.log"
-      if _s3_transfer_amazon \
+      if _http_transfer_retry "${__UAC_TRANSFER_MAX_ATTEMPTS}" "${__UAC_TRANSFER_RETRY_DELAY}" \
+          _s3_transfer_amazon \
           "${__UAC_OUTPUT_BASE_NAME}.log" \
           "${__UAC_S3_REGION}" \
           "${__UAC_S3_BUCKET}" \
@@ -737,7 +741,8 @@ if [ -n "${__UAC_S3_PROVIDER}" ] && [ -n "${__UAC_S3_BUCKET}" ]; then
     "google")
       printf "Transferring '%s' to S3 server...\n" \
         "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}.${__UAC_OUTPUT_EXTENSION}"
-      if _s3_transfer_google \
+      if _http_transfer_retry "${__UAC_TRANSFER_MAX_ATTEMPTS}" "${__UAC_TRANSFER_RETRY_DELAY}" \
+          _s3_transfer_google \
           "${__UAC_OUTPUT_BASE_NAME}.${__UAC_OUTPUT_EXTENSION}" \
           "${__UAC_S3_BUCKET}" \
           "${__UAC_S3_TOKEN}"; then
@@ -747,7 +752,8 @@ if [ -n "${__UAC_S3_PROVIDER}" ] && [ -n "${__UAC_S3_BUCKET}" ]; then
         _error_msg "Failed to transfer output file to the S3 server."
       fi
       printf "Transferring '%s' to S3 server...\n" "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}.log"
-      if _s3_transfer_google \
+      if _http_transfer_retry "${__UAC_TRANSFER_MAX_ATTEMPTS}" "${__UAC_TRANSFER_RETRY_DELAY}" \
+          _s3_transfer_google \
           "${__UAC_OUTPUT_BASE_NAME}.log" \
           "${__UAC_S3_BUCKET}" \
           "${__UAC_S3_TOKEN}"; then
@@ -760,7 +766,8 @@ if [ -n "${__UAC_S3_PROVIDER}" ] && [ -n "${__UAC_S3_BUCKET}" ]; then
     "ibm")
       printf "Transferring '%s' to S3 server...\n" \
         "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}.${__UAC_OUTPUT_EXTENSION}"
-      if _s3_transfer_ibm \
+      if _http_transfer_retry "${__UAC_TRANSFER_MAX_ATTEMPTS}" "${__UAC_TRANSFER_RETRY_DELAY}" \
+          _s3_transfer_ibm \
           "${__UAC_OUTPUT_BASE_NAME}.${__UAC_OUTPUT_EXTENSION}" \
           "${__UAC_S3_REGION}" \
           "${__UAC_S3_BUCKET}" \
@@ -771,7 +778,8 @@ if [ -n "${__UAC_S3_PROVIDER}" ] && [ -n "${__UAC_S3_BUCKET}" ]; then
         _error_msg "Failed to transfer output file to the S3 server."
       fi
       printf "Transferring '%s' to S3 server...\n" "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}.log"
-      if _s3_transfer_ibm \
+      if _http_transfer_retry "${__UAC_TRANSFER_MAX_ATTEMPTS}" "${__UAC_TRANSFER_RETRY_DELAY}" \
+          _s3_transfer_ibm \
           "${__UAC_OUTPUT_BASE_NAME}.log" \
           "${__UAC_S3_REGION}" \
           "${__UAC_S3_BUCKET}" \
@@ -791,7 +799,8 @@ if [ -n "${__UAC_AWS_S3_PRESIGNED_URL}" ]; then
   cd "${__UAC_DESTINATION_DIR}" || _exit_fatal "cd: ${__UAC_DESTINATION_DIR}: No such file or directory"
   printf "Transferring '%s' to Amazon S3 presigned URL...\n" \
     "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}.${__UAC_OUTPUT_EXTENSION}"
-  if _aws_s3_presigned_url_transfer \
+  if _http_transfer_retry "${__UAC_TRANSFER_MAX_ATTEMPTS}" "${__UAC_TRANSFER_RETRY_DELAY}" \
+      _aws_s3_presigned_url_transfer \
       "${__UAC_OUTPUT_BASE_NAME}.${__UAC_OUTPUT_EXTENSION}" \
       "${__UAC_AWS_S3_PRESIGNED_URL}"; then
     printf "Transfer completed successfully.\n"
@@ -801,7 +810,8 @@ if [ -n "${__UAC_AWS_S3_PRESIGNED_URL}" ]; then
   fi
   if [ -n "${__UAC_AWS_S3_PRESIGNED_URL_LOG_FILE}" ]; then
     printf "Transferring '%s' to Amazon S3 presigned URL...\n" "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}.log"
-    if _aws_s3_presigned_url_transfer \
+    if _http_transfer_retry "${__UAC_TRANSFER_MAX_ATTEMPTS}" "${__UAC_TRANSFER_RETRY_DELAY}" \
+        _aws_s3_presigned_url_transfer \
         "${__UAC_OUTPUT_BASE_NAME}.log" \
         "${__UAC_AWS_S3_PRESIGNED_URL_LOG_FILE}"; then
       printf "Transfer completed successfully.\n"

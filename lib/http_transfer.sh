@@ -18,7 +18,8 @@ _http_transfer()
 
   if command_exists "curl"; then
     __ht_verbose="--fail"
-    ${__UAC_VERBOSE_MODE} && __ht_verbose="--verbose"
+    # --fail is always required, otherwise HTTP errors are reported as success
+    ${__UAC_VERBOSE_MODE} && __ht_verbose="--fail --verbose"
     if [ -f "${__ht_payload}" ]; then
       __ht_command="curl \
 ${__ht_verbose} \
