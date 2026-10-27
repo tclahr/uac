@@ -679,24 +679,28 @@ if [ -n "${__UAC_SFTP}" ]; then
   cd "${__UAC_DESTINATION_DIR}" || _exit_fatal "cd: ${__UAC_DESTINATION_DIR}: No such file or directory"
   printf "Transferring '%s' to SFTP server...\n" \
     "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}${__UAC_OUTPUT_EXTENSION:+.}${__UAC_OUTPUT_EXTENSION}"
-  if _sftp_transfer \
+  if _http_transfer_retry "${__UAC_TRANSFER_MAX_ATTEMPTS}" "${__UAC_TRANSFER_RETRY_DELAY}" \
+      _sftp_transfer \
       "${__UAC_OUTPUT_BASE_NAME}${__UAC_OUTPUT_EXTENSION:+.}${__UAC_OUTPUT_EXTENSION}" \
       "${__UAC_SFTP}" \
       "${__UAC_SFTP_PORT}" \
       "${__UAC_SFTP_IDENTITY_FILE}" \
-      "${__UAC_SFTP_SSH_OPTIONS}"; then
+      "${__UAC_SFTP_SSH_OPTIONS}" \
+      true; then
     printf "Transfer completed successfully.\n"
     ${__UAC_DELETE_LOCAL_ON_SUCCESSFUL_TRANSFER} && rm -rf "${__UAC_OUTPUT_BASE_NAME}${__UAC_OUTPUT_EXTENSION:+.}${__UAC_OUTPUT_EXTENSION}"
   else
     _error_msg "Failed to transfer output file to the SFTP server."
   fi
   printf "Transferring '%s' to SFTP server...\n" "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}.log"
-  if _sftp_transfer \
+  if _http_transfer_retry "${__UAC_TRANSFER_MAX_ATTEMPTS}" "${__UAC_TRANSFER_RETRY_DELAY}" \
+      _sftp_transfer \
       "${__UAC_OUTPUT_BASE_NAME}.log" \
       "${__UAC_SFTP}" \
       "${__UAC_SFTP_PORT}" \
       "${__UAC_SFTP_IDENTITY_FILE}" \
-      "${__UAC_SFTP_SSH_OPTIONS}"; then
+      "${__UAC_SFTP_SSH_OPTIONS}" \
+      true; then
     printf "Transfer completed successfully.\n"
     ${__UAC_DELETE_LOCAL_ON_SUCCESSFUL_TRANSFER} && rm -rf "${__UAC_OUTPUT_BASE_NAME}.log"
   else
@@ -712,8 +716,7 @@ if [ -n "${__UAC_S3_PROVIDER}" ] && [ -n "${__UAC_S3_BUCKET}" ]; then
     "amazon")
       printf "Transferring '%s' to S3 server...\n" \
         "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}.${__UAC_OUTPUT_EXTENSION}"
-      if _http_transfer_retry "${__UAC_TRANSFER_MAX_ATTEMPTS}" "${__UAC_TRANSFER_RETRY_DELAY}" \
-          _s3_transfer_amazon \
+      if _s3_transfer_amazon \
           "${__UAC_OUTPUT_BASE_NAME}.${__UAC_OUTPUT_EXTENSION}" \
           "${__UAC_S3_REGION}" \
           "${__UAC_S3_BUCKET}" \
@@ -725,8 +728,7 @@ if [ -n "${__UAC_S3_PROVIDER}" ] && [ -n "${__UAC_S3_BUCKET}" ]; then
         _error_msg "Failed to transfer output file to the S3 server."
       fi
       printf "Transferring '%s' to S3 server...\n" "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}.log"
-      if _http_transfer_retry "${__UAC_TRANSFER_MAX_ATTEMPTS}" "${__UAC_TRANSFER_RETRY_DELAY}" \
-          _s3_transfer_amazon \
+      if _s3_transfer_amazon \
           "${__UAC_OUTPUT_BASE_NAME}.log" \
           "${__UAC_S3_REGION}" \
           "${__UAC_S3_BUCKET}" \
@@ -741,8 +743,7 @@ if [ -n "${__UAC_S3_PROVIDER}" ] && [ -n "${__UAC_S3_BUCKET}" ]; then
     "google")
       printf "Transferring '%s' to S3 server...\n" \
         "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}.${__UAC_OUTPUT_EXTENSION}"
-      if _http_transfer_retry "${__UAC_TRANSFER_MAX_ATTEMPTS}" "${__UAC_TRANSFER_RETRY_DELAY}" \
-          _s3_transfer_google \
+      if _s3_transfer_google \
           "${__UAC_OUTPUT_BASE_NAME}.${__UAC_OUTPUT_EXTENSION}" \
           "${__UAC_S3_BUCKET}" \
           "${__UAC_S3_TOKEN}"; then
@@ -752,8 +753,7 @@ if [ -n "${__UAC_S3_PROVIDER}" ] && [ -n "${__UAC_S3_BUCKET}" ]; then
         _error_msg "Failed to transfer output file to the S3 server."
       fi
       printf "Transferring '%s' to S3 server...\n" "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}.log"
-      if _http_transfer_retry "${__UAC_TRANSFER_MAX_ATTEMPTS}" "${__UAC_TRANSFER_RETRY_DELAY}" \
-          _s3_transfer_google \
+      if _s3_transfer_google \
           "${__UAC_OUTPUT_BASE_NAME}.log" \
           "${__UAC_S3_BUCKET}" \
           "${__UAC_S3_TOKEN}"; then
@@ -766,8 +766,7 @@ if [ -n "${__UAC_S3_PROVIDER}" ] && [ -n "${__UAC_S3_BUCKET}" ]; then
     "ibm")
       printf "Transferring '%s' to S3 server...\n" \
         "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}.${__UAC_OUTPUT_EXTENSION}"
-      if _http_transfer_retry "${__UAC_TRANSFER_MAX_ATTEMPTS}" "${__UAC_TRANSFER_RETRY_DELAY}" \
-          _s3_transfer_ibm \
+      if _s3_transfer_ibm \
           "${__UAC_OUTPUT_BASE_NAME}.${__UAC_OUTPUT_EXTENSION}" \
           "${__UAC_S3_REGION}" \
           "${__UAC_S3_BUCKET}" \
@@ -778,8 +777,7 @@ if [ -n "${__UAC_S3_PROVIDER}" ] && [ -n "${__UAC_S3_BUCKET}" ]; then
         _error_msg "Failed to transfer output file to the S3 server."
       fi
       printf "Transferring '%s' to S3 server...\n" "${__UAC_DESTINATION_DIR}/${__UAC_OUTPUT_BASE_NAME}.log"
-      if _http_transfer_retry "${__UAC_TRANSFER_MAX_ATTEMPTS}" "${__UAC_TRANSFER_RETRY_DELAY}" \
-          _s3_transfer_ibm \
+      if _s3_transfer_ibm \
           "${__UAC_OUTPUT_BASE_NAME}.log" \
           "${__UAC_S3_REGION}" \
           "${__UAC_S3_BUCKET}" \
