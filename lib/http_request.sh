@@ -23,9 +23,10 @@ _http_request()
   __hr_response_file="${5:-/dev/null}"
   __hr_response_headers_file="${6:-/dev/null}"
 
-  # --fail is always required, otherwise HTTP errors are reported as success
-  __hr_verbose="--fail"
-  ${__UAC_VERBOSE_MODE} && __hr_verbose="--fail --verbose"
+  # --fail is used when supported (see _setup_tools), otherwise HTTP errors
+  # are reported as success
+  __hr_verbose="${__UAC_TOOL_CURL_FAIL_OPTION}"
+  ${__UAC_VERBOSE_MODE} && __hr_verbose="${__UAC_TOOL_CURL_FAIL_OPTION} --verbose"
 
   __hr_command="curl \
 ${__hr_verbose} \
