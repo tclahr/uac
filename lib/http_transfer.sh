@@ -19,8 +19,8 @@ _http_transfer()
   if command_exists "curl"; then
     # --fail is used when supported (see _setup_tools), otherwise HTTP errors
     # are reported as success
-    __ht_verbose="${__UAC_TOOL_CURL_FAIL_OPTION}"
-    ${__UAC_VERBOSE_MODE} && __ht_verbose="${__UAC_TOOL_CURL_FAIL_OPTION} --verbose"
+    __ht_verbose="${__UAC_TOOL_CURL_FAIL_OPTION:-}"
+    ${__UAC_VERBOSE_MODE} && __ht_verbose="${__UAC_TOOL_CURL_FAIL_OPTION:-} --verbose"
     if [ -f "${__ht_payload}" ]; then
       __ht_command="curl \
 ${__ht_verbose} \
