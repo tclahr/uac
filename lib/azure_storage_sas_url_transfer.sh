@@ -16,8 +16,8 @@ _azure_storage_sas_url_transfer()
   __au_payload="${1:-Testing upload from shell script.}"
   __au_url="${2:-}"
 
-  # block size in MiB (500 MiB * 50000 blocks = ~24 TiB max blob size)
-  __au_block_size=500
+  # block size in MiB (100 MiB * 50000 blocks = ~4.8 TiB max blob size)
+  __au_block_size=100
 
   __au_date=`date "+%a, %d %b %Y %H:%M:%S %z"`
 

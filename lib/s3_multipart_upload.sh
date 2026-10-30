@@ -20,7 +20,7 @@
 _s3_multipart_upload()
 {
   __smu_file="${1:-}"
-  __smu_part_size="${2:-500}"
+  __smu_part_size="${2:-100}"
   __smu_request_function="${3:-}"
   shift 3
 

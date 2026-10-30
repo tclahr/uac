@@ -22,8 +22,8 @@ _s3_transfer_amazon()
   __s3a_access_key="${4:-}"
   __s3a_secret_key="${5:-}"
 
-  # part size in MiB (500 MiB * 10000 parts = ~4.8 TiB max object size)
-  __s3a_part_size=500
+  # part size in MiB (100 MiB * 10000 parts = ~0.95 TiB max object size)
+  __s3a_part_size=100
 
   __s3a_object_key=""
 

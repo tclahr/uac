@@ -18,8 +18,8 @@ _s3_transfer_google()
   __s3g_bucket="${2:-}"
   __s3g_token="${3:-}"
 
-  # part size in MiB (500 MiB * 10000 parts = ~4.8 TiB max object size)
-  __s3g_part_size=500
+  # part size in MiB (100 MiB * 10000 parts = ~0.95 TiB max object size)
+  __s3g_part_size=100
 
   __s3g_object_key=""
 

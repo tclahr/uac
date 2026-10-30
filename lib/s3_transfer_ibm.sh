@@ -20,8 +20,8 @@ _s3_transfer_ibm()
   __s3i_bucket="${3:-}"
   __s3i_token="${4:-}"
 
-  # part size in MiB (500 MiB * 10000 parts = ~4.8 TiB max object size)
-  __s3i_part_size=500
+  # part size in MiB (100 MiB * 10000 parts = ~0.95 TiB max object size)
+  __s3i_part_size=100
 
   __s3i_object_key=""
 
