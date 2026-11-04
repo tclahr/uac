@@ -1,0 +1,36 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect cPanel/WHM application logs (access, error, login, cPHulk).
+    supported_os: [linux]
+    collector: file
+    path: /usr/local/cpanel/logs
+    file_type: [f, l]
+    max_depth: 2
+    max_file_size: 1073741824 # 1GB
+  -
+    description: Collect cPanel EasyApache logs and domain logs (domlogs).
+    supported_os: [linux]
+    collector: file
+    path: /usr/local/apache/logs /usr/local/apache/domlogs /etc/apache2/logs
+    file_type: [f, l]
+    max_depth: 3
+    max_file_size: 1073741824 # 1GB
+  -
+    description: Collect archived cPanel per-account domain logs.
+    supported_os: [linux]
+    collector: file
+    path: %user_home%/logs
+    file_type: [f]
+    max_depth: 1
+    max_file_size: 1073741824 # 1GB
+  -
+    description: Collect WHM account transfer, restore and backup logs.
+    supported_os: [linux]
+    collector: file
+    path: /var/cpanel
+    name_pattern: ["*.log", "*.log.*"]
+    exclude_path_pattern: ["*/var/cpanel/cache"]
+    file_type: [f]
+    max_depth: 4
+    max_file_size: 209715200 # 200MB
