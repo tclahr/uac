@@ -17,8 +17,10 @@ _http_transfer()
   __ht_headers="${3:-}"
 
   if command_exists "curl"; then
-    __ht_verbose="--fail"
-    ${__UAC_VERBOSE_MODE} && __ht_verbose="--verbose"
+    # --fail is used when supported (see _setup_tools), otherwise HTTP errors
+    # are reported as success
+    __ht_verbose="${__UAC_TOOL_CURL_FAIL_OPTION:-}"
+    ${__UAC_VERBOSE_MODE} && __ht_verbose="${__UAC_TOOL_CURL_FAIL_OPTION:-} --verbose"
     if [ -f "${__ht_payload}" ]; then
       __ht_command="curl \
 ${__ht_verbose} \
@@ -36,8 +38,9 @@ ${__ht_headers} \
     fi
   
   else
-    __ht_verbose="--quiet"
-    ${__UAC_VERBOSE_MODE} && __ht_verbose="--verbose"
+    # --verbose is not used, as it is not supported by busybox wget
+    __ht_verbose="-q"
+    ${__UAC_VERBOSE_MODE} && __ht_verbose=""
     if [ -f "${__ht_payload}" ]; then
       __ht_command="wget \
 ${__ht_verbose} \
