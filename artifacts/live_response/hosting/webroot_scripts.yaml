@@ -1,0 +1,27 @@
+version: 1.0
+output_directory: /live_response/hosting
+artifacts:
+  -
+    description: List server-side scripts in web roots (web shell hunting).
+    supported_os: [linux]
+    collector: find
+    path: /var/www /home
+    name_pattern: ["*.php", "*.php5", "*.php7", "*.phtml", "*.phar", "*.shtml", "*.cgi", "*.pl"]
+    exclude_path_pattern: ["*/home/virtfs", "*/home/.cagefs", "*/var/www/vhosts/default"]
+    file_type: [f]
+    max_depth: 8
+    max_file_size: 10485760 # 10MB
+    ignore_date_range: true
+    output_file: webroot_scripts.txt
+  -
+    description: Hash server-side scripts in web roots (web shell hunting).
+    supported_os: [linux]
+    collector: hash
+    path: /var/www /home
+    name_pattern: ["*.php", "*.php5", "*.php7", "*.phtml", "*.phar", "*.shtml", "*.cgi", "*.pl"]
+    exclude_path_pattern: ["*/home/virtfs", "*/home/.cagefs", "*/var/www/vhosts/default"]
+    file_type: [f]
+    max_depth: 8
+    max_file_size: 10485760 # 10MB
+    ignore_date_range: true
+    output_file: webroot_scripts_hash

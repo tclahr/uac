@@ -1,0 +1,27 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect Plesk sw-cp-server logs.
+    supported_os: [linux]
+    collector: file
+    path: /var/log/sw-cp-server
+    file_type: [f, l]
+    max_depth: 2
+    max_file_size: 209715200 # 200MB
+  -
+    description: Collect Plesk admin panel logs (panel.log, httpsd access and error logs).
+    supported_os: [linux]
+    collector: file
+    path: /usr/local/psa/admin/logs /var/log/plesk
+    file_type: [f, l]
+    max_depth: 4
+    max_file_size: 209715200 # 200MB
+  -
+    description: Collect Plesk per-domain web server logs.
+    supported_os: [linux]
+    collector: file
+    path: /var/www/vhosts/system
+    path_pattern: ["*/logs/*"]
+    file_type: [f, l]
+    max_depth: 3
+    max_file_size: 1073741824 # 1GB

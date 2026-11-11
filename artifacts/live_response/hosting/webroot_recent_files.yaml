@@ -1,0 +1,12 @@
+version: 1.0
+output_directory: /live_response/hosting
+artifacts:
+  -
+    description: List files in web roots modified within the collection date range (requires --date-range-start).
+    supported_os: [linux]
+    collector: find
+    path: /var/www /home
+    exclude_path_pattern: ["*/home/virtfs", "*/home/.cagefs", "*/var/www/vhosts/default"]
+    file_type: [f]
+    max_depth: 8
+    output_file: webroot_recent_files.txt
