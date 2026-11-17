@@ -31,6 +31,7 @@ _setup_tools()
   __UAC_TOOL_MD5_BIN=""
   __UAC_TOOL_SHA1_BIN=""
   __UAC_TOOL_SHA256_BIN=""
+  __UAC_TOOL_CURL_FAIL_OPTION=""
   
   # check which options are supported by 'find'
   if find "${__UAC_DIR}" \( -name "uac" -o -name "uac.conf" \) -print >/dev/null; then
@@ -116,6 +117,22 @@ _setup_tools()
   # check if the maximum filename size that can be created in the file system is 255 characters
   if touch "${__UAC_TEMP_DATA_DIR}/1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890"; then
     __UAC_MAX_FILENAME_SIZE=245
+  fi
+
+  # check if curl supports --fail, which makes HTTP errors return a non-zero
+  # exit status so failed transfers can be retried. curl exits with 2 when an
+  # option is unknown, so any other exit status means the option is supported
+  if command_exists "curl"; then
+    curl --fail -s "http://127.0.0.1:9" >/dev/null 2>&1
+    if [ $? -ne 2 ]; then
+      __UAC_TOOL_CURL_FAIL_OPTION="--fail"
+    fi
+  fi
+
+  # without --fail (or without curl, when wget is used) HTTP errors are not
+  # detected, so transfers are not retried
+  if [ -z "${__UAC_TOOL_CURL_FAIL_OPTION}" ]; then
+    __UAC_TRANSFER_MAX_ATTEMPTS=1
   fi
 
   # check for available MD5 hashing tools
