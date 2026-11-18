@@ -26,6 +26,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- Tar options for reading a file list are now detected at runtime (`-T`, `-I`, `-L` or `-I` after `-cf`), by testing each variant and checking the created package, instead of being chosen by operating system. This fixes packaging on systems where the default `tar` does not match the OS, such as Solaris with GNU tar. The selected option is written to the log.
 - Fixed `--azure-storage-sas-url` transfers failing with HTTP 413 (Request Entity Too Large) for output files larger than 5000 MiB. Files larger than 100 MiB are now uploaded in blocks using Put Block and Put Block List.
 - Fixed `--s3-provider amazon` and `--s3-provider ibm` transfers failing for output files larger than 5 GiB, the maximum size of a single PUT request.
 - Fixed SFTP transfers being reported as successful when the upload failed (e.g. permission denied, disk full), as `sftp` exit status was always 0 when commands were read from stdin. This could lead to the local output file being deleted when `--delete-local-on-successful-transfer` was used.

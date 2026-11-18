@@ -441,6 +441,7 @@ if ${__UAC_TOOL_TAR_NO_FROM_FILE_SUPPORT}; then
   _log_msg INF "tar load from file support: false"
 else
   _log_msg INF "tar load from file support: true"
+  _log_msg INF "tar load from file option: ${__UAC_TOOL_TAR_FROM_FILE_OPTION}"
 fi
 if command_exists "gzip"; then
   _log_msg INF "gzip command exists: true"
