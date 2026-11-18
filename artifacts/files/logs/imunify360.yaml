@@ -1,0 +1,10 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect Imunify360 and ImunifyAV logs.
+    supported_os: [linux]
+    collector: file
+    path: /var/log/imunify360 /var/log/imunify-notifier
+    file_type: [f, l]
+    max_depth: 2
+    max_file_size: 209715200 # 200MB

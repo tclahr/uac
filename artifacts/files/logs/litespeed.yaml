@@ -1,0 +1,10 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect LiteSpeed Enterprise and OpenLiteSpeed logs.
+    supported_os: [linux]
+    collector: file
+    path: /usr/local/lsws/logs
+    file_type: [f, l]
+    max_depth: 2
+    max_file_size: 1073741824 # 1GB

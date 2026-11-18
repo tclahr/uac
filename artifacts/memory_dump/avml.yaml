@@ -1,4 +1,4 @@
-version: 2.4
+version: 2.5
 output_directory: /memory_dump
 artifacts:
   -
@@ -7,7 +7,7 @@ artifacts:
     collector: command
     # use ./uac -D avml_max_memory=NEW_VALUE to change the default value
     condition: test `free | awk '/^Mem:/ {print $2}'` -lt %avml_max_memory=270000000%
-    command: avml avml.lime
+    command: avml acquire avml.lime
   -
     description: Collect vmlinu* and System.map* files to help build Volatility profiles.
     supported_os: [linux]

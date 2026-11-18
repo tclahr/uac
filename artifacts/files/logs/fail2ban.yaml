@@ -1,0 +1,11 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect Fail2ban logs.
+    supported_os: [linux]
+    collector: file
+    path: /var/log
+    name_pattern: ["fail2ban*"]
+    file_type: [f, l]
+    max_depth: 2
+    max_file_size: 209715200 # 200MB

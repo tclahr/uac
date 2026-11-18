@@ -3,6 +3,8 @@
 # shellcheck disable=SC2006
 
 # Transfer file to Amazon S3.
+# Files larger than the part size are uploaded using multipart upload (curl
+# only), as a single PUT request is limited to 5 GiB.
 # Arguments:
 #   string payload: payload (file or string)
 #   string region: region
@@ -20,15 +22,15 @@ _s3_transfer_amazon()
   __s3a_access_key="${4:-}"
   __s3a_secret_key="${5:-}"
 
-  __s3a_service="s3"
+  # part size in MiB (100 MiB * 10000 parts = ~0.95 TiB max object size)
+  __s3a_part_size=100
+
   __s3a_object_key=""
 
   if [ -f "${__s3a_payload}" ]; then
     __s3a_object_key="${__s3a_payload}"
-    __s3a_payload_hash=`openssl dgst -sha256 <"${__s3a_payload}" | sed 's/^.* //'`
   else
     __s3a_object_key="transfer_test_from_uac.txt"
-    __s3a_payload_hash=`printf "%s" "${__s3a_payload}" | openssl dgst -sha256 | sed 's/^.* //'`
   fi
 
   __s3a_prefix=`echo "${__s3a_bucket}" | sed 's|^[^/]*/*||;s|/*$||'`
@@ -39,47 +41,35 @@ _s3_transfer_amazon()
   fi
 
   __s3a_host="${__s3a_bucket}.s3.${__s3a_region}.amazonaws.com"
-  __s3a_url="https://${__s3a_host}/${__s3a_object_key}"
 
-  __s3a_date=`date -u +"%Y%m%dT%H%M%SZ"`
-  __s3a_short_date=`date -u +"%Y%m%d"`
-  __s3a_algorithm="AWS4-HMAC-SHA256"
-  __s3a_credential_scope="${__s3a_short_date}/${__s3a_region}/${__s3a_service}/aws4_request"
+  if [ -f "${__s3a_payload}" ] && command_exists "curl"; then
+    __s3a_file_size=`wc -c <"${__s3a_payload}" | awk '{print $1}'`
+    # awk is used as expr may overflow on files larger than 2 GiB
+    if awk "BEGIN { exit !(${__s3a_file_size} > ${__s3a_part_size} * 1048576) }"; then
+      _s3_multipart_upload \
+        "${__s3a_payload}" \
+        "${__s3a_part_size}" \
+        _s3_transfer_amazon_request \
+        "${__s3a_host}" \
+        "${__s3a_object_key}" \
+        "${__s3a_region}" \
+        "${__s3a_access_key}" \
+        "${__s3a_secret_key}"
+      return
+    fi
+  fi
 
-  __s3a_canonical_request="PUT
-/${__s3a_object_key}
-
-host:${__s3a_host}
-x-amz-content-sha256:${__s3a_payload_hash}
-x-amz-date:${__s3a_date}
-
-host;x-amz-content-sha256;x-amz-date
-${__s3a_payload_hash}"
-
-  __s3a_canonical_request_hash=`printf "%s" "${__s3a_canonical_request}" | openssl dgst -sha256 | sed 's/^.* //'`
-
-  __s3a_string_to_sign="${__s3a_algorithm}
-${__s3a_date}
-${__s3a_credential_scope}
-${__s3a_canonical_request_hash}"
-
-  __s3a_date_key=`printf "%s" "${__s3a_short_date}" | openssl dgst -sha256 -hmac "AWS4${__s3a_secret_key}" | sed 's/^.* //'`
-  __s3a_region_key=`printf "%s" "${__s3a_region}" | openssl dgst -sha256 -mac hmac -macopt hexkey:"${__s3a_date_key}" | sed 's/^.* //'`
-  __s3a_service_key=`printf "%s" "${__s3a_service}" | openssl dgst -sha256 -mac hmac -macopt hexkey:"${__s3a_region_key}" | sed 's/^.* //'`
-  __s3a_signing_key=`printf "%s" "aws4_request" | openssl dgst -sha256 -mac hmac -macopt hexkey:"${__s3a_service_key}" | sed 's/^.* //'`
-  __s3a_signature=`printf "%s" "${__s3a_string_to_sign}" | openssl dgst -sha256 -mac hmac -macopt hexkey:"${__s3a_signing_key}" | sed 's/^.* //'`
-
-  __s3a_authorization="${__s3a_algorithm} Credential=${__s3a_access_key}/${__s3a_credential_scope}, SignedHeaders=host;x-amz-content-sha256;x-amz-date, Signature=${__s3a_signature}"
-
-  __s3a_headers="--header \"Content-Type: application/octet-stream\" \
---header \"Accept: */*\" \
---header \"x-amz-date: ${__s3a_date}\" \
---header \"x-amz-content-sha256: ${__s3a_payload_hash}\" \
---header \"Authorization: ${__s3a_authorization}\""
-
-  _http_transfer \
+  _http_transfer_retry "${__UAC_TRANSFER_MAX_ATTEMPTS}" "${__UAC_TRANSFER_RETRY_DELAY}" \
+    _s3_transfer_amazon_request \
+    "PUT" \
+    "" \
     "${__s3a_payload}" \
-    "${__s3a_url}" \
-    "${__s3a_headers}"
+    "" \
+    "" \
+    "${__s3a_host}" \
+    "${__s3a_object_key}" \
+    "${__s3a_region}" \
+    "${__s3a_access_key}" \
+    "${__s3a_secret_key}"
 
 }

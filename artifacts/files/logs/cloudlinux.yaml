@@ -1,0 +1,11 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect CloudLinux LVE and CageFS logs.
+    supported_os: [linux]
+    collector: file
+    path: /var/log
+    name_pattern: ["cloudlinux*", "lve*", "cagefs*"]
+    file_type: [f, l]
+    max_depth: 2
+    max_file_size: 104857600 # 100MB

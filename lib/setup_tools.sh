@@ -23,13 +23,16 @@ _setup_tools()
   __UAC_TOOL_FIND_CTIME_SUPPORT=false
   __UAC_TOOL_FIND_PRINT0_SUPPORT=false
   __UAC_TOOL_XARGS_NULL_DELIMITER_SUPPORT=false
+  __UAC_TOOL_XARGS_BACKSLASH_ESCAPE_SUPPORT=false
   __UAC_TOOL_STAT_BIN=""
   __UAC_TOOL_STAT_PARAMS=""
   __UAC_TOOL_TAR_NO_FROM_FILE_SUPPORT=false
+  __UAC_TOOL_TAR_FROM_FILE_OPTION=""
   __UAC_MAX_FILENAME_SIZE=118
   __UAC_TOOL_MD5_BIN=""
   __UAC_TOOL_SHA1_BIN=""
   __UAC_TOOL_SHA256_BIN=""
+  __UAC_TOOL_CURL_FAIL_OPTION=""
   
   # check which options are supported by 'find'
   if find "${__UAC_DIR}" \( -name "uac" -o -name "uac.conf" \) -print >/dev/null; then
@@ -75,6 +78,10 @@ _setup_tools()
   if echo "uac" | xargs -0 echo >/dev/null; then
     __UAC_TOOL_XARGS_NULL_DELIMITER_SUPPORT=true
   fi
+
+  if echo '\/tmp' | xargs echo | grep -q -E "^/"; then
+    __UAC_TOOL_XARGS_BACKSLASH_ESCAPE_SUPPORT=true
+  fi
   
   # check which stat tool and options are available for the target system
   if statx "${__UAC_MOUNT_POINT}" | grep -q -E "\|[0-9]+\|[0-9]+\|[0-9]+$"; then
@@ -91,26 +98,58 @@ _setup_tools()
     __UAC_TOOL_STAT_BIN="statf"
   fi
 
-  case "${__UAC_OPERATING_SYSTEM}" in
-    "esxi")
-      __UAC_TOOL_TAR_NO_FROM_FILE_SUPPORT=true
-      ;;
-    "linux")
-      # some old tar/busybox versions do not support -T, so a different
-      # solution is required to package and compress data
-      # checking if tar can create package getting names from file
-      echo "${__UAC_DIR}/uac" >"${__UAC_TEMP_DATA_DIR}/tar_gz_data.tmp" 2>/dev/null
-      if tar -T "${__UAC_TEMP_DATA_DIR}/tar_gz_data.tmp" -cf "${__UAC_TEMP_DATA_DIR}/tar_gz_data.tar" 2>/dev/null; then
-        true
-      else
-        __UAC_TOOL_TAR_NO_FROM_FILE_SUPPORT=true
-      fi
-      ;;
-  esac
+  # the option used by 'tar' to read the list of files from a file differs
+  # between implementations (GNU: -T, AIX: -L, BSD: -I, Solaris: -I after -cf),
+  # and the same operating system may ship different tar versions, so each
+  # variant is tested until one is able to create a package from a file list
+  echo "${__UAC_DIR}/uac" >"${__UAC_TEMP_DATA_DIR}/tar_from_file.tmp" 2>/dev/null
+  for __tf_option in "T" "I" "L" "I_AFTER"; do
+    rm -f "${__UAC_TEMP_DATA_DIR}/tar_from_file.tar" 2>/dev/null
+    case "${__tf_option}" in
+      "T")
+        tar -T "${__UAC_TEMP_DATA_DIR}/tar_from_file.tmp" -cf "${__UAC_TEMP_DATA_DIR}/tar_from_file.tar" >/dev/null 2>&1
+        ;;
+      "I")
+        tar -I "${__UAC_TEMP_DATA_DIR}/tar_from_file.tmp" -cf "${__UAC_TEMP_DATA_DIR}/tar_from_file.tar" >/dev/null 2>&1
+        ;;
+      "L")
+        tar -L "${__UAC_TEMP_DATA_DIR}/tar_from_file.tmp" -cf "${__UAC_TEMP_DATA_DIR}/tar_from_file.tar" >/dev/null 2>&1
+        ;;
+      "I_AFTER")
+        tar -cf "${__UAC_TEMP_DATA_DIR}/tar_from_file.tar" -I "${__UAC_TEMP_DATA_DIR}/tar_from_file.tmp" >/dev/null 2>&1
+        ;;
+    esac
+    # exit code is not enough (e.g. GNU tar -I is --use-compress-program),
+    # so check that the package contains the expected file
+    if tar -tf "${__UAC_TEMP_DATA_DIR}/tar_from_file.tar" 2>/dev/null | grep -q -E "(^|/)uac$"; then
+      __UAC_TOOL_TAR_FROM_FILE_OPTION="${__tf_option}"
+      break
+    fi
+  done
+  rm -f "${__UAC_TEMP_DATA_DIR}/tar_from_file.tmp" "${__UAC_TEMP_DATA_DIR}/tar_from_file.tar" 2>/dev/null
+  if [ -z "${__UAC_TOOL_TAR_FROM_FILE_OPTION}" ]; then
+    __UAC_TOOL_TAR_NO_FROM_FILE_SUPPORT=true
+  fi
 
   # check if the maximum filename size that can be created in the file system is 255 characters
   if touch "${__UAC_TEMP_DATA_DIR}/1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890"; then
     __UAC_MAX_FILENAME_SIZE=245
+  fi
+
+  # check if curl supports --fail, which makes HTTP errors return a non-zero
+  # exit status so failed transfers can be retried. curl exits with 2 when an
+  # option is unknown, so any other exit status means the option is supported
+  if command_exists "curl"; then
+    curl --fail -s "http://127.0.0.1:9" >/dev/null 2>&1
+    if [ $? -ne 2 ]; then
+      __UAC_TOOL_CURL_FAIL_OPTION="--fail"
+    fi
+  fi
+
+  # without --fail (or without curl, when wget is used) HTTP errors are not
+  # detected, so transfers are not retried
+  if [ -z "${__UAC_TOOL_CURL_FAIL_OPTION}" ]; then
+    __UAC_TRANSFER_MAX_ATTEMPTS=1
   fi
 
   # check for available MD5 hashing tools

@@ -174,7 +174,11 @@ _find_based_collector()
     "find")
       if [ -n "${__fc_command}" ]; then
         if ${__fc_is_file_list}; then
-            __fc_command="sed 's|.|\\\\&|g' \"${__fc_path}\" | xargs ${__fc_command}"
+            if ${__UAC_TOOL_XARGS_BACKSLASH_ESCAPE_SUPPORT}; then
+              __fc_command="sed 's|.|\\\\&|g' \"${__fc_path}\" | xargs ${__fc_command}"
+            else
+              __fc_command="echo \"${__fc_path}\" | xargs ${__fc_command}"
+            fi
         elif ${__UAC_TOOL_FIND_PRINT0_SUPPORT} && ${__UAC_TOOL_XARGS_NULL_DELIMITER_SUPPORT}; then
           __fc_find_command=`_build_find_command \
             "${__fc_path}" \
@@ -216,7 +220,11 @@ _find_based_collector()
           if echo "${__fc_find_command}" | grep -q -E "; $"; then
             __fc_find_command="{ ${__fc_find_command} }"
           fi
-          __fc_command="${__fc_find_command} | sed 's|.|\\\\&|g' | xargs ${__fc_command}"
+          if ${__UAC_TOOL_XARGS_BACKSLASH_ESCAPE_SUPPORT}; then
+            __fc_command="${__fc_find_command} | sed 's|.|\\\\&|g' | xargs ${__fc_command}"
+          else
+            __fc_command="${__fc_find_command} | xargs ${__fc_command}"
+          fi
         fi
         _verbose_msg "${__UAC_VERBOSE_CMD_PREFIX}${__fc_command}"
         _run_command "${__fc_command}" \
@@ -265,7 +273,11 @@ _find_based_collector()
 
         if [ -n "${__fc_hashing_tool}" ]; then
           if ${__fc_is_file_list}; then
-            __fc_hash_command="sed 's|.|\\\\&|g' \"${__fc_path}\" | xargs ${__fc_hashing_tool}"
+            if ${__UAC_TOOL_XARGS_BACKSLASH_ESCAPE_SUPPORT}; then
+              __fc_hash_command="sed 's|.|\\\\&|g' \"${__fc_path}\" | xargs ${__fc_hashing_tool}"
+            else
+              __fc_hash_command="while IFS= read -r __fc_line; do ${__fc_hashing_tool} \"\${__fc_line}\"; done <\"${__fc_path}\""
+            fi
           elif ${__UAC_TOOL_FIND_PRINT0_SUPPORT} && ${__UAC_TOOL_XARGS_NULL_DELIMITER_SUPPORT}; then
             __fc_find_command=`_build_find_command \
               "${__fc_path}" \
@@ -307,7 +319,11 @@ _find_based_collector()
             if echo "${__fc_find_command}" | grep -q -E "; $"; then
               __fc_find_command="{ ${__fc_find_command} }"
             fi
-            __fc_hash_command="${__fc_find_command} | sed 's|.|\\\\&|g' | xargs ${__fc_hashing_tool}"
+            if ${__UAC_TOOL_XARGS_BACKSLASH_ESCAPE_SUPPORT}; then
+              __fc_hash_command="${__fc_find_command} | sed 's|.|\\\\&|g' | xargs ${__fc_hashing_tool}"
+            else
+              __fc_hash_command="${__fc_find_command} | while IFS= read -r __fc_line; do ${__fc_hashing_tool} \"\${__fc_line}\"; done"
+            fi
           fi
           _verbose_msg "${__UAC_VERBOSE_CMD_PREFIX}${__fc_hash_command}"
           _run_command "${__fc_hash_command}" \
@@ -325,7 +341,11 @@ _find_based_collector()
     "stat")
       if [ -n "${__UAC_TOOL_STAT_BIN}" ]; then
         if ${__fc_is_file_list}; then
+          if ${__UAC_TOOL_XARGS_BACKSLASH_ESCAPE_SUPPORT}; then
             __fc_stat_command="sed 's|.|\\\\&|g' \"${__fc_path}\" | xargs ${__UAC_TOOL_STAT_BIN}${__UAC_TOOL_STAT_PARAMS:+ }${__UAC_TOOL_STAT_PARAMS}"
+          else
+            __fc_stat_command="while IFS= read -r __fc_line; do ${__UAC_TOOL_STAT_BIN}${__UAC_TOOL_STAT_PARAMS:+ }${__UAC_TOOL_STAT_PARAMS} \"\${__fc_line}\"; done <\"${__fc_path}\""
+          fi
         elif ${__UAC_TOOL_FIND_PRINT0_SUPPORT} && ${__UAC_TOOL_XARGS_NULL_DELIMITER_SUPPORT}; then
           __fc_find_command=`_build_find_command \
             "${__fc_path}" \
@@ -367,7 +387,11 @@ _find_based_collector()
           if echo "${__fc_find_command}" | grep -q -E "; $"; then
             __fc_find_command="{ ${__fc_find_command} }"
           fi
-          __fc_stat_command="${__fc_find_command} | sed 's|.|\\\\&|g' | xargs ${__UAC_TOOL_STAT_BIN}${__UAC_TOOL_STAT_PARAMS:+ }${__UAC_TOOL_STAT_PARAMS}"
+          if ${__UAC_TOOL_XARGS_BACKSLASH_ESCAPE_SUPPORT}; then
+            __fc_stat_command="${__fc_find_command} | sed 's|.|\\\\&|g' | xargs ${__UAC_TOOL_STAT_BIN}${__UAC_TOOL_STAT_PARAMS:+ }${__UAC_TOOL_STAT_PARAMS}"
+          else
+            __fc_stat_command="${__fc_find_command} | while IFS= read -r __fc_line; do ${__UAC_TOOL_STAT_BIN}${__UAC_TOOL_STAT_PARAMS:+ }${__UAC_TOOL_STAT_PARAMS} \"\${__fc_line}\"; done"
+          fi
         fi
         _verbose_msg "${__UAC_VERBOSE_CMD_PREFIX}${__fc_stat_command}"
         _run_command "${__fc_stat_command}" \

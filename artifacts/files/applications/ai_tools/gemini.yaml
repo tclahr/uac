@@ -1,0 +1,14 @@
+version: 1.1
+
+artifacts:
+  -
+    description: Collect Gemini CLI chat logs, prompt history, checkpoints, custom commands, policies, project registry, config and OAuth credentials.
+    supported_os: [linux, macos]
+    collector: file
+    path: %user_home%/.gemini
+    name_pattern: ["*.jsonl", "*.json", "settings.json", "oauth_creds.json", "google_accounts.json", "installation_id", "*.toml", "*.md", ".project_root"]
+    exclude_path_pattern: ["*/tmp/bin/*", "*/history/*", "*/cli-browser-profile/*"]
+    file_type: [f]
+    max_file_size: 1g
+    ignore_date_range: true
+    exclude_nologin_users: true

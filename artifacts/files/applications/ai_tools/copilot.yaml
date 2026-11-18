@@ -1,0 +1,63 @@
+version: 1.1
+
+artifacts:
+  -
+    description: Collect GitHub Copilot CLI session state (events, workspace metadata, plans, checkpoints), session store database, logs and config.
+    supported_os: [linux, macos]
+    collector: file
+    path: %user_home%/.copilot
+    name_pattern: ["*.jsonl", "*.json", "*.yaml", "*.md", "*.db", "*.db-wal", "*.db-shm", "*.log"]
+    file_type: [f]
+    exclude_path_pattern: ["*/pkg/*"]
+    max_file_size: 1g
+    ignore_date_range: true
+    exclude_nologin_users: true
+  -
+    description: Collect GitHub Copilot host token/config store.
+    supported_os: [linux, macos]
+    collector: file
+    path: %user_home%/.config/github-copilot
+    name_pattern: ["*.json", "hosts.json", "apps.json", "versions.json"]
+    file_type: [f]
+    ignore_date_range: true
+    exclude_nologin_users: true
+  -
+    description: Collect GitHub Copilot Chat conversation transcripts and agent-mode edit snapshots stored per workspace by VS Code (macOS).
+    supported_os: [macos]
+    collector: file
+    path: %user_home%/Library/"Application Support"/Code/User/workspaceStorage
+    path_pattern: ["*/chatSessions/*", "*/chatEditingSessions/*"]
+    file_type: [f]
+    max_file_size: 1g
+    ignore_date_range: true
+    exclude_nologin_users: true
+  -
+    description: Collect GitHub Copilot Chat conversation transcripts and agent-mode edit snapshots stored per workspace by VS Code (Linux).
+    supported_os: [linux]
+    collector: file
+    path: %user_home%/.config/Code/User/workspaceStorage
+    path_pattern: ["*/chatSessions/*", "*/chatEditingSessions/*"]
+    file_type: [f]
+    max_file_size: 1g
+    ignore_date_range: true
+    exclude_nologin_users: true
+  -
+    description: Collect GitHub Copilot Chat global storage - empty-window and transferred chat sessions and the extension session store database (macOS).
+    supported_os: [macos]
+    collector: file
+    path: %user_home%/Library/"Application Support"/Code/User/globalStorage/emptyWindowChatSessions %user_home%/Library/"Application Support"/Code/User/globalStorage/transferredChatSessions %user_home%/Library/"Application Support"/Code/User/globalStorage/github.copilot-chat
+    name_pattern: ["*.json", "*.jsonl", "*.db", "*.db-wal", "*.db-shm"]
+    file_type: [f]
+    max_file_size: 1g
+    ignore_date_range: true
+    exclude_nologin_users: true
+  -
+    description: Collect GitHub Copilot Chat global storage - empty-window and transferred chat sessions and the extension session store database (Linux).
+    supported_os: [linux]
+    collector: file
+    path: %user_home%/.config/Code/User/globalStorage/emptyWindowChatSessions %user_home%/.config/Code/User/globalStorage/transferredChatSessions %user_home%/.config/Code/User/globalStorage/github.copilot-chat
+    name_pattern: ["*.json", "*.jsonl", "*.db", "*.db-wal", "*.db-shm"]
+    file_type: [f]
+    max_file_size: 1g
+    ignore_date_range: true
+    exclude_nologin_users: true
