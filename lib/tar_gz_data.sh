@@ -17,26 +17,24 @@ _tar_gz_data()
     return 1
   fi
 
-  __tg_tar_command="tar -T \"${__tg_from_file}\" -cf - | gzip >\"${__tg_destination_file}\""
-  case "${__UAC_OPERATING_SYSTEM}" in
-    "aix")
-      __tg_tar_command="tar -L \"${__tg_from_file}\" -cf - | gzip >\"${__tg_destination_file}\""
-      ;;
-    "freebsd"|"netbsd"|"netscaler"|"openbsd")
-      __tg_tar_command="tar -I \"${__tg_from_file}\" -cf - | gzip >\"${__tg_destination_file}\""
-      ;;
-    "esxi"|"linux")
-      if ${__UAC_TOOL_TAR_NO_FROM_FILE_SUPPORT}; then
-        __tg_tar_command="tar -cf - * | gzip >\"${__tg_destination_file}\""
-      fi
-      ;;
-    "macos")
-      true
-      ;;
-    "solaris")
-      __tg_tar_command="tar -cf - -I \"${__tg_from_file}\" | gzip >\"${__tg_destination_file}\""
-      ;;
-  esac
+  if ${__UAC_TOOL_TAR_NO_FROM_FILE_SUPPORT}; then
+    __tg_tar_command="tar -cf - * | gzip >\"${__tg_destination_file}\""
+  else
+    case "${__UAC_TOOL_TAR_FROM_FILE_OPTION}" in
+      "I")
+        __tg_tar_command="tar -I \"${__tg_from_file}\" -cf - | gzip >\"${__tg_destination_file}\""
+        ;;
+      "L")
+        __tg_tar_command="tar -L \"${__tg_from_file}\" -cf - | gzip >\"${__tg_destination_file}\""
+        ;;
+      "I_AFTER")
+        __tg_tar_command="tar -cf - -I \"${__tg_from_file}\" | gzip >\"${__tg_destination_file}\""
+        ;;
+      *)
+        __tg_tar_command="tar -T \"${__tg_from_file}\" -cf - | gzip >\"${__tg_destination_file}\""
+        ;;
+    esac
+  fi
 
   _verbose_msg "${__UAC_VERBOSE_CMD_PREFIX}${__tg_tar_command}"
   eval "${__tg_tar_command}" \
