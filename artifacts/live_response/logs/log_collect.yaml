@@ -1,6 +1,6 @@
 version: 1.0
 condition: command_exists "log"
-output_directory: /live_response/system
+output_directory: /live_response/logs
 artifacts:
   -
     description: Collect the macOS Unified Logs into a logarchive.

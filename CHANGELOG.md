@@ -20,6 +20,7 @@ All notable changes to this project will be documented in this file.
 - `files/logs/modsecurity.yaml`, `files/logs/imunify360.yaml`, `files/logs/fail2ban.yaml`: Added collection of WAF and brute-force protection logs [linux]. (by [JuggeM](https://github.com/JuggeM))
 - `files/logs/plesk.yaml`: Added collection of Plesk panel and per-domain web server logs [linux]. (by [JuggeM](https://github.com/JuggeM))
 - `files/logs/proftpd.yaml`, `files/logs/pureftpd.yaml`, `files/logs/vsftpd.yaml`: Added collection of FTP server logs [linux]. (by [JuggeM](https://github.com/JuggeM))
+- `live_response/logs/log_collect.yaml`: Added collection of the macOS Unified Logs into a logarchive using `log collect` [macos]. (by [F9mc](https://github.com/F9mc))
 - `webserver/webroot_scripts.yaml`, `webserver/webroot_recent_files.yaml`: Added listing and hashing of server-side scripts in web roots for web shell hunting [linux]. (by [JuggeM](https://github.com/JuggeM))
 
 ### Removed Artifacts
