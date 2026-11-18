@@ -1,5 +1,5 @@
 version: 1.0
-output_directory: /live_response/hosting
+output_directory: /webserver
 artifacts:
   -
     description: List files in web roots modified within the collection date range (requires --date-range-start).
