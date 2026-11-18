@@ -17,26 +17,24 @@ _tar_data()
     return 1
   fi
 
-  __td_tar_command="tar -T \"${__td_from_file}\" -cf \"${__td_destination_file}\""
-  case "${__UAC_OPERATING_SYSTEM}" in
-    "aix")
-      __td_tar_command="tar -L \"${__td_from_file}\" -cf \"${__td_destination_file}\""
-      ;;
-    "freebsd"|"netbsd"|"netscaler"|"openbsd")
-      __td_tar_command="tar -I \"${__td_from_file}\" -cf \"${__td_destination_file}\""
-      ;;
-    "esxi"|"linux")
-      if ${__UAC_TOOL_TAR_NO_FROM_FILE_SUPPORT}; then
-        __tg_tar_command="tar -cf \"${__td_destination_file}\" *"
-      fi
-      ;;
-    "macos")
-      true
-      ;;
-    "solaris")
-      __td_tar_command="tar -cf \"${__td_destination_file}\" -I \"${__td_from_file}\""
-      ;;
-  esac
+  if ${__UAC_TOOL_TAR_NO_FROM_FILE_SUPPORT}; then
+    __td_tar_command="tar -cf \"${__td_destination_file}\" *"
+  else
+    case "${__UAC_TOOL_TAR_FROM_FILE_OPTION}" in
+      "I")
+        __td_tar_command="tar -I \"${__td_from_file}\" -cf \"${__td_destination_file}\""
+        ;;
+      "L")
+        __td_tar_command="tar -L \"${__td_from_file}\" -cf \"${__td_destination_file}\""
+        ;;
+      "I_AFTER")
+        __td_tar_command="tar -cf \"${__td_destination_file}\" -I \"${__td_from_file}\""
+        ;;
+      *)
+        __td_tar_command="tar -T \"${__td_from_file}\" -cf \"${__td_destination_file}\""
+        ;;
+    esac
+  fi
 
   _verbose_msg "${__UAC_VERBOSE_CMD_PREFIX}${__td_tar_command}"
   eval "${__td_tar_command}" \
