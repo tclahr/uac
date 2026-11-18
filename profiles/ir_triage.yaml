@@ -43,3 +43,4 @@ artifacts:
   - files/ssh/*
   - files/system/*
   - !files/system/trash.yaml
+  - !webserver/*

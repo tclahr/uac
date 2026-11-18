@@ -1,0 +1,26 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect DirectAdmin logs (error, security, system, task queue).
+    supported_os: [linux]
+    collector: file
+    path: /var/log/directadmin
+    file_type: [f, l]
+    max_depth: 2
+    max_file_size: 209715200 # 200MB
+  -
+    description: Collect DirectAdmin per-domain Apache logs.
+    supported_os: [linux]
+    collector: file
+    path: /var/log/httpd/domains
+    file_type: [f, l]
+    max_depth: 2
+    max_file_size: 1073741824 # 1GB
+  -
+    description: Collect DirectAdmin CustomBuild logs.
+    supported_os: [linux]
+    collector: file
+    path: /usr/local/directadmin/custombuild/logs
+    file_type: [f]
+    max_depth: 2
+    max_file_size: 104857600 # 100MB

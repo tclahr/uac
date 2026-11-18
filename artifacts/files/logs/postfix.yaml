@@ -1,0 +1,11 @@
+version: 1.0
+artifacts:
+  -
+    description: Collect Postfix and syslog mail facility logs.
+    supported_os: [linux]
+    collector: file
+    path: /var/log
+    name_pattern: ["maillog*", "mail.log*", "mail.err*", "mail.warn*", "mail.info*", "postfix*"]
+    file_type: [f, l]
+    max_depth: 2
+    max_file_size: 1073741824 # 1GB

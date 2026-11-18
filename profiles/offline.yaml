@@ -11,3 +11,4 @@ artifacts:
   - files/*
   - !files/browsers/cache.yaml
   - !files/system/trash.yaml
+  - !webserver/*
